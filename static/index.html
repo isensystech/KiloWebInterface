@@ -74,6 +74,39 @@
 
     </style>
 
+    <!-- PROJECT FONTS -->
+
+    <style>
+    :root{
+    /* Sans stack with robust fallbacks */
+    --font-sans: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
+    --font-mono: "Roboto Mono", Consolas, SFMono-Regular, Menlo, ui-monospace, monospace;
+    /* H2 token: weight size/line-height family */
+    /* clamp() keeps it responsive across viewports */
+    --type-h2: 700 clamp(18px, 2.2vw, 28px)/1.2 var(--font-sans);
+    --c-h: rgb(255, 255, 255); 
+    --type-h3: 700 18px/1.25 var(--font-sans); 
+
+    --type-h4: 400 16px/1.3 var(--font-sans); 
+
+    --type-h5: 500 14px/1.35 var(--font-sans); 
+    --type-body: 400 14px/1.35 var(--font-sans); 
+
+
+
+
+
+    --type-h4-mono: 600 16px/1.3 var(--font-mono); 
+    --type-16body-mono: 500 16px/1.3 var(--font-mono); 
+    
+    --type-h5-mono: 500 14px/1.35 var(--font-mono); 
+    --type-14body-mono: 400 14px/1.35 var(--font-mono); 
+
+    } 
+
+    </style>
+
+
 
     <!-- INFO BAR -->
     <style>
@@ -182,7 +215,7 @@
     </style>
 
 
-    <!-- Navigation -->
+    <!-- HEADER Navigation -->
     <style>
     /* Navigation arrows */
         .header-inner {
@@ -204,9 +237,9 @@
         }
 
         .carousel-title {
-          font-size: 2rem;
-          font-weight: 600;
-          color: white;
+            font: var(--type-h2);
+            color: var(--c-h); /* <- apply the pink you defined */
+
           text-align: center;
           opacity: 0;
           transition: opacity 0.3s ease;
@@ -241,7 +274,7 @@
         .nav-arrow:hover {
             transform: scale(1.2);   /* still animate on hover */
             filter: drop-shadow(0 0 8px rgb(100, 100, 100));
-            color: white;
+            color: rgb(255, 255, 255);
         }
         .nav-arrow.left {
             left: 5vh;
@@ -1107,18 +1140,13 @@
             padding-bottom: 26px;
         }
         .editor-modal-title {
-            font-size: 1.8rem;
+             font: var(--typo-h2);
+          color: var(--c-h2); /* <- apply the pink you defined */
             margin-bottom: 24px;
-            color: #ffffff;
-            font-weight: 600;
+            margin: 0 0 12px 0;
             text-align: center;
         }
-        .editor-modal-title {
-            margin: 0 0 12px 0;
-        }
-        .editor-modal-actions {
-            margin-top: 32px;
-        }  
+
         .editor-modal-content {
             width: 100%;
             display: flex;
@@ -3045,16 +3073,17 @@
         .drawer-content{
             background:#303030; /* to merge with active tab bg */
             padding:12px;
-            color:#fff;
             overflow:auto;
-            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         }
 
         .pane-title{
             /* Title row with optional actions on the right */
-            display:flex; align-items:center; justify-content:center;
+            display:flex; 
+            align-items:center; 
+            justify-content:center;
             margin-bottom:12px;
-            font-size:16px; font-weight:600; line-height:24px;
+            font: var(--type-h3);
+            color: var(--c-h);
         }
         
 
@@ -3601,9 +3630,8 @@
         }
 
         .status-title {
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 24px;
+        font: var(--type-h5);
+        color: var(--c-h); /* <- apply the pink you defined */
         }
 
         .status-icon {
@@ -3653,7 +3681,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px; /* space between header and controls */
-            padding: 4px;
+            padding: 6px;
 
             }
             /* Container for the section (unchanged) */
@@ -3661,12 +3689,13 @@
             gap: 6px;              /* space between items */
             display: flex;
             flex-direction: column;
-            padding: 10px;
+            padding: 0 10px;
             background: #303030;
             border-radius: 6px;
             color: #fff;
             font-family: Inter, sans-serif;
             }
+
 
 
 
@@ -3676,7 +3705,7 @@
             .battery-engine-status {
                 position: relative;
                 height: 48px;
-                padding: 0;
+                padding: 2;
                 background: #303030;    /* default = state 1 */
                 border: none;
                 border-radius: 6px;
@@ -3686,7 +3715,7 @@
                 gap: 8px;
 
 
-                font-family: Inter, sans-serif;
+                font-family: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
                 font-size: 16px;
                 font-weight: 600;
                 letter-spacing: 0.5px;
@@ -4065,10 +4094,8 @@
         opacity: 0.9;
         }
         .mission-card__item-text {
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 1.5;         /* compact lines */
-        color: #fff;
+        font: var(--type-h5);
+        color: var(--c-h); /* <- apply the pink you defined */
         }
 
 
@@ -4219,13 +4246,9 @@
 
             .mission-name{
             /* small caps look */
-            font-family: Inter, system-ui, sans-serif;
-            font-weight: 500;
-            font-size: 14px;
-            letter-spacing: 0.4px;   /* tech look */
-            color: #858585;        /* muted gray */
+            font: var(--type-h5);
+            color: var(--c-h); /* <- apply the pink you defined */
             text-align: center;     /* center the text itself */
-            line-height: 1.1; /* tighter lines; try 1, 1.2 or a fixed 16px */
             }
             .mission-value {
             font-family: Inter, system-ui, sans-serif;
@@ -4436,7 +4459,8 @@
 
         .asset-sub {
             grid-row: 2;                              /* second row */
-            line-height: var(--row2);
+            font: var(--type-h5);
+            color: var(--c-h); /* <- apply the pink you defined */
         }
 
         /* Right block: two metrics stacked with the same row heights */
@@ -4587,9 +4611,8 @@
         }
 
         .drawer-button-title {
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 24px;
+        font: var(--type-h4);
+          color: var(--c-h); /* <- apply the pink you defined */
         }
 
         .drawer-button-icon {
@@ -4794,6 +4817,8 @@
 
 
 
+
+
 <body>
     <div class="control-screen">
         <!-- INFO BAR -->
@@ -4830,7 +4855,6 @@
             </div>
 
 
-
             <div class="info-item">
 
                 <div class="info-item">
@@ -4852,7 +4876,7 @@
         </div>
 
         
-        <!-- HEADER -->
+        <!-- HEADER Navigation -->
         <header id="header">
             <div class="header-inner">
                 <button class="nav-arrow left" id="prev-screen">◀</button>
@@ -5451,7 +5475,7 @@
                             <div class="button-button-block">
                                 <div class="drawer-button-header">
                                     <img class="drawer-button-icon" src="images/pump-icon.svg" alt="Pump icon">
-                                    <span class="drawer-button-title">Pump Hight</span>
+                                    <span class="drawer-button-title">Pump Hght</span>
                                 </div>
 
                                 <div class="half-relay" data-live-default="on">
@@ -5836,201 +5860,167 @@
 
                         </svg>
 
-                        <div class="battery-block">
+                        <div class="battery-block"> 
 
-                            <!-- Start -->
-                            <div class="battery-button-block">
+  <!-- Engine Start -->
+  <div class="battery-button-block" data-bank="7" data-switch="1">
+    <div class="drawer-button-header">
+      <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
+      <span class="drawer-button-title">Engine Start</span>
+    </div>
+    <div class="sensor-controls">
+      <div class="drawer-button-toggle">
+        <button class="toggle-btn off" data-state="0">Off</button>
+        <button class="toggle-btn on"  data-state="1">On</button>
+      </div>
+      <div class="drawer-button-display">
+        <!-- show voltage from bank 7, stud 6 per your table -->
+        <span class="display-value" data-bank="7" data-stud="6">--</span>
+        <span class="display-unit">V</span>
+      </div>
+    </div>
+  </div>
 
-                                <div class="drawer-button-header">
-                                    <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
-                                    <span class="drawer-button-title">Engine Start</span>
-                                </div>
+  <!-- Engine Control -->
+  <div class="battery-button-block" data-bank="7" data-switch="2">
+    <div class="drawer-button-header">
+      <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
+      <span class="drawer-button-title">Engine Control</span>
+    </div>
+    <div class="sensor-controls">
+      <div class="drawer-button-toggle">
+        <button class="toggle-btn off" data-state="0">Off</button>
+        <button class="toggle-btn on"  data-state="1">On</button>
+      </div>
+      <div class="drawer-button-display">
+        <!-- table: 7-8 Engine Control Stud -->
+        <span class="display-value" data-bank="7" data-stud="8">--</span>
+        <span class="display-unit">V</span>
+      </div>
+    </div>
+  </div>
 
-                            <!-- Start relay (Bank 1, Switch 1) -->
-                                <div class="relay" data-bank="1" data-instance="1" data-name="Start">
-                                <div class="relay-controls">
-                                    <div class="drawer-button-toggle">
-                                    <button class="toggle-btn off active" data-value="--"> Off </button>
-                                    <button class="toggle-btn on"  data-value="--"> On </button>
-                                    </div>
-                                    <div class="drawer-button-display">
-                                    <span class="display-value">--</span>
-                                    <span class="display-unit">V</span>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-                            <!-- Start -->
-                            <div class="battery-button-block">
+  <!-- Engine → House -->
+  <div class="battery-button-block" data-bank="9" data-switch="1">
+    <div class="drawer-button-header">
+      <img class="drawer-button-icon" src="images/relay-icon.svg" alt="Temperature icon">
+      <span class="drawer-button-title">Engine → House</span>
+    </div>
+    <div class="relay-controls">
+      <div class="drawer-button-relay">
+        <button class="relay-btn off"  data-state="0">Off</button>
+        <button class="relay-btn auto" data-state="2">Auto</button>
+        <button class="relay-btn on"   data-state="1">On</button>
+      </div>
+      <div class="drawer-button-display">
+        <!-- your table has "Starter -> House Input/Output";
+             you had bank:7 there, но по смыслу это должен быть bank 9.
+             Поставлю примером stud="7" (Input). При необходимости поменяешь. -->
+        <span class="display-value" data-bank="9" data-stud="7">--</span>
+        <span class="display-unit">V</span>
+      </div>
+    </div>
+  </div>
 
-                                <div class="drawer-button-header">
-                                    <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
-                                    <span class="drawer-button-title">Engine Control</span>
-                                </div>
+  <!-- House → Payload 1 -->
+  <div class="battery-button-block" data-bank="8" data-switch="1">
+    <div class="drawer-button-header">
+      <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
+      <span class="drawer-button-title">House → Payload 1</span>
+    </div>
+    <div class="sensor-controls">
+      <div class="drawer-button-toggle">
+        <button class="toggle-btn off" data-state="0">Off</button>
+        <button class="toggle-btn on"  data-state="1">On</button>
+      </div>
+      <div class="drawer-button-display">
+        <!-- table: 8-6 Payload 1 -->
+        <span class="display-value" data-bank="8" data-stud="6">--</span>
+        <span class="display-unit">V</span>
+      </div>
+    </div>
+  </div>
 
-                                <div class="sensor-controls">
+  <!-- House Loads -->
+  <div class="battery-button-block" data-bank="8" data-switch="2">
+    <div class="drawer-button-header">
+      <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
+      <span class="drawer-button-title">House Loads</span>
+    </div>
+    <div class="sensor-controls">
+      <div class="drawer-button-toggle">
+        <button class="toggle-btn off" data-state="0">Off</button>
+        <button class="toggle-btn on"  data-state="1">On</button>
+      </div>
+      <div class="drawer-button-display">
+        <!-- table: 8-8 House Loads -->
+        <span class="display-value" data-bank="8" data-stud="8">--</span>
+        <span class="display-unit">V</span>
+      </div>
+    </div>
+  </div>
 
-                                    <div class="drawer-button-toggle">
-                                        <button class="toggle-btn off active" data-value="--"> Off </button>
-                                        <button class="toggle-btn on" data-value="17.2"> On </button>
-                                    </div>
+<hr class="divider" />
 
-                                    <div class="drawer-button-display">
-                                        <span class="display-value">--</span>
-                                        <span class="display-unit">V</span>
-                                    </div>
+  <!-- Payload 1 Loads -->
+  <div class="battery-button-block" data-bank="10" data-switch="1">
+    <div class="drawer-button-header">
+      <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
+      <span class="drawer-button-title">Payload 1 Loads</span>
+    </div>
+    <div class="sensor-controls">
+      <div class="drawer-button-toggle">
+        <button class="toggle-btn off" data-state="0">Off</button>
+        <button class="toggle-btn on"  data-state="1">On</button>
+      </div>
+      <div class="drawer-button-display">
+        <!-- table: bank 10, stud 6 -->
+        <span class="display-value" data-bank="10" data-stud="6">--</span>
+        <span class="display-unit">V</span>
+      </div>
+    </div>
+  </div>
 
-                                </div>
-                            </div>
-                                          
-                            <!-- House Relay -->
-                            <div class="battery-button-block">
+  <!-- Payload 1 → Payload 2 -->
+  <div class="battery-button-block" data-bank="10" data-switch="2">
+    <div class="drawer-button-header">
+      <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
+      <span class="drawer-button-title">Payload 1 → Payload 2</span>
+    </div>
+    <div class="sensor-controls">
+      <div class="drawer-button-toggle">
+        <button class="toggle-btn off" data-state="0">Off</button>
+        <button class="toggle-btn on"  data-state="1">On</button>
+      </div>
+      <div class="drawer-button-display">
+        <!-- table: bank 10, stud 8 -->
+        <span class="display-value" data-bank="10" data-stud="8">--</span>
+        <span class="display-unit">V</span>
+      </div>
+    </div>
+  </div>
 
-                                <div class="drawer-button-header">
-                                    <img class="drawer-button-icon" src="images/relay-icon.svg" alt="Temperature icon">
-                                    <span class="drawer-button-title">Engine -> House</span>
-                                </div>
+  <!-- Payload 2 Loads -->
+  <div class="battery-button-block" data-bank="10" data-switch="3">
+    <div class="drawer-button-header">
+      <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
+      <span class="drawer-button-title">Payload 2 Loads</span>
+    </div>
+    <div class="sensor-controls">
+      <div class="drawer-button-toggle">
+        <button class="toggle-btn off" data-state="0">Off</button>
+        <button class="toggle-btn on"  data-state="1">On</button>
+      </div>
+      <div class="drawer-button-display">
+        <!-- table: bank 10, stud 9 -->
+        <span class="display-value" data-bank="10" data-stud="9">--</span>
+        <span class="display-unit">V</span>
+      </div>
+    </div>
+  </div>
 
-                                <div class="relay-controls">
+</div>
 
-                                    <div class="drawer-button-relay" data-live-default="on">
-                                        <button class="relay-btn off active">Off</button>
-                                        <button class="relay-btn auto" data-value="13.2">Auto</button>
-                                        <button class="relay-btn on" data-value="13.2">On</button>
-
-                                    </div>
-
-                                    <div class="drawer-button-display">
-                                        <span class="display-value">--</span>
-                                        <span class="display-unit">V</span>
-                                    </div>
-
-                                </div>
-                            </div>
-                            
-                            <!-- House -->
-                            <div class="battery-button-block">
-
-                                <div class="drawer-button-header">
-                                    <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
-                                    <span class="drawer-button-title">House → Payload 1</span>
-                                </div>
-
-                                <div class="sensor-controls">
-
-                                    <div class="drawer-button-toggle">
-                                        <button class="toggle-btn off active" data-value="--"> Off </button>
-                                        <button class="toggle-btn on" data-value="17.2"> On </button>
-                                    </div>
-
-                                    <div class="drawer-button-display">
-                                        <span class="display-value">--</span>
-                                        <span class="display-unit">V</span>
-                                    </div>
-
-                                </div>
-                            </div>
-                            
-                            
-                            <!-- House -->
-                            <div class="battery-button-block">
-
-                                <div class="drawer-button-header">
-                                    <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
-                                    <span class="drawer-button-title">House Loads</span>
-                                </div>
-
-                                <div class="sensor-controls">
-
-                                    <div class="drawer-button-toggle">
-                                        <button class="toggle-btn off active" data-value="--"> Off </button>
-                                        <button class="toggle-btn on" data-value="17.2"> On </button>
-                                    </div>
-
-                                    <div class="drawer-button-display">
-                                        <span class="display-value">--</span>
-                                        <span class="display-unit">V</span>
-                                    </div>
-
-                                </div>
-                            </div>
-                                              
-                            
-
--------------------------------------------
-
-
-
-                            <!-- House -->
-                            <div class="battery-button-block">
-
-                                <div class="drawer-button-header">
-                                    <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
-                                    <span class="drawer-button-title"> Payload 1 Loads</span>
-                                </div>
-
-                                <div class="sensor-controls">
-
-                                    <div class="drawer-button-toggle">
-                                        <button class="toggle-btn off active" data-value="--"> Off </button>
-                                        <button class="toggle-btn on" data-value="17.2"> On </button>
-                                    </div>
-
-                                    <div class="drawer-button-display">
-                                        <span class="display-value">--</span>
-                                        <span class="display-unit">V</span>
-                                    </div>
-
-                                </div>
-                            </div>
-                                                                                
-                            <!-- Payload 1 -->
-                            <div class="battery-button-block">
-
-                                <div class="drawer-button-header">
-                                    <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
-                                    <span class="drawer-button-title">Payload 1 → Payload 2</span>
-                                </div>
-
-                                <div class="sensor-controls">
-
-                                    <div class="drawer-button-toggle">
-                                        <button class="toggle-btn off active" data-value="--"> Off </button>
-                                        <button class="toggle-btn on" data-value="17.2"> On </button>
-                                    </div>
-
-                                    <div class="drawer-button-display">
-                                        <span class="display-value">--</span>
-                                        <span class="display-unit">V</span>
-                                    </div>
-
-                                </div>
-                            </div>
-                                                                             
-                            <!-- Payload 2 -->
-                            <div class="battery-button-block">
-
-                                <div class="drawer-button-header">
-                                    <img class="drawer-button-icon" src="images/battery.svg" alt="Temperature icon">
-                                    <span class="drawer-button-title">Payload 2 Loads</span>
-                                </div>
-
-                                <div class="sensor-controls">
-
-                                    <div class="drawer-button-toggle">
-                                        <button class="toggle-btn off active" data-value="--"> Off </button>
-                                        <button class="toggle-btn on" data-value="17.2"> On </button>
-                                    </div>
-
-                                    <div class="drawer-button-display">
-                                        <span class="display-value">--</span>
-                                        <span class="display-unit">V</span>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
 
                     </div>
 
@@ -6708,6 +6698,12 @@
 
     </div>
 </div>
+
+
+
+
+
+
 
 
 
@@ -7640,23 +7636,24 @@
                 };
 
 
-                /* SLIDER button */
+
+
+/* SLIDER button */
 
                 window.onload = function () {
                         const thumb = document.getElementById('trim-thumb');
                         const fill = document.getElementById('trim-fill');
                         const pointer = document.querySelector('.trim-pointer-img');
                         const sliderWrapper = document.querySelector('.trim-slider-wrapper');
+                        const readout = document.getElementById('trim-readout'); // DEFINED HERE
+
                         if (!thumb || !fill || !pointer || !sliderWrapper || !readout) {
                             console.warn("Missing slider element(s)");
                             return;
                         }
-
+                        
                         const edgeOffset = 16; // Top and bottom 
                         
-
-
-
                         thumb.onmousedown = function (e) {
                             e.preventDefault();
 
@@ -7680,24 +7677,16 @@
                                     const angle = -60 + percent * 30;
                                     pointer.style.transform = `rotate(${angle}deg)`;
                                     if (readout) {
-                                    const raw = Math.round((1 - percent) * 14) + 1;
+                                        const raw = Math.round((1 - percent) * 14) + 1;
                                         readout.textContent = raw > 15 ? 'UP' : (raw < 1 ? 1 : raw);
-
-
                                     }
-                if (readout) {
-                }
-
-                                    // ✅ Update readout value
-                                    };
-
+                                    // Update readout value
+                            };
                         };
 
                         document.onmouseup = function () {
                             document.onmousemove = null;
                         };
-                    
-
                 };
                 
     </script>
@@ -9279,70 +9268,105 @@
         setupDocking('#auto-pilot-modal', { gap: 4 });  // 10px spacer
         </script>
 
-        // WS Scripts
-        <script>
-        (() => {
-        // 1) Connect
-        const ws = new WebSocket(
-            (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/ws"
-        );
 
-        ws.addEventListener("open", () => {
-            // Subscribe to the banks present in the page (unique list)
-            const banks = Array.from(new Set(Array.from(document.querySelectorAll(".relay")).map(el => Number(el.dataset.bank))));
-            ws.send(JSON.stringify({ type: "subscribe", banks }));
-        });
 
-        // 2) Send commands when Off/On is clicked (use your exact classes)
-        document.addEventListener("click", (e) => {
-            const btn = e.target.closest(".toggle-btn");
-            if (!btn) return;
 
-            const relay = btn.closest(".relay");
-            if (!relay) return;
 
-            const bank = Number(relay.dataset.bank);
-            const instance = Number(relay.dataset.instance);
-            const state = btn.classList.contains("on") ? 1 : 0;   // on → 1, off → 0
 
-            // White border (your "active") shows the *commanded* choice
-            relay.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
+        <!-- WebSocket -->
 
-            ws.send(JSON.stringify({ type: "relay.set", bank, instance, state }));
-        });
 
-        // 3) Handle feedback from ROS side → reflect actual state & volts
-        ws.addEventListener("message", (evt) => {
-            let msg; try { msg = JSON.parse(evt.data); } catch { return; }
 
-            // Actual on/off coming from the device (PGN 127501 → relayed as JSON)
-            if (msg.type === "relay.state") {
-            const relay = document.querySelector(
-                `.relay[data-bank="${msg.bank}"][data-instance="${msg.instance}"]`
-            );
-            if (!relay) return;
 
-            const onBtn  = relay.querySelector(".toggle-btn.on");
-            const offBtn = relay.querySelector(".toggle-btn.off");
+<script>
+  /* == 0) Connect to the real WebSocket server == */
+  // Dynamically determine the protocol and host to connect to the server
+  const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const wsUrl = `${wsProtocol}//${location.host}/ws`;
 
-            // Bold the *actual* state label (your request)
-            onBtn.style.fontWeight  = msg.state ? "bold" : "normal";
-            offBtn.style.fontWeight = msg.state ? "normal" : "bold";
-            }
+  console.log(`Attempting to connect to WebSocket at: ${wsUrl}`);
+  const ws = new WebSocket(wsUrl);
 
-            // Voltage (PGN 127508 → relayed as JSON)
-            if (msg.type === "relay.voltage") {
-            const relay = document.querySelector(
-                `.relay[data-bank="${msg.bank}"][data-instance="${msg.instance}"]`
-            );
-            if (!relay) return;
-            const display = relay.querySelector(".display-value");
-            if (display) display.textContent = (typeof msg.volts === "number" ? msg.volts.toFixed(1) : "--");
-            }
-        });
-        })();
-        </script>
+  // Make the connection globally accessible for other scripts or debugging
+  window.ws = ws;
+
+  ws.onopen = () => {
+    console.log('✅ WebSocket connection established.');
+    // You could also update a UI element here to show "Connected"
+  };
+
+  ws.onclose = () => {
+    console.log('❌ WebSocket connection closed.');
+    // Here you might want to show a "Disconnected" message in the UI
+  };
+
+  ws.onerror = (error) => {
+    console.error('WebSocket Error:', error);
+  };
+
+  /* == 1) Click handling (delegation) - This part remains the same == */
+  const root = document.querySelector('.battery-block');
+  root?.addEventListener('click', (e) => {
+    const btn = e.target.closest('button.toggle-btn, button.relay-btn');
+    if (!btn) return;
+    if (ws.readyState !== WebSocket.OPEN) { 
+      alert('WebSocket is not connected yet'); 
+      return; 
+    }
+
+    const block = btn.closest('.battery-button-block');
+    const bank  = Number(block?.dataset.bank);
+    const sw    = Number(block?.dataset.switch);
+    const state = Number(btn.dataset.state); // 0/1/2...
+
+    const payload = { type:'relay.set', bank, switch: sw, state };
+    ws.send(JSON.stringify(payload));
+    console.log('Sent:', payload);
+
+    // Optional: local visual mark in the clicked group
+    const group = btn.parentElement;
+    group?.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+
+  /* == 2) Incoming messages -> update UI - This part also remains the same == */
+  ws.onmessage = (evt) => {
+    let msg;
+    try { 
+      msg = JSON.parse(evt.data); 
+      console.log('Received:', msg);
+    } catch { 
+      console.warn('Received non-JSON message:', evt.data);
+      return; 
+    }
+
+    // a) relay.state: highlight proper button
+    if (msg.type === 'relay.state') {
+      const block = document.querySelector(`.battery-button-block[data-bank="${msg.bank}"][data-switch="${msg.switch}"]`);
+      if (block) {
+        const group = block.querySelector('.drawer-button-toggle, .drawer-button-relay');
+        if (group) {
+          group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+          const btn = group.querySelector(`button[data-state="${msg.state}"]`);
+          if (btn) btn.classList.add('active');
+        }
+      }
+    }
+
+    // b) relay.voltage: put volts into matching spans
+    if (msg.type === 'relay.voltage') {
+      document
+        .querySelectorAll(`.display-value[data-bank="${msg.bank}"][data-stud="${msg.stud}"]`)
+        .forEach(el => el.textContent = Number(msg.volts).toFixed(1));
+    }
+  };
+</script>
+
+<script>
+
+window.requestStatus = () => {}; // no-op
+</script>
+
 
 </body>
 </html>
