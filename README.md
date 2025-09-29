@@ -2,8 +2,11 @@
 
 ### Feature requests:
 
-* Save current screen state between reloads
-* Connect M20 functions
-* Connct Mavlink Functions
-* Connect Domentic Finctions
-* Connect OXE Functions
+- [ ] Save current screen state between reloads
+  - [ ] Assign unique numbers for tabs
+  - [ ] Create  ``` localStorage ``` instance for screen retention
+- [ ] Connect M20 functions
+- [X] Connect EGES Functions 
+- [ ] Connct Mavlink Functions
+- [ ] Connect Domentic Finctions
+- [ ] Connect OXE Functions
