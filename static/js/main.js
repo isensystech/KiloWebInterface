@@ -330,6 +330,43 @@
 
             // And run it once immediately on load
             updateUtcTime();
+
+            // --- Joystick Connection Indicator ---
+            const joystickIndicator = document.getElementById('joystick-indicator');
+            let hideJoystickTimeout;
+
+            function updateJoystickStatus() {
+                if (!joystickIndicator) return;
+
+                // Check if any gamepads are connected
+                const gamepads = navigator.getGamepads();
+                const isConnected = gamepads && Array.from(gamepads).some(g => g !== null);
+
+                if (isConnected) {
+                    joystickIndicator.classList.add('connected');
+                    joystickIndicator.classList.remove('disconnected');
+                    joystickIndicator.classList.remove('hidden');
+
+                    // Set a timer to hide the icon after 10 seconds
+                    clearTimeout(hideJoystickTimeout); // Clear any previous timer
+                    hideJoystickTimeout = setTimeout(() => {
+                        joystickIndicator.classList.add('hidden');
+                    }, 10000); // 10 seconds
+
+                } else {
+                    joystickIndicator.classList.add('disconnected');
+                    joystickIndicator.classList.remove('connected');
+                    joystickIndicator.classList.remove('hidden');
+                    clearTimeout(hideJoystickTimeout); // Cancel the hide timer if it was running
+                }
+            }
+
+            // Listen for gamepad connection events
+            window.addEventListener("gamepadconnected", updateJoystickStatus);
+            window.addEventListener("gamepaddisconnected", updateJoystickStatus);
+
+            // Also, check the status once on page load
+            updateJoystickStatus();
         });
 
         // Gear icon click — enter EDIT MODE
@@ -2586,4 +2623,6 @@
 
 
 
-window.requestStatus = () => {}; // no-op
+        window.requestStatus = () => {}; // no-op
+        
+        

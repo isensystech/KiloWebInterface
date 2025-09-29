@@ -4781,3 +4781,25 @@
     
     }
 
+        /* Gamepad Indicator Styles */
+        #joystick-indicator {
+            transition: all 0.5s ease;
+            opacity: 1;
+        }
+
+        #joystick-indicator.disconnected img {
+            /* Red color */
+            filter: invert(30%) sepia(90%) saturate(6000%) hue-rotate(350deg) brightness(90%) contrast(120%);
+        }
+
+        #joystick-indicator.connected img {
+            /* Green color */
+            filter: invert(50%) sepia(50%) saturate(5000%) hue-rotate(90deg) brightness(100%) contrast(100%);
+        }
+
+        #joystick-indicator.hidden {
+            opacity: 0;
+            width: 0;
+            margin: 0;
+            padding: 0;
+        }
