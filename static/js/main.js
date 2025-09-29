@@ -310,6 +310,26 @@
             
             // Request status every 500ms
             setInterval(requestStatus, 500);
+
+            // --- Live UTC Clock ---
+            const timeElement = document.getElementById('utc-time');
+
+            function updateUtcTime() {
+                if (!timeElement) return; // Stop if the element doesn't exist
+
+                const now = new Date();
+                const hours = String(now.getUTCHours()).padStart(2, '0');
+                const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+                const seconds = String(now.getUTCSeconds()).padStart(2, '0');
+
+                timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+            }
+
+            // Update the time every second
+            setInterval(updateUtcTime, 1000);
+
+            // And run it once immediately on load
+            updateUtcTime();
         });
 
         // Gear icon click — enter EDIT MODE
