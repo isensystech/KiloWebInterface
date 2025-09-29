@@ -1,4 +1,4 @@
-      /* SCRIPT // FOOTER and NAVIGATION   */
+      // SCRIPT // FOOTER and NAVIGATION   //
   
                // === Initial State ===
                 let currentScreen = 1;
@@ -70,7 +70,7 @@
 
  
 
-      /* SCRIPT // BUTTONS   */
+      // SCRIPT // BUTTONS
   
 
             // Safety cap functionality
@@ -290,7 +290,7 @@
 
  
 
-      /* SCRIPT // MODAL EDIT BUTTON   */
+      // SCRIPT // MODAL EDIT BUTTON   //
   
 
         // OPEN EDIT MODAL //
@@ -510,11 +510,11 @@
                             <div class="editor-modal-window ${mode === "timer" ? "timer-active" : ""}">
                                 <h2 class="editor-modal-title">Button edit</h2>
                                 <div class="editor-modal-content">
-                                      /* Preview button area   */
+                                      // Preview button area
                                     <div class="editor-preview-frame">
                                         <div class="editor-preview-content">
                                             <div class="editor-control-button preview-position" data-device="preview_button">
-                                                  /* Cap state container   */
+                                                  // Cap state container
                                                 <div class="editor-cap-container ${safetyCap ? "state-safety" : "state-no-cap"}" onclick="toggleCapState(this)">
                                                     <div class="editor-safety-cap">
                                                         <img src="${icon}" alt="Icon on cap" class="editor-cap-icon">
@@ -523,12 +523,12 @@
                                                     <div class="editor-safety-cap-hover"></div>
                                                 </div>
 
-                                                  /* Button with icon   */
+                                                  // Button with icon   //
                                                 <button class="editor-preview-button" data-id="0x999" data-bit="0">
                                                     <img src="${icon}" alt="Icon" class="editor-button-icon icon-selected">
                                                 </button>
 
-                                                  /* Label below button   */
+                                                  // Label below button   //
                                                 <div class="editor-button-label edited" contenteditable="true">${label}</div>
                                             </div>
                                         </div>
@@ -536,7 +536,7 @@
 
                             
 
-                                  /* Change Preview Button Icon   */
+                                  // Change Preview Button Icon   //
 
                                         <div class="editor-icon-picker-modal" id="iconPicker">
                                             <div class="editor-icon-grid">
@@ -582,7 +582,7 @@
                                         </div>
 
 
-                                  /* Function button area   */
+                                  // Function button area   //
                                         <div class="editor-options-row">
                                             <div class="editor-option-wrapper" data-mode="disabled" onclick="selectMode(this)">
                                                 <div class="editor-option-block">
@@ -614,7 +614,7 @@
                                         </div>
 
                                         
-                                          /* Timer value box BELOW all buttons   */
+                                          // Timer value box BELOW all buttons   //
                                         <div class="editor-value-box-wrapper">
                                             <div class="editor-value-box">
                                                 <div class="editor-arrow-controls">
@@ -628,17 +628,17 @@
 
 
 
-                                          /* input output value   */
+                                          // input output value   //
                                         <div class="editor-custom-input-row">
                                         <label class="editor-custom-label">CAN</label>
 
-                                          /* Первый блок: 0x 3 numbers   */
+                                          // Первый блок: 0x 3 numbers   //
                                             <div class="editor-prefixed-wrapper bn-wrapper">
                                                 <span class="editor-prefix">0x</span>
                                                 <input type="text" maxlength="3" class="editor-prefixed-input" placeholder="###">
                                             </div>
 
-                                          /* Второй блок: длинное значение   */
+                                          // Второй блок: длинное значение   //
                                             <div class="editor-prefixed-wrapper hex-wrapper">
                                                 <input type="text" maxlength="23" class="editor-custom-input long-input" placeholder="00 00 00 00 00 00 00 00">
                                             </div>
@@ -661,7 +661,7 @@
 
 
 
-                                          /* Cancel Apply buttons   */
+                                          // Cancel Apply buttons   //
                                         <div class="editor-modal-actions">
                                             <button class="editor-cancel-button">Cancel</button>
                                             <button class="editor-apply-button">Apply</button>
@@ -872,7 +872,7 @@
 
  
 
-      /* SCRIPT // MODAL TRIM   */
+      // SCRIPT // MODAL TRIM   //
   
 
                 function openTrimModal() {
@@ -944,7 +944,7 @@
 
 
 
-                /* SLIDER */
+                // SLIDER
                 const thumb = document.getElementById('trim-thumb');
                 const fill = document.getElementById('trim-fill');
                 const pointer = document.querySelector('.trim-pointer-img');
@@ -985,7 +985,7 @@
 
 
 
-/* SLIDER button */
+// SLIDER button //
 
                 window.onload = function () {
                         const thumb = document.getElementById('trim-thumb');
@@ -1038,7 +1038,7 @@
                 
  
 
-      /* SCRIPT // MODAL THROTTLE   */
+      // SCRIPT // MODAL THROTTLE
   
     document.addEventListener("DOMContentLoaded", () => {
         const gearTrack = document.querySelector(".gear-track");
@@ -1141,13 +1141,13 @@
     
  
 
-      /* BOAT // Rudder & Trim GAUGE row   */
+      // BOAT // Rudder & Trim GAUGE row   //
   
         // BOAT // Rudder & Trim data bindings
         // - Non-invasive bridge: reads existing DOM state and mirrors it to the new row.
         // - No changes to existing logic elsewhere.
 
-        /* eslint-disable no-undef */
+        // eslint-disable no-undef //
         (function () {
         // Cache DOM nodes once
         const rudderEl   = document.getElementById('rudder-angle-value');
@@ -1155,19 +1155,19 @@
         const rudderWrap = document.getElementById('boat-rudder-stat');
         const trimWrap   = document.getElementById('boat-trim-stat');
 
-        /** Format number for display (integer, keep sign) */
+        // Format number for display (integer, keep sign)
         function fmtInt(n) {
             const v = Math.round(Number(n) || 0);
             return v.toString();
         }
 
-        /** Brief visual tick to indicate fresh data */
+        // Brief visual tick to indicate fresh data
         function blip(el) {
             el && el.classList.add('updating');
             setTimeout(() => el && el.classList.remove('updating'), 120);
         }
 
-        /** Public: update Rudder Angle in degrees */
+        // Public: update Rudder Angle in degrees
         window.updateRudderAngle = function(angleDeg) {
             if (rudderEl) {
             rudderEl.textContent = fmtInt(angleDeg);
@@ -1175,7 +1175,7 @@
             }
         };
 
-        /** Public: update Trim in degrees */
+        // Public: update Trim in degrees //
         window.updateTrim = function(trimDeg) {
             if (trimEl) {
             trimEl.textContent = fmtInt(trimDeg);
@@ -1198,7 +1198,7 @@
         let lastRudderDeg = null;
         let lastTrimDeg   = null;
 
-        /** Read current rudder angle from DOM without touching existing logic */
+        // Read current rudder angle from DOM without touching existing logic //
         function readRudderDeg() {
             // 1) Prefer explicit input value if present
             if (rudderInput && rudderInput.value !== '') {
@@ -1220,7 +1220,7 @@
             return null;
         }
 
-        /** Read current trim angle from existing readout ".trim-readout" */
+        // Read current trim angle from existing readout ".trim-readout" //
         function readTrimDeg() {
             if (!trimReadout) return null;
             const txt = (trimReadout.textContent || '').trim();
@@ -1230,7 +1230,7 @@
             return null;
         }
 
-        /** Push to public updaters only when value actually changed */
+        // Push to public updaters only when value actually changed //
         function syncOnce() {
             const r = readRudderDeg();
             if (r !== null && r !== lastRudderDeg) {
@@ -1272,7 +1272,7 @@
         })();
  
 
-      /* SCRIPT // MODAL RULE RUDDER ANGLE INDICATOR   */
+      // SCRIPT // MODAL RULE RUDDER ANGLE INDICATOR   //
   
             function setRudderAngle(angle) {
             const pointer = document.getElementById("rudder-pointer");
@@ -1286,10 +1286,10 @@
             }
 
 
-            /**
-             * Reads the angle from the input field and applies it to the pointer.
-             * Ensures the angle stays within the allowed range (-35 to +35).
-             */
+            //
+            // Reads the angle from the input field and applies it to the pointer.
+            // Ensures the angle stays within the allowed range (-35 to +35).
+             //
             function updateRudderFromInput() {
             const input = document.getElementById("rudder-input");
             let angle = parseInt(input.value, 10);
@@ -1301,9 +1301,8 @@
             setRudderAngle(angle);
             }
 
-            /**
-             * Automatically initialize the pointer when the page loads.
-             */
+            // Automatically initialize the pointer when the page loads //
+            
             window.addEventListener("DOMContentLoaded", () => {
             updateRudderFromInput();
             });
@@ -1312,9 +1311,9 @@
 
  
 
-      /* SCRIPT // Logitech F310   */
+      // SCRIPT // Logitech F310   //
 
-              /* Left/Right Screen   */
+              // Left/Right Screen   //
           
                 let screenGamepadIndex = null;
                 let wasPressedLeft = false;
@@ -1358,7 +1357,7 @@
                 pollScreenNavigation();
          
 
-              /* Trim Modal   */
+              // Trim Modal   //
           
             let trimGamepadIndex = null;
             let isTrimOpen = false;
@@ -1437,7 +1436,7 @@
             pollTrimControl();
          
                         
-              /* Rudder Angle   */
+              // Rudder Angle  //
           
             let rudderGamepadIndex = null;
             let rudderAngle = 0; // value in degrees, -35 to +35
@@ -1500,8 +1499,8 @@
             }
          
 
-              /* Throttle   */
-              /* SCRIPT // MODAL THROTTLE   */
+              // Throttle  //
+              // SCRIPT // MODAL THROTTLE  //
           
             document.addEventListener("DOMContentLoaded", () => {
             const gearTrack = document.querySelector(".gear-track");
@@ -1764,7 +1763,7 @@
             });
          
 
-      /* MODAL GAUGES PANEL   */
+      // MODAL GAUGES PANEL   */
   
     // === Safety block smart placement ===
     // Moves safety-block to the right of gauges-panel if it overlaps the footer.
@@ -1827,7 +1826,7 @@
 
 
 
-      /* MODAL DRAWER PANEL   */
+      // MODAL DRAWER PANEL   //
   
     // Drawer tabs switching (data-tab = 1..8)
         (function () {
@@ -1874,7 +1873,7 @@
         })();
  
 
-          /* TAB 1: Boat Control   */
+          // TAB 1: Boat Control  //
       
                 // Communication toggle: updates display from button data attributes
                     document.addEventListener('DOMContentLoaded', () => {
@@ -1905,7 +1904,7 @@
                     });
 
 
-            /* === SOLO toggle styles (scoped) === */
+            // === SOLO toggle styles (scoped) === //
                 // JS scoped only to .solo-toggle to avoid collisions with existing handlers
                 document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.solo-toggle').forEach(group => {
@@ -1922,7 +1921,7 @@
                 });
 
 
-            /* === SOLO3 toggle styles (scoped) === */
+            // === SOLO3 toggle styles (scoped) === //
                 // Scoped JS only for .solo3-toggle
                 document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.solo3-toggle').forEach(group => {
@@ -1940,7 +1939,7 @@
                 });
                 });
 
-            /* === Pump === */
+            // === Pump === //
                 document.addEventListener('DOMContentLoaded', () => {
                     document.querySelectorAll('.half-relay').forEach(group => {
                     const autoBtn = group.querySelector('.relay-btn.auto');
@@ -1993,7 +1992,7 @@
 
      
 
-          /* TAB 2: Payload Control   */
+          // TAB 2: Payload Control  //
       
             // === Control of drawer display state ===
             // All comments in English.
@@ -2022,7 +2021,7 @@
      
 
 
-          /* TAB 4: Battery Status   */
+          // TAB 4: Battery Status   //
       
             document.addEventListener('DOMContentLoaded', () => {
             const btn = document.getElementById('ignitionBtn');
@@ -2047,7 +2046,7 @@
             });
      
 
-          /* TAB 4: ENGINE. House Relay   */
+          // TAB 4: ENGINE. House Relay   //
       
         // 3-way relay control: Off / Auto / On
         document.addEventListener('DOMContentLoaded', () => {
@@ -2126,14 +2125,14 @@
         });
      
 
-          /* TAB 4: ENGINE. ANIMATION LOAD   */
+          // TAB 4: ENGINE. ANIMATION LOAD   //
       
         // All comments in English.
 
-        /** Get loader element once */
+        // Get loader element once */
         const getStartLoaderEl = () => document.getElementById('start-loader');
 
-        /** Show overlay with optional auto-hide */
+        // Show overlay with optional auto-hide //
         function showStartLoader(durationMs = 1200){
         // guard: the element must exist
         const el = getStartLoaderEl();
@@ -2152,7 +2151,7 @@
         el._hideTimer = setTimeout(() => hideStartLoader(), durationMs);
         }
 
-        /** Hide overlay */
+        // Hide overlay //
         function hideStartLoader(){
         const el = getStartLoaderEl();
         if(!el) return;
@@ -2160,7 +2159,7 @@
         el.style.pointerEvents = 'none';
         }
 
-        /** Hook into existing ignition half buttons */
+        // Hook into existing ignition half buttons //
         document.addEventListener('DOMContentLoaded', () => {
         const btn = document.getElementById('ignitionBtn');
         if(!btn) return;
@@ -2246,9 +2245,9 @@
         })();
      
 
-          /* TAB 4: BATTERY LINES   */
+          // TAB 4: BATTERY LINES   //
 
-          /* TAB 5: Mission Pleer   */
+          // TAB 5: Mission Pleer   //
       
 
             // === Minimal timeline logic: evenly space waypoints and move the yellow cursor ===
@@ -2334,7 +2333,7 @@
 
      
 
-          /* TAB 6: Safety   */
+          // TAB 6: Safety   //
       
             document.addEventListener("DOMContentLoaded", () => {
             const bigButtons = document.querySelectorAll(".big-drawer-button");
@@ -2362,7 +2361,7 @@
             });
      
 
-          /* TAB 8: Sensors   */
+          // TAB 8: Sensors   //
       
             document.addEventListener("DOMContentLoaded", () => {
             const toggles = document.querySelectorAll(".drawer-button-toggle");
@@ -2390,7 +2389,7 @@
 
 
 
-      /* MODAL ACTIVE HELM PANEL   */
+      // MODAL ACTIVE HELM PANEL  //
       
         document.addEventListener("DOMContentLoaded", () => {
             const toggleBtn = document.getElementById("helm-toggle");                 // The main button that opens the modal
@@ -2464,7 +2463,7 @@
         });
      
 
-      /* MODAL AUTO PILOT PANEL   */
+      // MODAL AUTO PILOT PANEL   //
       
         // Auto-Pilot modal wiring (fixed for #auto-pilot-modal)
         document.addEventListener('DOMContentLoaded', () => {
@@ -2500,7 +2499,7 @@
      
 
 
-      /* Close MODAL PANEL   */
+      // Close MODAL PANEL   //
       
             // === Click-outside & Esc close for HELM and AUTOPILOT modals ===
             document.addEventListener("DOMContentLoaded", () => {
@@ -2546,7 +2545,7 @@
             });
      
 
-      /* MODAL PANEL DOCKER  */
+      // MODAL PANEL DOCKER  //
       
         // Dock a modal flush to .drawer-panel and align bottoms
         function dockModalToDrawer(modal, opts = {}){
