@@ -77,20 +77,29 @@ Add a .env.example to the repo if you standardize these.
 
 ### Recommended Dev Conventions
 * Use semantic class names for toggles and indicators (.toggle--armed, .indicator--fault).
-* Keep all network calls centralized in a single JS module (e.g., static/js/api.js).
+* Keep all network calls centralized in a single JS module (e.g., ```static/js/api.js```).
 * Provide mock backends for UI work (/mock/* JSON routes or an in-browser “demo mode”).
 
 ## Project Structure
 ```
 KiloWebInterface/
-├─ app.py              # Minimal Python entry point to serve UI
-├─ static/             # Front-end (HTML/CSS/JS, icons, fonts)
+├─ static/
+│  ├─ css/
+│  │  ├─ main.css          # Base layout & components
+│  │  └─ theme.css         # Dark theme / variables
+│  ├─ images/              # UI icons & assets
+│  └─ js/
+│     ├─ main.js           # UI logic, handlers, state
+│     └─ websocket.js      # WS client (telemetry/control wiring point)
+├─ static/index.html       # Dashboard HTML shell
+├─ app.py                  # Minimal server to host static UI
 ├─ .gitignore
 └─ README.md
 
+
 ```
 ### Roadmap
-- [ ] Persist tab/screen state across reloads (localStorage)
+- [ ] Persist tab/screen state across reloads (```localStorage```)
 - [ ] Wire M20 control surface to backend
 - [x] Wire EGES control surface to backend
 - [ ] Add MAVLink telemetry & basic commands (arm/disarm, mode, go-to)
