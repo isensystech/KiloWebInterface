@@ -1964,34 +1964,6 @@ document.addEventListener('DOMContentLoaded', () => {
  
 
           // TAB 1: Boat Control  //
-      
-                // Communication toggle: updates display from button data attributes
-                    document.addEventListener('DOMContentLoaded', () => {
-                    document.querySelectorAll('.comm-block').forEach(block => {
-                        const displaySignal = block.querySelector('[data-key="signal"]');
-                        const displayDbm    = block.querySelector('[data-key="dbm"]');
-                        const buttons       = block.querySelectorAll('.comm-toggle .comm-btn');
-
-                        // helper: apply values from a button
-                        const applyFromBtn = (btn) => {
-                        if (displaySignal) displaySignal.textContent = btn.dataset.signal ?? '--';
-                        if (displayDbm)    displayDbm.textContent    = btn.dataset.dbm ?? '--';
-                        };
-
-                        // init: set from the pre-active button
-                        const active = block.querySelector('.comm-btn.active') || buttons[0];
-                        if (active) applyFromBtn(active);
-
-                        // click handling
-                        block.querySelector('.comm-toggle').addEventListener('click', (e) => {
-                        const btn = e.target.closest('.comm-btn');
-                        if (!btn) return;
-                        buttons.forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        applyFromBtn(btn);
-                        });
-                    });
-                    });
 
 
             // === SOLO toggle styles (scoped) === //
@@ -2451,7 +2423,37 @@ document.addEventListener('DOMContentLoaded', () => {
             });
      
 
-          // TAB 8: Sensors   //
+          // TAB 8: Communication   //
+
+                
+                // Communication toggle: updates display from button data attributes
+                    document.addEventListener('DOMContentLoaded', () => {
+                    document.querySelectorAll('.comm-block').forEach(block => {
+                        const displaySignal = block.querySelector('[data-key="signal"]');
+                        const displayDbm    = block.querySelector('[data-key="dbm"]');
+                        const buttons       = block.querySelectorAll('.comm-toggle .comm-btn');
+
+                        // helper: apply values from a button
+                        const applyFromBtn = (btn) => {
+                        if (displaySignal) displaySignal.textContent = btn.dataset.signal ?? '--';
+                        if (displayDbm)    displayDbm.textContent    = btn.dataset.dbm ?? '--';
+                        };
+
+                        // init: set from the pre-active button
+                        const active = block.querySelector('.comm-btn.active') || buttons[0];
+                        if (active) applyFromBtn(active);
+
+                        // click handling
+                        block.querySelector('.comm-toggle').addEventListener('click', (e) => {
+                        const btn = e.target.closest('.comm-btn');
+                        if (!btn) return;
+                        buttons.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        applyFromBtn(btn);
+                        });
+                    });
+                    });
+
       
             document.addEventListener("DOMContentLoaded", () => {
             const toggles = document.querySelectorAll(".drawer-button-toggle");
