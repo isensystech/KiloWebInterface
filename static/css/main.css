@@ -1,8 +1,126 @@
+/* Testing git. Good Test Kate */
+
+    :root{
+    /* Sans stack with robust fallbacks */
+    --font-sans: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
+    --font-mono: "Roboto Mono", "Consolas", "SFMono-Regular", "Menlo", "ui-monospace", "monospace";
+    /* H2 token: weight size/line-height family */
+    /* clamp() keeps it responsive across viewports */
+    --c-h: rgb(255, 0, 200);
+    --c-b: #000000;
+
+    /* TITLE Fonts */
+    --type-h2: 700 clamp(18px, 2.2vw, 28px)/1.2 var(--font-sans);
+    --type-h3: 800 18px/1.25 var(--font-sans); 
+    --type-h4: 500 16px/1.3 var(--font-sans); 
+
+    /* BODY Fonts */
+    --type-body-regular: 400 14px/1.35 var(--font-sans); 
+    --type-body-bold: 700 14px/1.35 var(--font-sans); 
+
+    /* CAPTION Small Fonts */
+    --type-caption-regular:  400 12px/1.3  var(--font-sans);
+    --type-caption-bold:  700 12px/1.3  var(--font-sans);
+
+    /* Display Fonts */
+    --type-display-mono-regular: 400 16px/1.35 var(--font-mono);
+    --type-display-mono-bold:    700 16px/1.35 var(--font-mono);
+    
+    /* INFO BAR Fonts */
+    --type-caption-mono-regular:   400 14px/1.30 var(--font-mono);
+    --type-caption-mono-bold:      700 14px/1.30 var(--font-mono);
 
 
+
+    /* === Palette === */
+
+    /* Active font: button-text-active, icon-active, */
+    --color-white: #ffffff;
+
+    /* Title font */
+    --color-light: /* rgb(255, 0, 200);*/  #dadada; 
+    --text-inactive: #606060;
+
+    --button-active: #707070;
+    --button-inactive: #404040;
+
+
+    /* Drawer active background, Drawer inactive icons */
+    --color-drawer-bg: #303030;
+
+    /* Inactive drawer */
+    --color-drawer-bg: #252525;
+
+    /* Main background */
+    --color-bg: #202020;
+
+    /* Display, button strips */
+    --color-black: black;
+
+
+    /* KILL ALL Aactive, Attention Icons, Throttle fill */
+    --active-yellow: #FFBD0A;
     
-    
-    /* Testing git. Good Test Kate */
+    /* Payload buttons, KILL ALL Inactive */
+    --inactive-yellow: #9a7000;
+
+    --gauge-red: #D0021B;
+    --gauge-green: #009100;
+    --gauge-blue: #1f8fff;
+    --color-test: rgb(255, 0, 200); 
+    } 
+
+
+
+/* DISPLAY FONTS styles */
+
+    .display-value, 
+    .display-unit, 
+    .display-value-small, 
+    .display-unit-small { 
+    letter-spacing: 0.4px; /* mono tracking tech look */
+    } 
+
+    .display-label { font: var(--type-body-regular); 
+    color: var(--color-light);
+    }
+    .display-value{
+    /* mono 16px bold */
+    font: var(--type-display-mono-bold);
+    color: var(--color-white);
+    }
+    .display-unit{
+    /* mono 16px regular */
+    font: var(--type-display-mono-regular);
+    color: var(--color-light);
+    }
+
+    .display-value-inactive{
+    /* mono 16px bold */
+    font: var(--type-display-mono-bold);
+    color: var(--text-inactive);
+    }
+    .display-unit-inactive{
+    /* mono 16px regular */
+    font: var(--type-display-mono-regular);
+    color: var(--text-inactive);
+    }
+
+    .display-value-small { font: var(--type-caption-mono-bold);   }
+    .display-unit-small  { font: var(--type-caption-mono-regular); }
+    .display-label-small { font: var(--type-caption-regular); 
+    color: var(--color-light);
+    }
+
+    .button-label {
+        font: var(--type-caption-mono-regular);
+        color: var(--color-light);
+    }
+
+
+
+
+
 
     
     /* Reset and base styles */
@@ -11,11 +129,11 @@
             padding: 0;
             box-sizing: border-box;
 
-            /* ban on allocation 
+            /* ban on allocation */
             user-select: none; 			
             -webkit-user-select: none;
             -moz-user-select: none;
-            -ms-user-select: none;*/
+            -ms-user-select: none;
 
         }
         body {
@@ -71,142 +189,57 @@
         }
 
 
-    :root{
-    /* Sans stack with robust fallbacks */
-    --font-sans: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
-    --font-mono: "Roboto Mono", Consolas, SFMono-Regular, Menlo, ui-monospace, monospace;
-    /* H2 token: weight size/line-height family */
-    /* clamp() keeps it responsive across viewports */
-    --c-h: rgb(255, 0, 200);
-    --c-b: #000000;
-
-    /* TITLE Fonts */
-    --type-h2: 700 clamp(18px, 2.2vw, 28px)/1.2 var(--font-sans);
-    --type-h3: 800 18px/1.25 var(--font-sans); 
-    --type-h4: 500 16px/1.3 var(--font-sans); 
-
-    /* BODY Fonts */
-    --type-body-regular: 400 14px/1.35 var (--font-sans); 
-    --type-body-bold: 700 14px/1.35 var(--font-sans); 
-
-    /* CAPTION Small Fonts */
-    --type-caption-regular:  400 12px/1.3  var(--font-sans);
-    --type-caption-bold:  700 12px/1.3  var(--font-sans);
-
-
-    /* Display Fonts */
-    --type-display-mono-regular: 400 14px/1.35 var(--font-mono);
-    --type-display-mono-normal:  500 14px/1.35 var(--font-mono);
-    --type-display-mono-bold:    700 14px/1.35 var(--font-mono);
-    
-    /* INFO BAR Fonts */
-    --type-caption-mono-regular:   400 13px/1.30 var(--font-mono);
-    --type-display-mono-normal:    500 13px/1.35 var(--font-mono);
-    --type-caption-mono-bold:      700 13px/1.30 var(--font-mono);
-
-
-
-        /* === Palette === */
-
-
-    /* Active font: button-text-active, icon-active, */
-    --color-white: #ffffff;
-
-    /* Title font */
-    --color-light: rgb(255, 0, 200); /* #909090; */
-
-    --button-text-inactive: #606060;
-    --button-active: #707070;
-    --button-inactive: #404040;
 
 
 
 
-    /* Drawer active background, Drawer inactive icons */
-    --color-drawer-bg: #303030;
-
-    /* Inactive drawer */
-    --color-drawer-bg: #252525;
-
-    /* Main background */
-    --color-bg: #202020;
-
-    /* Display, button strips */
-    --color-black: black;
-
-
-
-
-    /* KILL ALL Aactive, Attention Icons, Throttle fill */
-    --active-yellow: #FFBD0A;
-    
-    /* Payload buttons, KILL ALL Inactive */
-    --inactive-yellow: #9a7000;
-
-
-    --gauge-red: #be000a;
-    --gauge-green: #009100;
-    --gauge-blue: #1f8fff;
-
-
-    --color-test: rgb(255, 0, 200); 
-
-    } 
-
-
-        .info-bar {
-        display: flex;               /* arrange items in a row */
-        justify-content: space-between; /* spread elements across the width */
-        align-items: center;          /* vertical centering */
-        padding: 8px 16px;
-        background-color: var(--color-bg);    /* dark background */
-        color: var(--color-white);               /* white text */
-        font-size: 14px;
-        border-bottom: 1px solid var(--color-bg); /* subtle separator */
-        }
-
-        /* Put icon + text on one line and center them vertically */
-        .info-item {
-        display: inline-flex;     /* single row */
-        align-items: center;      /* vertical centering */
-        gap: 6px;                 /* spacing between icon and text */
-        height: 20px;             /* = icon box height */
-        white-space: nowrap;      /* prevent wrapping that causes jumps */
-        }
         
-        
-        /* Size and center the SVG icon */
-        .info-icon {
-        display: inline-flex;      /* keep it inline with text */
-        align-items: center;       /* vertical centering */
-        justify-content: center;   /* horizontal centering */
-        width: 22px;               /* tweak if you need larger icon */
-        height: 22px;
-        }
 
-        .info-icon img {
-        width: 100%;               /* scale SVG to the box */
-        height: 100%;
-        display: block;            /* remove inline gaps */
-        }
+        /* INFO BAR */
 
-        /* Unit label (e.g., "GPS") */
-        .info-unit {
-        /* small caps look */
-        font-family: Inter, system-ui, sans-serif;
-        font-weight: 600;
-        font-size: 14px;
-        letter-spacing: 0.6px;         /* tech look */
-        color: #757575;              /* muted gray */
-        }
+/* Info bar layout */
+.info-bar{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:8px 16px;
+  background:var(--color-bg); color:var(--color-white);
+  border-bottom:1px solid var(--color-bg);
+}
 
-        /* Value text (e.g., "Locked") */
-        .info-value {
-        font-family: Inter, system-ui, sans-serif;
-        font-weight: 600;
-        font-size: 14px;
-        color: #909090;  /* brighter than unit */
-        }
+/* Item: icon + text inline */
+.info-item{ 
+    display:inline-flex; 
+    align-items:center; 
+    gap:6px; height:22px; 
+    white-space:nowrap; 
+}
+
+/* Icon box */
+.info-icon{ 
+    display:inline-flex; 
+    align-items:center; 
+    justify-content:center; 
+    width:22px; 
+    height:22px; }
+
+.info-icon img{ 
+    width:100%; 
+    height:100%; 
+    display:block; }
+
+/* Unit uses mono regular token + palette */
+.info-unit{
+  /* mono regular, small */
+  font: var(--type-caption-mono-regular);
+  color: var(--color-light);
+}
+
+/* Value uses mono bold token + palette */
+.info-value{
+  /* mono bold, small */
+  font: var(--type-caption-mono-bold);
+  color: var(--color-light);
+}
+
 
 
         /* ALARM ICON */
@@ -2459,11 +2492,6 @@
 
     /* MODAL GAUGES PANEL */
 
-
-                       .gauge-label { font: var(--type-body-regular); }
-            .gauge-value { font: var(--type-display-mono-bold);   }
-            .gauge-unit  { font: var(--type-display-mono-regular); }
-
             .gauge-icon {
             width: 24px;
             height: 24px;
@@ -2529,327 +2557,39 @@
             overflow: hidden;
             }
 
-            /* white fill; width is driven by --pct on a parent */
+           /* Mini-gauge fill uses a token instead of hardcoded white */
             .mini-gauge-fill {
-            width: var(--pct, 0%);     /* fallback to 0% if --pct is missing */
+            width: var(--pct, 0%);
             height: 100%;
-            background: #ffffff;
+            background: var(--bar-color, #ffffff); /* read token; white as fallback */
             border-radius: 3px;
             transition: width 180ms ease;
             }
 
-            /* CSS-only switch: when safety moves to the right, fix parent height */
-            @media (max-height: 1024px) {
-            .gauges-button-panel {
-                height: 736px;                 /* parent becomes 736px tall */
-                overflow: visible;             /* allow the side block to overflow */
-            }
-
-            .gauges-button-panel .safety-block {
-                position: absolute;
-                left: calc(100% + 12px);       /* gap to the right of the panel */
-                bottom: 0px;                 /* align bottoms: 896 - 736 = 160 */
-                margin-top: 0;
-                width: 128px;
-            }
-            }
-
-
-            .gauge-label { font: var(--type-body-regular); }
-            .gauge-value { font: var(--type-display-mono-bold);   }
-            .gauge-unit  { font: var(--type-display-mono-regular); }
-
-            .gauge-icon {
-            width: 24px;
-            height: 24px;
-            opacity: 1;
-            filter: none;
-            mix-blend-mode: normal;
-            margin: 4px;
-            }
-
-            .gauges-button-panel {
-            display: flex;            /* vertical stack */
-            flex-direction: column;
-            align-items: stretch;     /* children take full width */
-            position: absolute;
-            top: 50%;
-            left: 3vh;
-            transform: translateY(-50%);
-            z-index: 999;
-            width: 128px;
-            height: 896px;            /* total column height */
-            }
-
-            .gauges-panel {
-            position: static;
-            z-index: 999;
-            width: 128px;
-            height: 736px;
-            background-color: black;
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
-            }
-
-            .gauge-block {
-            width: 100%;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1px;
-            }
-
-
-            /* When safety sits to the right of the gauges panel */
-            .gauges-button-panel.side-safety .safety-block {
-            /* width stays the same; position will be set inline by JS */
-            width: 128px;
-            }
-            .gauges-button-panel.side-safety .kill-all-btn {
-            width: 100%;
-            }
-
-
-            .mini-gauge {
-            /* base track visuals */
-            display: block;            /* no flex → fill starts at the left edge */
-            width: 100%;
-            max-width: 104px;
-            height: 2px;
-            background: #757575;
-            border-radius: 3px;
-            overflow: hidden;
-            }
-
-            /* white fill; width is driven by --pct on a parent */
-            .mini-gauge-fill {
-            width: var(--pct, 0%);     /* fallback to 0% if --pct is missing */
-            height: 100%;
-            background: #ffffff;
-            border-radius: 3px;
-            transition: width 180ms ease;
-            }
-
-            /* CSS-only switch: when safety moves to the right, fix parent height */
-            @media (max-height: 1024px) {
-            .gauges-button-panel {
-                height: 736px;                 /* parent becomes 736px tall */
-                overflow: visible;             /* allow the side block to overflow */
-            }
-
-            .gauges-button-panel .safety-block {
-                position: absolute;
-                left: calc(100% + 12px);       /* gap to the right of the panel */
-                bottom: 0px;                 /* align bottoms: 896 - 736 = 160 */
-                margin-top: 0;
-                width: 128px;
-            }
+            /* State tokens for engine temperature */
+            #engine-temperature-gauge.is-cold { --bar-color: var(--gauge-blue); }
+            #engine-temperature-gauge.is-hot  { --bar-color: var(--gauge-red); }
             
+            /* Fuel gauge critical state drives the token used by .mini-gauge-fill */
+            #fuel-gauge.is-low { --bar-color: var(--gauge-red); }
+
+
+
+            /* CSS-only switch: when safety moves to the right, fix parent height */
+            @media (max-height: 1024px) {
+            .gauges-button-panel {
+                height: 736px;                 /* parent becomes 736px tall */
+                overflow: visible;             /* allow the side block to overflow */
             }
 
-
-            /* ===== Engine Temperature gauge block ===== */
-
-            .engine-temperature-gauge {
-            /* --pct controls fill width (0..100) */
-            --pct: 20%;
-            /* --bar-color controls the fill color; default is white */
-            --bar-color: #ffffff;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
+            .gauges-button-panel .safety-block {
+                position: absolute;
+                left: calc(100% + 12px);       /* gap to the right of the panel */
+                bottom: 0px;                 /* align bottoms: 896 - 736 = 160 */
+                margin-top: 0;
+                width: 128px;
             }
-
-            .engine-temperature-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
             }
-
-            .engine-temperature-gauge .gauge-line {
-            display: inline-flex;
-            align-items: baseline;
-            gap: 4px;
-            color: #ffffff;
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            }
-
-            .engine-temperature-gauge .value-lg {
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-            .engine-temperature-gauge .unit-lg {
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 400;
-            color: #757575;
-            }
-
-            /* Mini bar */
-            .engine-temperature-gauge .mini-gauge {
-            width: 100%;
-            max-width: 104px;
-            height: 2px;
-            background: #757575;     /* base track */
-            border-radius: 3px;
-            overflow: hidden;         /* clip inner fill */
-            }
-
-            .engine-temperature-gauge .mini-gauge-fill {
-            width: var(--pct);
-            height: 100%;
-            background: var(--bar-color);
-            border-radius: 3px;       /* rounded end near 100% */
-            transition: width 180ms ease, background-color 180ms ease;
-            }
-
-            /* Optional state colors (use one of these classes on the root block) */
-            .engine-temperature-gauge.cold  { --bar-color: #0059FF; } /* cool blue */
-            .engine-temperature-gauge.warm  { --bar-color: #FFBD0A; } /* amber */
-            .engine-temperature-gauge.hot   { --bar-color: #D0021B; } /* red */
-
-
-          /* Battery Voltage Gauge block */
-
-            .battery-voltage-gauge {
-            --pct: 0%;               /* controls fill width */
-            --bar-color: #ffffff;     /* default bar color */
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            }
-
-            .battery-voltage-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
-            /* Text line: muted label + strong value + muted unit */
-            .battery-voltage-gauge .battery-line {
-            display: inline-flex;
-            align-items: baseline;
-            gap: 2px;
-            text-align: center;
-            }
-
-            .label-muted,
-            .unit-muted {
-            color: #757575;
-            font-family: Inter, sans-serif;
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 500;
-            }
-
-            .value-strong {
-            color: #ffffff;
-            font-family: Inter, sans-serif;
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-
-            /* Mini bar (same logic as RPM/Speed) */
-            .battery-voltage-gauge .mini-gauge {
-            width: 100%;
-            max-width: 104px;
-            height: 2px;
-            background: #757575;      /* muted gray track */
-            border-radius: 3px;
-            overflow: hidden;
-            }
-
-            .battery-voltage-gauge .mini-gauge-fill {
-            width: var(--pct);
-            height: 100%;
-            background: var(--bar-color);
-            border-radius: 3px;
-            transition: width 180ms ease;
-            }
-
-
-             /* Fuel Gauge block    */
-
-            .fuel-gauge{
-            /* --pct controls the white fill width (0..100%) */
-            --pct: 0%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px; /* vertical spacing between rows */
-            }
-
-            .fuel-gauge .gauge-icon{
-            width: 24px;
-            height: 24px;
-            }
-
-            /* Top and bottom text rows (values + units) */
-            .fuel-gauge .gauge-line{
-            display: inline-flex;
-            align-items: baseline;
-            gap: 4px;
-            text-align: center;
-            justify-content: center;
-            color: #ffffff;
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            }
-
-            .fuel-gauge .value-lg{
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-            .fuel-gauge .unit-lg{
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 400;
-            color: #757575;
-            }
-
-            /* Mini bar like Speed/RPM */
-            .fuel-gauge .mini-gauge{
-            width: 100%;
-            max-width: 104px;      /* keep consistent with other gauges */
-            height: 2px;
-            background: #757575;   /* base track */
-            border-radius: 3px;
-            overflow: hidden;
-            }
-            .fuel-gauge .mini-gauge-fill{
-            width: var(--pct);     /* e.g., 37% */
-            height: 100%;
-            background: #ffffff;   /* fill color */
-            border-radius: 3px;
-            transition: width 180ms ease;
-            }
-
-            /* Burn rate row styling (uses Inter per your mock for mixed text) */
-            .fuel-gauge .gauge-line--rate{
-            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            color: #757575;        /* muted default */
-            }
-            .fuel-gauge .value-rate{
-            color: #ffffff;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
-            }
-            .fuel-gauge .unit-rate{
-            color: #757575;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
-            }
-
-        
         
 
 
@@ -3286,22 +3026,14 @@
 
          /* TAB 2: Payload Control */
         
-            .drawer-display { 
-            display: flex;
-            justify-content: center;    /* center horizontally */
-            align-items: center;        /* align icon and text vertically in the middle */
-            gap: 8px;                   /* space between icon and text */
-            padding: 14px 16px;
-            background: #000;
-            border-radius: 6px;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 1;             /* consistent vertical alignment */
-            width: 100%;
-            box-sizing: border-box;
-            color: #fff;                /* make text visible */
+            .drawer-display{
+            display:flex; justify-content:center; align-items:center; gap:8px;
+            padding:14px 16px; width:100%; box-sizing:border-box;
+            background:var(--color-black); color:var(--color-white); /* use palette tokens */
+            border-radius:6px;
+            font: var(--type-display-mono-regular); /* mono regular: weight size/line-height family */
+            line-height:1; /* keep tight vertical alignment if needed */
             }
-
             .drawer-display .display-icon {
             width: 24px;
             height: 24px;
@@ -3586,31 +3318,13 @@
         gap: 10px;        /* space between header and display */
         }
 
-        .status-display {
-        width: 80px;                  /* fixed width for display */
-        display: flex;
-        align-items: baseline;
-        justify-content: center;
-        gap: 4px;
-        padding: 6px 6px;
-        background: #000;
-        border-radius: 6px;
-        font-weight: 600;
-        font-size: 16px;
-        line-height: 20px;
-        white-space: nowrap;          /* value + unit stay on one line */
-        }
-
-        .status-display-value {
-        font-size: 16px;
-        font-weight: 500;
-        color: #fff;
-        }
-
-        .status-display-unit {
-        font-size: 16px;
-        font-weight: 500;
-        color: #757575;
+        .status-display{
+        width:80px;
+        display:flex; align-items:baseline; justify-content:center; gap:4px;
+        padding:6px 6px;
+        background:var(--color-black);
+        border-radius:6px;
+        white-space:nowrap; /* keep value + unit on one line */
         }
 
 
@@ -4187,15 +3901,13 @@
 
             .mission-name{
             /* small caps look */
-            font: var(--type-h5);
-            color: var(--c-h); /* <- apply the pink you defined */
+            font: var(--type-caption-regular);
+            color: var(--color-light); /* <- apply the pink you defined */
             text-align: center;     /* center the text itself */
             }
             .mission-value {
-            font-family: Inter, system-ui, sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: #ffffff;  /* brighter than unit */
+            font: var(--type-caption-mono-regular);
+            color: var(--color-white);
             }
 
 
@@ -4553,7 +4265,7 @@
 
         .drawer-button-title {
         font: var(--type-h4);
-          color: var(--c-h); /* <- apply the pink you defined */
+        color: var(--c-h); 
         }
 
         .drawer-button-icon {
@@ -4609,24 +4321,8 @@
         padding: 14px 14px;
         background: #000;
         border-radius: 6px;
-        font-weight: 600;
-        font-size: 16px;
-        line-height: 20px;
-        font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-
         }
 
-        .display-value {
-        font-size: 16px;
-        font-weight: 500;
-        color: #fff;
-        }
-
-        .display-unit {
-        font-size: 16px;
-        font-weight: 500;
-        color: #757575;
-        }
 
 
         

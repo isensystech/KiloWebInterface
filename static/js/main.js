@@ -1763,65 +1763,155 @@
             });
          
 
-      // MODAL GAUGES PANEL   */
-  
-    // === Safety block smart placement ===
-    // Moves safety-block to the right of gauges-panel if it overlaps the footer.
+// =======================
+// MODAL GAUGES PANEL
+// =======================
 
-    document.addEventListener('DOMContentLoaded', () => {
-    const parent  = document.querySelector('.gauges-button-panel');
-    const panel   = parent?.querySelector('.gauges-panel');
-    const safety  = parent?.querySelector('.safety-block');
-    const footer  = document.querySelector('footer, .footer, #footer'); // try common footer hooks
+// === Safety block smart placement ===
+// Moves .safety-block to the right of .gauges-panel if it overlaps the footer.
+document.addEventListener('DOMContentLoaded', () => {
+  const parent = document.querySelector('.gauges-button-panel');
+  if (!parent) return;
 
-    if (!parent || !panel || !safety || !footer) return;
+  const panel  = parent.querySelector('.gauges-panel');
+  const safety = parent.querySelector('.safety-block');
+  const footer = document.querySelector('footer, .footer, #footer'); // common footer hooks
 
-    // Check viewport overlap between safety-block and footer
-    const overlapsFooter = () => {
-        const s = safety.getBoundingClientRect();
-        const f = footer.getBoundingClientRect();
-        return s.bottom > f.top && s.top < f.bottom; // vertical intersection
-    };
+  // If any of required nodes are missing, bail out *only* from this feature
+  if (!panel || !safety || !footer) return;
 
-    // Place safety under the panel (default stacked layout)
-    const placeStacked = () => {
-        parent.classList.remove('side-safety');
-        safety.style.position = '';    // back to normal flow
-        safety.style.top = '';
-        safety.style.left = '';
-        safety.style.marginTop = 'auto';
-    };
+  // Ensure absolute children position relative to this parent
+  // (if CSS forgot to make it positioned).
+  if (getComputedStyle(parent).position === 'static') {
+    parent.style.position = 'relative'; // safe fallback for absolute positioning
+  }
 
-    // Place safety to the right of the panel, bottom-aligned to panel
-    const placeSide = () => {
-        parent.classList.add('side-safety');
+  // Check viewport overlap between safety-block and footer
+  const overlapsFooter = () => {
+    const s = safety.getBoundingClientRect();
+    const f = footer.getBoundingClientRect();
+    // vertical intersection check
+    return s.bottom > f.top && s.top < f.bottom;
+  };
 
-        // Compute coordinates relative to the parent
-        const leftPx = panel.offsetWidth + 12; // 12px gap to the right of the panel
-        const topPx  = (panel.offsetTop + panel.offsetHeight) - safety.offsetHeight;
+  // Place safety under the panel (default stacked layout)
+  const placeStacked = () => {
+    parent.classList.remove('side-safety');
+    safety.style.position = ''; // back to normal flow
+    safety.style.top = '';
+    safety.style.left = '';
+    safety.style.marginTop = 'auto';
+  };
 
-        safety.style.position = 'absolute';
-        safety.style.left = `${leftPx}px`;
-        safety.style.top  = `${topPx}px`;
-        safety.style.marginTop = '0';
-    };
+  // Place safety to the right of the panel, bottom-aligned to panel
+  const placeSide = () => {
+    parent.classList.add('side-safety');
 
-    const update = () => {
-        // Start from stacked to measure true overlap
-        placeStacked();
-        // Next frame, evaluate overlap and possibly move aside
-        requestAnimationFrame(() => {
-        if (overlapsFooter()) placeSide();
-        });
-    };
+    // Compute coordinates relative to the parent box
+    const parentRect = parent.getBoundingClientRect();
+    const panelRect  = panel.getBoundingClientRect();
 
-    // Recalculate on resize/scroll (footer visibility/position changes)
-    window.addEventListener('resize', update, { passive: true });
-    window.addEventListener('scroll',  update, { passive: true });
+    const leftPx = panelRect.width + 12; // 12px gap to the right of the panel
+    const topPx  = (panelRect.bottom - parentRect.top) - safety.offsetHeight;
 
-    update();
+    safety.style.position = 'absolute';
+    safety.style.left = `${leftPx}px`;
+    safety.style.top  = `${topPx}px`;
+    safety.style.marginTop = '0';
+  };
+
+  const update = () => {
+    // Start from stacked to measure true overlap
+    placeStacked();
+    // Next frame, evaluate overlap and possibly move aside
+    requestAnimationFrame(() => {
+      if (overlapsFooter()) placeSide();
     });
- 
+  };
+
+  // Recalculate on resize/scroll (footer visibility/position changes)
+  window.addEventListener('resize', update, { passive: true });
+  window.addEventListener('scroll',  update, { passive: true });
+
+  // React to panel size changes (fonts/UI scale)
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(update).observe(panel);
+  }
+
+  update();
+});
+
+
+// =======================
+// ENGINE TEMPERATURE GAUGE
+// =======================
+
+// > 90% => var(--gauge-red), < 10% => var(--gauge-blue), else => white.
+// === Engine temperature gauge: toggle classes to drive --bar-color ===
+document.addEventListener('DOMContentLoaded', () => {
+  const gauge = document.getElementById('engine-temperature-gauge');
+  if (!gauge) return;
+
+  // Read --pct (inline first, then computed)
+  const readPct = () => {
+    let raw = gauge.style.getPropertyValue('--pct');
+    if (!raw) raw = getComputedStyle(gauge).getPropertyValue('--pct');
+    const m = String(raw).match(/-?\d+(\.\d+)?/); // extract number
+    return m ? parseFloat(m[0]) : 0;
+  };
+
+  const applyState = () => {
+    const pct = readPct();
+    // Clear previous state
+    gauge.classList.remove('is-hot', 'is-cold');
+    // Set new state
+    if (pct > 90)      gauge.classList.add('is-hot');
+    else if (pct < 10) gauge.classList.add('is-cold');
+    // else neutral → token not set → fallback to white
+  };
+
+  // Initial
+  applyState();
+
+  // Re-apply when inline style (with --pct) changes
+  new MutationObserver(applyState).observe(gauge, {
+    attributes: true,
+    attributeFilter: ['style']
+  });
+});
+
+// === Fuel gauge color: <20% => var(--gauge-red) via --bar-color token ===
+document.addEventListener('DOMContentLoaded', () => {
+  const gauge = document.getElementById('fuel-gauge');
+  if (!gauge) return;
+
+  // Read --pct from inline style first, then computed style
+  const readPct = () => {
+    let raw = gauge.style.getPropertyValue('--pct');
+    if (!raw) raw = getComputedStyle(gauge).getPropertyValue('--pct');
+    const m = String(raw).match(/-?\d+(\.\d+)?/); // extract number
+    const n = m ? parseFloat(m[0]) : 0;
+    return Math.max(0, Math.min(100, n)); // clamp to 0..100
+  };
+
+  const apply = () => {
+    const pct = readPct();
+    // < 20% => add .is-low to drive --bar-color; otherwise remove it
+    gauge.classList.toggle('is-low', pct < 20);
+  };
+
+  // Initial state
+  apply();
+
+  // Re-apply when inline style (with --pct) changes
+  new MutationObserver(apply).observe(gauge, {
+    attributes: true,
+    attributeFilter: ['style']
+  });
+
+  // Optional: if layout code rewrites CSS vars during resize
+  window.addEventListener('resize', apply, { passive: true });
+});
 
 
 
