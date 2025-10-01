@@ -670,8 +670,6 @@
                             </div>
 
                         </div>
-                  
-
 
                         <!-- Active Helm & AP status  -->
                         <div class="button-button-row">
@@ -683,7 +681,7 @@
                                     <span class="drawer-button-title">Helm</span>
                                 </div>
                                 <!-- Main Button -->
-                                <button id="helm-toggle" class="middle-drawer-button">Manual</button>
+                                <button id="helm-toggle" class="drawer-button">Manual</button>
                             </div>
                                                         
                             <!-- AP status-->
@@ -693,7 +691,7 @@
                                     <span class="drawer-button-title">AP status</span>
                                 </div>
                                 <!-- Main Button -->
-                                <button id="ap-toggle" class="middle-drawer-button">Manual</button>
+                                <button id="ap-toggle" class="drawer-button">Manual</button>
                             </div>
 
                         </div>
@@ -716,8 +714,6 @@
                             <span class="display-value">Release Authorized</span>
                         </div>
                     </div>
-
-         
 
 
                     <!-- BUTTONS -->
@@ -824,19 +820,16 @@
 
                 <!-- TAB 3: Engine Status -->
                 <div class="tab-pane" data-tab="3">
-
                     <div class="pane-title"><span>Engine Status</span></div>
-                    
                     <div class="pane-grid">
 
                         <!-- Engine Status block -->
-
                         <div class="status-block">
 
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/coolant-temp.svg" alt="Temperature icon">
-                                    <span class="status-title">Engine coolant temp</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/coolant-temp.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Engine coolant temp</span>
                                 </div>
 
                                 <div class="status-display">
@@ -846,9 +839,9 @@
                             </div>
 
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/oil-tempriture.svg" alt="Temperature icon">
-                                    <span class="status-title">Engine oil temp </span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/oil-tempriture.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Engine oil temp </span>
                                 </div>
 
                                 <div class="status-display">
@@ -858,9 +851,9 @@
                             </div>
 
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/oil-pressure.svg" alt="Temperature icon">
-                                    <span class="status-title">Engine oil pressure</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/oil-pressure.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Engine oil pressure</span>
                                 </div>
 
                                 <div class="status-display">
@@ -870,9 +863,9 @@
                             </div>
 
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/gas-temperature.svg" alt="Temperature icon">
-                                    <span class="status-title">Exhaust gas temp</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/gas-temperature.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Exhaust gas temp</span>
                                 </div>
 
                                 <div class="status-display">
@@ -882,9 +875,9 @@
                             </div>
 
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/manifold-air-pressur.svg" alt="Temperature icon">
-                                    <span class="status-title">Manifold air pressur</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/manifold-air-pressur.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Manifold air pressur</span>
                                 </div>
 
                                 <div class="status-display">
@@ -894,9 +887,9 @@
                             </div>
 
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/manifold-air-temperature.svg" alt="Temperature icon">
-                                    <span class="status-title">Manifold air temp</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/manifold-air-temperature.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Manifold air temp</span>
                                 </div>
 
                                 <div class="status-display">
@@ -906,9 +899,9 @@
                             </div>
                             
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/gearbox-oil.svg" alt="Temperature icon">
-                                    <span class="status-title">Gearbox oil pressure</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/gearbox-oil.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Gearbox oil pressure</span>
                                 </div>
 
                                 <div class="status-display">
@@ -918,9 +911,9 @@
                             </div>
 
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/fuel-time.svg" alt="Temperature icon">
-                                    <span class="status-title">Fuel rate avg [time]</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/fuel-time.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Fuel rate avg [time]</span>
                                 </div>
 
                                 <div class="status-display">
@@ -930,9 +923,9 @@
                             </div>
 
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/fuel-distance.svg" alt="Temperature icon">
-                                    <span class="status-title">Fuel rate avg [dist]</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/fuel-distance.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Fuel rate avg [dist]</span>
                                 </div>
 
                                 <div class="status-display">
@@ -942,9 +935,9 @@
                             </div>
 
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/propeller.svg" alt="Temperature icon">
-                                    <span class="status-title">Propeller speed low</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/propeller.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Propeller speed low</span>
                                 </div>
 
                                 <div class="status-display">
@@ -954,9 +947,9 @@
                             </div>
                             
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/fuel-used.svg" alt="Temperature icon">
-                                    <span class="status-title">Fuel used</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/fuel-used.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Fuel used</span>
                                 </div>
 
                                 <div class="status-display">
@@ -966,9 +959,9 @@
                             </div>
 
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/range.svg" alt="Temperature icon">
-                                    <span class="status-title">Traveled distance</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/range.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Traveled distance</span>
                                 </div>
 
                                 <div class="status-display">
@@ -978,9 +971,9 @@
                             </div>
                                                         
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/speed.svg" alt="Temperature icon">
-                                    <span class="status-title">Max speed</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/speed.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Max speed</span>
                                 </div>
 
                                 <div class="status-display">
@@ -990,9 +983,9 @@
                             </div>
 
                             <div class="engine-status-controls">
-                                <div class="status-header">
-                                    <img class="status-icon" src="/static/images/engine-hrs.svg" alt="Temperature icon">
-                                    <span class="status-title">Engine hrs</span>
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/engine-hrs.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title ">Engine hrs</span>
                                 </div>
 
                                 <div class="status-display">
@@ -1006,7 +999,7 @@
                         
                         <!-- Kill Engine button -->
                         <div class="drawer-button-block">
-                            <button class="big-drawer-button">
+                            <button class="drawer-button">
                                 <img class="button-icon" src="/static/images/engine.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill Engine</span>
                             </button>
@@ -1044,7 +1037,7 @@
                                         <button class="toggle-btn on" data-state="1">On</button>
                                     </div>
 
-                                    <div class="drawer-button-display">
+                                    <div class="drawer-display">
                                         <!-- show voltage from bank 7, stud 6 per your table -->
                                         <span class="display-value" data-bank="7" data-stud="6">--</span>
                                         <span class="display-unit">V</span>
@@ -1055,19 +1048,19 @@
                             <!-- Engine Control -->
                             <div class="battery-button-block" data-bank="7" data-switch="2">
                                 <div class="drawer-button-header">
-                                <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
-                                <span class="drawer-button-title">Engine Control</span>
+                                    <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title">Engine Control</span>
                                 </div>
                                 <div class="button-display-row">
-                                <div class="drawer-button-toggle">
-                                    <button class="toggle-btn off" data-state="0">Off</button>
-                                    <button class="toggle-btn on"  data-state="1">On</button>
-                                </div>
-                                <div class="drawer-button-display">
-                                    <!-- table: 7-8 Engine Control Stud -->
-                                    <span class="display-value" data-bank="7" data-stud="8">--</span>
-                                    <span class="display-unit">V</span>
-                                </div>
+                                    <div class="drawer-button-toggle">
+                                        <button class="toggle-btn off" data-state="0">Off</button>
+                                        <button class="toggle-btn on"  data-state="1">On</button>
+                                    </div>
+                                    <div class="drawer-display">
+                                        <!-- table: 7-8 Engine Control Stud -->
+                                        <span class="display-value" data-bank="7" data-stud="8">--</span>
+                                        <span class="display-unit">V</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1083,10 +1076,7 @@
                                     <button class="toggle-btn auto" data-state="2">Auto</button>
                                     <button class="toggle-btn on"   data-state="1">On</button>
                                 </div>
-                                <div class="drawer-button-display">
-                                    <!-- your table has "Starter -> House Input/Output";
-                                        you had bank:7 there, но по смыслу это должен быть bank 9.
-                                        Поставлю примером stud="7" (Input). При необходимости поменяешь. -->
+                                <div class="drawer-display">
                                     <span class="display-value" data-bank="9" data-stud="7">--</span>
                                     <span class="display-unit">V</span>
                                 </div>
@@ -1104,7 +1094,7 @@
                                     <button class="toggle-btn off" data-state="0">Off</button>
                                     <button class="toggle-btn on"  data-state="1">On</button>
                                 </div>
-                                <div class="drawer-button-display">
+                                <div class="drawer-display">
                                     <!-- table: 8-6 Payload 1 -->
                                     <span class="display-value" data-bank="8" data-stud="6">--</span>
                                     <span class="display-unit">V</span>
@@ -1123,8 +1113,7 @@
                                     <button class="toggle-btn off" data-state="0">Off</button>
                                     <button class="toggle-btn on"  data-state="1">On</button>
                                 </div>
-                                <div class="drawer-button-display">
-                                    <!-- table: 8-8 House Loads -->
+                                <div class="drawer-display">
                                     <span class="display-value" data-bank="8" data-stud="8">--</span>
                                     <span class="display-unit">V</span>
                                 </div>
@@ -1144,7 +1133,7 @@
                                     <button class="toggle-btn off" data-state="0">Off</button>
                                     <button class="toggle-btn on"  data-state="1">On</button>
                                 </div>
-                                <div class="drawer-button-display">
+                                <div class="drawer-display">
                                     <!-- table: bank 10, stud 6 -->
                                     <span class="display-value" data-bank="10" data-stud="6">--</span>
                                     <span class="display-unit">V</span>
@@ -1163,7 +1152,7 @@
                                     <button class="toggle-btn off" data-state="0">Off</button>
                                     <button class="toggle-btn on"  data-state="1">On</button>
                                 </div>
-                                <div class="drawer-button-display">
+                                <div class="drawer-display">
                                     <!-- table: bank 10, stud 8 -->
                                     <span class="display-value" data-bank="10" data-stud="8">--</span>
                                     <span class="display-unit">V</span>
@@ -1182,7 +1171,7 @@
                                     <button class="toggle-btn off" data-state="0">Off</button>
                                     <button class="toggle-btn on"  data-state="1">On</button>
                                 </div>
-                                <div class="drawer-button-display">
+                                <div class="drawer-display">
                                     <!-- table: bank 10, stud 9 -->
                                     <span class="display-value" data-bank="10" data-stud="9">--</span>
                                     <span class="display-unit">V</span>
@@ -1406,7 +1395,7 @@
                                 <span class="drawer-button-title">Mission hours</span>
                             </div>
 
-                            <div class="drawer-button-display">
+                            <div class="drawer-display">
                                 <span class="display-value">00:00:00</span>
                             </div>
                         </div>
@@ -1418,7 +1407,7 @@
                                 <span class="drawer-button-title">Engine hour</span>
                             </div>
 
-                            <div class="drawer-button-display">
+                            <div class="drawer-display">
                                 <span class="display-value">00:00:00</span>
                             </div>
                         </div>
@@ -1431,7 +1420,7 @@
                                 <span class="drawer-button-title">Last Service</span>
                             </div>
 
-                            <div class="drawer-button-display">
+                            <div class="drawer-display">
                                 <span class="display-value">MM/DD/YY</span>
                             </div>
                         </div>
@@ -1442,37 +1431,37 @@
                         <div class="button-block">
 
                             <!-- Kill Engine button -->
-                            <button class="big-drawer-button">
+                            <button class="drawer-button">
                                 <img class="button-icon" src="/static/images/engine.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill Engine</span>
                             </button>
 
-                            <button class="big-drawer-button">
+                            <button class="drawer-button">
                                 <img class="button-icon" src="/static/images/battery.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill 12V Bus</span>
                             </button>
                             
-                            <button class="big-drawer-button">
+                            <button class="drawer-button">
                                 <img class="button-icon" src="/static/images/battery.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill 24V Bus</span>
                             </button>
                             
-                            <button class="big-drawer-button">
+                            <button class="drawer-button">
                                 <img class="button-icon" src="/static/images/kilo-icon.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill Payload Power</span>
                             </button>
                             
-                            <button class="big-drawer-button">
+                            <button class="drawer-button">
                                 <img class="button-icon" src="/static/images/radio-icon.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill Radio</span>
                             </button>
                             
-                            <button class="big-drawer-button">
+                            <button class="drawer-button">
                                 <img class="button-icon" src="/static/images/satellite.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill Satellite</span>
                             </button>
                             
-                            <button class="big-drawer-button">
+                            <button class="drawer-button">
                                 <img class="button-icon" src="/static/images/silent-mode.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Silent Mode</span>
                             </button>

@@ -2378,7 +2378,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // TAB 6: Safety   //
       
             document.addEventListener("DOMContentLoaded", () => {
-            const bigButtons = document.querySelectorAll(".big-drawer-button");
+            const bigButtons = document.querySelectorAll(".drawer-button");
 
             bigButtons.forEach((button) => {
                 const label = button.querySelector(".button-drawer-label");
@@ -2445,7 +2445,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             toggles.forEach(toggle => {
                 const buttons = toggle.querySelectorAll(".toggle-btn");
-                const display = toggle.parentElement.querySelector(".drawer-button-display");
+                const display = toggle.parentElement.querySelector(".drawer-button");
                 const valueEl = display.querySelector(".display-value");
 
                 buttons.forEach(btn => {
