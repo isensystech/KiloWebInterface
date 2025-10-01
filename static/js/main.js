@@ -1964,26 +1964,20 @@ document.addEventListener('DOMContentLoaded', () => {
  
 
           // TAB 1: Boat Control  //
-
-
-            // === SOLO toggle styles (scoped) === //
-                // JS scoped only to .solo-toggle to avoid collisions with existing handlers
+            // === Toggle styles (scoped) === //
                 document.addEventListener('DOMContentLoaded', () => {
-                document.querySelectorAll('.solo-toggle').forEach(group => {
+                document.querySelectorAll('.drawer-button-toggle').forEach(group => {
                     group.addEventListener('click', (e) => {
-                    const btn = e.target.closest('.solo-btn');
+                    const btn = e.target.closest('.toggle-btn');
                     if (!btn || !group.contains(btn)) return;
 
-                    // clear and set active within this isolated group
-                    group.querySelectorAll('.solo-btn').forEach(b => b.classList.remove('active'));
+                    group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    // No display to update here; extend later if needed
                     });
                 });
                 });
 
-
-            // === SOLO3 toggle styles (scoped) === //
+            // === Toggle styles (scoped) === //
                 // Scoped JS only for .solo3-toggle
                 document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.solo3-toggle').forEach(group => {
@@ -2004,8 +1998,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // === Pump === //
                 document.addEventListener('DOMContentLoaded', () => {
                     document.querySelectorAll('.half-relay').forEach(group => {
-                    const autoBtn = group.querySelector('.relay-btn.auto');
-                    const onBtn   = group.querySelector('.relay-btn.on');
+                    const autoBtn = group.querySelector('.toggle-btn.auto');
+                    const onBtn   = group.querySelector('.toggle-btn.on');
 
                     const clearStates = () => {
                         [autoBtn, onBtn].forEach(b => {
@@ -2055,10 +2049,7 @@ document.addEventListener('DOMContentLoaded', () => {
      
 
           // TAB 2: Payload Control  //
-      
             // === Control of drawer display state ===
-            // All comments in English.
-
             function setDrawerDisplay(state) {
             // state should be either "authorized" or "prohibited"
             const display = document.getElementById("drawer-display");
@@ -2078,13 +2069,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             }
 
-            // Example: default is "authorized"
-            // Later you can call setDrawerDisplay("prohibited") when external signal arrives
-     
 
 
           // TAB 4: Battery Status   //
-      
             document.addEventListener('DOMContentLoaded', () => {
             const btn = document.getElementById('ignitionBtn');
 
@@ -2108,14 +2095,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
      
 
-          // TAB 4: ENGINE. House Relay   //
-      
+        // TAB 4: ENGINE. House Relay   //
         // 3-way relay control: Off / Auto / On
         document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.drawer-button-relay').forEach(group => {
-            const offBtn  = group.querySelector('.relay-btn.off');
-            const autoBtn = group.querySelector('.relay-btn.auto');
-            const onBtn   = group.querySelector('.relay-btn.on');
+            const offBtn  = group.querySelector('.toggle-btn.off');
+            const autoBtn = group.querySelector('.toggle-btn.auto');
+            const onBtn   = group.querySelector('.toggle-btn.on');
 
             // Find paired display within the same relay-controls block
             const displayValue = group.closest('.relay-controls')?.querySelector('.display-value');
@@ -2187,10 +2173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
      
 
-          // TAB 4: ENGINE. ANIMATION LOAD   //
-      
-        // All comments in English.
-
+        // TAB 4: ENGINE. ANIMATION LOAD   //
         // Get loader element once */
         const getStartLoaderEl = () => document.getElementById('start-loader');
 
@@ -2356,9 +2339,6 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCursor();
             })();
 
-
-
-
             
             // Toggle Play/Pause icon and title
             document.addEventListener('DOMContentLoaded', () => {
@@ -2424,35 +2404,40 @@ document.addEventListener('DOMContentLoaded', () => {
      
 
           // TAB 8: Communication   //
+            // Drive display from the nearest .drawer-button-toggle group (no ids, no comm-*)
+            document.addEventListener('DOMContentLoaded', () => {
+            // For each toggle container on the page…
+            document.querySelectorAll('.drawer-button-toggle').forEach(container => {
+                // Root scope = the parent element that contains both toggle and display
+                const root = container.parentElement;
+                if (!root) return;
 
-                
-                // Communication toggle: updates display from button data attributes
-                    document.addEventListener('DOMContentLoaded', () => {
-                    document.querySelectorAll('.comm-block').forEach(block => {
-                        const displaySignal = block.querySelector('[data-key="signal"]');
-                        const displayDbm    = block.querySelector('[data-key="dbm"]');
-                        const buttons       = block.querySelectorAll('.comm-toggle .comm-btn');
+                const buttons       = container.querySelectorAll('.toggle-btn');
+                const displaySignal = root.querySelector('[data-key="signal"]');
+                const displayDbm    = root.querySelector('[data-key="dbm"]');
 
-                        // helper: apply values from a button
-                        const applyFromBtn = (btn) => {
-                        if (displaySignal) displaySignal.textContent = btn.dataset.signal ?? '--';
-                        if (displayDbm)    displayDbm.textContent    = btn.dataset.dbm ?? '--';
-                        };
+                // helper: apply values from a button to the display
+                const applyFromBtn = (btn) => {
+                if (displaySignal) displaySignal.textContent = btn.dataset.signal ?? '--';
+                if (displayDbm)    displayDbm.textContent    = btn.dataset.dbm ?? '--';
+                };
 
-                        // init: set from the pre-active button
-                        const active = block.querySelector('.comm-btn.active') || buttons[0];
-                        if (active) applyFromBtn(active);
+                // init from pre-active or first
+                applyFromBtn(container.querySelector('.toggle-btn.active') || buttons[0]);
 
-                        // click handling
-                        block.querySelector('.comm-toggle').addEventListener('click', (e) => {
-                        const btn = e.target.closest('.comm-btn');
-                        if (!btn) return;
-                        buttons.forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        applyFromBtn(btn);
-                        });
-                    });
-                    });
+                // clicks (event delegation on the container)
+                container.addEventListener('click', (e) => {
+                const btn = e.target.closest('.toggle-btn');
+                if (!btn || !container.contains(btn)) return;
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                applyFromBtn(btn);
+                });
+            });
+            });
+
+
+
 
       
             document.addEventListener("DOMContentLoaded", () => {

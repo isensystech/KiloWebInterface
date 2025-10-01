@@ -547,7 +547,8 @@
                     <span>Boat Control</span>
                     </div>
                     <div class="pane-grid">
-
+                        
+                        <!-- Engine -->
                         <div class="drawer-button-block">
 
                             <div class="drawer-button-header">
@@ -555,7 +556,6 @@
                                 <span class="drawer-button-title">Engine</span>
                             </div>
                         
-                            <!-- Engine -->
                             <button class="battery-engine-status" id="ignitionBtn" data-state="1">
                                 <!-- State 1: single "Ignition" -->
                                 <span class="state-one">
@@ -586,10 +586,6 @@
                             </button>
                         </div>
 
-
-
-
-
                         <!-- Radar -->
                         <div class="drawer-button-block">
                             <div class="drawer-button-header">
@@ -597,11 +593,9 @@
                                 <span class="drawer-button-title">Radar</span>
                             </div>
 
-                            <div class="solo-controls">
-                                <div class="solo-toggle" role="group" aria-label="Radar toggle">
-                                    <button class="solo-btn off active" data-value="--"> Off </button>
-                                    <button class="solo-btn on" data-value="17.2"> On </button>
-                                </div>
+                            <div class="drawer-button-toggle" role="group" aria-label="Radar toggle">
+                                <button class="toggle-btn off active" data-value="--"> Off </button>
+                                <button class="toggle-btn on" data-value="17.2"> On </button>
                             </div>
                         </div>
                       
@@ -612,12 +606,10 @@
                                 <span class="drawer-button-title">AIS</span>
                             </div>
 
-                           <div class="solo3-controls">
-                                <div class="solo3-toggle" role="group" aria-label="Sound toggle">
-                                    <button class="solo3-btn off active" type="button" data-value="--">Off</button>
-                                    <button class="solo3-btn silent"      type="button" data-value="S">Silent</button>
-                                    <button class="solo3-btn on"          type="button" data-value="17.2">On</button>
-                                </div>
+                            <div class="drawer-button-toggle" role="group" aria-label="Sound toggle">
+                                <button class="toggle-btn off active" type="button" data-value="--">Off</button>
+                                <button class="toggle-btn silent"      type="button" data-value="S">Silent</button>
+                                <button class="toggle-btn on"          type="button" data-value="17.2">On</button>
                             </div>
                         </div>                     
                         
@@ -628,12 +620,10 @@
                                 <span class="drawer-button-title">Navigation Lights</span>
                             </div>
 
-                           <div class="solo3-controls">
-                                <div class="solo3-toggle" role="group" aria-label="Light relay">
-                                    <button class="solo3-btn off active" type="button" data-value="--">Off</button>
-                                    <button class="solo3-btn silent"      type="button" data-value="S">Anchor</button>
-                                    <button class="solo3-btn on"          type="button" data-value="17.2">On</button>
-                                </div>
+                            <div class="drawer-button-toggle" role="group" aria-label="Light relay">
+                                <button class="toggle-btn off active" type="button" data-value="--">Off</button>
+                                <button class="toggle-btn silent"      type="button" data-value="S">Anchor</button>
+                                <button class="toggle-btn on"          type="button" data-value="17.2">On</button>
                             </div>
                         </div>
                       
@@ -644,11 +634,9 @@
                                 <span class="drawer-button-title">Beacon</span>
                             </div>
 
-                            <div class="solo-controls">
-                                <div class="solo-toggle" role="group" aria-label="Beacon toggle">
-                                    <button class="solo-btn off active" data-value="--"> Off </button>
-                                    <button class="solo-btn on" data-value="17.2"> On </button>
-                                </div>
+                            <div class="drawer-button-toggle" role="group" aria-label="Beacon toggle">
+                                <button class="toggle-btn off active" data-value="--"> Off </button>
+                                <button class="toggle-btn on" data-value="17.2"> On </button>
                             </div>
                         </div>
                                                                                               
@@ -656,28 +644,28 @@
                         <div class="button-button-row">
 
                             <!-- Pump Hight -->
-                            <div class="button-button-block">
+                            <div class="button-half-block">
                                 <div class="drawer-button-header">
                                     <img class="drawer-button-icon" src="/static/images/pump-icon.svg" alt="Pump icon">
                                     <span class="drawer-button-title">Pump Hght</span>
                                 </div>
 
                                 <div class="half-relay" data-live-default="on">
-                                    <button class="relay-btn auto" data-value="13.2">Auto</button>
-                                    <button class="relay-btn on" data-value="13.2">On</button>
+                                    <button class="toggle-btn auto" data-value="13.2">Auto</button>
+                                    <button class="toggle-btn on" data-value="13.2">On</button>
                                 </div>
                             </div>
                                                         
                             <!-- Pump Low-->
-                            <div class="button-button-block">
+                            <div class="button-half-block">
                                 <div class="drawer-button-header">
                                     <img class="drawer-button-icon" src="/static/images/pump-icon.svg" alt="Pump icon">
                                     <span class="drawer-button-title">Pump Low</span>
                                 </div>
 
                                 <div class="half-relay" data-live-default="on">
-                                    <button class="relay-btn auto" data-value="13.2">Auto</button>
-                                    <button class="relay-btn on" data-value="13.2">On</button>
+                                    <button class="toggle-btn auto" data-value="13.2">Auto</button>
+                                    <button class="toggle-btn on" data-value="13.2">On</button>
                                 </div>
                             </div>
 
@@ -689,7 +677,7 @@
                         <div class="button-button-row">
 
                             <!-- Active Helm -->
-                            <div class="button-button-block">
+                            <div class="button-half-block">
                                 <div class="drawer-button-header">
                                     <img class="drawer-button-icon" src="/static/images/helm-icon.svg" alt="Helm icon">
                                     <span class="drawer-button-title">Helm</span>
@@ -699,7 +687,7 @@
                             </div>
                                                         
                             <!-- AP status-->
-                            <div class="button-button-block">
+                            <div class="button-half-block">
                                 <div class="drawer-button-header">
                                     <img class="drawer-button-icon" src="/static/images/autopilot-icon.svg" alt="Autopilot icon">
                                     <span class="drawer-button-title">AP status</span>
@@ -1046,19 +1034,21 @@
                             <!-- Engine Start -->
                             <div class="battery-button-block" data-bank="7" data-switch="1">
                                 <div class="drawer-button-header">
-                                <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
-                                <span class="drawer-button-title">Engine Start</span>
+                                    <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
+                                    <span class="drawer-button-title">Engine Start</span>
                                 </div>
-                                <div class="sensor-controls">
-                                <div class="drawer-button-toggle">
-                                    <button class="toggle-btn off" data-state="0">Off</button>
-                                    <button class="toggle-btn on"  data-state="1">On</button>
-                                </div>
-                                <div class="drawer-button-display">
-                                    <!-- show voltage from bank 7, stud 6 per your table -->
-                                    <span class="display-value" data-bank="7" data-stud="6">--</span>
-                                    <span class="display-unit">V</span>
-                                </div>
+                                
+                                <div class="button-display-row">
+                                    <div class="drawer-button-toggle">
+                                        <button class="toggle-btn off" data-state="0">Off</button>
+                                        <button class="toggle-btn on" data-state="1">On</button>
+                                    </div>
+
+                                    <div class="drawer-button-display">
+                                        <!-- show voltage from bank 7, stud 6 per your table -->
+                                        <span class="display-value" data-bank="7" data-stud="6">--</span>
+                                        <span class="display-unit">V</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1068,7 +1058,7 @@
                                 <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
                                 <span class="drawer-button-title">Engine Control</span>
                                 </div>
-                                <div class="sensor-controls">
+                                <div class="button-display-row">
                                 <div class="drawer-button-toggle">
                                     <button class="toggle-btn off" data-state="0">Off</button>
                                     <button class="toggle-btn on"  data-state="1">On</button>
@@ -1089,9 +1079,9 @@
                                 </div>
                                 <div class="relay-controls">
                                 <div class="drawer-button-relay">
-                                    <button class="relay-btn off"  data-state="0">Off</button>
-                                    <button class="relay-btn auto" data-state="2">Auto</button>
-                                    <button class="relay-btn on"   data-state="1">On</button>
+                                    <button class="toggle-btn off"  data-state="0">Off</button>
+                                    <button class="toggle-btn auto" data-state="2">Auto</button>
+                                    <button class="toggle-btn on"   data-state="1">On</button>
                                 </div>
                                 <div class="drawer-button-display">
                                     <!-- your table has "Starter -> House Input/Output";
@@ -1109,7 +1099,7 @@
                                 <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
                                 <span class="drawer-button-title">House → Payload 1</span>
                                 </div>
-                                <div class="sensor-controls">
+                                <div class="button-display-row">
                                 <div class="drawer-button-toggle">
                                     <button class="toggle-btn off" data-state="0">Off</button>
                                     <button class="toggle-btn on"  data-state="1">On</button>
@@ -1128,7 +1118,7 @@
                                 <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
                                 <span class="drawer-button-title">House Loads</span>
                                 </div>
-                                <div class="sensor-controls">
+                                <div class="button-display-row">
                                 <div class="drawer-button-toggle">
                                     <button class="toggle-btn off" data-state="0">Off</button>
                                     <button class="toggle-btn on"  data-state="1">On</button>
@@ -1149,7 +1139,7 @@
                                 <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
                                 <span class="drawer-button-title">Payload 1 Loads</span>
                                 </div>
-                                <div class="sensor-controls">
+                                <div class="button-display-row">
                                 <div class="drawer-button-toggle">
                                     <button class="toggle-btn off" data-state="0">Off</button>
                                     <button class="toggle-btn on"  data-state="1">On</button>
@@ -1168,7 +1158,7 @@
                                 <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
                                 <span class="drawer-button-title">Payload 1 → Payload 2</span>
                                 </div>
-                                <div class="sensor-controls">
+                                <div class="button-display-row">
                                 <div class="drawer-button-toggle">
                                     <button class="toggle-btn off" data-state="0">Off</button>
                                     <button class="toggle-btn on"  data-state="1">On</button>
@@ -1187,7 +1177,7 @@
                                 <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
                                 <span class="drawer-button-title">Payload 2 Loads</span>
                                 </div>
-                                <div class="sensor-controls">
+                                <div class="button-display-row">
                                 <div class="drawer-button-toggle">
                                     <button class="toggle-btn off" data-state="0">Off</button>
                                     <button class="toggle-btn on"  data-state="1">On</button>
@@ -1203,7 +1193,6 @@
                         </div>
 
                     </div>
-
                 </div>
 
                 <!-- TAB 5: Mission Playlist -->
@@ -1417,7 +1406,7 @@
                                 <span class="drawer-button-title">Mission hours</span>
                             </div>
 
-                            <div class="drawer-button-display fullwidth">
+                            <div class="drawer-button-display">
                                 <span class="display-value">00:00:00</span>
                             </div>
                         </div>
@@ -1429,7 +1418,7 @@
                                 <span class="drawer-button-title">Engine hour</span>
                             </div>
 
-                            <div class="drawer-button-display fullwidth">
+                            <div class="drawer-button-display">
                                 <span class="display-value">00:00:00</span>
                             </div>
                         </div>
@@ -1442,7 +1431,7 @@
                                 <span class="drawer-button-title">Last Service</span>
                             </div>
 
-                            <div class="drawer-button-display fullwidth">
+                            <div class="drawer-button-display">
                                 <span class="display-value">MM/DD/YY</span>
                             </div>
                         </div>
@@ -1794,27 +1783,23 @@
                                 <span class="drawer-button-title">Communication</span>
                             </div>
 
-
-                            <!-- Toggle row -->
-                            <div class="comm-toggle">
-                                <button class="comm-btn radio" type="button"
-                                    data-signal="98" data-dbm="107">Radio</button>
-                                <button class="comm-btn satellite active" type="button"
-                                    data-signal="100" data-dbm="110">Satellite</button>
+                         <!-- Toggle row -->
+                             <div class="drawer-button-toggle">
+                                <button class="toggle-btn"        type="button" data-signal="98"  data-dbm="107">Radio</button>
+                                <button class="toggle-btn active" type="button" data-signal="100" data-dbm="110">Satellite</button>
                             </div>
 
-                            
-                            <!-- Display row "100% | 110 dBm" -->
+                            <!-- Display lives next to the toggle; only data-keys matter -->
                             <div class="comm-display">
                                 <div class="comm-metric">
-                                    <span class="display-value" data-key="signal">100</span>
+                                    <span class="display-value" data-key="signal">109</span>
                                     <span class="display-unit">%</span>
                                 </div>
 
                                 <div class="comm-divider" aria-hidden="true"></div>
 
                                 <div class="comm-metric">
-                                    <span class="display-value" data-key="dbm">110</span>
+                                    <span class="display-value" data-key="dbm">87</span>
                                     <span class="display-unit">dBm</span>
                                 </div>
                             </div>

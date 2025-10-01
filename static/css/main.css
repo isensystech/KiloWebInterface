@@ -11,11 +11,11 @@
     /* TITLE Fonts */
     --type-h2: 700 clamp(18px, 2.2vw, 28px)/1.2 var(--font-sans);
     --type-h3: 800 18px/1.25 var(--font-sans); 
-    --type-h4: 400 16px/1.3 var(--font-sans); 
+    --type-h4: 400 14px/1.3 var(--font-sans); 
 
     /* BODY Fonts */
-    --type-button-regular: 400 14px/1.35 var(--font-sans); 
-    --type-button-bold: 700 14px/1.35 var(--font-sans); 
+    --type-button-regular: 400 16px/1.35 var(--font-sans); 
+    --type-button-bold: 700 16px/1.35 var(--font-sans); 
 
     /* CAPTION Small Fonts */
     --type-caption-regular:  400 12px/1.3  var(--font-sans);
@@ -38,7 +38,7 @@
 
     /* Title font */
     --color-light: /* rgb(255, 0, 200);*/  #dadada; 
-    --text-inactive: #606060;
+    --text-inactive: #757575;
 
     --button-active: #707070;
     --button-inactive: #404040;
@@ -95,26 +95,30 @@
     color: var(--color-light);
     }
 
-    .display-value-inactive{
-    /* mono 16px bold */
-    font: var(--type-display-mono-bold);
-    color: var(--text-inactive);
-    }
-    .display-unit-inactive{
-    /* mono 16px regular */
-    font: var(--type-display-mono-regular);
-    color: var(--text-inactive);
-    }
-
     .display-value-small { font: var(--type-caption-mono-bold);   }
     .display-unit-small  { font: var(--type-caption-mono-regular); }
     .display-label-small { font: var(--type-caption-regular); 
     color: var(--color-light);
     }
+    
+/* BUTTON STYLES */
 
 
-/* Drawer BUTTON styles */
+    /* Buttons container */
+    .drawer-button-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* space between header and controls */
+    padding: 10px;
+    }
 
+    /* Buttons Title styles */
+    .drawer-button-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.8;
+    }
     .drawer-button-icon {
     font-size: 24px;
     }
@@ -123,11 +127,53 @@
     color: var(--color-white); 
     }
 
+    /* Buttons styles */
+    .drawer-button-toggle{
+    display:flex;
+    background-color: var(--button-inactive);
+    border-radius:6px;
+    overflow:hidden;
+    }
+    .toggle-btn{
+    flex:1;
+    padding:14px 0;
+    border:none;
+    border-radius: 6px;
+    background-color: var(--button-inactive);
+    color: var(--color-white);
+    font: var(--type-button-regular);
+    cursor:pointer;
+    text-align:center;
+    opacity:.5;
+    transition: opacity .2s, background-color .2s, color .2s;
+    }
+    .toggle-btn.active{
+    background-color: var(--button-active);
+    font: var(--type-button-bold); /* 700 14px/1.35 var(--font-sans) */
+    opacity:1;
+    }
+
+    /* White live-outline inside the selected button */
+    .toggle-btn.live {
+    box-shadow: inset 0 0 0 2px var(--color-white);
+    border-radius: inherit;
+    transition: box-shadow 0.15s ease;
+    }
+
+    /* Hover on the buttons */
+    .toggle-btn:hover { opacity: 0.8; }
 
 
-
-
-
+    /* Display block */
+    .drawer-button-display {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    padding: 14px 14px;
+    background: var(--color-black);
+    border-radius: 6px;
+    }
 
 
 
@@ -2800,97 +2846,9 @@
         
 
          /* TAB 1: Boat Control */
-        
-
-         /* === SOLO toggle styles (scoped) === */
-
-            /* One block, full width */
-            .solo-controls{
-            display:block;
-            }
-
-            /* Toggle group container */
-            .solo-toggle{
-            display:flex;
-            width:100%;
-            background:#404040;
-            border-radius:6px;
-            overflow:hidden;
-            }
-
-            /* Buttons */
-            .solo-btn{
-            flex:1;
-            padding:14px 0;
-            border:none;
-            background:#404040;
-            color:#fff;
-            font:500 16px/16px Inter, sans-serif;
-            text-align:center;
-            cursor:pointer;
-            opacity:.5;
-            transition:opacity .2s, background .2s;
-            }
-
-            /* Endcaps rounding */
-            .solo-btn.off{ border-radius:6px; }
-            .solo-btn.on { border-radius:6px; }
-
-            /* Active visual */
-            .solo-btn.active{
-            background:#707070;
-            opacity:1;
-            font-weight:600;
-            border-radius:6px;
-            }
 
 
-            /* === SOLO3 toggle styles (scoped) === */
-
-            /* Container */
-            .solo3-controls {
-            display: block;
-            }
-
-            .solo3-toggle {
-            display: flex;
-            width: 100%;
-            background: #404040;
-            border-radius: 6px;
-            overflow: hidden;
-            }
-
-            /* Buttons */
-            .solo3-btn {
-            flex: 1;
-            padding: 14px 0;
-            border: none;
-            background: #404040;
-            color: #fff;
-            font: 500 16px/16px Inter, sans-serif;
-            text-align: center;
-            cursor: pointer;
-            opacity: .5;
-            transition: opacity .2s, background .2s;
-            }
-
-            /* Endcaps rounding */
-            .solo3-btn.off    { border-radius: 6px; }
-            .solo3-btn.silent { border-radius: 6px; }          /* middle – no rounding */
-            .solo3-btn.on     { border-radius: 6px; }
-
-            /* Active visual */
-            .solo3-btn.active {
-            background: #707070;
-            opacity: 1;
-            font-weight: 600;
-            border-radius: 6px;
-            }
-
-
-            /* === Pump === */
-
-            /* Horizontal container for two blocks */
+            /* Container for two blocks */
             .button-button-row {
             display: grid;          /* Arrange children horizontally */
             flex: 1; 
@@ -2899,9 +2857,14 @@
             padding: 10px;
             }
 
+            /* Container for two blocks and one display*/
+            .button-display-row {
+            display: grid;
+            grid-template-columns: 3fr 2fr; /* two equal columns */
+            gap: 10px;
+            }
 
-            /* Pump block container */
-            .button-button-block {
+            .button-half-block {
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -2912,14 +2875,18 @@
             font-family: Inter, sans-serif;
             }
 
+            /* Pump block container */
             .half-relay {
             flex: 1;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            background: #404040;
+            background-color: var(--button-inactive);
             border-radius: 6px;
             overflow: hidden;
-            }
+            }       
+
+
+
 
 
             /* === Active Helm & AP status === */
@@ -3522,45 +3489,7 @@
             overflow: hidden;
             }
 
-            .relay-btn {
-            flex: 1;
-            padding: 14px 0;
-            border: none;
-            background: #404040;
-            color: #fff;
-            font-size: 16px;
-            line-height: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            text-align: center;
-            opacity: 0.5;
-            transition: opacity 0.2s, background 0.2s;
-            }
 
-            .relay-btn.off { border-radius: 6px; }
-            .relay-btn.on  { border-radius: 6px; }
-
-            .relay-btn.active {
-                background: #707070;
-                color: #fff;
-                opacity: 1;   /* fully opaque */
-                font-weight: 600;
-                border-radius: 6px;
-            }
-
-            /* White live-outline inside the selected button */
-            .relay-btn.live {
-            /* inner white stroke that doesn't change layout */
-            box-shadow: inset 0 0 0 2px #fff;
-            /* keep rounded corners of edge buttons */
-            border-radius: inherit;
-            transition: box-shadow 0.15s ease;
-            }
-
-            /* Optional: a bit clearer hover on the trio */
-            .drawer-button-relay .relay-btn:hover {
-            opacity: 0.8;
-            }
 
         
 
@@ -3688,7 +3617,7 @@
         opacity: 0.9;
         }
         .mission-card__item-text {
-        font: var(--type-h5);
+        font: var(--type-display-mono-regular);
         color: var(--color-light); /* <- apply the pink you defined */
         }
 
@@ -3769,7 +3698,7 @@
             display: flex;                    /* center label horizontally/vertically */
             align-items: center;
             justify-content: center;
-            font: 700 10px/12px Inter, system-ui, sans-serif; /* tight line height */
+            font: var(--type-caption-regular);
             }
             /* Reserve space under the track for labels */
             .mission-pleer .mission-timeline { padding-bottom: 12px; } /* 8px dot + 15px gap ~ 22px */
@@ -3781,8 +3710,8 @@
             top: calc(100% + 5px);            /* 15px under the bottom of the dot */
             left: 50%;
             transform: translateX(-50%);
-            font: 500 12px/1 Inter, system-ui, sans-serif; /* compact line height */
-            color: #ffffff;
+            font: var(--type-caption-regular);
+            color: var(--color-white); 
             white-space: nowrap;
             pointer-events: none;              /* label doesn't catch hover/clicks */
             z-index: 2;
@@ -3792,12 +3721,12 @@
             .mission-pleer .mission-cursor { z-index: 3; }
 
 
-            /* Yellow cursor */
+            /* Round cursor */
             .mission-pleer .mission-cursor{
             position:absolute; top:50%;
             width:16px; height:16px; border-radius:50%;
             transform:translate(-50%,-50%);
-            box-shadow: inset 0 0 0 2px #ffffff;
+            box-shadow: inset 0 0 0 2px var(--color-white); 
             background:transparent;
             transition:left .22s ease;
             pointer-events:none;
@@ -3859,29 +3788,16 @@
             }
 
             .pleer-data-name {
-            /* small caps look */
-            font-family: Inter, system-ui, sans-serif;
-            font-weight: 500;
-            font-size: 12px;
-            letter-spacing: 0.6px;   /* tech look */
-            color: #858585;        /* muted gray */
+            font: var(--type-caption-mono-regular);
+            color: var(--color-light); 
             }
-
-            /* Value text (e.g., "Locked") */
             .pleer-data-value {
-            font-family: Inter, system-ui, sans-serif;
-            font-weight: 600;
-            font-size: 12px;
-            color: #ffffff;  /* brighter than unit */
+            font: var(--type-caption-mono-bold);
+            color: var(--color-white); 
             }
-
             .pleer-data-unit {
-            /* small caps look */
-            font-family: Inter, system-ui, sans-serif;
-            font-weight: 500;
-            font-size: 12px;
-            letter-spacing: 0.6px;   /* tech look */
-            color: #858585;        /* muted gray */
+            font: var(--type-caption-mono-regular);
+            color: var(--color-light); 
             }
 
 
@@ -3891,21 +3807,7 @@
         
 
          /* TAB 6: Safety */
-        
-        .drawer-button-display.fullwidth {
-        display: flex;
-        justify-content: center;    /* center content horizontally */
-        align-items: center;
-        gap: 4px;
-        padding: 14px 16px;
-        background: #000;
-        border-radius: 6px;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 20px;
-        width: 100%;                /* stretch to full width */
-        box-sizing: border-box;      /* include padding in width */
-        }
+    
 
         .button-block {
         display: flex;
@@ -4186,138 +4088,44 @@
             .comm-display{
             display:grid;
             grid-template-columns: 1fr 1px 1fr;  /* two equal halves + divider */
-            align-items:center;
-            justify-content:space-between;
-            gap:16px;
-            padding:14px 16px;
-            background:#000;
-            border-radius:8px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 16px;
+            background: var(--color-black);
+            border-radius: 6px;
             }
 
-            /* Single metric cell */
-            .comm-metric{
-            display:grid;
-            grid-template-columns: 1fr 1fr; 
-            align-items:center;
-            gap:6px;
+            /* Place the pair near the divider */
+            .comm-metric {
+            display: flex;               /* pair as one chunk */
+            align-items: baseline;       /* numbers + units align nicely */
+            gap: 6px;
+            justify-content: center;     /* default if понадобится центр */
             }
 
             /* Vertical divider */
-            .comm-divider{
-            width:1px;
-            height:24px;
-            background: #757575;
-            opacity:1;
-            justify-self:center;
+            .comm-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--text-inactive);
+            opacity: 1;
+            justify-self: center;
             }
-
-            /* Toggle group */
-            .comm-toggle{
-            margin-top:8px;
-            display:flex;
-            background:#404040;
-            border-radius:8px;
-            overflow:hidden;           /* clip inner rounded active */
-            }
-
-            /* Toggle buttons */
-            .comm-btn{
-            flex:1;
-            padding:14px 0;
-            border:none;
-            background:#505050;
-            color:#fff;
-            font:500 16px/16px Inter, sans-serif;
-            cursor:pointer;
-            opacity:.5;
-            transition:opacity .2s, background .2s;
-            }
-            .comm-btn:first-child{ border-radius:8px 0 0 8px; }
-            .comm-btn:last-child { border-radius:0 8px 8px 0; }
-
-            .comm-btn.active{
-            background:#707070;
-            opacity:1;
-            font-weight:600;
-            border-radius:8px;
-            }
-
-
-
         
-        /* Sensor block container */
-        .drawer-button-block {
-        display: flex;
-        flex-direction: column;
-        gap: 8px; /* space between header and controls */
-        padding: 10px;
-        background: #303030;
-        border-radius: 6px;
-        color: #fff;
-        font-family: Inter, sans-serif;
-        }
-
-        /* Header */
-        .drawer-button-header {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 14px;
-        font-weight: 500;
-        opacity: 0.9;
-        }
 
 
 
 
-        /* Controls row */
-        .sensor-controls {
-        display: grid;
-        grid-template-columns: 3fr 2fr; /* two equal columns */
-        gap: 10px;
-        }
 
 
 
 
-        /* Toggle buttons */
-        .drawer-button-toggle{
-        display:flex;
-        background-color: var(--button-inactive);
-        border-radius:6px;
-        overflow:hidden;
-        }
-
-        .toggle-btn{
-        flex:1;
-        padding:14px 0;
-        border:none;
-        background-color: var(--button-inactive);
-        color: var(--text-inactive);
-        font: var(--type-button-regular); /* 400 14px/1.35 var(--font-sans) */
-        cursor:pointer;
-        text-align:center;
-        opacity:.5;
-        transition: opacity .2s, background-color .2s, color .2s;
-        }
-        .toggle-btn.active{
-        background-color: var(--button-active);
-        color: var(--color-white);
-        font: var(--type-button-bold); /* 700 14px/1.35 var(--font-sans) */
-        opacity:1;
-        }
 
 
-        /* Display block */
-        .drawer-button-display {
-        display: flex;
-        align-items: baseline;
-        justify-content: center;
-        gap: 4px;
-        padding: 14px 14px;
-        background: #000;
-        border-radius: 6px;
-        }
+
+
+
 
 
 
