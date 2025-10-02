@@ -15,18 +15,17 @@
 
 
 
-
-
 <body>
+
     <div class="control-screen">
         <!-- INFO BAR -->
         <div class="info-bar">
 
-    <div class="info-item">
-        <span class="info-icon" aria-hidden="true"><img src="/static/images/time-icon.svg" alt=""></span>
-        <span id="utc-time" class="info-value">00:00:00</span>
-        <span class="info-unit">UTC</span>
-    </div>
+            <div class="info-item">
+                <span class="info-icon" aria-hidden="true"><img src="/static/images/time-icon.svg" alt=""></span>
+                <span id="utc-time" class="info-value">00:00:00</span>
+                <span class="info-unit">UTC</span>
+            </div>
 
 
             <div class="info-item info-item--center">
@@ -72,7 +71,6 @@
             </div>
 
         </div>
-
         
         <!-- HEADER Navigation -->
         <header id="header">
@@ -116,7 +114,6 @@
             </div>
 
         </main>
-
 
         <!-- FOOTER -->
         <footer id="footer">
@@ -313,13 +310,13 @@
             <div class="editor-modal-backdrop">
 
                 <div class="editor-modal-window">
-                    <h2 class="editor-modal-title">Trim Control</h2>
+                    <h2 class="pane-title">Trim Control</h2>
                     <div class="editor-modal-close" onclick="applyTrimSettings()">✕</div>
 
 
                     <!-- TRIM MODAL Background image -->
                     <div class="trim-image-wrapper">
-                    <img alt="KILO" class="trim-center-image" src="/static/images/kilo-half-side.svg"/>
+                        <img alt="KILO" class="trim-center-image" src="/static/images/kilo-half-side.svg"/>
 
                         <!-- Overlay for gauge marks -->
                         <div class="trim-gauge-overlay">
@@ -334,8 +331,8 @@
                         <div class="trim-slider-overlay">
 
                             <div class="trim-labels">
-                                                                —<br/><br/><br/><br/><br/><br/><br/>
-                                                                15<br/>14<br/>13<br/>12<br/>11<br/>10<br/>9<br/>8<br/>7<br/>6<br/>5<br/>4<br/>3<br/>2<br/>1<br/>0<br/><br/>
+                                        UP<br/><br/><br/><br/><br/><br/><br/>
+                                        15<br/>14<br/>13<br/>12<br/>11<br/>10<br/>9<br/>8<br/>7<br/>6<br/>5<br/>4<br/>3<br/>2<br/>1<br/>0<br/><br/>
                             </div>
 
                             <div class="trim-track-bg"></div>
@@ -346,11 +343,66 @@
                             <div class="trim-readout" id="trim-readout">1</div>
                             <div class="trim-slider-wrapper">
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
+        <!-- TRIM TAB CONTROL MODAL -->
+        <div class="modal-backdrop" id="trim-tab-modal-backdrop" style="display: none;"></div>
+        <div id="trim-tab-modal-container" style="display: none;">
+            <div class="editor-modal-backdrop">
+
+                <div class="editor-modal-window">
+                    <h2 class="pane-title">Trim Tab Control</h2>
+                    <div class="editor-modal-close" onclick="trimTabApplySettings()">✕</div>
+                   
+                        <div class="trim-image-wrapper">
+                        <img alt="KILO" class="trim-tab-boat-image" src="/static/images/kilo-back.svg"/>
+
+                        </div>
+
+                </div>
+            </div>
         </div>
+
+        <!-- ANCHOR MODAL -->
+        <div class="modal-backdrop" id="anchor-modal-backdrop" style="display: none;"></div>
+        <div id="anchor-modal-container" style="display: none;">
+            <div class="editor-modal-backdrop">
+
+                <div class="editor-modal-window">
+                    <h2 class="pane-title">Anchor Control</h2>
+                    <div class="editor-modal-close" onclick="anchorApplySettings()">✕</div>
+                   
+                    <div class="trim-image-wrapper">
+                    <img alt="KILO" class="anchor-boat-image" src="/static/images/kilo-half-anchor.svg"/>
+
+                        <!-- Slider -->
+                            <div class="anchor-slider-overlay">
+                            <div class="anchor-labels">
+                                Up<br/><br/>
+                                15<br/>14<br/>13<br/>12<br/>11<br/>10<br/>9<br/>8<br/>7<br/>6<br/>5<br/>4<br/>3<br/>2<br/>1<br/>0<br/><br/>
+                            </div>
+
+                            <div class="anchor-track-bg"></div>
+                            <div class="anchor-track-fill" id="anchor-fill"></div>        <!-- was trim-fill -->
+                            <div class="anchor-thumb" id="anchor-thumb"></div>            <!-- was trim-thumb -->
+
+                            <!-- READOUT -->
+                            <div class="anchor-readout" id="anchor-readout">1</div>      <!-- was trim-readout -->
+                            <div class="anchor-slider-wrapper"></div>
+                            </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
 
         <!-- HUGE SIGN -->
         <div id="throttle-indicator">
@@ -492,10 +544,6 @@
             </div>
 
         </div>
-
-
-
-
 
 
 
@@ -677,7 +725,7 @@
                             <!-- Active Helm -->
                             <div class="button-half-block">
                                 <div class="drawer-button-header">
-                                    <img class="drawer-button-icon" src="/static/images/helm-icon.svg" alt="Helm icon">
+                                    <img class="drawer-button-icon" src="/static/images/helm-icon.svg" alt="Helm">
                                     <span class="drawer-button-title">Helm</span>
                                 </div>
                                 <!-- Main Button -->
@@ -687,7 +735,7 @@
                             <!-- AP status-->
                             <div class="button-half-block">
                                 <div class="drawer-button-header">
-                                    <img class="drawer-button-icon" src="/static/images/autopilot-icon.svg" alt="Autopilot icon">
+                                    <img class="drawer-button-icon" src="/static/images/autopilot-icon.svg" alt="Autopilot">
                                     <span class="drawer-button-title">AP status</span>
                                 </div>
                                 <!-- Main Button -->
@@ -707,17 +755,17 @@
                                     <span class="drawer-button-title">Trim Tab</span>
                                 </div>
                                 <!-- Main Button -->
-                                <button id="helm-toggle" class="drawer-button">Manual</button>
+                                <button id="trim-tab-modal" class="drawer-button">Auto</button>
                             </div>
                                                         
                             <!-- Anchor-->
                             <div class="button-half-block">
                                 <div class="drawer-button-header">
                                     <img class="drawer-button-icon" src="/static/images/anchor-icon.svg" alt="Anchor">
-                                    <span class="drawer-button-title">2Anchor</span>
+                                    <span class="drawer-button-title">Anchor</span>
                                 </div>
                                 <!-- Main Button -->
-                                <button id="ap-toggle" class="drawer-button">Manual</button>
+                                <button id="anchor-modal" class="drawer-button">Edit</button>
                             </div>
 
                         </div>
@@ -1875,11 +1923,10 @@
         </div>
 
 
-
     </div>
-</div>
 
-<script src="/static/js/websocket.js"></script>
-<script src="/static/js/main.js"></script>
+    <script src="/static/js/websocket.js"></script>
+    <script src="/static/js/main.js"></script>
+
 </body>
 </html>

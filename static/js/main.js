@@ -1763,6 +1763,143 @@
             });
          
 
+
+
+
+// ==============
+// TRIM TAB MODAL
+// ==============
+
+// === Trim Tab modal: open/close using existing ids/classes only ===
+document.addEventListener('DOMContentLoaded', () => {
+  const openBtn   = document.getElementById('trim-tab-modal');            // the button
+  const backdrop  = document.getElementById('trim-tab-modal-backdrop');   // dark overlay
+  const container = document.getElementById('trim-tab-modal-container');  // modal container
+  const windowEl  = container?.querySelector('.editor-modal-window');     // modal window
+
+  if (!openBtn || !backdrop || !container || !windowEl) return; // nothing to wire
+
+  const open  = () => { backdrop.style.display = 'block'; container.style.display = 'block'; };
+  const close = () => { backdrop.style.display = 'none';  container.style.display = 'none'; };
+
+  // open by button
+  openBtn.addEventListener('click', open);
+
+  // close by clicking the dark overlay
+  backdrop.addEventListener('click', close);
+
+  // close by clicking outside the modal window inside the container
+  container.addEventListener('click', (e) => {
+    // if click is NOT inside the modal window -> close
+    if (!windowEl.contains(e.target)) close();
+  });
+
+  // close on Esc
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+  // close button hook from markup: onclick="trimTabApplySettings()"
+  window.trimTabApplySettings = function () {
+    // // apply settings if needed…
+    close();
+  };
+});
+
+
+
+// ==============
+// ANCHOR MODAL
+// ==============
+
+// Open/close using existing ids/classes only
+document.addEventListener('DOMContentLoaded', () => {
+  const openBtn   = document.getElementById('anchor-modal');            // the button
+  const backdrop  = document.getElementById('anchor-modal-backdrop');   // dark overlay
+  const container = document.getElementById('anchor-modal-container');  // modal container
+  const windowEl  = container?.querySelector('.editor-modal-window');   // modal window
+
+  if (!openBtn || !backdrop || !container || !windowEl) return;
+
+  const open  = () => { backdrop.style.display = 'block'; container.style.display = 'block'; };
+  const close = () => { backdrop.style.display = 'none';  container.style.display = 'none'; };
+
+  openBtn.addEventListener('click', open);     // open by button
+  backdrop.addEventListener('click', close);   // close by dark overlay
+
+  // close when clicking outside the modal window
+  container.addEventListener('click', (e) => {
+    if (!windowEl.contains(e.target)) close();
+  });
+
+  // close on Esc
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+  // close button hook from markup: onclick="anchorApplySettings()"
+  window.anchorApplySettings = function () {
+    // apply settings if needed…
+    close();
+  };
+});
+
+
+
+
+// === Anchor slider (top→down fill, moves with thumb) ===
+(() => {
+  const thumb   = document.getElementById('anchor-thumb');
+  const fill    = document.getElementById('anchor-fill');
+  const readout = document.getElementById('anchor-readout');
+  const slider  = document.querySelector('.anchor-slider-wrapper');
+  const pointer = document.querySelector('.anchor-pointer-img');
+
+  if (!thumb || !fill || !slider) return;
+
+  // anchor fill to the TOP (override possible CSS "bottom")
+  fill.style.bottom = '';     // remove bottom anchor
+  fill.style.top = '0';       // fill grows downward
+
+  thumb.onmousedown = function (e) {
+    e.preventDefault();
+
+    document.onmousemove = function (e) {
+      const rect = slider.getBoundingClientRect();
+      const minY = rect.top, maxY = rect.bottom;
+
+      let posY = e.clientY;
+      if (posY < minY) posY = minY;
+      if (posY > maxY) posY = maxY;
+
+      // percent: 1 at top, 0 at bottom
+      const percent = 1 - (posY - minY) / (maxY - minY);
+
+      // thumb goes with fill (downwards), fill grows from TOP
+      thumb.style.top   = `${(1 - percent) * 100}%`;
+      fill.style.height = `${(1 - percent) * 100}%`;
+
+      if (pointer) {
+        const angle = Math.round((percent * 30) - 15); // -15..+15
+        pointer.style.transform = `rotate(${angle}deg)`;
+      }
+
+      if (readout) {
+        const raw = Math.round((1 - percent) * 14) + 1;   // 1..15
+        readout.textContent = Math.max(1, Math.min(15, raw));
+      }
+    };
+
+    document.onmouseup = () => { document.onmousemove = null; };
+  };
+})();
+
+
+
+
+
+
+
+
+
+
+
 // =======================
 // MODAL GAUGES PANEL
 // =======================
