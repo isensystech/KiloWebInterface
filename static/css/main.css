@@ -3338,14 +3338,15 @@
             /* Button label (reduced) */
             .button-label {
             margin-top: 6px;         /* was 8px */
-            color: #fff;
-            text-align: center;
-            font-family: Inter, sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.5px;     /* technical look */
-            line-height: 18px; /* e.g., 16px for compact but readable lines */
-
+            color: var(--color-white);
+            font: var(--type-button-regular);
+            cursor:pointer;
+            text-align:center;
+            opacity: 0.8;
+            transition: opacity .2s, background-color .2s, color .2s;
+            }
+            .button-label:hover {
+            opacity: 1;
             }
 
 

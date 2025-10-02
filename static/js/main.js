@@ -2586,7 +2586,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const helmContent  = helmModal?.querySelector(".status-modal-content");
 
             const apToggle     = document.getElementById("ap-toggle");
-            const apModal      = document.getElementById("status-modal");
+            const apModal      = document.getElementById("auto-pilot-modal");
             const apContent    = apModal?.querySelector(".status-modal-content");
 
             // Helper: close a modal safely

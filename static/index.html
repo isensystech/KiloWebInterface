@@ -581,7 +581,7 @@
                                 <!-- State 3: single "Engine Works" (pulse) -->
                                 <span class="state-three" hidden>
                                     <img class="button-icon" src="/static/images/engine.svg" alt="Engine power">
-                                    <span class="battery-engine-label">Engine Works</span>
+                                    <span class="battery-engine-label">Engine Running</span>
                                 </span>
                             </button>
                         </div>
@@ -697,6 +697,32 @@
                         </div>
                   
 
+                        <!-- Trim Tab & Anchor  -->
+                        <div class="button-button-row">
+
+                            <!-- Trim Tab -->
+                            <div class="button-half-block">
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/helm-icon.svg" alt="Helm icon">
+                                    <span class="drawer-button-title">Trim Tab</span>
+                                </div>
+                                <!-- Main Button -->
+                                <button id="helm-toggle" class="drawer-button">Manual</button>
+                            </div>
+                                                        
+                            <!-- Anchor-->
+                            <div class="button-half-block">
+                                <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/autopilot-icon.svg" alt="Autopilot icon">
+                                    <span class="drawer-button-title">Anchor</span>
+                                </div>
+                                <!-- Main Button -->
+                                <button id="ap-toggle" class="drawer-button">Manual</button>
+                            </div>
+
+                        </div>
+                  
+
 
                     </div>
                 </div>
@@ -726,91 +752,91 @@
                                 </div>
 
                                 <button data-bit="0" data-id="0x550">
-                                <img alt="Actuator" class="button-icon" src="/static/images/engine.svg"/>
+                                <img alt="Actuator" class="button-icon" src="/static/images/vtol.svg"/>
                                 </button>
 
-                                <div class="button-label">Actuator Power</div>
+                                <div class="button-label">VTOL 1</div>
                             </div>
                         </div> 
                         <div class="button-2"> 
-                            <div class="control-button" data-device="engine_power">
+                            <div class="control-button" data-device="quadrocopter">
                                 <div class="safety-cap">
-                                <img alt="engine" src="/static/images/engine.svg"/>
+                                <img alt="engine" src="/static/images/quadro-icon.svg"/>
                                 </div>
                                 
                                 <button data-bit="1" data-id="0x550">
-                                <img alt="engine" class="button-icon" src="/static/images/engine.svg"/>
+                                <img alt="engine" class="button-icon" src="/static/images/quadro-icon.svg"/>
                                 </button>
-                                <div class="button-label">engine Power</div>
+                                <div class="button-label">Quadro 2</div>
                             </div>
                         </div>
                         <div class="button-3"> 
                             <div class="control-button" data-device="12v_house_charging">
                                 <div class="safety-cap">
-                                <img alt="12V Charging" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" src="/static/images/buoy.svg"/>
                                 </div>
                                 <button data-bit="2" data-id="0x550">
-                                <img alt="12V Charging" class="button-icon" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" class="button-icon" src="/static/images/buoy.svg"/>
                                 </button>
-                                <div class="button-label">12V House Charging</div>
+                                <div class="button-label">Buoy 1</div>
                             </div>
                         </div>
                         <div class="button-4"> 
                             <div class="control-button" data-device="12v_house_charging">
                                 <div class="safety-cap">
-                                <img alt="12V Charging" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" src="/static/images/buoy.svg"/>
                                 </div>
                                 <button data-bit="2" data-id="0x550">
-                                <img alt="12V Charging" class="button-icon" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" class="button-icon" src="/static/images/buoy.svg"/>
                                 </button>
-                                <div class="button-label">12V House Charging</div>
+                                <div class="button-label">Buoy 2</div>
                             </div>
                         </div>
                         <div class="button-5"> 
                             <div class="control-button" data-device="actuator_power">
                                 <div class="safety-cap">
-                                <img alt="Actuator" src="/static/images/actuator.svg"/>
+                                <img alt="Actuator" src="/static/images/quadro-icon.svg"/>
                                 </div>
 
                                 <button data-bit="0" data-id="0x550">
-                                <img alt="Actuator" class="button-icon" src="/static/images/actuator.svg"/>
+                                <img alt="Actuator" class="button-icon" src="/static/images/quadro-icon.svg"/>
                                 </button>
 
-                                <div class="button-label">Actuator Power</div>
+                                <div class="button-label">Quadro 1</div>
                             </div>
                         </div> 
                         <div class="button-6"> 
                             <div class="control-button" data-device="engine_power">
                                 <div class="safety-cap">
-                                <img alt="engine" src="/static/images/engine.svg"/>
+                                <img alt="engine" src="/static/images/quadro-icon.svg"/>
                                 </div>
                                 
                                 <button data-bit="1" data-id="0x550">
-                                <img alt="engine" class="button-icon" src="/static/images/engine.svg"/>
+                                <img alt="engine" class="button-icon" src="/static/images/quadro-icon.svg"/>
                                 </button>
-                                <div class="button-label">engine Power</div>
+                                <div class="button-label">Quadro 3</div>
                             </div>
                         </div>
                         <div class="button-7"> 
                             <div class="control-button" data-device="12v_house_charging">
                                 <div class="safety-cap">
-                                <img alt="12V Charging" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" src="/static/images/buoy.svg"/>
                                 </div>
                                 <button data-bit="2" data-id="0x550">
-                                <img alt="12V Charging" class="button-icon" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" class="button-icon" src="/static/images/buoy.svg"/>
                                 </button>
-                                <div class="button-label">12V House Charging</div>
+                                <div class="button-label">Buoy 3</div>
                             </div>
                         </div>
                         <div class="button-8"> 
                             <div class="control-button" data-device="12v_house_charging">
                                 <div class="safety-cap">
-                                <img alt="12V Charging" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" src="/static/images/buoy.svg"/>
                                 </div>
                                 <button data-bit="2" data-id="0x550">
-                                <img alt="12V Charging" class="button-icon" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" class="button-icon" src="/static/images/buoy.svg"/>
                                 </button>
-                                <div class="button-label">12V House Charging</div>
+                                <div class="button-label">Buoy 4</div>
                             </div>
                         </div>
 
@@ -1154,7 +1180,7 @@
                                 </div>
                                 <div class="drawer-display">
                                     <!-- table: bank 10, stud 8 -->
-                                    <span class="display-value" data-bank="10" data-stud="8">--</span>
+                                    <span class="display-value" data-bank="10" data-stud="14">--</span>
                                     <span class="display-unit">V</span>
                                 </div>
                                 </div>
@@ -1173,7 +1199,7 @@
                                 </div>
                                 <div class="drawer-display">
                                     <!-- table: bank 10, stud 9 -->
-                                    <span class="display-value" data-bank="10" data-stud="9">--</span>
+                                    <span class="display-value" data-bank="10" data-stud="15">--</span>
                                     <span class="display-unit">V</span>
                                 </div>
                                 </div>
