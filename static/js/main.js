@@ -1772,9 +1772,9 @@
 
 // === Trim Tab modal: open/close using existing ids/classes only ===
 document.addEventListener('DOMContentLoaded', () => {
-  const openBtn   = document.getElementById('trim-tab-modal');            // the button
-  const backdrop  = document.getElementById('trim-tab-modal-backdrop');   // dark overlay
-  const container = document.getElementById('trim-tab-modal-container');  // modal container
+  const openBtn   = document.getElementById('trimtab-modal');            // the button
+  const backdrop  = document.getElementById('trimtab-modal-backdrop');   // dark overlay
+  const container = document.getElementById('trimtab-modal-container');  // modal container
   const windowEl  = container?.querySelector('.editor-modal-window');     // modal window
 
   if (!openBtn || !backdrop || !container || !windowEl) return; // nothing to wire
@@ -1803,6 +1803,170 @@ document.addEventListener('DOMContentLoaded', () => {
     close();
   };
 });
+
+
+
+// Init all trimtab sliders on the page (PORT & STBD)
+(() => {
+  const STEP = 5; // percent points per click
+
+  const initTrimtab = (root) => {
+    const track = root.querySelector('.trimtab-track-bg');
+    const fill  = root.querySelector('.trimtab-track-fill');
+    const thumb = root.querySelector('.trimtab-thumb');
+    const up    = root.querySelector('.throttle-up');
+    const down  = root.querySelector('.throttle-down');
+    if (!track || !fill || !thumb) return;
+
+    // keep fill growing from TOP
+    fill.style.top = '0'; fill.style.bottom = 'auto';
+
+    // apply UI from top% (0 top .. 100 bottom)
+    const applyFromTopPct = (t) => {
+      const pct = Math.max(0, Math.min(100, t));
+      thumb.style.top   = pct + '%';
+      fill.style.height = pct + '%';
+    };
+
+    const getTopPct = () => {
+      const v = parseFloat(thumb.style.top);
+      return Number.isFinite(v) ? v : 50;
+    };
+
+    // arrows
+    up   && up.addEventListener('click',  (e)=>{ e.preventDefault(); applyFromTopPct(getTopPct() - STEP); });
+    down && down.addEventListener('click',(e)=>{ e.preventDefault(); applyFromTopPct(getTopPct() + STEP); });
+
+    // drag & click on track
+    const pointToTopPct = (clientY) => {
+      const r = track.getBoundingClientRect();
+      let rel = (clientY - r.top) / r.height; // 0..1
+      return Math.max(0, Math.min(1, rel)) * 100;
+    };
+    const moveMouse = (e)=> applyFromTopPct(pointToTopPct(e.clientY));
+    const moveTouch = (e)=> { e.preventDefault(); applyFromTopPct(pointToTopPct(e.touches[0].clientY)); };
+
+    const stop = ()=>{
+      document.removeEventListener('mousemove', moveMouse);
+      document.removeEventListener('mouseup', stop);
+      document.removeEventListener('touchmove', moveTouch);
+      document.removeEventListener('touchend', stop);
+    };
+    const start = (e)=>{
+      e.preventDefault();
+      if (e.touches) moveTouch(e); else moveMouse(e);
+      document.addEventListener('mousemove', moveMouse);
+      document.addEventListener('mouseup', stop, { once:true });
+      document.addEventListener('touchmove', moveTouch, { passive:false });
+      document.addEventListener('touchend', stop, { once:true });
+    };
+
+    thumb.addEventListener('mousedown', start);
+    thumb.addEventListener('touchstart', start, { passive:false });
+    track.addEventListener('mousedown', start);
+    track.addEventListener('touchstart', start, { passive:false });
+
+    // init
+    applyFromTopPct(getTopPct());
+  };
+
+  // init all instances
+  document.querySelectorAll('.trimtab-slider-overlay').forEach(initTrimtab);
+})();
+
+// Robust rudder binding: waits for elements, survives other init errors
+(() => {
+  const clamp = v => Math.max(-35, Math.min(35, v));
+
+  const bind = () => {
+    const boat  = document.querySelector('.trimtab-boat-image');
+    const input = document.getElementById('rudder-input');
+    if (!boat || !input) return false;
+
+    // center pivot + smooth motion
+    boat.style.transformOrigin = '50% 50%';
+    boat.style.transition = 'transform 180ms ease';
+
+    const apply = () => {
+      let v = parseFloat(input.value);
+      if (!Number.isFinite(v)) v = 0;
+      v = clamp(v);
+      input.value = v;
+      boat.style.transform = `rotate(${v}deg)`;
+    };
+
+    // expose for inline handler if present
+    window.updateRudderFromInput = apply;
+
+    input.addEventListener('input',  apply);
+    input.addEventListener('change', apply);
+    apply();
+    return true;
+  };
+
+  // Try until elements exist
+  const tryBind = () => { if (!bind()) requestAnimationFrame(tryBind); };
+  tryBind();
+})();
+
+
+
+
+
+
+
+
+
+
+// Simple gyro: rotate #gyro-boat with left/right arrows
+(() => {
+  const clamp = v => Math.max(-35, Math.min(35, v));
+
+  const ready = () => {
+    const boat  = document.getElementById('gyro-boat');
+    const left  = document.getElementById('gyro-left');
+    const right = document.getElementById('gyro-right');
+    const angleEl = document.getElementById('gyro-angle');
+    if (!boat || !left || !right || !angleEl) return requestAnimationFrame(ready);
+
+    let angle = 0;
+    const STEP = 1;
+
+    const apply = () => {
+      boat.style.transform = `rotate(${angle}deg)`;
+      angleEl.textContent = `${angle}°`;
+    };
+
+    const startHold = (dir) => {
+      if (startHold.t) return;
+      startHold.t = setInterval(() => { angle = clamp(angle + dir * STEP); apply(); }, 60);
+    };
+    const stopHold = () => { clearInterval(startHold.t); startHold.t = null; };
+
+    left .addEventListener('click', (e)=>{ e.preventDefault(); angle = clamp(angle - STEP); apply(); });
+    right.addEventListener('click', (e)=>{ e.preventDefault(); angle = clamp(angle + STEP); apply(); });
+
+    left .addEventListener('mousedown', ()=> startHold(-1));
+    right.addEventListener('mousedown',()=> startHold(+1));
+    document.addEventListener('mouseup', stopHold);
+    left .addEventListener('touchstart', (e)=>{ e.preventDefault(); startHold(-1); }, {passive:false});
+    right.addEventListener('touchstart',(e)=>{ e.preventDefault(); startHold(+1); }, {passive:false});
+    document.addEventListener('touchend', stopHold);
+
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'ArrowLeft')  { angle = clamp(angle - STEP); apply(); }
+      if (e.key === 'ArrowRight') { angle = clamp(angle + STEP); apply(); }
+    });
+
+    apply();
+  };
+
+  ready();
+})();
+
+
+
+
 
 
 
@@ -1842,52 +2006,95 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-// === Anchor slider (top→down fill, moves with thumb) ===
+// === Anchor slider: unified logic (buttons + drag, top-anchored fill) ===
 (() => {
   const thumb   = document.getElementById('anchor-thumb');
   const fill    = document.getElementById('anchor-fill');
   const readout = document.getElementById('anchor-readout');
-  const slider  = document.querySelector('.anchor-slider-wrapper');
-  const pointer = document.querySelector('.anchor-pointer-img');
+  const track   = document.querySelector('.anchor-track-bg');          // bounds = track
+  const upBtn   = document.getElementById('anchor-throttle-up');
+  const downBtn = document.getElementById('anchor-throttle-down');
+  const pointer = document.querySelector('.anchor-pointer-img');       // optional
 
-  if (!thumb || !fill || !slider) return;
+  if (!thumb || !fill || !track) return;
 
-  // anchor fill to the TOP (override possible CSS "bottom")
-  fill.style.bottom = '';     // remove bottom anchor
-  fill.style.top = '0';       // fill grows downward
+  // force fill to grow from TOP (override any CSS bottom)
+  fill.style.bottom = 'auto';
+  fill.style.top = '0';
 
-  thumb.onmousedown = function (e) {
-    e.preventDefault();
+  // apply UI from top% (0 = top, 100 = bottom)
+  const applyFromTopPct = (t) => {
+    const pct = Math.max(0, Math.min(100, t));
+    thumb.style.top   = pct + '%';
+    fill.style.height = pct + '%';                 // fill to thumb from top
 
-    document.onmousemove = function (e) {
-      const rect = slider.getBoundingClientRect();
-      const minY = rect.top, maxY = rect.bottom;
+    // percent 1..0 for any extra mapping
+    const percent = 1 - (pct / 100);              // 1 at top, 0 at bottom
 
-      let posY = e.clientY;
-      if (posY < minY) posY = minY;
-      if (posY > maxY) posY = maxY;
+    // optional pointer rotation
+    if (pointer) {
+      const angle = Math.round((percent * 30) - 15); // -15..+15
+      pointer.style.transform = `rotate(${angle}deg)`;
+    }
 
-      // percent: 1 at top, 0 at bottom
-      const percent = 1 - (posY - minY) / (maxY - minY);
-
-      // thumb goes with fill (downwards), fill grows from TOP
-      thumb.style.top   = `${(1 - percent) * 100}%`;
-      fill.style.height = `${(1 - percent) * 100}%`;
-
-      if (pointer) {
-        const angle = Math.round((percent * 30) - 15); // -15..+15
-        pointer.style.transform = `rotate(${angle}deg)`;
-      }
-
-      if (readout) {
-        const raw = Math.round((1 - percent) * 14) + 1;   // 1..15
-        readout.textContent = Math.max(1, Math.min(15, raw));
-      }
-    };
-
-    document.onmouseup = () => { document.onmousemove = null; };
+    // readout 1..15 (same as before)
+    if (readout) {
+      const raw = Math.round((1 - percent) * 14) + 1;
+      readout.textContent = Math.max(1, Math.min(15, raw));
+    }
   };
+
+  // make updater available if needed elsewhere
+  window.anchorApplyFromTopPct = applyFromTopPct;
+
+  // current top% (defaults to 50 if unset)
+  const getTopPct = () => {
+    const v = parseFloat(thumb.style.top);
+    return Number.isFinite(v) ? v : 50;
+  };
+
+  // ---- Buttons (↑ / ↓) ----
+  const STEP = 5; // percent points
+  const moveUp   = () => applyFromTopPct(getTopPct() - STEP); // up = smaller top%
+  const moveDown = () => applyFromTopPct(getTopPct() + STEP); // down = larger top%
+
+  upBtn   && upBtn.addEventListener('click', (e) => { e.preventDefault(); moveUp();   });
+  downBtn && downBtn.addEventListener('click', (e) => { e.preventDefault(); moveDown(); });
+
+  // ---- Drag on thumb (and click/drag on track) ----
+  const pointToTopPct = (clientY) => {
+    const r = track.getBoundingClientRect();
+    let rel = (clientY - r.top) / r.height;   // 0 at top .. 1 at bottom
+    rel = Math.max(0, Math.min(1, rel));
+    return rel * 100;
+  };
+
+  const onMoveMouse = (e) => applyFromTopPct(pointToTopPct(e.clientY));
+  const onMoveTouch = (e) => { e.preventDefault(); applyFromTopPct(pointToTopPct(e.touches[0].clientY)); };
+
+  const endDrag = () => {
+    document.removeEventListener('mousemove', onMoveMouse);
+    document.removeEventListener('mouseup', endDrag);
+    document.removeEventListener('touchmove', onMoveTouch);
+    document.removeEventListener('touchend', endDrag);
+  };
+
+  const startDrag = (e) => {
+    e.preventDefault();
+    if (e.touches) onMoveTouch(e); else onMoveMouse(e);
+    document.addEventListener('mousemove', onMoveMouse);
+    document.addEventListener('mouseup', endDrag, { once: true });
+    document.addEventListener('touchmove', onMoveTouch, { passive: false });
+    document.addEventListener('touchend', endDrag, { once: true });
+  };
+
+  thumb.addEventListener('mousedown', startDrag);
+  thumb.addEventListener('touchstart', startDrag, { passive: false });
+  track.addEventListener('mousedown', startDrag);                // click track to move
+  track.addEventListener('touchstart', startDrag, { passive:false });
+
+  // init to current position (or 50%)
+  applyFromTopPct(getTopPct());
 })();
 
 

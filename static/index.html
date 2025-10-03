@@ -350,17 +350,62 @@
         </div>
 
 
-        <!-- TRIM TAB CONTROL MODAL -->
-        <div class="modal-backdrop" id="trim-tab-modal-backdrop" style="display: none;"></div>
-        <div id="trim-tab-modal-container" style="display: none;">
+        <!-- TRIMTAB CONTROL MODAL -->
+        <div class="modal-backdrop" id="trimtab-modal-backdrop" style="display: none;"></div>
+        <div id="trimtab-modal-container" style="display: none;">
             <div class="editor-modal-backdrop">
 
                 <div class="editor-modal-window">
-                    <h2 class="pane-title">Trim Tab Control</h2>
+                    <h2 class="pane-title">Trim Tab Control & Gyroscope feedback</h2>
                     <div class="editor-modal-close" onclick="trimTabApplySettings()">✕</div>
-                   
-                        <div class="trim-image-wrapper">
-                        <img alt="KILO" class="trim-tab-boat-image" src="/static/images/kilo-back.svg"/>
+                    <div class="trim-image-wrapper">
+
+                                <div class="gyro-feedback">
+
+                                      <!-- water line (toggle "over" to draw above the boat) -->
+                                    <div class="gyro-water" aria-hidden="true"></div>
+                                    <img alt="KILO" class="trimtab-boat-image" id="gyro-boat" src="/static/images/kilo-back.svg"/>
+
+                                    <div class="gyro-controls">
+                                        <button id="gyro-left"  class="throttle-button throttle-up"   type="button" aria-label="Left">◄</button>
+                                            <span   id="gyro-angle"  class="gyro-angle">0°</span>
+                                        <button id="gyro-right" class="throttle-button throttle-down" type="button" aria-label="Right">►</button>
+                                    </div>
+                                </div>
+
+                               
+                                <!-- Trim Tabs (two mini sliders) -->
+                                <div class="trimtab-panel">
+                                    
+                                    <!-- PORT -->
+                                    <div class="trimtab-block" aria-label="Port">
+                                        <div class="trimtab-slider-overlay">
+                                        <button class="throttle-button throttle-up"   type="button" aria-label="Up"><span class="throttle-icon">▲</span></button>
+
+                                        <div class="trimtab-track-bg"></div>
+                                        <div class="trimtab-track-fill"></div>
+                                        <div class="trimtab-thumb"></div>
+
+                                        <button class="throttle-button throttle-down" type="button" aria-label="Down"><span class="throttle-icon">▼</span></button>
+                                        </div>
+                                        <div class="trimtab-caption">PORT</div>
+                                    </div>
+
+                                    <!-- STBD -->
+                                    <div class="trimtab-block" aria-label="Starboard">
+                                        <div class="trimtab-slider-overlay">
+                                        <button class="throttle-button throttle-up"   type="button" aria-label="Up"><span class="throttle-icon">▲</span></button>
+
+                                        <div class="trimtab-track-bg"></div>
+                                        <div class="trimtab-track-fill"></div>
+                                        <div class="trimtab-thumb"></div>
+
+                                        <button class="throttle-button throttle-down" type="button" aria-label="Down"><span class="throttle-icon">▼</span></button>
+                                        </div>
+                                        <div class="trimtab-caption">STBD</div>
+                                    </div>
+
+                                </div>
 
                         </div>
 
@@ -380,20 +425,36 @@
                     <div class="trim-image-wrapper">
                     <img alt="KILO" class="anchor-boat-image" src="/static/images/kilo-half-anchor.svg"/>
 
+
+
+
+                    
                         <!-- Slider -->
                             <div class="anchor-slider-overlay">
-                            <div class="anchor-labels">
-                                Up<br/><br/>
-                                15<br/>14<br/>13<br/>12<br/>11<br/>10<br/>9<br/>8<br/>7<br/>6<br/>5<br/>4<br/>3<br/>2<br/>1<br/>0<br/><br/>
-                            </div>
+                                
+                                <!-- ↑ Up button (keep classes, new id) -->
+                                <button id="anchor-throttle-up" class="throttle-button throttle-up" type="button" aria-label="Anchor up">
+                                <span class="throttle-icon">▲</span>
+                                </button>
 
-                            <div class="anchor-track-bg"></div>
-                            <div class="anchor-track-fill" id="anchor-fill"></div>        <!-- was trim-fill -->
-                            <div class="anchor-thumb" id="anchor-thumb"></div>            <!-- was trim-thumb -->
+                                    <div class="anchor-labels">
+                                        Up<br/><br/>
+                                        0<br/>5<br/>10<br/>15<br/>20<br/>25<br/>30<br/>35<br/>40<br/>45<br/>50<br/>55<br/>60<br/>65<br/>70<br/>75<br/>80<br/>85<br/>90<br/>95<br/>100<br/><br/>
+                                    </div>
 
-                            <!-- READOUT -->
-                            <div class="anchor-readout" id="anchor-readout">1</div>      <!-- was trim-readout -->
-                            <div class="anchor-slider-wrapper"></div>
+                                    <div class="anchor-track-bg"></div>
+                                    <div class="anchor-track-fill" id="anchor-fill"></div>        <!-- was trim-fill -->
+                                    <div class="anchor-thumb" id="anchor-thumb"></div>            <!-- was trim-thumb -->
+
+                                    <!-- READOUT -->
+                                    <div class="anchor-readout" id="anchor-readout">1</div>      <!-- was trim-readout -->
+                                    <div class="anchor-slider-wrapper"></div>
+
+                                <!-- ↓ Down button (keep classes, new id) -->
+                                <button id="anchor-throttle-down" class="throttle-button throttle-down" type="button" aria-label="Anchor down">
+                                <span class="throttle-icon">▼</span>
+                                </button>
+
                             </div>
 
 
@@ -751,11 +812,11 @@
                             <!-- Trim Tab -->
                             <div class="button-half-block">
                                 <div class="drawer-button-header">
-                                    <img class="drawer-button-icon" src="/static/images/trim-tab-icon.svg" alt="Trim Tab">
+                                    <img class="drawer-button-icon" src="/static/images/trimtab-icon.svg" alt="Trim Tab">
                                     <span class="drawer-button-title">Trim Tab</span>
                                 </div>
                                 <!-- Main Button -->
-                                <button id="trim-tab-modal" class="drawer-button">Auto</button>
+                                <button id="trimtab-modal" class="drawer-button">Auto</button>
                             </div>
                                                         
                             <!-- Anchor-->
