@@ -632,13 +632,11 @@
                                         <div class="editor-custom-input-row">
                                         <label class="editor-custom-label">CAN</label>
 
-                                          // Первый блок: 0x 3 numbers   //
                                             <div class="editor-prefixed-wrapper bn-wrapper">
                                                 <span class="editor-prefix">0x</span>
                                                 <input type="text" maxlength="3" class="editor-prefixed-input" placeholder="###">
                                             </div>
 
-                                          // Второй блок: длинное значение   //
                                             <div class="editor-prefixed-wrapper hex-wrapper">
                                                 <input type="text" maxlength="23" class="editor-custom-input long-input" placeholder="00 00 00 00 00 00 00 00">
                                             </div>
@@ -1656,7 +1654,7 @@
 
                 // If joystick is mostly centered, don't update
                 if (Math.abs(raw) <= deadzone) {
-                    renderSlider(logicalPercent); // raw не нужен тут
+                    renderSlider(logicalPercent); 
                     requestAnimationFrame(pollThrottleControl);
                     return;
                 }
@@ -2370,14 +2368,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         group.dataset.mode = mode;
                     };
 
-                    // Инициализация: Auto по умолчанию
                     setMode(group.dataset.mode || 'auto');
 
-                    // Обработчики кликов
                     autoBtn.addEventListener('click', () => setMode('auto'));
                     onBtn.addEventListener('click', () => setMode('on'));
 
-                    // Внешнее обновление (например, по телеметрии)
                     group.updateLive = (isOn) => {
                         if ((group.dataset.mode || 'auto') !== 'auto') return;
                         autoBtn.classList.remove('live');
@@ -2385,7 +2380,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         (isOn ? onBtn : autoBtn).classList.add('live');
                     };
 
-                    // Сейчас: live = On
                     onBtn.classList.add('live');
                     });
                 });
@@ -2421,20 +2415,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const setState = (n) => btn.setAttribute('data-state', String(n));
 
-            // Клик по всей кнопке в состояниях 1 и 3 -> переход в сплит (2)
             btn.addEventListener('click', (e) => {
                 const s = Number(btn.getAttribute('data-state') || 1);
                 if (s === 1 || s === 3) setState(2);
             });
 
-            // Обработчики половинок в состоянии 2
             btn.querySelector('.half-off').addEventListener('click', (e) => {
-                e.stopPropagation();           // не пускаем событие вверх
-                setState(1);                   // Off -> назад в 1
+                e.stopPropagation();           
+                setState(1);                   
             });
             btn.querySelector('.half-start').addEventListener('click', (e) => {
                 e.stopPropagation();
-                setState(3);                   // Start -> в 3 (зелёный)
+                setState(3);                   
             });
             });
      

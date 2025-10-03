@@ -9,6 +9,7 @@
     /* === Weight size/line-height family === */
 
     /* TITLE Fonts */
+    --type-h1: 800 clamp(48px, 6.4vw, 64px)/1.2 var(--font-sans);
     --type-h2: 700 clamp(18px, 2.2vw, 28px)/1.2 var(--font-sans);
     --type-h3: 800 18px/1.25 var(--font-sans); 
     --type-h4: 400 14px/1.3 var(--font-sans); 
@@ -110,7 +111,6 @@
 
 
 
-
 /* MAGENTA / ERROR / BORDER */
     * { outline: 1px dashed rgba(255, 0, 221, 0);}
 
@@ -120,25 +120,28 @@
 
     /* Reset and base styles */
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
 
-            /* ban on allocation */
-            user-select: none; 			
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-
+        /* ban on allocation */
+        user-select: none; 			
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
         }
+
+
+
+
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #202020;
-            color: #ffffff;
-            line-height: 1.6;
-            overflow: hidden;
-            overflow-y: auto;
-            height: auto;
+        font-family: var(--font-sans);
+        background-color: var(--color-bg);
+        color: var(--color-white);
+        line-height: 1.6;
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
         }
         
         html, body {
@@ -166,21 +169,21 @@
         }
 
         .control-screen {
-          display: flex;
-          flex-direction: column;
-          min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
         }
 
         #main {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-            overflow-y: auto;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        overflow-y: auto;
         }
         .main-content {
         overflow-y: auto;
-        max-height: calc(100vh - 160px); /* примерно: хедер (100px) + футер (60px) */
+        max-height: calc(100vh - 160px);
         }
 
 
@@ -194,18 +197,21 @@
 
         /* Info bar layout */
         .info-bar{
-        display:flex; justify-content:space-between; align-items:center;
+        display:flex; 
+        justify-content:space-between; 
+        align-items:center;
         padding:8px 16px;
-        background:var(--color-bg); color:var(--color-white);
+        background:var(--color-bg); 
+        color:var(--color-white);
         border-bottom:1px solid var(--color-bg);
         }
 
         /* Item: icon + text inline */
         .info-item{ 
-            display:inline-flex; 
-            align-items:center; 
-            gap:6px; height:22px; 
-            white-space:nowrap; 
+        display:inline-flex; 
+        align-items:center; 
+        gap:6px; height:22px; 
+        white-space:nowrap; 
         }
 
         /* Icon box */
@@ -271,7 +277,7 @@
         @media (min-width: 1024px){
         .info-bar{ position: relative; } /* anchor for absolute centering */
 
-        .info-bar .info-item--center{
+            .info-bar .info-item--center{
             position: absolute;           /* take out of flex flow */
             left: 50%;                    /* center in viewport */
             transform: translateX(-50%);  /* exact centering */
@@ -279,7 +285,7 @@
             margin: 0;                    /* ignore inline gaps */
             width: max-content;           /* shrink to its contents */
             pointer-events: auto;         /* keep clickable */
-        }
+            }
         }
 
 
@@ -294,84 +300,78 @@
         }
 
         .carousel-titles {
-          position: absolute;
-          top: 5vh;
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 999;
-          pointer-events: none;
+        position: absolute;
+        top: 5vh;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        pointer-events: none;
         }
 
         .carousel-title {
-            font: var(--type-h2);
-            color: var(--color-light); /* <- apply the pink you defined */
-
-          text-align: center;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          white-space: nowrap; 
+        font: var(--type-h2);
+        color: var(--color-light); 
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap; 
         }
 
         .carousel-title.active {
-          opacity: 1;
+        opacity: 1;
         }
 
         .nav-arrow {
-            position: absolute;
-            top: 5vh;
-            background: none;        /* no background */
-            border: none;            /* no border */
-            border-radius: 0;        /* no rounding */
-            color: #757575;
-            font-size: 32px;         /* make triangle bigger if needed */
-            cursor: pointer;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: auto;             /* no fixed size */
-            height: auto;
-            padding: 0;              /* no padding */
+        position: absolute;
+        top: 5vh;
+        background: none;        /* no background */
+        border: none;            /* no border */
+        color: var(--text-inactive);            
+        font-size: var(--type-h1);     
+        cursor: pointer;
+        z-index: 1000;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;             /* no fixed size */
+        height: auto;
+        padding: 0;              /* no padding */
         }
         .nav-arrow:hover {
-            transform: scale(1.2);   /* still animate on hover */
-            filter: drop-shadow(0 0 8px rgb(100, 100, 100));
-            color: rgb(255, 255, 255);
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 8px var(--color-light));
+        color: var(--color-white);  
         }
-        .nav-arrow.left {
-            left: 5vh;
-        }
-        .nav-arrow.right {
-            right: 5vh;
-        }
+        .nav-arrow.left{ left: 40vh; }
+        .nav-arrow.right{ right: 40vh; }
 
         
-    /* Screen indicator dots */
+        /* Screen indicator dots */
         .screen-indicator {
-            position: absolute;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 1000;
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 1000;
         }
         .indicator-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #505050;
-            transition: background-color 0.3s ease;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: var(--button-inactive);
+        transition: background-color 0.3s ease;
         }
         .indicator-dot.active {
-            background-color: white;
+        background-color: var(--button-active);
         }
 
-    /* Screens */
+        /* Screens */
         .screen-main {
         flex: 1;
         display: flex;
@@ -381,90 +381,95 @@
         }
 
         .screen-title {
-          position: absolute;
-          top: 5vh;
-          left: 50%;
-          transform: translateX(-50%);
-          font-size: 2.1rem;
-          font-weight: 600;
-          color: #ffffff;
-          z-index: 100;
+        position: absolute;
+        top: 5vh;
+        left: 50%;
+        transform: translateX(-50%);
+        font: var(--type-h2);
+        color: var(--color-white);
+        z-index: 100;
         }
 
         .boat-control {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 60px 1fr 1fr 1fr 1fr 1fr 60px;
-            gap: 20px;
-            width: 100%;
-            align-items: stretch;
-            padding: 40px 0;
-            padding-top: 80px;
-
+        flex: 1;
+        display: grid;
+        grid-template-columns: 60px 1fr 1fr 1fr 1fr 1fr 60px;
+        gap: 20px;
+        width: 100%;
+        align-items: stretch;
+        padding: 40px 0;
+        padding-top: 80px;
         }
         .container {
-          width: 100vw;
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          position: relative;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
         }
 
         .main-content {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          position: relative;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        position: relative;
         }
 
         .screen {
-          flex: 1;
-          display: none;
-          flex-direction: column;
-          position: relative;
+        flex: 1;
+        display: none;
+        flex-direction: column;
+        position: relative;
         }
 
         .screen.active {
-          display: flex;
+        display: flex;
         }
 
-        /* Columns */
-        .columns-wrapper.full-height {
-          flex: 1;
-          display: flex;
-          flex-direction: row;
-          padding-bottom: 50px;
-        }
 
-        .column {
-          flex: 1;
-          text-align: center;
-          color: #fff;
-          font-weight: bold;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .column.col-center {
-          background-color: #444;
-        }
-        .column.col-left-center,
-        .column.col-right-center {
-          background-color: #3a3a3a;
-          flex-direction: column;
-          justify-content: space-evenly;
 
-        }
-        .column.left,
-        .column.right {
-          background-color: #3a3a3a;
-          flex-direction: column;
-          justify-content: space-evenly;
-        }
-        .column.side-left,
-        .column.side-right {
-          flex: 0 0 80px;
-        }
+
+
+
+
+/* Columns */
+.columns-wrapper.full-height {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 50px;
+}
+
+.column {
+  flex: 1;
+  text-align: center;
+  color: var(--color-white);
+  font: var(--type-button-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.column.col-center {
+  background-color: var(--button-inactive);
+}
+.column.col-left-center,
+.column.col-right-center {
+  background-color: var(--button-inactive);
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.column.left,
+.column.right {
+  background-color: var(--button-inactive);
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.column.side-left,
+.column.side-right {
+  flex: 0 0 80px;
+}
+
+
 
 
 /*GAUGES */
@@ -482,7 +487,6 @@
     pointer-events: none;
     }
 
-    /* Левая колонка (вторая из пяти) = примерно 20% экрана */
     #gauges-all > .gauge-1,
     #gauges-all > .gauge-2,
     #gauges-all > .gauge-3,
@@ -490,7 +494,6 @@
     grid-column: 2;
     }
 
-    /* Правая колонка (четвёртая из пяти) = примерно 80% экрана */
     #gauges-all > .gauge-5,
     #gauges-all > .gauge-6,
     #gauges-all > .gauge-7,
@@ -498,7 +501,6 @@
     grid-column: 6;
     }
 
-    /* Общий стиль */
     #gauges-all > div {
     display: flex;
     flex-direction: column;
@@ -2288,7 +2290,7 @@
         flex-wrap: wrap;
         flex-direction: row;
         gap: 12px;
-        justify-content: space-between; /* или flex-start / center */
+        justify-content: space-between; 
         justify-content: center;
         padding-bottom: 30px;
         }
@@ -2297,7 +2299,7 @@
         /* GAUGES BLOCK */
         .gauge-1, .gauge-2, .gauge-3, .gauge-4,
         .gauge-5, .gauge-6, .gauge-7, .gauge-8 {
-            flex: 1 1 calc(25% - 12px); /* 4 в ряд */
+            flex: 1 1 calc(25% - 12px); 
             order: 1;
             margin: 5px;
             display: flex;
@@ -2367,20 +2369,17 @@
             overflow: hidden;
         }
 
-        /* Левый throttle */
         .throttle-wrapper {
             grid-column: 1;
             grid-row: 2;
             justify-self: center;
         }
 
-        /* Левые gauges */
         .gauge-1 { grid-column: 2; grid-row: 1; }
         .gauge-2 { grid-column: 2; grid-row: 2; }
         .gauge-3 { grid-column: 2; grid-row: 3; }
         .gauge-4 { grid-column: 2; grid-row: 4; }
 
-        /* Левые кнопки (по центру блока, визуально как gauges) */
         .button-1 { grid-column: 3; grid-row: 1; }
         .button-2 { grid-column: 3; grid-row: 2; }
         .button-3 { grid-column: 3; grid-row: 3; }
@@ -2391,7 +2390,6 @@
 
 
         
-        /* Центр (rudder + лодка) */
         .rudder-wrapper {
             grid-column: 4;
             grid-row: 1 / span 4;
@@ -2410,19 +2408,16 @@
             transform: scale(1);
         }
 
-        /* Правые кнопки */
         .button-5 { grid-column: 5; grid-row: 1; }
         .button-6 { grid-column: 5; grid-row: 2; }
         .button-7 { grid-column: 5; grid-row: 3; }
         .button-8 { grid-column: 5; grid-row: 4; }
 
-        /* Правые gauges */
         .gauge-5 { grid-column: 6; grid-row: 1; }
         .gauge-6 { grid-column: 6; grid-row: 2; }
         .gauge-7 { grid-column: 6; grid-row: 3; }
         .gauge-8 { grid-column: 6; grid-row: 4; }
 
-        /* Общие отступы и центрирование */
         .gauge-1, .gauge-2, .gauge-3, .gauge-4,
         .gauge-5, .gauge-6, .gauge-7, .gauge-8,
         .button-1, .button-2, .button-3, .button-4,
@@ -2430,7 +2425,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 20px 0; /* добавлено для согласованности с gauges */
+            margin: 20px 0; 
         }
 
         .control-button {
@@ -2519,7 +2514,7 @@
 
             .throttle-wrapper {
             grid-column: 1;
-            grid-row: 2; /* или другой ряд, если нужно ниже/выше */
+            grid-row: 2; 
             justify-self: start;
             align-self: center;
             margin-top: 0;
@@ -4272,7 +4267,7 @@
             display: flex;               /* pair as one chunk */
             align-items: baseline;       /* numbers + units align nicely */
             gap: 6px;
-            justify-content: center;     /* default if понадобится центр */
+            justify-content: center;    
             }
 
             /* Vertical divider */
