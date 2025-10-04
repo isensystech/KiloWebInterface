@@ -696,31 +696,29 @@
                         </div>
 
                         <!-- Radar -->
-                        <div class="drawer-button-block">
+                        <div class="drawer-button-block" data-component="m20relay" data-switch="3">
                             <div class="drawer-button-header">
                                 <img class="drawer-button-icon" src="/static/images/radar-icon.svg" alt="Radar icon">
                                 <span class="drawer-button-title">Radar</span>
                             </div>
-
                             <div class="drawer-button-toggle" role="group" aria-label="Radar toggle">
-                                <button class="toggle-btn off active" data-value="--"> Off </button>
-                                <button class="toggle-btn on" data-value="17.2"> On </button>
+                                <button class="toggle-btn off active" data-state="0"> Off </button>
+                                <button class="toggle-btn on" data-state="1"> On </button>
                             </div>
                         </div>
                       
                         <!-- AIS -->
-                        <div class="drawer-button-block">
+                        <div class="drawer-button-block" id="ais-controls">
                             <div class="drawer-button-header">
                                 <img class="drawer-button-icon" src="/static/images/radio-icon.svg" alt="Radio icon">
                                 <span class="drawer-button-title">AIS</span>
                             </div>
-
-                            <div class="drawer-button-toggle" role="group" aria-label="Sound toggle">
-                                <button class="toggle-btn off active" type="button" data-value="--">Off</button>
-                                <button class="toggle-btn silent"      type="button" data-value="S">Silent</button>
-                                <button class="toggle-btn on"          type="button" data-value="17.2">On</button>
+                            <div class="drawer-button-toggle" role="group" aria-label="AIS toggle">
+                                <button class="toggle-btn off active" data-action="off">Off</button>
+                                <button class="toggle-btn silent" data-action="silent">Silent</button>
+                                <button class="toggle-btn on" data-action="on">On</button>
                             </div>
-                        </div>                     
+                        </div>                  
                         
                         <!-- Navigation Lights -->
                         <div class="drawer-button-block">
@@ -737,15 +735,14 @@
                         </div>
                       
                         <!-- Beacon -->
-                        <div class="drawer-button-block">
+                       <div class="drawer-button-block" data-component="m20relay" data-switch="7">
                             <div class="drawer-button-header">
                                 <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
                                 <span class="drawer-button-title">Beacon</span>
                             </div>
-
                             <div class="drawer-button-toggle" role="group" aria-label="Beacon toggle">
-                                <button class="toggle-btn off active" data-value="--"> Off </button>
-                                <button class="toggle-btn on" data-value="17.2"> On </button>
+                                <button class="toggle-btn off active" data-state="0"> Off </button>
+                                <button class="toggle-btn on" data-state="1"> On </button>
                             </div>
                         </div>
                                                                                               

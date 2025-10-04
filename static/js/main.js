@@ -3027,11 +3027,306 @@ document.addEventListener('DOMContentLoaded', () => {
         setupDocking('#auto-pilot-modal', { gap: 4 });  // 10px spacer
      
 
+// === Engine Start Button State Machine ===
+// === UNIVERSAL CLICK COMMAND HANDLER ===
+    document.body.addEventListener('click', (e) => {
+        if (!window.ws || window.ws.readyState !== WebSocket.OPEN) {
+            console.warn('WebSocket is not connected. Cannot send command.');
+            return;
+        }
 
+        const ignitionBtn = e.target.closest('#ignitionBtn');
+        const aisBtn = e.target.closest('#ais-controls button[data-action]');
+        const m20Btn = e.target.closest('[data-component="m20relay"] button[data-state]');
+        const egisBtn = e.target.closest('.battery-button-block button');
 
+        // --- 1. ENGINE BUTTON LOGIC ---
+        if (ignitionBtn && !ignitionBtn.disabled) {
+            const stateOne = ignitionBtn.querySelector('.state-one');
+            const stateTwo = ignitionBtn.querySelector('.state-two');
+            const stateThree = ignitionBtn.querySelector('.state-three');
 
+            const setVisualState = (targetState) => {
+                ignitionBtn.dataset.state = targetState;
+                stateOne.hidden = (targetState !== 1);
+                stateTwo.hidden = (targetState !== 2);
+                stateThree.hidden = (targetState !== 3);
+                ignitionBtn.classList.toggle('is-running', targetState === 3);
+            };
 
+            const stateBeforeClick = Number(ignitionBtn.dataset.state || 1);
 
+            if (stateBeforeClick === 1) {
+                console.log('Action: Ignition ON');
+                window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 1, state: 1 }));
+                setVisualState(2);
+            } else if (stateBeforeClick === 2) {
+                const rect = ignitionBtn.getBoundingClientRect();
+                const isRightHalf = e.clientX > (rect.left + rect.width / 2);
+                if (isRightHalf) { // START
+                    console.log('Action: Starting Engine Sequence...');
+                    ignitionBtn.disabled = true;
+                    window.ws.send(JSON.stringify({ type: "relay.set", bank: 7, "switch": 1, state: 1 }));
+                    setTimeout(() => {
+                        window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 2, state: 1 }));
+                        setTimeout(() => {
+                            window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 2, state: 0 }));
+                            ignitionBtn.disabled = false;
+                        }, 2000);
+                    }, 2000);
+                    setVisualState(3);
+                } else { // OFF
+                    console.log('Action: Ignition OFF');
+                    window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 1, state: 0 }));
+                    setVisualState(1);
+                }
+            } else if (stateBeforeClick === 3) {
+                console.log('Action: Stop Engine');
+                window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 1, state: 0 }));
+                setVisualState(1);
+            }
+            return;
+        }
+
+        // --- 2. AIS BUTTON LOGIC ---
+        if (aisBtn) {
+            const action = aisBtn.dataset.action;
+            const payloads = [];
+            if (action === 'off') {
+                payloads.push({ type: "m20relay.set", "switch": 4, state: 0 });
+                payloads.push({ type: "m20relay.set", "switch": 24, state: 0 });
+            } else if (action === 'silent') {
+                payloads.push({ type: "m20relay.set", "switch": 4, state: 1 });
+                payloads.push({ type: "m20relay.set", "switch": 24, state: 0 });
+            } else if (action === 'on') {
+                payloads.push({ type: "m20relay.set", "switch": 4, state: 1 });
+                payloads.push({ type: "m20relay.set", "switch": 24, state: 1 });
+            }
+            payloads.forEach(p => window.ws.send(JSON.stringify(p)));
+            console.log(`Sent AIS Command(s) for action: ${action}`);
+            return;
+        }
+
+        // --- 3. GENERIC M20 RELAY LOGIC ---
+        if (m20Btn) {
+            const block = m20Btn.closest('[data-component="m20relay"]');
+            const payload = {
+                type: 'm20relay.set',
+                switch: parseInt(block.dataset.switch, 10),
+                state: parseInt(m20Btn.dataset.state, 10)
+            };
+            window.ws.send(JSON.stringify(payload));
+            console.log('Sent M20 Relay Command:', payload);
+            return;
+        }
+
+        // --- 4. EGIS RELAY LOGIC ---
+        if (egisBtn) {
+            const block = egisBtn.closest('.battery-button-block');
+            const payload = {
+                type: 'relay.set',
+                bank: Number(block?.dataset.bank),
+                switch: Number(block?.dataset.switch),
+                state: Number(egisBtn.dataset.state)
+            };
+            window.ws.send(JSON.stringify(payload));
+            console.log('Sent EGIS Relay Command:', payload);
+            return;
+        }
+        
+    });
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing application');
+
+    // === Screen Navigation Logic ===
+    const indicators = document.querySelectorAll('.indicator-dot');
+    const screens = document.querySelectorAll('.screen');
+
+    indicators.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const screenNumber = dot.dataset.screen;
+            
+            screens.forEach(s => s.classList.remove('active'));
+            const targetScreen = document.getElementById(`screen-${screenNumber}`);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+            }
+
+            indicators.forEach(d => d.classList.remove('active'));
+            dot.classList.add('active');
+        });
+    });
+
+    // === Modal Popup Logic ===
+    const helmModal = document.getElementById('helm-modal');
+    const apModal = document.getElementById('auto-pilot-modal');
+    const helmToggle = document.getElementById('helm-toggle');
+    const apToggle = document.getElementById('ap-toggle');
+
+    [helmToggle, apToggle].forEach(toggle => {
+        if (!toggle) return;
+        const modal = (toggle === helmToggle) ? helmModal : apModal;
+        toggle.addEventListener('click', () => modal?.classList.toggle('is-open'));
+    });
+
+    document.addEventListener('click', (e) => {
+        if (helmModal?.classList.contains('is-open') && !helmModal.contains(e.target) && !helmToggle?.contains(e.target)) {
+            helmModal.classList.remove('is-open');
+        }
+        if (apModal?.classList.contains('is-open') && !apModal.contains(e.target) && !apToggle?.contains(e.target)) {
+            apModal.classList.remove('is-open');
+        }
+    });
+
+    // === Drawer Toggle Logic ===
+    const drawerToggle = document.getElementById('drawer-toggle');
+    const drawer = document.getElementById('drawer');
+    const drawerContent = document.getElementById('drawerContent');
+    
+    drawerToggle?.addEventListener('click', () => {
+        const isOpening = !drawer.classList.contains('open');
+        drawer.classList.toggle('open');
+        drawerToggle.setAttribute('aria-expanded', isOpening);
+        drawerContent.setAttribute('aria-hidden', !isOpening);
+    });
+
+    // === Tab Navigation in Drawer ===
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tabId = button.dataset.tab;
+
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            tabPanes.forEach(pane => {
+                pane.classList.toggle('active', pane.dataset.tab === tabId);
+            });
+        });
+    });
+
+    // === Payload Button Safety Caps ===
+    const safetyCaps = document.querySelectorAll('.safety-cap');
+    safetyCaps.forEach(cap => {
+        cap.addEventListener('click', () => {
+            cap.style.display = 'none';
+            setTimeout(() => {
+                cap.style.display = 'block';
+            }, 5000); // Reset after 5 seconds
+        });
+    });
+    
+    // === UNIVERSAL CLICK COMMAND HANDLER ===
+    document.body.addEventListener('click', (e) => {
+        if (!window.ws || window.ws.readyState !== WebSocket.OPEN) {
+            console.warn('WebSocket is not connected. Cannot send command.');
+            return;
+        }
+
+        const ignitionBtn = e.target.closest('#ignitionBtn');
+        const aisBtn = e.target.closest('#ais-controls button[data-action]');
+        const m20Btn = e.target.closest('[data-component="m20relay"] button[data-state]');
+        const egisBtn = e.target.closest('.battery-button-block button');
+
+        // --- 1. ENGINE BUTTON LOGIC ---
+        if (ignitionBtn && !ignitionBtn.disabled) {
+            const stateOne = ignitionBtn.querySelector('.state-one');
+            const stateTwo = ignitionBtn.querySelector('.state-two');
+            const stateThree = ignitionBtn.querySelector('.state-three');
+
+            const setVisualState = (targetState) => {
+                ignitionBtn.dataset.state = targetState;
+                stateOne.hidden = (targetState !== 1);
+                stateTwo.hidden = (targetState !== 2);
+                stateThree.hidden = (targetState !== 3);
+                ignitionBtn.classList.toggle('is-running', targetState === 3);
+            };
+
+            const stateBeforeClick = Number(ignitionBtn.dataset.state || 1);
+
+            if (stateBeforeClick === 1) {
+                console.log('Action: Ignition ON');
+                window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 1, state: 1 }));
+                setVisualState(2);
+            } else if (stateBeforeClick === 2) {
+                const rect = ignitionBtn.getBoundingClientRect();
+                const isRightHalf = e.clientX > (rect.left + rect.width / 2);
+                if (isRightHalf) { // START
+                    console.log('Action: Starting Engine Sequence...');
+                    ignitionBtn.disabled = true;
+                    window.ws.send(JSON.stringify({ type: "relay.set", bank: 7, "switch": 1, state: 1 }));
+                    setTimeout(() => {
+                        window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 2, state: 1 }));
+                        setTimeout(() => {
+                            window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 2, state: 0 }));
+                            ignitionBtn.disabled = false;
+                        }, 2000);
+                    }, 2000);
+                    setVisualState(3);
+                } else { // OFF
+                    console.log('Action: Ignition OFF');
+                    window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 1, state: 0 }));
+                    setVisualState(1);
+                }
+            } else if (stateBeforeClick === 3) {
+                console.log('Action: Stop Engine');
+                window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 1, state: 0 }));
+                setVisualState(1);
+            }
+            return;
+        }
+
+        // --- 2. AIS BUTTON LOGIC ---
+        if (aisBtn) {
+            const action = aisBtn.dataset.action;
+            const payloads = [];
+            if (action === 'off') {
+                payloads.push({ type: "m20relay.set", "switch": 4, state: 0 });
+                payloads.push({ type: "m20relay.set", "switch": 24, state: 0 });
+            } else if (action === 'silent') {
+                payloads.push({ type: "m20relay.set", "switch": 4, state: 1 });
+                payloads.push({ type: "m20relay.set", "switch": 24, state: 0 });
+            } else if (action === 'on') {
+                payloads.push({ type: "m20relay.set", "switch": 4, state: 1 });
+                payloads.push({ type: "m20relay.set", "switch": 24, state: 1 });
+            }
+            payloads.forEach(p => window.ws.send(JSON.stringify(p)));
+            console.log(`Sent AIS Command(s) for action: ${action}`);
+            return;
+        }
+
+        // --- 3. GENERIC M20 RELAY LOGIC ---
+        if (m20Btn) {
+            const block = m20Btn.closest('[data-component="m20relay"]');
+            const payload = {
+                type: 'm20relay.set',
+                switch: parseInt(block.dataset.switch, 10),
+                state: parseInt(m20Btn.dataset.state, 10)
+            };
+            window.ws.send(JSON.stringify(payload));
+            console.log('Sent M20 Relay Command:', payload);
+            return;
+        }
+
+        // --- 4. EGIS RELAY LOGIC ---
+        if (egisBtn) {
+            const block = egisBtn.closest('.battery-button-block');
+            if(!block) return;
+            const payload = {
+                type: 'relay.set',
+                bank: Number(block.dataset.bank),
+                switch: Number(block.dataset.switch),
+                state: Number(egisBtn.dataset.state)
+            };
+            window.ws.send(JSON.stringify(payload));
+            console.log('Sent EGIS Relay Command:', payload);
+            return;
+        }
+    });
+});
 
 
 
