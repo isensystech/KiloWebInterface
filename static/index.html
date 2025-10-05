@@ -21,32 +21,31 @@
         <!-- INFO BAR -->
         <div class="info-bar">
 
-    <div class="info-item">
-        <span class="info-icon" aria-hidden="true"><img src="/static/images/time-icon.svg" alt=""></span>
-        <span id="utc-time" class="info-value">00:00:00</span>
-        <span class="info-unit">UTC</span>
-    </div>
-
+            <div class="info-item">
+                <span class="info-icon" aria-hidden="true"><img src="/static/images/time-icon.svg" alt=""></span>
+                <span id="utc-time" class="info-value">--:--:--</span>
+                <span class="info-unit">UTC</span>
+            </div>
 
             <div class="info-item info-item--center">
                 &nbsp; &nbsp; &nbsp; <!-- SPASE -->
 
-                <span class="alarm-icon" aria-hidden="true"><img src="/static/images/engine.svg" alt=""></span>
+                <span id="engine-indicator" class="alarm-icon" aria-hidden="true"><img src="/static/images/engine.svg" alt=""></span>
                     &nbsp; <!-- space -->
                 <span id="joystick-indicator" class="info-icon" aria-hidden="true"><img src="/static/images/joystick-icon.svg" alt=""></span>
                     &nbsp; <!-- space -->
-                <span class="info-icon" aria-hidden="true"><img src="/static/images/comp-icon.svg" alt=""></span>
+                <span id="ap-indicator" class="info-icon" aria-hidden="true"><img src="/static/images/comp-icon.svg" alt=""></span>
                     &nbsp; <!-- space -->
 
                     <!-- inactive -->
-                <span class="alarm-icon" aria-hidden="true"><img src="/static/images/fuel.svg" alt=""></span>
+                <span id="fuel-indicator" class="alarm-icon" aria-hidden="true"><img src="/static/images/fuel.svg" alt=""></span>
                     &nbsp; <!-- space -->
                     <!-- active -->
-                <span class="alarm-icon is-active" aria-hidden="true"><img src="/static/images/propeller.svg" alt=""></span>
+                <span id="prop-indicator" class="alarm-icon is-active" aria-hidden="true"><img src="/static/images/propeller.svg" alt=""></span>
                     &nbsp; <!-- space -->
-                <span class="alarm-icon" aria-hidden="true"><img src="/static/images/oil-tempriture.svg" alt=""></span>
+                <span id="oil-indicator" class="alarm-icon" aria-hidden="true"><img src="/static/images/oil-tempriture.svg" alt=""></span>
                     &nbsp; <!-- space -->
-                <span class="alarm-icon" aria-hidden="true"><img src="/static/images/oil-pressure.svg" alt=""></span>
+                <span id="oil-pressure-indicator" class="alarm-icon" aria-hidden="true"><img src="/static/images/oil-pressure.svg" alt=""></span>
                 
                 &nbsp; &nbsp; &nbsp; <!-- SPASE -->
             </div>
@@ -56,7 +55,7 @@
 
                 <div class="info-item">
                     <span class="info-icon" aria-hidden="true"><img src="/static/images/satellite.svg" alt=""></span>
-                    <span class="info-value">32</span>
+                    <span id="gps_satellites" class="info-value">--</span>
                 </div>
 
                 &nbsp; &nbsp; &nbsp;         <!-- SPASE -->
@@ -64,10 +63,10 @@
                 <span class="info-icon" aria-hidden="true"><img src="/static/images/coordinates-icon.svg" alt=""></span>
 
                 <span class="info-unit">LAT</span>
-                <span class="info-value">0.000000</span>
+                <span id="gps_lat_deg" class="info-value">0.000000</span>
                 &nbsp;         <!-- SPASE -->
                 <span class="info-unit">LNG</span>
-                <span class="info-value">0.000000</span>
+                <span id="gps_lng_deg" class="info-value">0.000000</span>
             </div>
 
         </div>
@@ -382,7 +381,7 @@
                     <div class="ap-status-gauge gauge-block">
                     <img src="/static/images/autopilot-icon.svg" alt="AP Status Icon" class="gauge-icon">
                     <div class="gauge-label">AP status</div>
-                    <div class="gauge-value">Mission</div>
+                    <div id="ap_mode" class="gauge-value">Mission</div>
                     </div>
                 </div>
 
@@ -394,7 +393,7 @@
 
                         <!-- value line -->
                         <div class="gauge-line">
-                            <span class="value value-lg">38.6</span>
+                            <span id="groundspeed_ms" class="value value-lg">38.6</span>
                             <span class=""> km/h</span>
                         </div>
 
@@ -452,23 +451,17 @@
                 </div>
 
                 <!-- Battery Voltage Gauge block -->
-                <div class="battery-voltage-gauge gauge-block">
-                    <!-- Battery Voltage Gauge (with mini bar) -->
-                    <div class="battery-voltage-gauge gauge-block" style="--pct: 64%;">
-                        <!-- icon -->
-                        <img src="/static/images/battery.svg" alt="Battery Icon" class="gauge-icon">
-
-                        <!-- value line -->
-                        <div class="gauge-line">
-                            <span class="label-muted">Start&nbsp;</span>
-                            <span class="value-strong js-voltage">11.2</span>
-                            <span class="unit-muted">&nbsp;v</span>
-                        </div>
-
-                        <!-- mini gauge bar -->
-                        <div class="mini-gauge" role="img" aria-label="Battery level">
-                            <div class="mini-gauge-fill"></div>
-                        </div>
+                <div id="battery-gauge-10-6" class="battery-voltage-gauge gauge-block" style="--pct: 0%;">
+                    <img src="/static/images/battery.svg" alt="Battery Icon" class="gauge-icon">
+                    
+                    <div class="gauge-line">
+                        <span class="label-muted">Start&nbsp;</span>
+                        <span class="value-strong js-voltage">--</span>
+                        <span class="unit-muted">&nbsp;v</span>
+                    </div>
+                    
+                    <div class="mini-gauge" role="img" aria-label="Battery level">
+                        <div class="mini-gauge-fill"></div>
                     </div>
                 </div>
 
@@ -672,7 +665,7 @@
                             <div class="button-button-block">
                                 <div class="drawer-button-header">
                                     <img class="drawer-button-icon" src="/static/images/pump-icon.svg" alt="Pump icon">
-                                    <span class="drawer-button-title">Pump Hght</span>
+                                    <span class="drawer-button-title">Pump High</span>
                                 </div>
 
                                 <div class="half-relay" data-live-default="on">
@@ -749,97 +742,97 @@
                     <div class="payload-button-block">
      
                         <div class="button-1"> 
-                            <div class="control-button" data-device="actuator_power">
+                            <div class="control-button" data-device="buoy1">
                                 <div class="safety-cap">
-                                <img alt="Actuator" src="/static/images/vtol.svg"/>
+                                <img alt="Actuator" src="/static/images/buoy.svg"/>
                                 </div>
 
                                 <button data-bit="0" data-id="0x550">
-                                <img alt="Actuator" class="button-icon" src="/static/images/engine.svg"/>
+                                <img alt="Actuator" class="button-icon" src="/static/images/buoy.svg"/>
                                 </button>
 
-                                <div class="button-label">Actuator Power</div>
+                                <div class="button-label">Buoy 1</div>
                             </div>
                         </div> 
                         <div class="button-2"> 
-                            <div class="control-button" data-device="engine_power">
+                            <div class="control-button" data-device="buoy2">
                                 <div class="safety-cap">
-                                <img alt="engine" src="/static/images/engine.svg"/>
+                                <img alt="engine" src="/static/images/buoy.svg"/>
                                 </div>
                                 
                                 <button data-bit="1" data-id="0x550">
-                                <img alt="engine" class="button-icon" src="/static/images/engine.svg"/>
+                                <img alt="engine" class="button-icon" src="/static/images/buoy.svg"/>
                                 </button>
-                                <div class="button-label">engine Power</div>
+                                <div class="button-label">Buoy 3</div>
                             </div>
                         </div>
                         <div class="button-3"> 
                             <div class="control-button" data-device="12v_house_charging">
                                 <div class="safety-cap">
-                                <img alt="12V Charging" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" src="/static/images/vtol.svg"/>
                                 </div>
                                 <button data-bit="2" data-id="0x550">
-                                <img alt="12V Charging" class="button-icon" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" class="button-icon" src="/static/images/vtol.svg"/>
                                 </button>
-                                <div class="button-label">12V House Charging</div>
+                                <div class="button-label">VTOL Port</div>
                             </div>
                         </div>
                         <div class="button-4"> 
-                            <div class="control-button" data-device="12v_house_charging">
+                            <div class="control-button" data-device="UUV">
                                 <div class="safety-cap">
-                                <img alt="12V Charging" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" src="/static/images/torpedo.svg"/>
                                 </div>
                                 <button data-bit="2" data-id="0x550">
-                                <img alt="12V Charging" class="button-icon" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" class="button-icon" src="/static/images/torpedo.svg"/>
                                 </button>
-                                <div class="button-label">12V House Charging</div>
+                                <div class="button-label">UUV</div>
                             </div>
                         </div>
                         <div class="button-5"> 
-                            <div class="control-button" data-device="actuator_power">
+                            <div class="control-button" data-device="buoy2">
                                 <div class="safety-cap">
-                                <img alt="Actuator" src="/static/images/actuator.svg"/>
+                                <img alt="Actuator" src="/static/images/buoy.svg"/>
                                 </div>
 
                                 <button data-bit="0" data-id="0x550">
-                                <img alt="Actuator" class="button-icon" src="/static/images/actuator.svg"/>
+                                <img alt="Actuator" class="button-icon" src="/static/images/buoy.svg"/>
                                 </button>
 
-                                <div class="button-label">Actuator Power</div>
+                                <div class="button-label">Buoy 2</div>
                             </div>
                         </div> 
                         <div class="button-6"> 
-                            <div class="control-button" data-device="engine_power">
+                            <div class="control-button" data-device="buoy4">
                                 <div class="safety-cap">
-                                <img alt="engine" src="/static/images/engine.svg"/>
+                                <img alt="engine" src="/static/images/buoy.svg"/>
                                 </div>
                                 
                                 <button data-bit="1" data-id="0x550">
-                                <img alt="engine" class="button-icon" src="/static/images/engine.svg"/>
+                                <img alt="engine" class="button-icon" src="/static/images/buoy.svg"/>
                                 </button>
-                                <div class="button-label">engine Power</div>
+                                <div class="button-label">Buoy 4</div>
                             </div>
                         </div>
                         <div class="button-7"> 
-                            <div class="control-button" data-device="12v_house_charging">
+                            <div class="control-button" data-device="VTOLStbd">
                                 <div class="safety-cap">
-                                <img alt="12V Charging" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" src="/static/images/vtol.svg"/>
                                 </div>
                                 <button data-bit="2" data-id="0x550">
-                                <img alt="12V Charging" class="button-icon" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" class="button-icon" src="/static/images/vtol.svg"/>
                                 </button>
-                                <div class="button-label">12V House Charging</div>
+                                <div class="button-label">VTOL Stbd</div>
                             </div>
                         </div>
                         <div class="button-8"> 
-                            <div class="control-button" data-device="12v_house_charging">
+                            <div class="control-button" data-device="rov">
                                 <div class="safety-cap">
-                                <img alt="12V Charging" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" src="/static/images/rov.svg"/>
                                 </div>
                                 <button data-bit="2" data-id="0x550">
-                                <img alt="12V Charging" class="button-icon" src="/static/images/12vchg.svg"/>
+                                <img alt="12V Charging" class="button-icon" src="/static/images/rov.svg"/>
                                 </button>
-                                <div class="button-label">12V House Charging</div>
+                                <div class="button-label">ROV</div>
                             </div>
                         </div>
 
@@ -1723,9 +1716,9 @@
                                 <div class="asset-main">
 
                                     <div class="asset-info">
-                                        <img class="asset-icon" src="/static/images/boat.svg" alt="">
+                                        <img class="asset-icon" src="/static/images/buoy.svg" alt="">
                                         <div class="asset-texts">
-                                            <div class="asset-title">23 Kilo</div>
+                                            <div class="asset-title">17 Buoy</div>
                                             <div class="asset-sub">Leader</div>
                                         </div>
                                     </div>
@@ -1748,9 +1741,9 @@
                                 <div class="asset-main">
 
                                     <div class="asset-info">
-                                        <img class="asset-icon" src="/static/images/boat.svg" alt="">
+                                        <img class="asset-icon" src="/static/images/rov.svg" alt="">
                                         <div class="asset-texts">
-                                            <div class="asset-title">23 Kilo</div>
+                                            <div class="asset-title">15 ROV</div>
                                             <div class="asset-sub">Leader</div>
                                         </div>
                                     </div>
@@ -1758,11 +1751,11 @@
                                     <div class="asset-meta">
                                         <div class="metric">
                                             <img class="m-icon" src="/static/images/true-north.svg" alt="">
-                                            <span>102<span class="unit">°</span></span>
+                                            <span>17<span class="unit">°</span></span>
                                         </div>
                                         <div class="metric">
                                             <img class="m-icon" src="/static/images/distance.svg" alt="">
-                                            <span>14 <span class="unit">km</span></span>
+                                            <span>18 <span class="unit">km</span></span>
                                         </div>
                                     </div>
 
@@ -1773,9 +1766,9 @@
                                 <div class="asset-main">
 
                                     <div class="asset-info">
-                                        <img class="asset-icon" src="/static/images/boat.svg" alt="">
+                                        <img class="asset-icon" src="/static/images/tower.svg" alt="">
                                         <div class="asset-texts">
-                                            <div class="asset-title">23 Kilo</div>
+                                            <div class="asset-title">02 Weather</div>
                                             <div class="asset-sub">Leader</div>
                                         </div>
                                     </div>

@@ -64,6 +64,95 @@
       console.warn('Received non-JSON message:', evt.data);
       return; 
     }
+  // =================== NEW MAVLINK HANDLER START ===================
+
+    // Helper function to manage status icons
+    const handleStatusIndicator = (elementId, status, okClass = 'connected', badClass = 'disconnected', timeout = 10000) => {
+        const indicator = document.getElementById(elementId);
+        if (!indicator) return;
+
+        indicator.style.display = 'inline-block'; // Make it visible
+        indicator.classList.remove(okClass, badClass); // Clear previous states
+
+        if (status) { // Good status (true or 'ok')
+            indicator.classList.add(okClass);
+            // Hide after timeout for positive feedback
+            setTimeout(() => {
+                indicator.style.display = 'none';
+            }, timeout);
+        } else { // Bad status (false or other)
+            indicator.classList.add(badClass);
+            // Keep it visible to show the error
+        }
+    };
+    // b) relay.voltage: put volts into matching spans
+        if (msg.type === 'relay.voltage') {
+          
+            // Only handle the specific gauge for bank 10, stud 6
+            if (msg.bank === 10 && msg.stud === 6) {
+                const gaugeEl = document.getElementById('battery-gauge-10-6');
+                if (!gaugeEl) return; // Exit if the element isn't found
+
+                const voltage = msg.volts;
+                const minVoltage = 11.0;
+                const maxVoltage = 14.5;
+                const lowVoltageThreshold = 12.0;
+
+                // 1. Update the numeric value
+                const valueEl = gaugeEl.querySelector('.js-voltage');
+                if (valueEl) {
+                    valueEl.textContent = voltage.toFixed(1);
+                }
+
+                // 2. Calculate and set the gauge percentage
+                let pct = ((voltage - minVoltage) / (maxVoltage - minVoltage)) * 100;
+                // Clamp the value between 0 and 100
+                pct = Math.max(0, Math.min(100, pct));
+                gaugeEl.style.setProperty('--pct', `${pct.toFixed(0)}%`);
+
+                // 3. Set the color state
+                if (voltage < lowVoltageThreshold) {
+                    gaugeEl.classList.add('is-low');
+                } else {
+                    gaugeEl.classList.remove('is-low');
+                }
+            }
+        }
+    // Check if the message is a mavlink.state update
+    if (msg.type === 'mavlink.state') {
+        // --- 1. Update Text Values ---
+        const textFields = ['utc_time_str', 'gps_satellites', 'gps_lat_deg', 'gps_lng_deg'];
+        textFields.forEach(key => {
+            const el = document.getElementById(key);
+            if (el && msg[key] !== undefined) {
+                // For lat/lng, format to 6 decimal places
+                if (key === 'gps_lat_deg' || key === 'gps_lng_deg') {
+                    el.textContent = parseFloat(msg[key]).toFixed(6);
+                } else {
+                    el.textContent = msg[key];
+                }
+            } else if (el) {
+                el.textContent = '--'; // Fallback value
+            }
+        });
+        document.getElementById('ap_mode').textContent = msg.ap_mode || '--';
+
+        // --- 2. Update Status Icons ---
+        handleStatusIndicator('joystick-indicator', msg.joystick_connected);
+        handleStatusIndicator('ap-indicator', msg.ap_connected);
+        handleStatusIndicator('companion-indicator', msg.companion_connected);
+
+        // System status is special ('ok' vs 'error')
+        handleStatusIndicator(
+            'system-status-indicator',
+            (msg.system_status === 'ok' || msg.system_status === 1), // The condition for "good" status
+            'ok',       // CSS class for good status
+            'error'     // CSS class for bad status
+        );
+    }
+
+  // =================== NEW MAVLINK HANDLER END ===================
+
 
     // a) relay.state: highlight proper button
     if (msg.type === 'relay.state') {
@@ -85,3 +174,5 @@
         .forEach(el => el.textContent = Number(msg.volts).toFixed(1));
     }
   };
+
+  

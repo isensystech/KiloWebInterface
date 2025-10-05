@@ -4803,3 +4803,33 @@
             margin: 0;
             padding: 0;
         }
+
+
+        /* Info Bar icon color schema*/
+       /* General Status Indicator Styles */
+        #ap-indicator, #companion-indicator, #system-status-indicator {
+            transition: all 0.5s ease;
+            margin: 0 8px; /* Add some spacing between icons */
+        }
+
+        /* Red / Disconnected / Error State */
+        #ap-indicator.disconnected img,
+        #companion-indicator.disconnected img,
+        #system-status-indicator.error img {
+            /* Red color */
+            filter: invert(30%) sepia(90%) saturate(6000%) hue-rotate(350deg) brightness(90%) contrast(120%);
+        }
+
+        /* Green / Connected / OK State */
+        #ap-indicator.connected img,
+        #companion-indicator.connected img,
+        #system-status-indicator.ok img {
+            /* Green color */
+            filter: invert(70%) sepia(50%) saturate(2000%) hue-rotate(85deg) brightness(120%) contrast(110%);
+        } 
+        /* End Of Info Bar icon color schema*/
+
+        /* Battery Gauge Low Voltage State */
+        .gauge-block.is-low .mini-gauge-fill {
+            background-color: #e12d39; /* A standard red color */
+        }
