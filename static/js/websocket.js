@@ -54,6 +54,9 @@
     btn.classList.add('active');
   });
 
+  // This object will store the last known state of our status icons
+  const indicatorStates = {};
+
   /* == 2) Incoming messages -> update UI - This part also remains the same == */
   ws.onmessage = (evt) => {
     let msg;
@@ -66,25 +69,33 @@
     }
   // =================== NEW MAVLINK HANDLER START ===================
 
-    // Helper function to manage status icons
-    const handleStatusIndicator = (elementId, status, okClass = 'connected', badClass = 'disconnected', timeout = 10000) => {
-        const indicator = document.getElementById(elementId);
-        if (!indicator) return;
+// Helper function to manage status icons (now with state-tracking)
+const handleStatusIndicator = (elementId, newStatus, okClass = 'connected', badClass = 'disconnected', timeout = 5000) => {
+    const indicator = document.getElementById(elementId);
+    if (!indicator) return;
 
-        indicator.style.display = 'inline-block'; // Make it visible
-        indicator.classList.remove(okClass, badClass); // Clear previous states
+    const previousStatus = indicatorStates[elementId];
 
-        if (status) { // Good status (true or 'ok')
+    // Only act if the status has changed
+    if (newStatus !== previousStatus) {
+        if (newStatus) { // State changed to GOOD (e.g., false -> true)
+            indicator.style.display = 'inline-block';
+            indicator.classList.remove(badClass);
             indicator.classList.add(okClass);
             // Hide after timeout for positive feedback
             setTimeout(() => {
                 indicator.style.display = 'none';
             }, timeout);
-        } else { // Bad status (false or other)
+        } else { // State changed to BAD (e.g., true -> false)
+            indicator.style.display = 'inline-block';
+            indicator.classList.remove(okClass);
             indicator.classList.add(badClass);
-            // Keep it visible to show the error
         }
-    };
+    }
+
+    // Always update the state for the next message
+    indicatorStates[elementId] = newStatus;
+};
     // b) relay.voltage: put volts into matching spans
         if (msg.type === 'relay.voltage') {
           
