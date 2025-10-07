@@ -563,94 +563,104 @@
 
 
 
-/* Throttle */
 
-    /* Engine Control Throttle Slider */
-        /* Wrapper that handles hover expansion */
+    /* THROTTLE MODAL */
+
+        /* Throttle Wrapper — absolute position relative to boat */
         .throttle-wrapper {
         position: absolute;
         top: 50%;
-        left: calc(5vh - 105px); /* shifted 40px to the left */
 
-        transform: translateY(-50%);
+        /* Layout variables */
+        --boatW: clamp(220px, 28vw, 520px);   /* boat visual width model */
+        --gap: clamp(16px, 3vw, 48px);        /* space between boat and throttle */
+        --throttleW: 70px;                    /* expanded width of the panel */
+        --collapsedW: 50px;                   /* collapsed width of the panel */
+        --nudgeX: 40px;                        /* fine horizontal offset */
+        --nudgeY: 0px;                        /* fine vertical offset */
+
+        /* Keep constant distance from centered boat */
+        left: calc(50% - (var(--boatW)/2) - var(--gap) - var(--throttleW) + var(--nudgeX));
+        transform: translateY(calc(-50% + var(--nudgeY)));
         z-index: 999;
+        width: var(--throttleW);              /* wrapper always holds max width */
         }
-        /* Default compact gear toggle */
+
+        /* Panel core — centered; expands by width (no text squashing) */
         .mini-gear-toggle {
-        width: 36px;
+        width: var(--collapsedW);             /* collapsed width */
         height: 460px;
-        background-color: none;
         border-radius: 12px;
         display: flex;
         flex-direction: column;
         align-items: center;
         padding: 6px 0;
-        transition: width 0.3s ease, height 0.3s ease;
-        overflow: visible;  
+        overflow: visible;
         cursor: pointer;
+        margin: 0 auto;                       /* center in wrapper */
+        transition: width 0.3s ease, height 0.3s ease;
         }
-        /* Expand on hover */
-        .throttle-wrapper:hover .mini-gear-toggle {
-        width: 85px;
+
+        /* Symmetric expansion */
+        .throttle-wrapper:hover .mini-gear-toggle,
+        .throttle-wrapper.expanded .mini-gear-toggle {
+        width: 100%;                          /* expands to wrapper width */
         }
-        /* Container for the slider */
-        .mini-gear-toggle .gear-track {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        }
-        /* Track background */
+
+        /* Track */
         .gear-track {
         position: relative;
-        width: 20px;
+        width: 20px;                          /* narrow when collapsed */
         height: 100%;
-        background: black;
-        border: 1px solid #757575;
-        border-radius: 12px;
-        margin: 0 auto;
+        background: var(--color-black);
+        border: 1px solid var(--button-inactive);
+        border-radius: 6px;
+        margin: 0 auto;                       /* keep centered */
         z-index: 0;
         overflow: visible;
+        transition: width 0.3s ease;
         }
-        /* Fill above track, below neutral button and thumb */
+
+        /* Track widens with the panel */
+        .throttle-wrapper:hover .gear-track,
+        .throttle-wrapper.expanded .gear-track {
+        width: 100%;
+        }
+
+        /* Fill */
         .gear-fill {
         position: absolute;
         bottom: 50%;
         left: 0;
         width: 100%;
-        background-color: #FFBD0A;
-        border: 0px solid #000000;
+        background-color: var(--active-yellow);
+        border: 0;
         height: 46%;
         z-index: 1;
         }
-        /* Forward "F" button on top */
-        .forward-button{
+
+        /* Forward button */
+        .forward-button {
+        position: absolute;
+        top: 2.5%;
+        left: 50%;
         transform: translate(-50%, -50%);
         width: 100%;
-        color: #ffffff;
-        font-size: 12px;
+        height: 20px;
+        color: var(--color-white);
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 10;
         cursor: pointer;
         transition: all 0.3s ease;
-        overflow: hidden;
         white-space: nowrap;
-        position: absolute;
-        top: 2%;
-        left: 50%;
-        height: 20px;
         }
-        .text-forward {
-        display: none;
-        }
-        .throttle-wrapper:hover .text-f {
-        display: none;
-        }
-        .throttle-wrapper:hover .text-forward {
-        display: inline;
-        }
-        /* Neutral "N" button in center */
+        .text-forward { display: none; }
+        .throttle-wrapper:hover .text-f { display: none; }
+        .throttle-wrapper:hover .text-forward { display: inline; }
+
+        /* Neutral button */
         .neutral-button {
         position: absolute;
         top: 50%;
@@ -658,178 +668,129 @@
         transform: translate(-50%, -50%);
         width: 100%;
         height: 60px;
-        background-color: #454545;
+        background-color: var(--color-drawer-bg);
         border-radius: 4px;
-        font-size: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 10;
         cursor: pointer;
         transition: all 0.3s ease;
-        overflow: hidden;
         white-space: nowrap;
         }
-        /* On hover, expand neutral button and reveal full label */
         .throttle-wrapper:hover .neutral-button {
-        width: 100%;             /* Match gear-track width */
-        font-size: 14px;         /* Slightly larger text */
-        }
-        /* Default: show 'N', hide 'Neutral' */
-        .text-neutral {
-        display: none;
-        color:#ffffff
-        }
-        .throttle-wrapper:hover .text-n {
-        display: none;
-        color:#ffffff
-
-        }
-        .throttle-wrapper:hover .text-neutral {
-        display: inline;
-        color:#ffffff
-
-        }
-        /* Ensure gear-track expands smoothly */
-        .mini-gear-toggle .gear-track {
         width: 100%;
-        transition: width 0.3s ease;
         }
-        /* Reverse "R" button on bottom */
-        .reverse-button{
+        .text-neutral { display: none; color: var(--color-white); }
+        .throttle-wrapper:hover .text-n { display: none; }
+        .throttle-wrapper:hover .text-neutral { display: inline; }
+
+        /* Reverse button */
+        .reverse-button {
+        position: absolute;
+        top: 97.5%;
+        left: 50%;
         transform: translate(-50%, -50%);
         width: 100%;
-        color: #ffffff;
-        font-size: 12px;
+        height: 20px;
+        color: var(--color-white);
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 10;
         cursor: pointer;
         transition: all 0.3s ease;
-        overflow: hidden;
         white-space: nowrap;
-        position: absolute;
-        top: 98%;
-        left: 50%;
-        height: 20px;
         }
-        .text-reverse {
-        display: none;
-        }
-        .throttle-wrapper:hover .text-r {
-        display: none;
-        }
-        .throttle-wrapper:hover .text-reverse {
-        display: inline;
-        }
+        .text-reverse { display: none; }
+        .throttle-wrapper:hover .text-r { display: none; }
+        .throttle-wrapper:hover .text-reverse { display: inline; }
 
-
-
-        /* Gear thumb (slider handle) styling */
+        /* Thumb */
         .gear-thumb {
         position: absolute;
         bottom: 50%;
-        left: 50%;                          /* Center horizontally */
+        left: 50%;
         transform: translate(-50%, 50%);
-        width: 36px;                        /* Narrow default width */
+        width: 36px;                          /* narrow when collapsed */
         height: 28px;
-        background: linear-gradient(0deg, rgb(30, 30, 30) 0%, rgb(75, 75, 75) 100%);
+        background: linear-gradient(0deg, rgb(100, 100, 100) 0%, rgb(75, 75, 75) 100%);
         border-radius: 10px;
-        z-index: 15;                        /* Above all other elements */
+        z-index: 15;
         transition: width 0.1s ease;
         }
-
-        /* Optional hover effect for thumb itself */
-        .gear-thumb:hover {
-        filter: drop-shadow(0 0 4px rgba(255, 255, 255, 1));
+        .throttle-wrapper:hover .gear-thumb,
+        .throttle-wrapper.expanded .gear-thumb {
+        width: 100%;                          /* matches track width on expand */
         }
-
-        /* Text label inside the thumb */
+        .gear-thumb:hover {
+        filter: drop-shadow(0 0 4px var(--color-white));
+        }
         .gear-thumb-text {
-        display: flex;                     /* ✅ Always visible */
+        display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
         height: 100%;
         pointer-events: none;
         text-align: center;
-        font-size: 14px;                   /* ✅ Small by default */
-        color: #ffffff;
+        color: var(--color-white);
         transition: all 0.3s ease;
         }
-
-        /* On hover — expand and brighten */
-        .throttle-wrapper:hover .gear-thumb {
-        width: 100%;
-        }
-
-        .throttle-wrapper:hover .gear-thumb-text {
-        font-size: 16px;
-        opacity: 1;
-        color: #ffffff;
-        }
-
-        /* Throttle Down Button */
-        .throttle-button {
-            width: 100%;
-            height: 10px;
-            background-color: transparent;
-            color: #757575;
-            font-size: 18px;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .throttle-up {
-            margin-left: -1px;
-        }
-        .throttle-icon {
-            transition: all 0.2s ease;
-        }
-        .throttle-button:hover .throttle-icon {
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 8px white);
-            color: white;
-        }
-                
-        /* Throttle expanded GAMEPAD */
-        .throttle-wrapper.expanded .mini-gear-toggle {
-        width: 120px;
-        }
-
-        .throttle-wrapper.expanded .text-f {
-        display: none;
-        }
-        .throttle-wrapper.expanded .text-forward {
-        display: inline;
-        }
-
-        .throttle-wrapper.expanded .text-n {
-        display: none;
-        }
-        .throttle-wrapper.expanded .text-neutral {
-        display: inline;
-        }
-
-        .throttle-wrapper.expanded .text-r {
-        display: none;
-        }
-        .throttle-wrapper.expanded .text-reverse {
-        display: inline;
-        }
-
-        .throttle-wrapper.expanded .gear-thumb {
-        width: 100%;
-        }
+        .throttle-wrapper:hover .gear-thumb-text,
         .throttle-wrapper.expanded .gear-thumb-text {
-        display: block;
+        opacity: 1;
+        color: var(--color-white);
         }
 
+        /* Control buttons (stay in normal flow inside the panel) */
+        .throttle-button {
+        width: 100%;
+        height: 10px;
+        background-color: transparent;
+        color: var(--button-inactive);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        }
+        .throttle-up { margin-left: -1px; }
+        .throttle-icon { transition: all 0.2s ease; }
+        .throttle-button:hover .throttle-icon {
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 8px var(--color-white));
+        color: var(--color-white);
+        }
 
-/* RULE RUDDER ANGLE INDICATOR */
+        /* Expanded state via class (e.g., gamepad) */
+        .throttle-wrapper.expanded .text-f { display: none; font: var(--type-caption-mono-regular); }
+        .throttle-wrapper.expanded .text-forward { display: inline; font: var(--type-caption-mono-regular); }
+        .throttle-wrapper.expanded .text-n { display: none; font: var(--type-caption-mono-regular); }
+        .throttle-wrapper.expanded .text-neutral { display: inline; font: var(--type-caption-mono-regular); }
+        .throttle-wrapper.expanded .text-r { display: none; font: var(--type-caption-mono-regular); }
+        .throttle-wrapper.expanded .text-reverse { display: inline; font: var(--type-caption-mono-regular); }
+        .throttle-wrapper.expanded .mini-gear-toggle { width: 100%; }
+        .throttle-wrapper.expanded .gear-thumb { width: 100%; }
+        .throttle-wrapper.expanded .gear-thumb-text { display: flex; font: var(--type-caption-mono-bold); }
+
+        /* Typography baseline for all throttle labels */
+        .throttle-wrapper,
+        .throttle-wrapper .forward-button,
+        .throttle-wrapper .neutral-button,
+        .throttle-wrapper .reverse-button,
+        .throttle-wrapper .throttle-button {
+            
+        font: var(--type-caption-mono-regular); /* single source of truth */
+        line-height: 1; /* optional: crisper vertical alignment */
+        /* optional: lock mono family if you use it via tokens */
+        /* font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); */
+        }
+
+        .throttle-wrapper .gear-thumb-text {
+        font: var(--type-caption-mono-bold);
+        }
+
 
 
     /* RUDDER ANGLE INDICATOR */
@@ -897,6 +858,10 @@
         color: #757575; 
         font-size: 14px;
         }
+
+
+
+
 
     /* BOAT // Rudder & Trim GAUGE row */
 
@@ -4428,3 +4393,12 @@
             margin: 0;
             padding: 0;
         }
+
+
+
+
+
+
+
+
+        
