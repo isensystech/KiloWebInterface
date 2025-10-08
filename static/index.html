@@ -1899,35 +1899,97 @@
                     <div class="pane-title"><span>Communication</span> </div>
                     <div class="pane-grid">
 
-                        <!-- Communication block -->
-                        <div class="drawer-button-block comm-block">
 
+
+                        <!-- TUNNELS -->
+                        <div id="btn-tunnels" class="drawer-button-block" data-component="xxx" data-switch="xxx">
                             <div class="drawer-button-header">
-                                <img class="drawer-button-icon" src="/static/images/signal-bars.svg" alt="Communication">
-                                <span class="drawer-button-title">Communication</span>
+                                <img class="drawer-button-icon" src="/static/images/tunnel-icon.svg" alt="Tunnels">
+                                <span class="drawer-button-title">Tunnels</span>
                             </div>
 
-                         <!-- Toggle row -->
-                             <div class="drawer-button-toggle">
-                                <button class="toggle-btn"        type="button" data-signal="98"  data-dbm="107">Radio</button>
-                                <button class="toggle-btn active" type="button" data-signal="100" data-dbm="110">Satellite</button>
+                            <div class="drawer-button-toggle" role="tablist" aria-label="VPN tunnels">
+                                <button class="toggle-btn off" role="tab" aria-selected="false" data-state="vpn1">VPN 1</button>
+                                <button class="toggle-btn on active" role="tab" aria-selected="true"  data-state="vpn2">VPN 2</button>
+                            </div>
+                        </div>
+
+                        
+                        <!-- SAT -->
+                        <div id="btn-sat" class="drawer-button-block" data-bank="xxx" data-switch="xxx">
+                            <div class="drawer-button-header">
+                                <img class="drawer-button-icon" src="/static/images/satellite-icon.svg" alt="Satellite">
+                                <span class="drawer-button-title">SAT</span>
                             </div>
 
-                            <!-- Display lives next to the toggle; only data-keys matter -->
-                            <div class="comm-display">
-                                <div class="comm-metric">
-                                    <span class="display-value" data-key="signal">109</span>
+                            <div class="button-display-row">
+                                <!-- Segmented toggle -->
+                                <div class="drawer-button-toggle" role="group" aria-label="SAT toggle">
+                                    <button class="toggle-btn off" data-state="0">Off</button>
+                                    <button class="toggle-btn on active" data-state="1">On</button>
+                                </div>
+
+                                <!-- Right-side display -->
+                                <div class="drawer-display">
+                                    <span class="display-value" data-bank="xxx" data-stud="xxx">72</span>
                                     <span class="display-unit">%</span>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div class="comm-divider" aria-hidden="true"></div>
-
-                                <div class="comm-metric">
-                                    <span class="display-value" data-key="dbm">87</span>
-                                    <span class="display-unit">dBm</span>
-                                </div>
+                        <!-- CELL -->
+                        <div id="btn-cell" class="drawer-button-block" data-bank="xxx" data-switch="xxx">
+                            <div class="drawer-button-header">
+                                <img class="drawer-button-icon" src="/static/images/signal-bars.svg" alt="CELL">
+                                <span class="drawer-button-title">CELL</span>
                             </div>
 
+                            <div class="button-display-row">
+                                <!-- Segmented toggle -->
+                                <div class="drawer-button-toggle" role="group" aria-label="CELL toggle">
+                                    <button class="toggle-btn off" data-state="0">Off</button>
+                                    <button class="toggle-btn on active" data-state="1">On</button>
+                                </div>
+
+                                <!-- Right-side display -->
+                                <div class="drawer-display">
+                                    <span class="display-value" data-bank="xxx" data-stud="xxx">94</span>
+                                    <span class="display-unit">%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- LOS -->
+                        <div id="btn-los" class="drawer-button-block" data-bank="xxx" data-switch="xxx">
+                            <div class="drawer-button-header">
+                                <img class="drawer-button-icon" src="/static/images/radio-icon.svg" alt="Radio">
+                                <span class="drawer-button-title">LOS</span>
+                            </div>
+
+                            <div class="button-display-row">
+                                <!-- Segmented toggle -->
+                                <div class="drawer-button-toggle" role="group" aria-label="LOS toggle">
+                                    <button class="toggle-btn off" data-state="0">Off</button>
+                                    <button class="toggle-btn on active" data-state="1">On</button>
+                                </div>
+
+                                <!-- Right-side display -->
+                                <div class="drawer-display">
+                                    <span class="display-value" data-bank="xxx" data-stud="xxx">31</span>
+                                    <span class="display-unit">%</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Frequency bands -->
+                        <div id="btn-frequency" class="drawer-button-block" data-component="xxx" data-switch="xxx">
+                            <div class="drawer-button-toggle" role="tablist" aria-label="Frequency band">
+                                <!-- Keep original class names: off / silent / on; labels changed per mock -->
+                                <button class="toggle-btn off" role="tab" aria-selected="false" data-action="1g2">1.2 GHz</button>
+                                <button class="toggle-btn off" role="tab" aria-selected="false" data-action="2g4">2.4 GHz</button>
+                                <button class="toggle-btn on active" role="tab" aria-selected="true" data-action="5g8">5.8 GHz</button>
+                            </div>
                         </div>
 
 

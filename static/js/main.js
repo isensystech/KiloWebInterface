@@ -2740,67 +2740,172 @@ document.addEventListener('DOMContentLoaded', () => {
      
 
           // TAB 8: Communication   //
-            // Drive display from the nearest .drawer-button-toggle group (no ids, no comm-*)
-            document.addEventListener('DOMContentLoaded', () => {
-            // For each toggle container on the page…
-            document.querySelectorAll('.drawer-button-toggle').forEach(container => {
-                // Root scope = the parent element that contains both toggle and display
-                const root = container.parentElement;
-                if (!root) return;
 
-                const buttons       = container.querySelectorAll('.toggle-btn');
-                const displaySignal = root.querySelector('[data-key="signal"]');
-                const displayDbm    = root.querySelector('[data-key="dbm"]');
 
-                // helper: apply values from a button to the display
-                const applyFromBtn = (btn) => {
-                if (displaySignal) displaySignal.textContent = btn.dataset.signal ?? '--';
-                if (displayDbm)    displayDbm.textContent    = btn.dataset.dbm ?? '--';
-                };
+            /** Apply readout for one drawer-button-block */
+            function applyCommState(block, isOn) {
+            // Ensure we have a display area
+            const valueEl = block.querySelector('.drawer-display .display-value');
+            const unitEl  = block.querySelector('.drawer-display .display-unit');
+            if (!valueEl || !unitEl) return;
 
-                // init from pre-active or first
-                applyFromBtn(container.querySelector('.toggle-btn.active') || buttons[0]);
+            // Cache original ON readout once per block
+            if (!block.dataset.onValue) {
+                block.dataset.onValue = valueEl.textContent.trim();
+                block.dataset.onUnit  = unitEl.textContent.trim();
+            }
 
-                // clicks (event delegation on the container)
-                container.addEventListener('click', (e) => {
-                const btn = e.target.closest('.toggle-btn');
-                if (!btn || !container.contains(btn)) return;
-                buttons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                applyFromBtn(btn);
-                });
+            if (isOn) {
+                valueEl.textContent = block.dataset.onValue;
+                unitEl.textContent  = block.dataset.onUnit;
+            } else {
+                valueEl.textContent = '---';
+                unitEl.textContent  = '';
+            }
+            }
+
+            /** Set active button within a toggle group */
+            function setActiveToggle(btn) {
+            const block  = btn.closest('.drawer-button-block');
+            const group  = btn.closest('.drawer-button-toggle');
+            if (!block || !group) return;
+
+            // Toggle visual state (only siblings inside this group)
+            group.querySelectorAll('.toggle-btn').forEach(b => {
+                const isActive = b === btn;
+                b.classList.toggle('active', isActive);
+                b.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
+
+            // Apply readout only for two-state controls (off/on)
+            const isOn = btn.classList.contains('on');
+            applyCommState(block, isOn);
+            }
+
+            // Global delegated click handler (covers SAT/CELL/LOS and others)
+            document.addEventListener('click', function (ev) {
+            const btn = ev.target.closest('.drawer-button-block .toggle-btn');
+            if (!btn) return;
+            setActiveToggle(btn);
             });
 
-
-
-
-      
-            document.addEventListener("DOMContentLoaded", () => {
-            const toggles = document.querySelectorAll(".drawer-button-toggle");
-
-            toggles.forEach(toggle => {
-                const buttons = toggle.querySelectorAll(".toggle-btn");
-                const display = toggle.parentElement.querySelector(".drawer-button");
-                const valueEl = display.querySelector(".display-value");
-
-                buttons.forEach(btn => {
-                btn.addEventListener("click", () => {
-                    // remove active from all
-                    buttons.forEach(b => b.classList.remove("active"));
-                    // set active
-                    btn.classList.add("active");
-
-                    // update only value (unit stays the same)
-                    const value = btn.dataset.value || "--";
-                    valueEl.textContent = value;
-                });
-                });
+            // Initial sync for any pre-marked .active states (optional but helpful)
+            (function initialCommSync() {
+            document.querySelectorAll('.drawer-button-block').forEach(block => {
+                const activeBtn = block.querySelector('.drawer-button-toggle .toggle-btn.active');
+                if (!activeBtn) return;
+                // Do not re-run setActiveToggle if it is already in correct state,
+                // but ensure readout matches the current active button.
+                applyCommState(block, activeBtn.classList.contains('on'));
             });
-            });
-     
+            })();
 
 
+
+
+
+
+            // Lock/unlock Frequency block when LOS is Off/On
+
+// Cache original classes of Frequency buttons once
+function initFrequencyCache() {
+  const freq = document.getElementById('btn-frequency');
+  if (!freq) return;
+  freq.querySelectorAll('.toggle-btn').forEach(btn => {
+    if (!btn.dataset.origClass) {
+      btn.dataset.origClass = btn.className; // e.g., "toggle-btn on active"
+    }
+  });
+}
+
+// Dim (lock) or undim (unlock) the Frequency block
+function setFrequencyLocked(locked) {
+  const freq = document.getElementById('btn-frequency');
+  if (!freq) return;
+
+  const buttons = freq.querySelectorAll('.toggle-btn');
+
+  if (locked) {
+    // Save currently active target to restore later
+    const active = freq.querySelector('.toggle-btn.active');
+    if (active) {
+      // Prefer data-action, fallback to text
+      freq.dataset.prevTarget = active.dataset.action || active.textContent.trim();
+    }
+    // Force all buttons to "toggle-btn off" and clear ARIA active
+    buttons.forEach(btn => {
+      btn.className = 'toggle-btn off';
+      btn.setAttribute('aria-selected', 'false');
+    });
+    // Visual dim
+    freq.style.opacity = '0.5';
+    freq.dataset.locked = '1';
+  } else {
+    // Restore original classes
+    buttons.forEach(btn => {
+      if (btn.dataset.origClass) {
+        btn.className = btn.dataset.origClass;
+      }
+      // Clear ARIA; will set on the chosen active below
+      btn.setAttribute('aria-selected', 'false');
+    });
+
+    // Restore previously active (by data-action or text), else keep existing .active, else first .on, else first button
+    let target =
+      (freq.dataset.prevTarget &&
+        Array.from(buttons).find(b => (b.dataset.action || b.textContent.trim()) === freq.dataset.prevTarget)) ||
+      freq.querySelector('.toggle-btn.active') ||
+      freq.querySelector('.toggle-btn.on') ||
+      buttons[0];
+
+    if (target) {
+      target.classList.add('active');
+      target.setAttribute('aria-selected', 'true');
+    }
+
+    // Clear dim
+    freq.style.opacity = '';
+    freq.dataset.locked = '0';
+  }
+}
+
+// Sync lock with current LOS state
+function syncFrequencyByLos() {
+  const losOnActive = document.querySelector('#btn-los .toggle-btn.on.active');
+  setFrequencyLocked(!losOnActive); // lock when LOS is Off
+}
+
+// Block clicks on Frequency when locked
+function preventClicksWhenLocked(e) {
+  const btn = e.target.closest('#btn-frequency .toggle-btn');
+  if (!btn) return;
+  const freq = document.getElementById('btn-frequency');
+  if (freq && freq.dataset.locked === '1') {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}
+
+// Wire once
+(function () {
+  initFrequencyCache();
+  syncFrequencyByLos();
+
+  // Re-sync on any LOS toggle click
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('#btn-los .toggle-btn')) {
+      syncFrequencyByLos();
+    }
+  });
+
+  // Prevent frequency clicks while locked
+  document.addEventListener('click', preventClicksWhenLocked, true);
+})();
+
+
+
+
+            
 
       // MODAL ACTIVE HELM PANEL  //
       
@@ -2874,7 +2979,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         });
-     
+
+        
 
       // MODAL AUTO PILOT PANEL   //
       
