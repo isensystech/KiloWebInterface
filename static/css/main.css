@@ -1,147 +1,29 @@
-/* Testing git. Good Test Kate */
 
-    :root{
-    /* Sans stack with robust fallbacks */
-    --font-sans: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
-    --font-mono: "Roboto Mono", "Consolas", "SFMono-Regular", "Menlo", "ui-monospace", "monospace";
-    
-
-    /* === Weight size/line-height family === */
-
-    /* TITLE Fonts */
-    --type-h1: 800 clamp(48px, 6.4vw, 64px)/1.2 var(--font-sans);
-    --type-h2: 700 clamp(18px, 2.2vw, 28px)/1.2 var(--font-sans);
-    --type-h3: 800 18px/1.25 var(--font-sans); 
-    --type-h4: 400 14px/1.3 var(--font-sans); 
-
-    /* BODY Fonts */
-    --type-button-regular: 400 16px/1.35 var(--font-sans); 
-    --type-button-bold: 700 16px/1.35 var(--font-sans); 
-
-    /* CAPTION Small Fonts */
-    --type-caption-regular:  400 12px/1.3  var(--font-sans);
-    --type-caption-bold:  700 12px/1.3  var(--font-sans);
-
-    /* Display Fonts */
-    --type-display-mono-regular: 400 16px/1.35 var(--font-mono);
-    --type-display-mono-bold:    700 16px/1.35 var(--font-mono);
-    
-    /* INFO BAR Fonts */
-    --type-caption-mono-regular:   400 14px/1.30 var(--font-mono);
-    --type-caption-mono-bold:      700 14px/1.30 var(--font-mono);
-
-
-
-    /* === Palette === */
-
-    /* Active font: button-text-active, icon-active, */
-    --color-white: #ffffff;
-
-    /* Title font */
-    --color-light: /* rgb(255, 0, 200);*/  #dadada; 
-    --text-inactive: #757575;
-
-    --button-active: #707070;
-    --button-inactive: #404040;
-
-
-    /* Drawer active background, Drawer inactive icons */
-    --color-drawer-bg: #303030;
-
-    /* Inactive drawer */
-    --color-drawer-inactive-bg: #252525;
-
-    /* Main background */
-    --color-bg: #202020;
-
-    /* Display, button strips */
-    --color-black: black;
-
-
-    /* KILL ALL Aactive, Attention Icons, Throttle fill */
-    --active-yellow: #FFBD0A;
-    
-    /* Payload buttons, KILL ALL Inactive */
-    --inactive-yellow: #9a7000;
-
-    --gauge-red: #D0021B;
-    --gauge-green: #009100;
-    --gauge-blue: #1f8fff;
-    --color-tech: rgb(255, 0, 200); 
-    } 
-
-
-
-
-/* DISPLAY FONTS styles */
-
-    .display-value, 
-    .display-unit, 
-    .display-value-small, 
-    .display-unit-small { 
-    letter-spacing: 0.4px; /* mono tracking tech look */
-    } 
-
-    .display-label { 
-    font: var(--type-button-regular); 
-    color: var(--color-light);
-    }
-    .display-value{
-    /* mono 16px bold */
-    font: var(--type-display-mono-bold);
-    color: var(--color-white);
-    }
-    .display-unit{
-    /* mono 16px regular */
-    font: var(--type-display-mono-regular);
-    color: var(--color-light);
-    }
-
-    .display-value-small { font: var(--type-caption-mono-bold);   }
-    .display-unit-small  { font: var(--type-caption-mono-regular); }
-    .display-label-small { font: var(--type-caption-regular); 
-    color: var(--color-light);
-    }
-    
-
-
-
-
-
-
-
-
-/* MAGENTA / ERROR / BORDER */
-    * { outline: 1px dashed rgba(255, 0, 221, 0);}
 
     
+    
+    
+    /* Testing git. Good Test Scott Kate */
 
-
-
+    
     /* Reset and base styles */
         * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-
-        /* ban on allocation */
-        user-select: none; 			
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
-
-
-
-
         body {
-        font-family: var(--font-sans);
-        background-color: var(--color-bg);
-        color: var(--color-white);
-        line-height: 1.6;
-        overflow-x: hidden;
-        overflow-y: auto;
-        height: auto;
+            font-family: 'Roboto', sans-serif;
+            background-color: #202020;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow: hidden;
+            overflow-y: auto;
+            height: auto;
         }
         
         html, body {
@@ -169,78 +51,105 @@
         }
 
         .control-screen {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
         }
 
         #main {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        overflow-y: auto;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+            overflow-y: auto;
         }
         .main-content {
         overflow-y: auto;
-        max-height: calc(100vh - 160px);
+        max-height: calc(100vh - 160px); /* примерно: хедер (100px) + футер (60px) */
         }
 
 
+    :root{
+    /* Sans stack with robust fallbacks */
+    --font-sans: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
+    --font-mono: "Roboto Mono", Consolas, SFMono-Regular, Menlo, ui-monospace, monospace;
+    /* H2 token: weight size/line-height family */
+    /* clamp() keeps it responsive across viewports */
+    --type-h2: 700 clamp(18px, 2.2vw, 28px)/1.2 var(--font-sans);
+    --c-h: rgb(255, 255, 255); 
+    --type-h3: 700 18px/1.25 var(--font-sans); 
+
+    --type-h4: 400 16px/1.3 var(--font-sans); 
+
+    --type-h5: 500 14px/1.35 var(--font-sans); 
+    --type-body: 400 14px/1.35 var(--font-sans); 
 
 
 
 
+
+    --type-h4-mono: 600 16px/1.3 var(--font-mono); 
+    --type-16body-mono: 500 16px/1.3 var(--font-mono); 
+    
+    --type-h5-mono: 500 14px/1.35 var(--font-mono); 
+    --type-14body-mono: 400 14px/1.35 var(--font-mono); 
+
+    } 
+
+
+        .info-bar {
+        display: flex;               /* arrange items in a row */
+        justify-content: space-between; /* spread elements across the width */
+        align-items: center;          /* vertical centering */
+        padding: 8px 16px;
+        background-color: #202020;    /* dark background */
+        color: #ffffff;               /* white text */
+        font-size: 14px;
+        border-bottom: 1px solid #202020; /* subtle separator */
+        }
+
+        /* Put icon + text on one line and center them vertically */
+        .info-item {
+        display: inline-flex;     /* single row */
+        align-items: center;      /* vertical centering */
+        gap: 6px;                 /* spacing between icon and text */
+        height: 20px;             /* = icon box height */
+        white-space: nowrap;      /* prevent wrapping that causes jumps */
+        }
         
-
-/* INFO BAR */
-
-        /* Info bar layout */
-        .info-bar{
-        display:flex; 
-        justify-content:space-between; 
-        align-items:center;
-        padding:8px 16px;
-        background:var(--color-bg); 
-        color:var(--color-white);
-        border-bottom:1px solid var(--color-bg);
+        
+        /* Size and center the SVG icon */
+        .info-icon {
+        display: inline-flex;      /* keep it inline with text */
+        align-items: center;       /* vertical centering */
+        justify-content: center;   /* horizontal centering */
+        width: 22px;               /* tweak if you need larger icon */
+        height: 22px;
         }
 
-        /* Item: icon + text inline */
-        .info-item{ 
-        display:inline-flex; 
-        align-items:center; 
-        gap:6px; height:22px; 
-        white-space:nowrap; 
+        .info-icon img {
+        width: 100%;               /* scale SVG to the box */
+        height: 100%;
+        display: block;            /* remove inline gaps */
         }
 
-        /* Icon box */
-        .info-icon{ 
-            display:inline-flex; 
-            align-items:center; 
-            justify-content:center; 
-            width:22px; 
-            height:22px; }
-
-        .info-icon img{ 
-            width:100%; 
-            height:100%; 
-            display:block; }
-
-        /* Unit uses mono regular token + palette */
-        .info-unit{
-        /* mono regular, small */
-        font: var(--type-caption-mono-regular);
-        color: var(--color-light);
+        /* Unit label (e.g., "GPS") */
+        .info-unit {
+        /* small caps look */
+        font-family: Inter, system-ui, sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        letter-spacing: 0.6px;         /* tech look */
+        color: #757575;              /* muted gray */
         }
 
-        /* Value uses mono bold token + palette */
-        .info-value{
-        /* mono bold, small */
-        font: var(--type-caption-mono-bold);
-        color: var(--color-light);
+        /* Value text (e.g., "Locked") */
+        .info-value {
+        font-family: Inter, system-ui, sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        color: #909090;  /* brighter than unit */
         }
-
 
 
         /* ALARM ICON */
@@ -277,7 +186,7 @@
         @media (min-width: 1024px){
         .info-bar{ position: relative; } /* anchor for absolute centering */
 
-            .info-bar .info-item--center{
+        .info-bar .info-item--center{
             position: absolute;           /* take out of flex flow */
             left: 50%;                    /* center in viewport */
             transform: translateX(-50%);  /* exact centering */
@@ -285,7 +194,7 @@
             margin: 0;                    /* ignore inline gaps */
             width: max-content;           /* shrink to its contents */
             pointer-events: auto;         /* keep clickable */
-            }
+        }
         }
 
 
@@ -300,78 +209,84 @@
         }
 
         .carousel-titles {
-        position: absolute;
-        top: 5vh;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 999;
-        pointer-events: none;
+          position: absolute;
+          top: 5vh;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 999;
+          pointer-events: none;
         }
 
         .carousel-title {
-        font: var(--type-h2);
-        color: var(--color-light); 
-        text-align: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        white-space: nowrap; 
+            font: var(--type-h2);
+            color: var(--c-h); /* <- apply the pink you defined */
+
+          text-align: center;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          white-space: nowrap; 
         }
 
         .carousel-title.active {
-        opacity: 1;
+          opacity: 1;
         }
 
         .nav-arrow {
-        position: absolute;
-        top: 5vh;
-        background: none;        /* no background */
-        border: none;            /* no border */
-        color: var(--text-inactive);            
-        font-size: var(--type-h1);     
-        cursor: pointer;
-        z-index: 1000;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: auto;             /* no fixed size */
-        height: auto;
-        padding: 0;              /* no padding */
+            position: absolute;
+            top: 5vh;
+            background: none;        /* no background */
+            border: none;            /* no border */
+            border-radius: 0;        /* no rounding */
+            color: #757575;
+            font-size: 32px;         /* make triangle bigger if needed */
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;             /* no fixed size */
+            height: auto;
+            padding: 0;              /* no padding */
         }
         .nav-arrow:hover {
-        transform: scale(1.2);
-        filter: drop-shadow(0 0 8px var(--color-light));
-        color: var(--color-white);  
+            transform: scale(1.2);   /* still animate on hover */
+            filter: drop-shadow(0 0 8px rgb(100, 100, 100));
+            color: rgb(255, 255, 255);
         }
-        .nav-arrow.left{ left: 40vh; }
-        .nav-arrow.right{ right: 40vh; }
+        .nav-arrow.left {
+            left: 5vh;
+        }
+        .nav-arrow.right {
+            right: 5vh;
+        }
 
         
-        /* Screen indicator dots */
+    /* Screen indicator dots */
         .screen-indicator {
-        position: absolute;
-        bottom: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 10px;
-        z-index: 1000;
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
         }
         .indicator-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background-color: var(--button-inactive);
-        transition: background-color 0.3s ease;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #505050;
+            transition: background-color 0.3s ease;
         }
         .indicator-dot.active {
-        background-color: var(--button-active);
+            background-color: white;
         }
 
-        /* Screens */
+    /* Screens */
         .screen-main {
         flex: 1;
         display: flex;
@@ -381,98 +296,93 @@
         }
 
         .screen-title {
-        position: absolute;
-        top: 5vh;
-        left: 50%;
-        transform: translateX(-50%);
-        font: var(--type-h2);
-        color: var(--color-white);
-        z-index: 100;
+          position: absolute;
+          top: 5vh;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 2.1rem;
+          font-weight: 600;
+          color: #ffffff;
+          z-index: 100;
         }
 
         .boat-control {
-        flex: 1;
-        display: grid;
-        grid-template-columns: 60px 1fr 1fr 1fr 1fr 1fr 60px;
-        gap: 20px;
-        width: 100%;
-        align-items: stretch;
-        padding: 40px 0;
-        padding-top: 80px;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 60px 1fr 1fr 1fr 1fr 1fr 60px;
+            gap: 20px;
+            width: 100%;
+            align-items: stretch;
+            padding: 40px 0;
+            padding-top: 80px;
+
         }
         .container {
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        position: relative;
+          width: 100vw;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          position: relative;
         }
 
         .main-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        position: relative;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          position: relative;
         }
 
         .screen {
-        flex: 1;
-        display: none;
-        flex-direction: column;
-        position: relative;
+          flex: 1;
+          display: none;
+          flex-direction: column;
+          position: relative;
         }
 
         .screen.active {
-        display: flex;
+          display: flex;
+        }
+
+        /* Columns */
+        .columns-wrapper.full-height {
+          flex: 1;
+          display: flex;
+          flex-direction: row;
+          padding-bottom: 50px;
+        }
+
+        .column {
+          flex: 1;
+          text-align: center;
+          color: #fff;
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .column.col-center {
+          background-color: #444;
+        }
+        .column.col-left-center,
+        .column.col-right-center {
+          background-color: #3a3a3a;
+          flex-direction: column;
+          justify-content: space-evenly;
+
+        }
+        .column.left,
+        .column.right {
+          background-color: #3a3a3a;
+          flex-direction: column;
+          justify-content: space-evenly;
+        }
+        .column.side-left,
+        .column.side-right {
+          flex: 0 0 80px;
         }
 
 
-
-
-
-
-
-/* Columns */
-.columns-wrapper.full-height {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  padding-bottom: 50px;
-}
-
-.column {
-  flex: 1;
-  text-align: center;
-  color: var(--color-white);
-  font: var(--type-button-bold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.column.col-center {
-  background-color: var(--button-inactive);
-}
-.column.col-left-center,
-.column.col-right-center {
-  background-color: var(--button-inactive);
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-.column.left,
-.column.right {
-  background-color: var(--button-inactive);
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-.column.side-left,
-.column.side-right {
-  flex: 0 0 80px;
-}
-
-
-
-
-/*GAUGES */
+    /*GAUGES */
 
     #gauges-all {
     display: grid;
@@ -487,6 +397,7 @@
     pointer-events: none;
     }
 
+    /* Левая колонка (вторая из пяти) = примерно 20% экрана */
     #gauges-all > .gauge-1,
     #gauges-all > .gauge-2,
     #gauges-all > .gauge-3,
@@ -494,6 +405,7 @@
     grid-column: 2;
     }
 
+    /* Правая колонка (четвёртая из пяти) = примерно 80% экрана */
     #gauges-all > .gauge-5,
     #gauges-all > .gauge-6,
     #gauges-all > .gauge-7,
@@ -501,6 +413,7 @@
     grid-column: 6;
     }
 
+    /* Общий стиль */
     #gauges-all > div {
     display: flex;
     flex-direction: column;
@@ -510,7 +423,7 @@
 
 
 
-/* GAUGES LIST */
+    /* GAUGES LIST */
 
         .gauge-mini {
         display: flex;
@@ -563,104 +476,95 @@
 
 
 
+    /* Throttle */
 
-    /* THROTTLE MODAL */
 
-        /* Throttle Wrapper — absolute position relative to boat */
+    /* Engine Control Throttle Slider */
+        /* Wrapper that handles hover expansion */
         .throttle-wrapper {
         position: absolute;
         top: 50%;
+        left: calc(5vh - 105px); /* shifted 40px to the left */
 
-        /* Layout variables */
-        --boatW: clamp(220px, 28vw, 520px);   /* boat visual width model */
-        --gap: clamp(16px, 3vw, 48px);        /* space between boat and throttle */
-        --throttleW: 70px;                    /* expanded width of the panel */
-        --collapsedW: 50px;                   /* collapsed width of the panel */
-        --nudgeX: 40px;                        /* fine horizontal offset */
-        --nudgeY: 0px;                        /* fine vertical offset */
-
-        /* Keep constant distance from centered boat */
-        left: calc(50% - (var(--boatW)/2) - var(--gap) - var(--throttleW) + var(--nudgeX));
-        transform: translateY(calc(-50% + var(--nudgeY)));
+        transform: translateY(-50%);
         z-index: 999;
-        width: var(--throttleW);              /* wrapper always holds max width */
         }
-
-        /* Panel core — centered; expands by width (no text squashing) */
+        /* Default compact gear toggle */
         .mini-gear-toggle {
-        width: var(--collapsedW);             /* collapsed width */
+        width: 36px;
         height: 460px;
+        background-color: none;
         border-radius: 12px;
         display: flex;
         flex-direction: column;
         align-items: center;
         padding: 6px 0;
-        overflow: visible;
-        cursor: pointer;
-        margin: 0 auto;                       /* center in wrapper */
         transition: width 0.3s ease, height 0.3s ease;
+        overflow: visible;  
+        cursor: pointer;
         }
-
-        /* Symmetric expansion */
-        .throttle-wrapper:hover .mini-gear-toggle,
-        .throttle-wrapper.expanded .mini-gear-toggle {
-        width: 100%;                          /* expands to wrapper width */
+        /* Expand on hover */
+        .throttle-wrapper:hover .mini-gear-toggle {
+        width: 85px;
         }
-
-        /* Track */
+        /* Container for the slider */
+        .mini-gear-toggle .gear-track {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        }
+        /* Track background */
         .gear-track {
         position: relative;
-        width: 20px;                          /* narrow when collapsed */
+        width: 20px;
         height: 100%;
-        background: var(--color-black);
-        border: 1px solid var(--button-inactive);
-        border-radius: 6px;
-        margin: 0 auto;                       /* keep centered */
+        background: black;
+        border: 1px solid #757575;
+        border-radius: 12px;
+        margin: 0 auto;
         z-index: 0;
         overflow: visible;
-        transition: width 0.3s ease;
         }
-
-        /* Track widens with the panel */
-        .throttle-wrapper:hover .gear-track,
-        .throttle-wrapper.expanded .gear-track {
-        width: 100%;
-        }
-
-        /* Fill */
+        /* Fill above track, below neutral button and thumb */
         .gear-fill {
         position: absolute;
         bottom: 50%;
         left: 0;
         width: 100%;
-        background-color: var(--active-yellow);
-        border: 0;
+        background-color: #FFBD0A;
+        border: 0px solid #000000;
         height: 46%;
         z-index: 1;
         }
-
-        /* Forward button */
-        .forward-button {
-        position: absolute;
-        top: 2.5%;
-        left: 50%;
+        /* Forward "F" button on top */
+        .forward-button{
         transform: translate(-50%, -50%);
         width: 100%;
-        height: 20px;
-        color: var(--color-white);
+        color: #ffffff;
+        font-size: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 10;
         cursor: pointer;
         transition: all 0.3s ease;
+        overflow: hidden;
         white-space: nowrap;
+        position: absolute;
+        top: 2%;
+        left: 50%;
+        height: 20px;
         }
-        .text-forward { display: none; }
-        .throttle-wrapper:hover .text-f { display: none; }
-        .throttle-wrapper:hover .text-forward { display: inline; }
-
-        /* Neutral button */
+        .text-forward {
+        display: none;
+        }
+        .throttle-wrapper:hover .text-f {
+        display: none;
+        }
+        .throttle-wrapper:hover .text-forward {
+        display: inline;
+        }
+        /* Neutral "N" button in center */
         .neutral-button {
         position: absolute;
         top: 50%;
@@ -668,129 +572,178 @@
         transform: translate(-50%, -50%);
         width: 100%;
         height: 60px;
-        background-color: var(--color-drawer-bg);
+        background-color: #454545;
         border-radius: 4px;
+        font-size: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 10;
         cursor: pointer;
         transition: all 0.3s ease;
+        overflow: hidden;
         white-space: nowrap;
         }
+        /* On hover, expand neutral button and reveal full label */
         .throttle-wrapper:hover .neutral-button {
-        width: 100%;
+        width: 100%;             /* Match gear-track width */
+        font-size: 14px;         /* Slightly larger text */
         }
-        .text-neutral { display: none; color: var(--color-white); }
-        .throttle-wrapper:hover .text-n { display: none; }
-        .throttle-wrapper:hover .text-neutral { display: inline; }
+        /* Default: show 'N', hide 'Neutral' */
+        .text-neutral {
+        display: none;
+        color:#ffffff
+        }
+        .throttle-wrapper:hover .text-n {
+        display: none;
+        color:#ffffff
 
-        /* Reverse button */
-        .reverse-button {
-        position: absolute;
-        top: 97.5%;
-        left: 50%;
+        }
+        .throttle-wrapper:hover .text-neutral {
+        display: inline;
+        color:#ffffff
+
+        }
+        /* Ensure gear-track expands smoothly */
+        .mini-gear-toggle .gear-track {
+        width: 100%;
+        transition: width 0.3s ease;
+        }
+        /* Reverse "R" button on bottom */
+        .reverse-button{
         transform: translate(-50%, -50%);
         width: 100%;
-        height: 20px;
-        color: var(--color-white);
+        color: #ffffff;
+        font-size: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 10;
         cursor: pointer;
         transition: all 0.3s ease;
+        overflow: hidden;
         white-space: nowrap;
+        position: absolute;
+        top: 98%;
+        left: 50%;
+        height: 20px;
         }
-        .text-reverse { display: none; }
-        .throttle-wrapper:hover .text-r { display: none; }
-        .throttle-wrapper:hover .text-reverse { display: inline; }
+        .text-reverse {
+        display: none;
+        }
+        .throttle-wrapper:hover .text-r {
+        display: none;
+        }
+        .throttle-wrapper:hover .text-reverse {
+        display: inline;
+        }
 
-        /* Thumb */
+
+
+        /* Gear thumb (slider handle) styling */
         .gear-thumb {
         position: absolute;
         bottom: 50%;
-        left: 50%;
+        left: 50%;                          /* Center horizontally */
         transform: translate(-50%, 50%);
-        width: 36px;                          /* narrow when collapsed */
+        width: 36px;                        /* Narrow default width */
         height: 28px;
-        background: linear-gradient(0deg, rgb(100, 100, 100) 0%, rgb(75, 75, 75) 100%);
+        background: linear-gradient(0deg, rgb(30, 30, 30) 0%, rgb(75, 75, 75) 100%);
         border-radius: 10px;
-        z-index: 15;
+        z-index: 15;                        /* Above all other elements */
         transition: width 0.1s ease;
         }
-        .throttle-wrapper:hover .gear-thumb,
-        .throttle-wrapper.expanded .gear-thumb {
-        width: 100%;                          /* matches track width on expand */
-        }
+
+        /* Optional hover effect for thumb itself */
         .gear-thumb:hover {
-        filter: drop-shadow(0 0 4px var(--color-white));
+        filter: drop-shadow(0 0 4px rgba(255, 255, 255, 1));
         }
+
+        /* Text label inside the thumb */
         .gear-thumb-text {
-        display: flex;
+        display: flex;                     /* ✅ Always visible */
         align-items: center;
         justify-content: center;
         width: 100%;
         height: 100%;
         pointer-events: none;
         text-align: center;
-        color: var(--color-white);
+        font-size: 14px;                   /* ✅ Small by default */
+        color: #ffffff;
         transition: all 0.3s ease;
         }
-        .throttle-wrapper:hover .gear-thumb-text,
-        .throttle-wrapper.expanded .gear-thumb-text {
-        opacity: 1;
-        color: var(--color-white);
-        }
 
-        /* Control buttons (stay in normal flow inside the panel) */
-        .throttle-button {
+        /* On hover — expand and brighten */
+        .throttle-wrapper:hover .gear-thumb {
         width: 100%;
-        height: 10px;
-        background-color: transparent;
-        color: var(--button-inactive);
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         }
-        .throttle-up { margin-left: -1px; }
-        .throttle-icon { transition: all 0.2s ease; }
+
+        .throttle-wrapper:hover .gear-thumb-text {
+        font-size: 16px;
+        opacity: 1;
+        color: #ffffff;
+        }
+
+        /* Throttle Down Button */
+        .throttle-button {
+            width: 100%;
+            height: 10px;
+            background-color: transparent;
+            color: #757575;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .throttle-up {
+            margin-left: -1px;
+        }
+        .throttle-icon {
+            transition: all 0.2s ease;
+        }
         .throttle-button:hover .throttle-icon {
-        transform: scale(1.2);
-        filter: drop-shadow(0 0 8px var(--color-white));
-        color: var(--color-white);
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 8px white);
+            color: white;
+        }
+                
+        /* Throttle expanded GAMEPAD */
+        .throttle-wrapper.expanded .mini-gear-toggle {
+        width: 120px;
         }
 
-        /* Expanded state via class (e.g., gamepad) */
-        .throttle-wrapper.expanded .text-f { display: none; font: var(--type-caption-mono-regular); }
-        .throttle-wrapper.expanded .text-forward { display: inline; font: var(--type-caption-mono-regular); }
-        .throttle-wrapper.expanded .text-n { display: none; font: var(--type-caption-mono-regular); }
-        .throttle-wrapper.expanded .text-neutral { display: inline; font: var(--type-caption-mono-regular); }
-        .throttle-wrapper.expanded .text-r { display: none; font: var(--type-caption-mono-regular); }
-        .throttle-wrapper.expanded .text-reverse { display: inline; font: var(--type-caption-mono-regular); }
-        .throttle-wrapper.expanded .mini-gear-toggle { width: 100%; }
-        .throttle-wrapper.expanded .gear-thumb { width: 100%; }
-        .throttle-wrapper.expanded .gear-thumb-text { display: flex; font: var(--type-caption-mono-bold); }
-
-        /* Typography baseline for all throttle labels */
-        .throttle-wrapper,
-        .throttle-wrapper .forward-button,
-        .throttle-wrapper .neutral-button,
-        .throttle-wrapper .reverse-button,
-        .throttle-wrapper .throttle-button {
-            
-        font: var(--type-caption-mono-regular); /* single source of truth */
-        line-height: 1; /* optional: crisper vertical alignment */
-        /* optional: lock mono family if you use it via tokens */
-        /* font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); */
+        .throttle-wrapper.expanded .text-f {
+        display: none;
+        }
+        .throttle-wrapper.expanded .text-forward {
+        display: inline;
         }
 
-        .throttle-wrapper .gear-thumb-text {
-        font: var(--type-caption-mono-bold);
+        .throttle-wrapper.expanded .text-n {
+        display: none;
+        }
+        .throttle-wrapper.expanded .text-neutral {
+        display: inline;
         }
 
+        .throttle-wrapper.expanded .text-r {
+        display: none;
+        }
+        .throttle-wrapper.expanded .text-reverse {
+        display: inline;
+        }
+
+        .throttle-wrapper.expanded .gear-thumb {
+        width: 100%;
+        }
+        .throttle-wrapper.expanded .gear-thumb-text {
+        display: block;
+        }
+
+
+    /* RULE RUDDER ANGLE INDICATOR */
 
 
     /* RUDDER ANGLE INDICATOR */
@@ -859,10 +812,6 @@
         font-size: 14px;
         }
 
-
-
-
-
     /* BOAT // Rudder & Trim GAUGE row */
 
     /* Row container */
@@ -929,7 +878,7 @@
   
 
 
-/* FOOTER */
+    /* FOOTER */
 
 
     /* Status bar */
@@ -1083,7 +1032,8 @@
         }
         
 
-/* EDIT Button MODAL */
+    /* EDIT Button MODAL */
+
 
         body.editing-mode {
             background-color: #000000;
@@ -1165,8 +1115,8 @@
             padding-bottom: 26px;
         }
         .editor-modal-title {
-            font: var(--typo-h2);
-            color: var(--color-light); /* <- apply the pink you defined */
+             font: var(--typo-h2);
+          color: var(--c-h2); /* <- apply the pink you defined */
             margin-bottom: 24px;
             margin: 0 0 12px 0;
             text-align: center;
@@ -1811,7 +1761,7 @@
 
 
 
-/* TRIM MODAL */
+    /* TRIM MODAL */
 
         /* TRIM MODAL */
         #trim-modal-backdrop {
@@ -1970,222 +1920,7 @@
         }
 
 
-
-/* ======= TRIM TAB CONTROL MODAL ======= */
-
-/* Split wrapper into two vertical halves */
-/* top: boat image, bottom: two mini sliders */
-.trim-image-wrapper{
-  /* grid gives two equal rows */
-  display: grid;                           /* two-row layout */
-  grid-template-rows: 1fr 1fr;             /* 50% / 50% */
-  align-items: center;                     /* vertical centering inside rows */
-  justify-items: center;                   /* horizontal centering */
-  gap: 12px;                               /* small spacing between halves */
-  position: relative;                      /* keep existing absolute children safe */
-  min-height: 340px;                       /* ≈ 2 × 170px slider height */
-}
-
-/* Bottom half: the two mini sliders */
-.trimtab-panel{
-  grid-row: 2;                              /* place in the lower half */
-  display: flex;                            /* your existing layout for two sliders */
-  gap: 16px;
-  align-items: flex-end;
-  justify-content: center;
-  width: 100%;
-}
-
-.trimtab-block{ width:80px; }
-
-/* slider box (half height of anchor: 170px) */
-.trimtab-slider-overlay{ position:relative; width:80px; height:170px; }
-
-/* track / fill / thumb */
-.trimtab-track-bg{
-  position:absolute; left:40px; top:0; width:30px; height:100%;
-  background:#000; border-radius:10px;
-}
-.trimtab-track-fill{
-  position:absolute; left:42px; top:0; width:29%;
-  height:50%; background:#FFBD0A; border-radius:9px;
-}
-.trimtab-thumb{
-  position:absolute; left:36px; width:38px; height:26px;
-  transform:translateY(-50%); border-radius:10%;
-  background:radial-gradient(ellipse 50% 50% at 50% 50%, #939393 0%, #737373 100%);
-  cursor:grab; z-index:2;
-}
-
-/* place your existing arrow buttons above/below the track, scoped to slider */
-.trimtab-slider-overlay .throttle-up,
-.trimtab-slider-overlay .throttle-down{
-  position:absolute; left:55px; transform:translateX(-50%); z-index:3;
-}
-.trimtab-slider-overlay .throttle-up{ top:0; }
-.trimtab-slider-overlay .throttle-down{ bottom:0; }
-
-/* small captions (optional) */
-.trimtab-caption{ margin-top:6px; text-align:center; color:#dadada; font: var(--type-caption-regular); }
-
-
-
-
-
-
-
-/* GYROSCOPE top-half image */
-/* Gyro block: stack vertically and center */
-.gyro-feedback{
-  /* vertical stack */
-  display: flex;                 /* center both children vertically */
-  flex-direction: column;        /* image above, controls below */
-  align-items: center;           /* horizontal centering */
-  justify-content: center;       /* vertical centering inside the area */
-  gap: 8px;                      /* space between image and controls */
-    position:relative;              /* anchor for absolute water */
-
-}
-
-/* Boat image (≈ +30% from previous 50% → 65%) */
-#gyro-boat{
-  /* size */
-  width: 35%;                    /* 50% * 1.3 = 65% */
-  max-width:none;
-  height:auto;
-  transform-origin:50% 50%;
-  transition:transform 180ms ease;
-  display:block;
-  position:relative;              /* allow z-index */
-  z-index:1;                      /* above water by default */
-}
-
-
-/* Controls under the image, centered */
-.gyro-controls{
-  display: flex;
-  align-items: center;
-  justify-content: center;       /* center buttons + angle */
-  gap: 8px;
-  margin: 8px 0 0;               /* small space from image */
-}
-
-/* Angle label */
-.gyro-angle{
-  color: var(--color-light);
-  font: var(--type-caption-mono-regular);
-}
-
-/* wavy water line */
-.gyro-water{
-  position:absolute; left:50%; top:56%; transform:translateX(-50%);
-  width:90%; height:4px; pointer-events:none; z-index:2;
-
-  /* wave color here */
-  background-color: var(--color-white);
-
-  /* wave shape as mask */
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'%3E%3Cpath d='M0 5 Q 5 0 10 5 T 20 5 T 30 5 T 40 5 T 50 5 T 60 5 T 70 5 T 80 5 T 90 5 T 100 5 T 110 5 T 120 5' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
-  -webkit-mask-repeat:repeat-x;
-  -webkit-mask-position:center;
-  -webkit-mask-size:90px 100%;
-          mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'%3E%3Cpath d='M0 5 Q 5 0 10 5 T 20 5 T 30 5 T 40 5 T 50 5 T 60 5 T 70 5 T 80 5 T 90 5 T 100 5 T 110 5 T 120 5' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
-          mask-repeat:repeat-x;
-          mask-position:center;
-          mask-size:90px 100%;
-}
-
-.gyro-water.over{ z-index: 5; } /* draw above the boat if needed */
-
-
-
-
-
-/* ======= ANCHOR MODAL ======= */
-
-        .anchor-boat-image {
-        position: absolute;
-        top: 20%;
-        left: 40%;
-        transform: translate(-50%, -50%);
-        width: 60%;
-        height: auto;
-        }
-
-        /* Slider overlay container */
-        .anchor-slider-overlay{
-        position:absolute; top:0; right:0; height:100%;
-        display:flex; align-items:center; padding-right:10px;
-        z-index:4;
-        }
-
-        /* Scale labels */
-        .anchor-labels{
-        position:absolute; left:8px; top:0; width:30px; height:90%;
-        font-size:10px; font-family:'Roboto', sans-serif; font-weight:700;
-        color:#757575; line-height:15px; text-align:center;
-        pointer-events:none;
-        }
-
-        /* Background track */
-        .anchor-track-bg{
-        position:absolute; top:10; left:40px; width:30px; height:100%;
-        background:black; border-radius:10px;
-        }
-
-        /* Fill (yellow) */
-        .anchor-track-fill{
-        position:absolute; left:42px; width:29%;
-        background-color:#FFBD0A; border-radius:9px;
-        z-index:1; height:100%; bottom:2px;
-        }
-
-        /* Thumb handle */
-        .anchor-thumb{
-        position:absolute; left:36px; width:38px; height:26px;
-        background:radial-gradient(ellipse 50% 50% at 50% 50%, #939393 0%, #737373 100%);
-        border-radius:10%; transform:translateY(-50%); cursor:grab; z-index:10;
-        }
-        .anchor-thumb:hover{
-        filter:drop-shadow(0 0 8px rgb(100,100,100));
-        background:radial-gradient(ellipse 50% 50% at 50% 50%, #a8a8a8 0%, #848484 100%);
-        }
-
-        /* Readout badge */
-        .anchor-readout{
-        position:absolute; left:-230px; bottom:0; width:60px; height:40px;
-        background-color:#000; color:#fff; font-family:Roboto, sans-serif;
-        font-weight:normal; font-size:28px; text-align:center; line-height:40px;
-        border-radius:4px; z-index:6;
-        }
-
-        /* Empty wrapper (kept, used in HTML) */
-        .anchor-slider-wrapper{
-        position:relative; width:80px; height:340px;
-        margin-left:auto; margin-right:0; margin-top:0; margin-bottom:0;
-        z-index:2; overflow:visible;
-        }
-
-
-
-        /* Place throttle buttons above/below the slider *inside* the overlay */
-        /* Track center: left = 40px + 15px = 55px */
-        #anchor-throttle-up,
-        #anchor-throttle-down{
-        position: absolute;          /* take out of the flex flow */
-        left: 55px;                  /* center horizontally over 30px track */
-        transform: translateX(-50%); /* horizontal centering only */
-        z-index: 6;                  /* above track */
-        }
-        .anchor-track-fill{ top:0; bottom:auto; } /* anchor fill to TOP */
-
-        #anchor-throttle-up   { top: 0; }     /* at the top edge (no negative offset) */
-        #anchor-throttle-down { bottom: 0; }  /* at the bottom edge */
-
-
-
-
-/* NEW VERSION */
+    /* NEW VERSION */
 
 
         .gauges-left, .gauges-right,
@@ -2255,7 +1990,7 @@
         flex-wrap: wrap;
         flex-direction: row;
         gap: 12px;
-        justify-content: space-between; 
+        justify-content: space-between; /* или flex-start / center */
         justify-content: center;
         padding-bottom: 30px;
         }
@@ -2264,7 +1999,7 @@
         /* GAUGES BLOCK */
         .gauge-1, .gauge-2, .gauge-3, .gauge-4,
         .gauge-5, .gauge-6, .gauge-7, .gauge-8 {
-            flex: 1 1 calc(25% - 12px); 
+            flex: 1 1 calc(25% - 12px); /* 4 в ряд */
             order: 1;
             margin: 5px;
             display: flex;
@@ -2334,17 +2069,20 @@
             overflow: hidden;
         }
 
+        /* Левый throttle */
         .throttle-wrapper {
             grid-column: 1;
             grid-row: 2;
             justify-self: center;
         }
 
+        /* Левые gauges */
         .gauge-1 { grid-column: 2; grid-row: 1; }
         .gauge-2 { grid-column: 2; grid-row: 2; }
         .gauge-3 { grid-column: 2; grid-row: 3; }
         .gauge-4 { grid-column: 2; grid-row: 4; }
 
+        /* Левые кнопки (по центру блока, визуально как gauges) */
         .button-1 { grid-column: 3; grid-row: 1; }
         .button-2 { grid-column: 3; grid-row: 2; }
         .button-3 { grid-column: 3; grid-row: 3; }
@@ -2355,6 +2093,7 @@
 
 
         
+        /* Центр (rudder + лодка) */
         .rudder-wrapper {
             grid-column: 4;
             grid-row: 1 / span 4;
@@ -2373,16 +2112,19 @@
             transform: scale(1);
         }
 
+        /* Правые кнопки */
         .button-5 { grid-column: 5; grid-row: 1; }
         .button-6 { grid-column: 5; grid-row: 2; }
         .button-7 { grid-column: 5; grid-row: 3; }
         .button-8 { grid-column: 5; grid-row: 4; }
 
+        /* Правые gauges */
         .gauge-5 { grid-column: 6; grid-row: 1; }
         .gauge-6 { grid-column: 6; grid-row: 2; }
         .gauge-7 { grid-column: 6; grid-row: 3; }
         .gauge-8 { grid-column: 6; grid-row: 4; }
 
+        /* Общие отступы и центрирование */
         .gauge-1, .gauge-2, .gauge-3, .gauge-4,
         .gauge-5, .gauge-6, .gauge-7, .gauge-8,
         .button-1, .button-2, .button-3, .button-4,
@@ -2390,7 +2132,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 20px 0; 
+            margin: 20px 0; /* добавлено для согласованности с gauges */
         }
 
         .control-button {
@@ -2479,7 +2221,7 @@
 
             .throttle-wrapper {
             grid-column: 1;
-            grid-row: 2; 
+            grid-row: 2; /* или другой ряд, если нужно ниже/выше */
             justify-self: start;
             align-self: center;
             margin-top: 0;
@@ -2510,7 +2252,7 @@
 
 
 
-/* HUGE SIGN & ANIMATION LOAD */
+    /* HUGE SIGN & ANIMATION LOAD */
 
     /* HUGE SIGN */
     #throttle-indicator{
@@ -2658,16 +2400,8 @@
 
 
 
-/* MODAL GAUGES PANEL */
+    /* MODAL GAUGES PANEL */
 
-            .gauge-icon {
-            width: 24px;
-            height: 24px;
-            opacity: 1;
-            filter: none;
-            mix-blend-mode: normal;
-            margin: 4px;
-            }
 
             .gauges-button-panel {
             display: flex;            /* vertical stack */
@@ -2678,6 +2412,7 @@
             left: 3vh;
             transform: translateY(-50%);
             z-index: 999;
+
             width: 128px;
             height: 896px;            /* total column height */
             }
@@ -2685,10 +2420,12 @@
             .gauges-panel {
             position: static;
             z-index: 999;
+
             width: 128px;
             height: 736px;
             background-color: black;
             border-radius: 6px;
+
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
@@ -2697,12 +2434,17 @@
             .gauge-block {
             width: 100%;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1px;
+            color: white;
+            font-family: sans-serif;
+            font-size: 16px;
+            font-weight: 500;
             }
 
+            .gauge-icon {
+            opacity: 1;
+            filter: none;
+            mix-blend-mode: normal;
+            }
 
             /* When safety sits to the right of the gauges panel */
             .gauges-button-panel.side-safety .safety-block {
@@ -2712,35 +2454,6 @@
             .gauges-button-panel.side-safety .kill-all-btn {
             width: 100%;
             }
-
-
-            .mini-gauge {
-            /* base track visuals */
-            display: block;            /* no flex → fill starts at the left edge */
-            width: 100%;
-            max-width: 104px;
-            height: 2px;
-            background: #757575;
-            border-radius: 3px;
-            overflow: hidden;
-            }
-
-           /* Mini-gauge fill uses a token instead of hardcoded white */
-            .mini-gauge-fill {
-            width: var(--pct, 0%);
-            height: 100%;
-            background: var(--bar-color, #ffffff); /* read token; white as fallback */
-            border-radius: 3px;
-            transition: width 180ms ease;
-            }
-
-            /* State tokens for engine temperature */
-            #engine-temperature-gauge.is-cold { --bar-color: var(--gauge-blue); }
-            #engine-temperature-gauge.is-hot  { --bar-color: var(--gauge-red); }
-            
-            /* Fuel gauge critical state drives the token used by .mini-gauge-fill */
-            #fuel-gauge.is-low { --bar-color: var(--gauge-red); }
-
 
 
             /* CSS-only switch: when safety moves to the right, fix parent height */
@@ -2758,11 +2471,424 @@
                 width: 128px;
             }
             }
+
+
+
+
+       /* Active Helm block */
+
+            /* Active Helm block */
+            .active-helm-gauge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px; 
+            }
+
+            .active-helm-gauge .gauge-icon {
+            width: 24px;
+            height: 24px;
+            }
+
+            .active-helm-gauge .gauge-label {
+            font-family: Inter, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #757575;
+            line-height: 21px;
+            text-align: center;
+            }
+
+            .active-helm-gauge .gauge-value {
+            font-family: Inter, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            line-height: 24px;
+            text-align: center;
+            }
+            
+
+
+        /* AP Status block */
+
+            /* AP Status block */
+            .ap-status-gauge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            }
+
+            .ap-status-gauge .gauge-icon {
+            width: 24px;
+            height: 24px;
+            }
+
+            .ap-status-gauge .gauge-label {
+            font-family: Inter, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #757575;
+            line-height: 21px;
+            text-align: center;
+            }
+
+            .ap-status-gauge .gauge-value {
+            font-family: Inter, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            line-height: 24px;
+            text-align: center;
+            }
+        
+
+         /* Speed / Avg gauge block */
+        
+            .speed-avg-gauge {
+            /* --pct controls the white fill width (0%..100%) */
+            --pct: 0%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px; /* vertical spacing between rows */
+            }
+
+            /* Icon size same as в предыдущих блоках */
+            .speed-avg-gauge .gauge-icon {
+            width: 24px;
+            height: 24px;
+            }
+
+            /* Top and bottom text rows */
+            .speed-avg-gauge .gauge-line {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 4px;
+            color: #ffffff; /* values are white by default */
+            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            }
+
+            .speed-avg-gauge .value-lg { /* main value */
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 700;
+            }
+            .speed-avg-gauge .unit-lg {
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 400;
+            color: #757575; /* muted unit */
+            }
+
+            /* AVG row style */
+            .speed-avg-gauge .gauge-line--small .label {
+            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 12px;
+            line-height: 18px;
+            font-weight: 700;
+            color: #fff;
+            }
+            .speed-avg-gauge .value-sm {
+            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 12px;
+            line-height: 18px;
+            font-weight: 700;
+            color: #fff;
+            }
+            .speed-avg-gauge .unit-sm {
+            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 12px;
+            line-height: 18px;
+            font-weight: 400;
+            color: #757575;
+            }
+
+            /* Mini gauge bar (0..100%) */
+            .speed-avg-gauge .mini-gauge {
+            /* Base bar */
+            width: 100%;
+            max-width: 104px;        /* tweak to your panel width */
+            height: 2px;             /* bar height */
+            background: #2b2b2b;     /* muted gray base */
+            border-radius: 3px;
+            overflow: hidden;        /* clip inner fill */
+            }
+
+            /* White fill controlled by --pct */
+            .speed-avg-gauge .mini-gauge-fill {
+            /* Fill grows from left to right */
+            width: var(--pct);       /* e.g., 39% */
+            height: 100%;
+            background: #ffffff;
+            border-radius: 3px;      /* keeps rounded cap when near 100% */
+            transition: width 180ms ease; /* smooth updates */
+            }
+
+        
+
+         /* RPM gauge block */
+        
+            /* ===== RPM gauge block ===== */
+            .rpm-gauge {
+            --pct: 0%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            }
+
+            .rpm-gauge .gauge-icon {
+            width: 24px;
+            height: 24px;
+            }
+
+            .rpm-gauge .gauge-line {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 4px;
+            color: #ffffff;
+            font-family: "Roboto Mono", monospace;
+            }
+
+            .rpm-gauge .value-lg {
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 700;
+            }
+            .rpm-gauge .unit-lg {
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 400;
+            color: #757575;
+            }
+
+            /* Mini bar reused from speed gauge */
+            .rpm-gauge .mini-gauge {
+            width: 100%;
+            max-width: 104px;
+            height: 2px;
+            background: #757575;
+            border-radius: 3px;
+            overflow: hidden;
+            }
+            .rpm-gauge .mini-gauge-fill {
+            width: var(--pct);
+            height: 100%;
+            background: #fff;
+            border-radius: 3px;
+            transition: width 180ms ease;
+            }
+        
+
+         /* Engine Temperature gauge block */
+        
+            /* ===== Engine Temperature gauge block ===== */
+            .engine-temperature-gauge {
+            /* --pct controls fill width (0..100) */
+            --pct: 0%;
+            /* --bar-color controls the fill color; default is white */
+            --bar-color: #ffffff;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            }
+
+            .engine-temperature-gauge .gauge-icon {
+            width: 24px;
+            height: 24px;
+            }
+
+            .engine-temperature-gauge .gauge-line {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 4px;
+            color: #ffffff;
+            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            }
+
+            .engine-temperature-gauge .value-lg {
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 700;
+            }
+            .engine-temperature-gauge .unit-lg {
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 400;
+            color: #757575;
+            }
+
+            /* Mini bar */
+            .engine-temperature-gauge .mini-gauge {
+            width: 100%;
+            max-width: 104px;
+            height: 2px;
+            background: #757575;     /* base track */
+            border-radius: 3px;
+            overflow: hidden;         /* clip inner fill */
+            }
+
+            .engine-temperature-gauge .mini-gauge-fill {
+            width: var(--pct);
+            height: 100%;
+            background: var(--bar-color);
+            border-radius: 3px;       /* rounded end near 100% */
+            transition: width 180ms ease, background-color 180ms ease;
+            }
+
+            /* Optional state colors (use one of these classes on the root block) */
+            .engine-temperature-gauge.cold  { --bar-color: #0059FF; } /* cool blue */
+            .engine-temperature-gauge.warm  { --bar-color: #FFBD0A; } /* amber */
+            .engine-temperature-gauge.hot   { --bar-color: #D0021B; } /* red */
+
+        
+
+         /* Battery Voltage Gauge block */
+        
+            .battery-voltage-gauge {
+            --pct: 0%;               /* controls fill width */
+            --bar-color: #ffffff;     /* default bar color */
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            }
+
+            .battery-voltage-gauge .gauge-icon {
+            width: 24px;
+            height: 24px;
+            }
+
+            /* Text line: muted label + strong value + muted unit */
+            .battery-voltage-gauge .battery-line {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 2px;
+            text-align: center;
+            }
+
+            .label-muted,
+            .unit-muted {
+            color: #757575;
+            font-family: Inter, sans-serif;
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 500;
+            }
+
+            .value-strong {
+            color: #ffffff;
+            font-family: Inter, sans-serif;
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 700;
+            }
+
+            /* Mini bar (same logic as RPM/Speed) */
+            .battery-voltage-gauge .mini-gauge {
+            width: 100%;
+            max-width: 104px;
+            height: 2px;
+            background: #757575;      /* muted gray track */
+            border-radius: 3px;
+            overflow: hidden;
+            }
+
+            .battery-voltage-gauge .mini-gauge-fill {
+            width: var(--pct);
+            height: 100%;
+            background: var(--bar-color);
+            border-radius: 3px;
+            transition: width 180ms ease;
+            }
+
+        
+
+         /* Fuel Gauge block */
+        
+            .fuel-gauge{
+            /* --pct controls the white fill width (0..100%) */
+            --pct: 0%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px; /* vertical spacing between rows */
+            }
+
+            .fuel-gauge .gauge-icon{
+            width: 24px;
+            height: 24px;
+            }
+
+            /* Top and bottom text rows (values + units) */
+            .fuel-gauge .gauge-line{
+            display: inline-flex;
+            align-items: baseline;
+            gap: 4px;
+            text-align: center;
+            justify-content: center;
+            color: #ffffff;
+            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            }
+
+            .fuel-gauge .value-lg{
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 700;
+            }
+            .fuel-gauge .unit-lg{
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 400;
+            color: #757575;
+            }
+
+            /* Mini bar like Speed/RPM */
+            .fuel-gauge .mini-gauge{
+            width: 100%;
+            max-width: 104px;      /* keep consistent with other gauges */
+            height: 2px;
+            background: #757575;   /* base track */
+            border-radius: 3px;
+            overflow: hidden;
+            }
+            .fuel-gauge .mini-gauge-fill{
+            width: var(--pct);     /* e.g., 37% */
+            height: 100%;
+            background: #ffffff;   /* fill color */
+            border-radius: 3px;
+            transition: width 180ms ease;
+            }
+
+            /* Burn rate row styling (uses Inter per your mock for mixed text) */
+            .fuel-gauge .gauge-line--rate{
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            color: #757575;        /* muted default */
+            }
+            .fuel-gauge .value-rate{
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            }
+            .fuel-gauge .unit-rate{
+            color: #757575;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            }
+
         
 
 
-    /* KILL ALL BUTTON */
+     /* KILL ALL BUTTON */
         
+
         .safety-block {
         margin-top: auto;
         position: static;
@@ -2775,6 +2901,11 @@
         flex-direction: column;
         justify-content: flex-end;
         gap: 4px;  /* optional: spacing between title and button */
+        }
+
+        /* Make "Safety" label normal weight */
+        .safety-block .drawer-button-title {
+        font-weight: 400; /* normal */
         }
 
 
@@ -2809,7 +2940,7 @@
         
 
 
-/* MODAL DRAWER PANEL */
+     /* MODAL DRAWER PANEL */
 
          /* Tabs container */
         
@@ -2822,7 +2953,7 @@
 
             width: 288px;
             height: 896px;
-            background-color: var(--color-drawer-bg);
+            background-color: #303030;
             border-radius: 6px;
 
             display: flex;
@@ -2835,7 +2966,7 @@
             flex-direction: row;
             justify-content: space-between;
             padding: 4px 0 0 0;
-            background: var(--color-drawer-inactive-bg);
+            background: #252525;
             border-radius: 6px 6px 0 0;
         }
 
@@ -2906,6 +3037,8 @@
         }
 
 
+
+        
         
 
          /* Content */
@@ -2924,8 +3057,7 @@
             justify-content:center;
             margin-bottom:12px;
             font: var(--type-h3);
-            color: var(--color-light);
-            letter-spacing: 0.4px; /* mono tracking tech look */
+            color: var(--c-h);
         }
         
 
@@ -2945,106 +3077,210 @@
         }
 
         
- /*  MODAL DRAWER PANEL  */
-         
-            /* BUTTON STYLES */
 
-            /* Buttons container */
-            .drawer-button-block {
-            display: flex;
-            flex-direction: column;
-            gap: 6px; /* space between header and controls */
-            padding: 6px 10px;
-            }
+         /* TAB 1: Boat Control */
+        
 
-            /* Buttons Title styles */
-            .drawer-button-header {
-            flex: 1;                      /* take remaining space */
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            opacity: 0.8;
-            white-space: nowrap;          /* prevent title from wrapping */
-            overflow: hidden;             /* truncate if too long */
-            text-overflow: ellipsis;      /* show ... if truncated */
-            }
-            .drawer-button-icon {
-            font-size: 24px;
-            }
-            .drawer-button-title {
-            font: var(--type-h4);
-            color: var(--color-white); 
+
+            /* ===== Communication block (scoped) ===== */
+
+            /* Display container */
+            .comm-display{
+            display:grid;
+            grid-template-columns: 1fr 1px 1fr;  /* two equal halves + divider */
+            align-items:center;
+            justify-content:space-between;
+            gap:16px;
+            padding:14px 16px;
+            background:#000;
+            border-radius:8px;
             }
 
-            /* Buttons styles */
-            .drawer-button-toggle{
+            /* Single metric cell */
+            .comm-metric{
+            display:grid;
+            grid-template-columns: 1fr 1fr; 
+            align-items:center;
+            gap:6px;
+            font:600 16px/20px Inter, sans-serif;
+            color:#fff;
+            }
+            .comm-metric .display-unit{ color:#9a9a9a; font-weight:500; }
+
+            /* Vertical divider */
+            .comm-divider{
+            width:1px;
+            height:24px;
+            background: #757575;
+            opacity:1;
+            justify-self:center;
+            }
+
+            /* Toggle group */
+            .comm-toggle{
+            margin-top:8px;
             display:flex;
-            background-color: var(--button-inactive);
-            border-radius:6px;
-            overflow:hidden;
+            background:#404040;
+            border-radius:8px;
+            overflow:hidden;           /* clip inner rounded active */
             }
-            .toggle-btn{
+
+            /* Toggle buttons */
+            .comm-btn{
             flex:1;
             padding:14px 0;
             border:none;
-            border-radius: 6px;
-            background-color: var(--button-inactive);
-            color: var(--color-white);
-            font: var(--type-button-regular);
+            background:#505050;
+            color:#fff;
+            font:500 16px/16px Inter, sans-serif;
             cursor:pointer;
-            text-align:center;
             opacity:.5;
-            transition: opacity .2s, background-color .2s, color .2s;
+            transition:opacity .2s, background .2s;
             }
-            .toggle-btn.active{
-            background-color: var(--button-active);
-            font: var(--type-button-bold); /* 700 14px/1.35 var(--font-sans) */
+            .comm-btn:first-child{ border-radius:8px 0 0 8px; }
+            .comm-btn:last-child { border-radius:0 8px 8px 0; }
+
+            .comm-btn.active{
+            background:#707070;
             opacity:1;
+            font-weight:600;
+            border-radius:8px;
             }
 
-            /* White live-outline inside the selected button */
-            .toggle-btn.live {
-            box-shadow: inset 0 0 0 2px var(--color-white);
-            border-radius: inherit;
-            transition: box-shadow 0.15s ease;
+
+
+
+
+
+
+         /* === SOLO toggle styles (scoped) === */
+
+            /* One block, full width */
+            .solo-controls{
+            display:block;
             }
 
-            /* Hover on the buttons */
-            .toggle-btn:hover { opacity: 0.8; }
-
-
-            /* Display block */
-            .drawer-display{
-            display:flex; 
-            justify-content:center; 
-            align-items:center; 
-            gap:8px;
-            padding:14px 16px; 
-            width:100%; 
-            box-sizing:border-box;
-            background:var(--color-black); 
-            color:var(--color-white); /* use palette tokens */
+            /* Toggle group container */
+            .solo-toggle{
+            display:flex;
+            width:100%;
+            background:#404040;
             border-radius:6px;
-            font: var(--type-display-mono-regular); /* mono regular: weight size/line-height family */
-            line-height:1; /* keep tight vertical alignment if needed */
+            overflow:hidden;
             }
 
-            .drawer-display .display-icon {
-            width: 24px;
-            height: 24px;
-            display: block;      /* prevent inline misalignment */
+            /* Buttons */
+            .solo-btn{
+            flex:1;
+            padding:14px 0;
+            border:none;
+            background:#404040;
+            color:#fff;
+            font:500 16px/16px Inter, sans-serif;
+            text-align:center;
+            cursor:pointer;
+            opacity:.5;
+            transition:opacity .2s, background .2s;
+            }
+
+            /* Endcaps rounding */
+            .solo-btn.off{ border-radius:6px; }
+            .solo-btn.on { border-radius:6px; }
+
+            /* Active visual */
+            .solo-btn.active{
+            background:#707070;
+            opacity:1;
+            font-weight:600;
+            border-radius:6px;
             }
 
 
+            /* === SOLO3 toggle styles (scoped) === */
 
-            /* Button styles */
+            /* Container */
+            .solo3-controls {
+            display: block;
+            }
 
-            .drawer-button {
+            .solo3-toggle {
+            display: flex;
+            width: 100%;
+            background: #404040;
+            border-radius: 6px;
+            overflow: hidden;
+            }
+
+            /* Buttons */
+            .solo3-btn {
+            flex: 1;
+            padding: 14px 0;
+            border: none;
+            background: #404040;
+            color: #fff;
+            font: 500 16px/16px Inter, sans-serif;
+            text-align: center;
+            cursor: pointer;
+            opacity: .5;
+            transition: opacity .2s, background .2s;
+            }
+
+            /* Endcaps rounding */
+            .solo3-btn.off    { border-radius: 6px; }
+            .solo3-btn.silent { border-radius: 6px; }          /* middle – no rounding */
+            .solo3-btn.on     { border-radius: 6px; }
+
+            /* Active visual */
+            .solo3-btn.active {
+            background: #707070;
+            opacity: 1;
+            font-weight: 600;
+            border-radius: 6px;
+            }
+
+
+            /* === Pump === */
+
+            /* Horizontal container for two blocks */
+            .button-button-row {
+            display: grid;          /* Arrange children horizontally */
+            flex: 1; 
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;              /* Space between blocks */
+            padding: 10px;
+            }
+
+
+            /* Pump block container */
+            .button-button-block {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 0px;
+            background: #303030;
+            border-radius: 6px;
+            color: #fff;
+            font-family: Inter, sans-serif;
+            }
+
+            .half-relay {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: #404040;
+            border-radius: 6px;
+            overflow: hidden;
+            }
+
+
+            /* === Active Helm & AP status === */
+
+            .middle-drawer-button {
             width: 100%;
             height: 48px;     /* fixed button height */
-            padding: 0;
+            padding: 0 16px;
 
-            background-color: var(--button-inactive);
+            background: #404040;
             border: none;
             border-radius: 6px;
 
@@ -3054,60 +3290,390 @@
             justify-content: center;   /* horizontal centering */
             gap: 8px;
 
-            color: var(--color-white);
-            font: var(--type-button-regular);
+            font-family: Inter, sans-serif;
+            font-size: 16px;
+            letter-spacing: 0.5px;     /* technical look */
+            color: #fff;
 
             cursor: pointer;
-            transition: opacity .2s, background-color .2s, color .2s;
+            transition: background 0.2s, transform 0.1s, color 0.2s;
             box-sizing: border-box;
             }
 
-            .drawer-button.active {
-            background-color: var(--button-active);
-            font: var(--type-button-bold); /* 700 14px/1.35 var(--font-sans) */
-            opacity:1;
+            .middle-drawer-button:hover {
+            background: #505050;
+            font-weight: 600;
+            }
+
+            /* Active state highlight */
+            .middle-drawer-button.active {
+            background: #757575;
+            font-weight: 600;
             }
 
 
-            /* Container for two blocks */
-            .button-button-row {
-            display: grid;          /* Arrange children horizontally */
-            flex: 1; 
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;              /* Space between blocks */
-            padding: 10px;
+            /* === Active Helm BUTTON / DISPLAY === */
+
+
+        
+
+         /* TAB 2: Payload Control */
+        
+            .drawer-display { 
+            display: flex;
+            justify-content: center;    /* center horizontally */
+            align-items: center;        /* align icon and text vertically in the middle */
+            gap: 8px;                   /* space between icon and text */
+            padding: 14px 16px;
+            background: #000;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 1;             /* consistent vertical alignment */
+            width: 100%;
+            box-sizing: border-box;
+            color: #fff;                /* make text visible */
             }
 
-            /* Container for two blocks and one display*/
-            .button-display-row {
-            display: grid;
-            grid-template-columns: 3fr 2fr; /* two equal columns */
-            gap: 10px;
+            .drawer-display .display-icon {
+            width: 24px;
+            height: 24px;
+            display: block;             /* prevent inline misalignment */
             }
 
-            /* Container for two half-width buttons stacked vertically */
-            .button-half-block {
+            /* BUTTONS */
+
+            /* Exactly two items per row, pushed apart inside narrow pane */
+            .payload-button-block {
+            display: grid;                        /* keep grid */
+            grid-template-columns: 1fr 1fr;    /* two fixed columns */
+            column-gap: 8px;                      /* must be <= 14px for 254px pane */
+            row-gap: 32px;
+            justify-content: space-between;
+            padding-left: 0;                      /* free space for two 120px items */
+            padding-right: 0;
+            margin-top: 42px;
+            /* keep existing top/bottom padding, background, colors, etc. */
+            }
+
+            /* Ensure grid children don't try to be flex containers accidentally */
+            .payload-button-block > div {
+            display: block;                        /* avoid unexpected flex behavior */
+            width: 120px;                          /* match column width */
+            }
+        
+    
+         /* TAB 2: BUTTONS */
+        
+
+        /* Button positioning (scaled down from original) */
+        /* Control block: width locked to button; height auto to fit label lines */
+        /* Control wrapper: let it grow to fit label; keep flex layout */
+        .control-button {
+        position: relative;
+        width: 100px;
+        height: auto;                 /* was 90px */
+        display: flex;                /* keep column flex */
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        }
+
+        /* Outer wrappers: do not cap height so the label doesn't force shrink */
+        .button-1,
+        .button-2,
+        .button-3,
+        .button-4,
+        .button-5,
+        .button-6,
+        .button-7,
+        .button-8 {
+        width: 100px;
+        height: auto;                 /* was 90px */
+        }
+
+        /* SAFETY CAP ICON SIZE AND STYLING (proportionally reduced) */
+        .safety-cap {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;             /* was 110px */
+        height: 60px;            /* was 55px */
+        background: repeating-linear-gradient(-45deg, #9a7000, #9a7000 12px, black 8px, black 25px);
+        border-radius: 6px;      /* was 8px */
+        z-index: 200;
+        transform-origin: top center;
+        transition: transform 0.3s ease-out;
+        box-shadow: inset 0 0 0 2px #9a7000, 0 4px 8px rgba(0, 0, 0, 0.4);
+        outline: black, 8px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 8px;          /* was 10px */
+        color: rgba(0, 0, 0, 0.7);
+        font-weight: bold;
+        text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+        outline: inset 2px solid #9a7000;
+        }
+
+
+        .safety-cap:hover {
+        box-shadow:
+            inset 0 0 0 2px #9a7000,
+            0 0 10px 2px rgb(90, 90, 90);
+        }
+
+        /* Thinner (by ~1/3) yet dense outline via drop-shadows */
+        .safety-cap img {
+        width: 34px;
+        height: 34px;
+        filter:
+            brightness(0)
+            /* orthogonal offsets: 2px -> 1.33px */
+            drop-shadow(1.33px 0 0 #9a7000)
+            drop-shadow(-1.33px 0 0 #9a7000)
+            drop-shadow(0 1.33px 0 #9a7000)
+            drop-shadow(0 -1.33px 0 #9a7000)
+            /* diagonal offsets: 3px -> 2px */
+            drop-shadow(2px 2px 0 #9a7000)
+            drop-shadow(-2px 2px 0 #9a7000)
+            drop-shadow(2px -2px 0 #9a7000)
+            drop-shadow(-2px -2px 0 #9a7000);
+        }
+
+        .safety-cap.open {
+        /* keeps your existing percentage-based lift */
+        transform: translateX(-50%) translateY(var(--shift-amount, -110%));
+        opacity: 0.5;
+        }
+
+        /* Base button: hard-lock to 100×60 and prevent flex shrink */
+        .control-button button {
+        width: 100px;
+        height: 60px;
+        flex: 0 0 60px;               /* do not shrink in column flex */
+        box-sizing: border-box;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(30, 30, 30);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 9px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        z-index: 1;
+        position: relative;
+        margin-top: 0;
+        }
+
+        .button-icon {
+        /* same filter; size is controlled by the asset or other rules */
+        filter: brightness(0) saturate(100%) invert(36%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(92%);
+        }
+
+        /* Armed state */
+        .control-button button.armed {
+        background-color: black;
+        box-shadow: none;
+        animation: none;
+        }
+        .control-button button.armed .button-icon {
+        filter: 
+        brightness(0) saturate(100%) invert(100%) sepia(0%) 
+        saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+        }
+
+        /* Active state */
+        .control-button button.active {
+        background-color: rgb(0, 202, 198);
+        animation: pulse-button 1.5s infinite;
+        }
+        .control-button button.active .button-icon {
+        filter: brightness(0) saturate(100%) invert(75%) sepia(85%) 
+        hue-rotate(40deg) brightness(115%) contrast(105%);
+        }
+        @keyframes pulse-button {
+        0%   { background-color: rgb(213, 21, 191); box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3), 0 0 5px rgb(74, 91, 222); }
+        50%  { background-color: rgb(219, 28, 175); box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3), 0 0 15px rgb(41, 106, 227); }
+        100% { background-color: rgb(222, 42, 222); box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3), 0 0 5px rgb(240, 85, 29); }
+        }
+
+        /* On state */
+        .control-button button.on {
+        background-color: #2d340f;
+        animation: pulse-green 1.5s infinite;
+        box-shadow: 0 0 0 0px #2d340f, 0 0 12px #536020;
+        }
+        @keyframes pulse-green {
+        0%   { box-shadow: 0 0 0 2px #2d340f, 0 0 5px #90b400; }
+        50%  { box-shadow: 0 0 0 2px #2d340f, 0 0 15px #ccff00; }
+        100% { box-shadow: 0 0 0 2px #2d340f, 0 0 5px #90b400; }
+        }
+        .control-button button.on .button-icon {
+        filter: brightness(0) saturate(100%) invert(81%) sepia(98%) saturate(500%) hue-rotate(32deg) brightness(120%) contrast(110%);
+        animation: icon-brightness-pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes icon-brightness-pulse {
+        0%, 100% { filter: brightness(0) saturate(55%) invert(81%) sepia(98%) saturate(500%) hue-rotate(32deg) brightness(54%) contrast(110%); }
+        50%      { filter: brightness(0) saturate(100%) invert(81%) sepia(98%) saturate(500%) hue-rotate(32deg) brightness(120%) contrast(110%); }
+        }
+
+        /* Hover for active states */
+        .control-button button.armed:hover,
+        .control-button button.active:hover,
+        .control-button button.on:hover {
+        box-shadow: 0 0 10px 2px rgb(100, 100, 100);
+        }
+
+        /* Button label (reduced) */
+        .button-label {
+        margin-top: 6px;         /* was 8px */
+        color: #fff;
+        text-align: center;
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.5px;     /* technical look */
+        line-height: 18px; /* e.g., 16px for compact but readable lines */
+
+        }
+
+
+        /* Icon: keep it from affecting button height */
+        .button-icon {
+        width: 24px;
+        height: 24px;
+        display: block;               /* remove inline baseline gaps */
+        filter: brightness(0) saturate(100%) invert(36%) sepia(0%) saturate(0%)
+                hue-rotate(0deg) brightness(95%) contrast(92%);
+        }
+
+        /* Normalize base size for all eight buttons (wins over generic button rules) */
+        .button-1 .control-button button,
+        .button-2 .control-button button,
+        .button-3 .control-button button,
+        .button-4 .control-button button,
+        .button-5 .control-button button,
+        .button-6 .control-button button,
+        .button-7 .control-button button,
+        .button-8 .control-button button {
+        width: 100px;
+        height: 60px;                 /* was auto */
+        flex: 0 0 60px;               /* extra guard against shrinking */
+        }
+
+
+
+
+        
+
+         /* TAB 3: Engine Status */
+        
+            
+        /* Display block */
+        .status-block {
+        display: flex;
+        flex-direction: column;
+        gap: 8px; /* space between header and controls */
+        padding: 10px;
+        background: #303030;
+        border-radius: 6px;
+        color: #fff;
+        font-family: Inter, sans-serif;
+        }
+
+        /* Header */
+        .status-header {
+        flex: 1;                      /* take remaining space */
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        opacity: 0.9;
+        white-space: nowrap;          /* prevent title from wrapping */
+        overflow: hidden;             /* truncate if too long */
+        text-overflow: ellipsis;      /* show ... if truncated */
+        }
+
+        .status-title {
+        font: var(--type-h5);
+        color: var(--c-h); /* <- apply the pink you defined */
+        }
+
+        .status-icon {
+        font-size: 24px;
+        }
+
+        /* Controls row */
+        .engine-status-controls {
+        display: flex;    /* put header and display in one row */
+        align-items: center;
+        gap: 10px;        /* space between header and display */
+        }
+
+        .status-display {
+        width: 80px;                  /* fixed width for display */
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 4px;
+        padding: 6px 6px;
+        background: #000;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 20px;
+        white-space: nowrap;          /* value + unit stay on one line */
+        }
+
+        .status-display-value {
+        font-size: 16px;
+        font-weight: 500;
+        color: #fff;
+        }
+
+        .status-display-unit {
+        font-size: 16px;
+        font-weight: 500;
+        color: #757575;
+        }
+
+
+        
+
+         /* TAB 4: Battery Status */
+        
+            .battery-button-block {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            padding: 0px;
+            gap: 6px; /* space between header and controls */
+            padding: 6px;
+
+            }
+            /* Container for the section (unchanged) */
+            .battery-block {
+            gap: 6px;              /* space between items */
+            display: flex;
+            flex-direction: column;
+            padding: 0 10px;
+            background: #303030;
+            border-radius: 6px;
+            color: #fff;
+            font-family: Inter, sans-serif;
             }
 
-            /* Pump block container */
-            .half-relay {
-            flex-direction: column;
-            display: grid;
-            
-            grid-template-columns: 1fr 1fr;
-            background-color: var(--button-inactive);
-            border-radius: 6px;
-            overflow: hidden;
-            }       
 
 
 
-
-            /* TAB 1: Engine Status Ignition, Off | Start, Engine Kill */
+            /* TAB 4: Engine Status Ignition, Off | Start, Engine Kill */
 
             /* Base button */
             .battery-engine-status {
@@ -3319,290 +3885,6 @@
 
 
 
-        
-
-         /* TAB 2: Payload Control */
-
-
-         /* PAYLOAD BUTTONS  */
-
-            /* Exactly two items per row, pushed apart inside narrow pane */
-            .payload-button-block {
-            display: grid;                        /* keep grid */
-            grid-template-columns: 1fr 1fr;    /* two fixed columns */
-            column-gap: 8px;                      /* must be <= 14px for 254px pane */
-            row-gap: 32px;
-            justify-content: space-between;
-            padding-left: 0;                      /* free space for two 120px items */
-            padding-right: 0;
-            margin-top: 42px;
-            /* keep existing top/bottom padding, background, colors, etc. */
-            }
-
-            /* Ensure grid children don't try to be flex containers accidentally */
-            .payload-button-block > div {
-            display: block;                        /* avoid unexpected flex behavior */
-            width: 120px;                          /* match column width */
-            }
-                
-            /* Button positioning (scaled down from original) */
-            /* Control block: width locked to button; height auto to fit label lines */
-            /* Control wrapper: let it grow to fit label; keep flex layout */
-            .control-button {
-            position: relative;
-            width: 100px;
-            height: auto;                 /* was 90px */
-            display: flex;                /* keep column flex */
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            }
-
-            /* Outer wrappers: do not cap height so the label doesn't force shrink */
-            .button-1,
-            .button-2,
-            .button-3,
-            .button-4,
-            .button-5,
-            .button-6,
-            .button-7,
-            .button-8 {
-            width: 100px;
-            height: auto;                 /* was 90px */
-            }
-
-            /* SAFETY CAP ICON SIZE AND STYLING (proportionally reduced) */
-            .safety-cap {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;             /* was 110px */
-            height: 60px;            /* was 55px */
-            background: repeating-linear-gradient(-45deg, #9a7000, #9a7000 12px, black 8px, black 25px);
-            border-radius: 6px;      /* was 8px */
-            z-index: 200;
-            transform-origin: top center;
-            transition: transform 0.3s ease-out;
-            box-shadow: inset 0 0 0 2px #9a7000, 0 4px 8px rgba(0, 0, 0, 0.4);
-            outline: var(--color-black), 8px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 8px;          /* was 10px */
-            color: var(--color-black);
-            font-weight: bold;
-            outline: inset 2px solid #9a7000;
-            }
-
-
-            .safety-cap:hover {
-            box-shadow:
-                inset 0 0 0 2px #9a7000,
-                0 0 10px 2px rgb(90, 90, 90);
-            }
-
-            /* Thinner (by ~1/3) yet dense outline via drop-shadows */
-            .safety-cap img {
-            width: 34px;
-            height: 34px;
-            filter:
-                brightness(0)
-                /* orthogonal offsets: 2px -> 1.33px */
-                drop-shadow(1.33px 0 0 #9a7000)
-                drop-shadow(-1.33px 0 0 #9a7000)
-                drop-shadow(0 1.33px 0 #9a7000)
-                drop-shadow(0 -1.33px 0 #9a7000)
-                /* diagonal offsets: 3px -> 2px */
-                drop-shadow(2px 2px 0 #9a7000)
-                drop-shadow(-2px 2px 0 #9a7000)
-                drop-shadow(2px -2px 0 #9a7000)
-                drop-shadow(-2px -2px 0 #9a7000);
-            }
-
-            .safety-cap.open {
-            /* keeps your existing percentage-based lift */
-            transform: translateX(-50%) translateY(var(--shift-amount, -110%));
-            opacity: 0.5;
-            }
-
-            /* Base button: hard-lock to 100×60 and prevent flex shrink */
-            .control-button button {
-            width: 100px;
-            height: 60px;
-            flex: 0 0 60px;               /* do not shrink in column flex */
-            box-sizing: border-box;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: rgb(30, 30, 30);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 9px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
-            z-index: 1;
-            position: relative;
-            margin-top: 0;
-            }
-
-            .button-icon {
-            /* same filter; size is controlled by the asset or other rules */
-            filter: brightness(0) saturate(100%) invert(36%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(92%);
-            }
-
-            /* Armed state */
-            .control-button button.armed {
-            background-color: black;
-            box-shadow: none;
-            animation: none;
-            }
-            .control-button button.armed .button-icon {
-            filter: 
-            brightness(0) saturate(100%) invert(100%) sepia(0%) 
-            saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
-            }
-
-            /* Active state */
-            .control-button button.active {
-            background-color: rgb(0, 202, 198);
-            animation: pulse-button 1.5s infinite;
-            }
-            .control-button button.active .button-icon {
-            filter: brightness(0) saturate(100%) invert(75%) sepia(85%) 
-            hue-rotate(40deg) brightness(115%) contrast(105%);
-            }
-            @keyframes pulse-button {
-            0%   { background-color: rgb(213, 21, 191); box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3), 0 0 5px rgb(74, 91, 222); }
-            50%  { background-color: rgb(219, 28, 175); box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3), 0 0 15px rgb(41, 106, 227); }
-            100% { background-color: rgb(222, 42, 222); box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3), 0 0 5px rgb(240, 85, 29); }
-            }
-
-            /* On state */
-            .control-button button.on {
-            background-color: #2d340f;
-            animation: pulse-green 1.5s infinite;
-            box-shadow: 0 0 0 0px #2d340f, 0 0 12px #536020;
-            }
-            @keyframes pulse-green {
-            0%   { box-shadow: 0 0 0 2px #2d340f, 0 0 5px #90b400; }
-            50%  { box-shadow: 0 0 0 2px #2d340f, 0 0 15px #ccff00; }
-            100% { box-shadow: 0 0 0 2px #2d340f, 0 0 5px #90b400; }
-            }
-            .control-button button.on .button-icon {
-            filter: brightness(0) saturate(100%) invert(81%) sepia(98%) saturate(500%) hue-rotate(32deg) brightness(120%) contrast(110%);
-            animation: icon-brightness-pulse 1.5s ease-in-out infinite;
-            }
-            @keyframes icon-brightness-pulse {
-            0%, 100% { filter: brightness(0) saturate(55%) invert(81%) sepia(98%) saturate(500%) hue-rotate(32deg) brightness(54%) contrast(110%); }
-            50%      { filter: brightness(0) saturate(100%) invert(81%) sepia(98%) saturate(500%) hue-rotate(32deg) brightness(120%) contrast(110%); }
-            }
-
-            /* Hover for active states */
-            .control-button button.armed:hover,
-            .control-button button.active:hover,
-            .control-button button.on:hover {
-            box-shadow: 0 0 10px 2px rgb(100, 100, 100);
-            }
-
-            /* Button label (reduced) */
-            .button-label {
-            margin-top: 6px;         /* was 8px */
-            color: var(--color-white);
-            font: var(--type-button-regular);
-            cursor:pointer;
-            text-align:center;
-            opacity: 0.8;
-            transition: opacity .2s, background-color .2s, color .2s;
-            }
-            .button-label:hover {
-            opacity: 1;
-            }
-
-
-            /* Icon: keep it from affecting button height */
-            .button-icon {
-            width: 24px;
-            height: 24px;
-            display: block;               /* remove inline baseline gaps */
-            filter: brightness(0) saturate(100%) invert(36%) sepia(0%) saturate(0%)
-                    hue-rotate(0deg) brightness(95%) contrast(92%);
-            }
-
-            /* Normalize base size for all eight buttons (wins over generic button rules) */
-            .button-1 .control-button button,
-            .button-2 .control-button button,
-            .button-3 .control-button button,
-            .button-4 .control-button button,
-            .button-5 .control-button button,
-            .button-6 .control-button button,
-            .button-7 .control-button button,
-            .button-8 .control-button button {
-            width: 100px;
-            height: 60px;                 /* was auto */
-            flex: 0 0 60px;               /* extra guard against shrinking */
-            }
-
-
-
-            
-/* TAB 3: Engine Status */
-        
-        /* Display block */
-        .status-block {
-        display: flex;
-        flex-direction: column;
-        gap: 8px; /* space between header and controls */
-        padding: 10px;
-        }
-
-        /* Controls row */
-        .engine-status-controls {
-        display: flex;    /* put header and display in one row */
-        align-items: center;
-        gap: 10px;        /* space between header and display */
-        }
-
-        .status-display{
-        width:80px;
-        display:flex; 
-        margin-left:auto;
-        align-items:baseline; 
-        justify-content:center; 
-        gap:4px;
-        padding:6px 6px;
-        background:var(--color-black);
-        border-radius:6px;
-        white-space:nowrap; /* keep value + unit on one line */
-        }
-
-
-        
-
-         /* TAB 4: Battery Status */
-        
-            .battery-block {
-            gap: 6px;        /* space between items */
-            display: flex;
-            flex-direction: column;
-            padding: 0 10px;
-            }
-            .battery-button-block {
-            display: flex;
-            flex-direction: column;
-            gap: 6px; /* space between header and controls */
-            padding: 6px;
-            }
-
-
-
-
-
             /* TAB 4: House Relay */
 
             /* Controls row */
@@ -3620,7 +3902,45 @@
             overflow: hidden;
             }
 
+            .relay-btn {
+            flex: 1;
+            padding: 14px 0;
+            border: none;
+            background: #404040;
+            color: #fff;
+            font-size: 16px;
+            line-height: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            opacity: 0.5;
+            transition: opacity 0.2s, background 0.2s;
+            }
 
+            .relay-btn.off { border-radius: 6px; }
+            .relay-btn.on  { border-radius: 6px; }
+
+            .relay-btn.active {
+                background: #707070;
+                color: #fff;
+                opacity: 1;   /* fully opaque */
+                font-weight: 600;
+                border-radius: 6px;
+            }
+
+            /* White live-outline inside the selected button */
+            .relay-btn.live {
+            /* inner white stroke that doesn't change layout */
+            box-shadow: inset 0 0 0 2px #fff;
+            /* keep rounded corners of edge buttons */
+            border-radius: inherit;
+            transition: box-shadow 0.15s ease;
+            }
+
+            /* Optional: a bit clearer hover on the trio */
+            .drawer-button-relay .relay-btn:hover {
+            opacity: 0.8;
+            }
 
         
 
@@ -3748,8 +4068,8 @@
         opacity: 0.9;
         }
         .mission-card__item-text {
-        font: var(--type-display-mono-regular);
-        color: var(--color-light); /* <- apply the pink you defined */
+        font: var(--type-h5);
+        color: var(--c-h); /* <- apply the pink you defined */
         }
 
 
@@ -3829,7 +4149,7 @@
             display: flex;                    /* center label horizontally/vertically */
             align-items: center;
             justify-content: center;
-            font: var(--type-caption-regular);
+            font: 700 10px/12px Inter, system-ui, sans-serif; /* tight line height */
             }
             /* Reserve space under the track for labels */
             .mission-pleer .mission-timeline { padding-bottom: 12px; } /* 8px dot + 15px gap ~ 22px */
@@ -3841,8 +4161,8 @@
             top: calc(100% + 5px);            /* 15px under the bottom of the dot */
             left: 50%;
             transform: translateX(-50%);
-            font: var(--type-caption-regular);
-            color: var(--color-white); 
+            font: 500 12px/1 Inter, system-ui, sans-serif; /* compact line height */
+            color: #ffffff;
             white-space: nowrap;
             pointer-events: none;              /* label doesn't catch hover/clicks */
             z-index: 2;
@@ -3852,12 +4172,12 @@
             .mission-pleer .mission-cursor { z-index: 3; }
 
 
-            /* Round cursor */
+            /* Yellow cursor */
             .mission-pleer .mission-cursor{
             position:absolute; top:50%;
             width:16px; height:16px; border-radius:50%;
             transform:translate(-50%,-50%);
-            box-shadow: inset 0 0 0 2px var(--color-white); 
+            box-shadow: inset 0 0 0 2px #ffffff;
             background:transparent;
             transition:left .22s ease;
             pointer-events:none;
@@ -3900,13 +4220,15 @@
 
             .mission-name{
             /* small caps look */
-            font: var(--type-caption-regular);
-            color: var(--color-light); /* <- apply the pink you defined */
+            font: var(--type-h5);
+            color: var(--c-h); /* <- apply the pink you defined */
             text-align: center;     /* center the text itself */
             }
             .mission-value {
-            font: var(--type-caption-mono-regular);
-            color: var(--color-white);
+            font-family: Inter, system-ui, sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: #ffffff;  /* brighter than unit */
             }
 
 
@@ -3919,16 +4241,29 @@
             }
 
             .pleer-data-name {
-            font: var(--type-caption-mono-regular);
-            color: var(--color-light); 
+            /* small caps look */
+            font-family: Inter, system-ui, sans-serif;
+            font-weight: 500;
+            font-size: 12px;
+            letter-spacing: 0.6px;   /* tech look */
+            color: #858585;        /* muted gray */
             }
+
+            /* Value text (e.g., "Locked") */
             .pleer-data-value {
-            font: var(--type-caption-mono-bold);
-            color: var(--color-white); 
+            font-family: Inter, system-ui, sans-serif;
+            font-weight: 600;
+            font-size: 12px;
+            color: #ffffff;  /* brighter than unit */
             }
+
             .pleer-data-unit {
-            font: var(--type-caption-mono-regular);
-            color: var(--color-light); 
+            /* small caps look */
+            font-family: Inter, system-ui, sans-serif;
+            font-weight: 500;
+            font-size: 12px;
+            letter-spacing: 0.6px;   /* tech look */
+            color: #858585;        /* muted gray */
             }
 
 
@@ -3938,7 +4273,21 @@
         
 
          /* TAB 6: Safety */
-    
+        
+        .drawer-button-display.fullwidth {
+        display: flex;
+        justify-content: center;    /* center content horizontally */
+        align-items: center;
+        gap: 4px;
+        padding: 14px 16px;
+        background: #000;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 20px;
+        width: 100%;                /* stretch to full width */
+        box-sizing: border-box;      /* include padding in width */
+        }
 
         .button-block {
         display: flex;
@@ -3951,7 +4300,7 @@
         font-family: Inter, sans-serif;
         }
 
-        .drawer-button {
+        .big-drawer-button {
         width: 100%;
         height: 48px;               /* fixed button height */
         padding: 0;              /* remove extra padding */
@@ -3977,7 +4326,7 @@
         box-sizing: border-box;
         }
 
-        .drawer-button .button-icon {
+        .big-drawer-button .button-icon {
         width: 24px;
         height: 24px;
         align-self: center; 
@@ -3986,7 +4335,7 @@
         transition: filter 0.2s;
         }
 
-        .drawer-button .button-drawer-label {
+        .big-drawer-button .button-drawer-label {
         color: #fff;
         transition: color 0.2s;
         display: inline-block;    /* behaves well with flex parent */
@@ -3995,29 +4344,29 @@
 
 
         /* Hover */
-        .drawer-button.active:hover {
+        .big-drawer-button.active:hover {
         background: #555555;
         }
 
-        .drawer-button:hover {
+        .big-drawer-button:hover {
         background: #808080;
         }
 
         /* Pressed */
-        .drawer-button:active {
+        .big-drawer-button:active {
         transform: scale(0.98);
         }
 
         /* Active state */
-        .drawer-button.active {
+        .big-drawer-button.active {
         background: #505050;
         }
 
-        .drawer-button.active .button-drawer-label {
+        .big-drawer-button.active .button-drawer-label {
         color: #757575; /* gray text */
         }
 
-        .drawer-button.active .button-icon {
+        .big-drawer-button.active .button-icon {
         filter: brightness(0) saturate(100%) invert(46%) sepia(0%) saturate(0%) hue-rotate(181deg) brightness(95%) contrast(90%);
         }
 
@@ -4085,7 +4434,7 @@
         .asset-sub {
             grid-row: 2;                              /* second row */
             font: var(--type-h5);
-            color: var(--color-light); /* <- apply the pink you defined */
+            color: var(--c-h); /* <- apply the pink you defined */
         }
 
         /* Right block: two metrics stacked with the same row heights */
@@ -4212,52 +4561,105 @@
         
 
          /* TAB 8: Sensors */
-
-        /* ===== Communication block (scoped) ===== */
-
-            /* Display container */
-            .comm-display{
-            display:grid;
-            grid-template-columns: 1fr 1px 1fr;  /* two equal halves + divider */
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 14px 16px;
-            background: var(--color-black);
-            border-radius: 6px;
-            }
-
-            /* Place the pair near the divider */
-            .comm-metric {
-            display: flex;               /* pair as one chunk */
-            align-items: baseline;       /* numbers + units align nicely */
-            gap: 6px;
-            justify-content: center;    
-            }
-
-            /* Vertical divider */
-            .comm-divider {
-            width: 1px;
-            height: 24px;
-            background: var(--text-inactive);
-            opacity: 1;
-            justify-self: center;
-            }
         
+        /* Sensor block container */
+        .drawer-button-block {
+        display: flex;
+        flex-direction: column;
+        gap: 8px; /* space between header and controls */
+        padding: 10px;
+        background: #303030;
+        border-radius: 6px;
+        color: #fff;
+        font-family: Inter, sans-serif;
+        }
 
+        /* Header */
+        .drawer-button-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        opacity: 0.9;
+        }
 
+        .drawer-button-title {
+        font: var(--type-h4);
+          color: var(--c-h); /* <- apply the pink you defined */
+        }
 
+        .drawer-button-icon {
+        font-size: 24px;
+        }
 
+        /* Controls row */
+        .sensor-controls {
+        display: grid;
+        grid-template-columns: 3fr 2fr; /* two equal columns */
+        gap: 10px;
+        }
 
+        /* Toggle buttons */
+        .drawer-button-toggle {
+        display: flex;
+        background: #404040;
+        border-radius: 6px;
+        overflow: hidden;
+        }
 
+        .toggle-btn {
+        flex: 1;
+        padding: 14px 0;
+        border: none;
+        background: #404040;
+        color: #fff;
+        font-size: 16px;
+        line-height: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        text-align: center;
+        opacity: 0.5;
+        transition: opacity 0.2s, background 0.2s;
+        }
 
+        .toggle-btn.off { border-radius: 6px; }
+        .toggle-btn.on  { border-radius: 6px; }
 
+        .toggle-btn.active {
+            background: #707070;
+            color: #fff;
+            opacity: 1;   /* fully opaque */
+            font-weight: 600;
+        }
 
+        /* Display block */
+        .drawer-button-display {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 4px;
+        padding: 14px 14px;
+        background: #000;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 20px;
+        font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
+        }
 
+        .display-value {
+        font-size: 16px;
+        font-weight: 500;
+        color: #fff;
+        }
 
-
-
+        .display-unit {
+        font-size: 16px;
+        font-weight: 500;
+        color: #757575;
+        }
 
 
         
@@ -4322,7 +4724,7 @@
         height: 48px;     /* fixed button height */
         padding: 0;       /* remove extra padding */
 
-        background:var(--button-inactive); 
+        background: #404040;
         border: none;
         border-radius: 6px;
 
@@ -4332,8 +4734,11 @@
         justify-content: center;   /* horizontal centering */
         gap: 8px;
 
-        font: var(--type-display-mono-regular);
-        color:var(--color-white);
+        font-family: Inter, sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0.5px;     /* technical look */
+        color: #757575;
 
         cursor: pointer;
         transition: background 0.2s, transform 0.1s, color 0.2s;
@@ -4341,14 +4746,13 @@
         }
 
         .ap-mode-btn:hover {
-        font: var(--type-display-mono-bold);
-        background:var(--button-active); 
-
+        background: #505050;
+        color: #fff;
         }
         .ap-mode-btn.active {
-        font: var(--type-display-mono-bold);
-        background:var(--color-black); 
-
+        font-weight: 600;
+        color: #fff;
+        background: #454545;
 
         }
 
@@ -4369,7 +4773,13 @@
 
 
 
+     /* MAGENTA / ERROR / BORDER */
 
+
+    * {
+    outline: 1px dashed rgba(181, 90, 169, 0.01);
+    
+    }
 
         /* Gamepad Indicator Styles */
         #joystick-indicator {
@@ -4395,10 +4805,31 @@
         }
 
 
+        /* Info Bar icon color schema*/
+       /* General Status Indicator Styles */
+        #ap-indicator, #companion-indicator, #system-status-indicator {
+            transition: all 0.5s ease;
+            margin: 0 8px; /* Add some spacing between icons */
+        }
 
+        /* Red / Disconnected / Error State */
+        #ap-indicator.disconnected img,
+        #companion-indicator.disconnected img,
+        #system-status-indicator.error img {
+            /* Red color */
+            filter: invert(30%) sepia(90%) saturate(6000%) hue-rotate(350deg) brightness(90%) contrast(120%);
+        }
 
+        /* Green / Connected / OK State */
+        #ap-indicator.connected img,
+        #companion-indicator.connected img,
+        #system-status-indicator.ok img {
+            /* Green color */
+            filter: invert(70%) sepia(50%) saturate(2000%) hue-rotate(85deg) brightness(120%) contrast(110%);
+        } 
+        /* End Of Info Bar icon color schema*/
 
-
-
-
-        
+        /* Battery Gauge Low Voltage State */
+        .gauge-block.is-low .mini-gauge-fill {
+            background-color: #e12d39; /* A standard red color */
+        }
