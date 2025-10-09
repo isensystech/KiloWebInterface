@@ -655,9 +655,7 @@
 
                 <!-- TAB 1: Boat Control -->
                 <div class="tab-pane active" data-tab="1">
-                    <div class="pane-title">
-                    <span>Boat Control</span>
-                    </div>
+                    <div class="pane-title"><span>Boat Control</span></div>
                     <div class="pane-grid">
                         
                         <!-- Engine -->
@@ -831,6 +829,283 @@
 
                         </div>
                   
+
+                        
+
+                        <!-- EXTRA TEMPORARY BUTTONS -->
+
+                        <div class="pane-title"><span>Commanded State Message</span></div>
+
+                        <!-- ROW 1 -->
+                        <div class="button-button-row">
+                            <!-- Bilge Hight -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Bilge Hight</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Bilge Hight">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                                                        
+                            <!-- Bilge Low-->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Bilge Low</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Bilge Low">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 2 -->
+                        <div class="button-button-row">
+                            <!-- Port Trim Tab -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Port Trim T</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Port Trim Tab">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+
+                            <!-- Stdb Trim Tab -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Stdb Trim T</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Stdb Trim Tab">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 3 -->
+                        <div class="button-button-row">
+                            <!-- Payload Fan 1 -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Payload F1</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Payload Fan 1">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+
+                            <!-- Payload Fan 2 -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Payload F2</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Payload Fan 2">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 4 -->
+                        <div class="button-button-row">
+                            <!-- Deck Light -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Deck Light</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Deck Light">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                                                        
+                            <!-- Dock Lights -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Dock Lights</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Dock Lights">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 5 -->
+                        <div class="button-button-row">
+                            <!-- Camera 1 -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Camera 1</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Camera 1">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                                                        
+                            <!-- Camera 2 -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Camera 2</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Camera 2">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 6 -->
+                        <div class="button-button-row">
+                            <!-- Anchor Light -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Anchor Light</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Anchor Light">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                                                        
+                            <!-- Nav Lights -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Nav Lights</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Nav Lights">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 7 -->
+                        <div class="button-button-row">
+                            <!-- Horn -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Horn</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Horn">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                                                        
+                            <!-- Radar -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Radar</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Radar">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 8 -->
+                        <div class="button-button-row">
+                            <!-- Beacon -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Beacon</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Beacon">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                                                        
+                            <!-- LOS Radio -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">LOS Radio</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="LOS Radio">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 9 -->
+                        <div class="button-button-row">
+                            <!-- SatCom -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">SatCom</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="SatCom">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                                                        
+                            <!-- Sonar1 -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Sonar1</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Sonar1">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 10 -->
+                        <div class="button-button-row">
+                            <!-- Autopilot -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">Autopilot</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="Autopilot">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                                                        
+                            <!-- AIS Silent -->
+                            <div class="button-half-block">
+                               <div class="drawer-button-header">
+                                    <img class="drawer-button-icon" src="/static/images/lamp-icon.svg" alt="Lamp icon">
+                                    <span class="drawer-button-title">AIS Silent</span>
+                                </div>
+                                <div class="drawer-button-toggle" role="group" aria-label="AIS Silent">
+                                    <button class="toggle-btn off active" data-state="0"> Off </button>
+                                    <button class="toggle-btn on" data-state="1"> On </button>
+                                </div>
+                            </div>
+                        </div>
+
 
 
                     </div>
