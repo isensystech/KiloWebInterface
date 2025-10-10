@@ -4809,7 +4809,7 @@
        /* General Status Indicator Styles */
         #ap-indicator, #companion-indicator, #system-status-indicator {
             transition: all 0.5s ease;
-            margin: 0 8px; /* Add some spacing between icons */
+        /*    margin: 0 8px; /* Add some spacing between icons */
         }
 
         /* Red / Disconnected / Error State */
