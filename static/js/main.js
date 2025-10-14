@@ -632,13 +632,11 @@
                                         <div class="editor-custom-input-row">
                                         <label class="editor-custom-label">CAN</label>
 
-                                          // Первый блок: 0x 3 numbers   //
                                             <div class="editor-prefixed-wrapper bn-wrapper">
                                                 <span class="editor-prefix">0x</span>
                                                 <input type="text" maxlength="3" class="editor-prefixed-input" placeholder="###">
                                             </div>
 
-                                          // Второй блок: длинное значение   //
                                             <div class="editor-prefixed-wrapper hex-wrapper">
                                                 <input type="text" maxlength="23" class="editor-custom-input long-input" placeholder="00 00 00 00 00 00 00 00">
                                             </div>
@@ -1656,7 +1654,7 @@
 
                 // If joystick is mostly centered, don't update
                 if (Math.abs(raw) <= deadzone) {
-                    renderSlider(logicalPercent); // raw не нужен тут
+                    renderSlider(logicalPercent); 
                     requestAnimationFrame(pollThrottleControl);
                     return;
                 }
@@ -1762,6 +1760,350 @@
             pollThrottleControl();
             });
          
+
+
+
+
+// ==============
+// TRIM TAB MODAL
+// ==============
+
+// === Trim Tab modal: open/close using existing ids/classes only ===
+document.addEventListener('DOMContentLoaded', () => {
+  const openBtn   = document.getElementById('trimtab-modal');            // the button
+  const backdrop  = document.getElementById('trimtab-modal-backdrop');   // dark overlay
+  const container = document.getElementById('trimtab-modal-container');  // modal container
+  const windowEl  = container?.querySelector('.editor-modal-window');     // modal window
+
+  if (!openBtn || !backdrop || !container || !windowEl) return; // nothing to wire
+
+  const open  = () => { backdrop.style.display = 'block'; container.style.display = 'block'; };
+  const close = () => { backdrop.style.display = 'none';  container.style.display = 'none'; };
+
+  // open by button
+  openBtn.addEventListener('click', open);
+
+  // close by clicking the dark overlay
+  backdrop.addEventListener('click', close);
+
+  // close by clicking outside the modal window inside the container
+  container.addEventListener('click', (e) => {
+    // if click is NOT inside the modal window -> close
+    if (!windowEl.contains(e.target)) close();
+  });
+
+  // close on Esc
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+  // close button hook from markup: onclick="trimTabApplySettings()"
+  window.trimTabApplySettings = function () {
+    // // apply settings if needed…
+    close();
+  };
+});
+
+
+
+// Init all trimtab sliders on the page (PORT & STBD)
+(() => {
+  const STEP = 5; // percent points per click
+
+  const initTrimtab = (root) => {
+    const track = root.querySelector('.trimtab-track-bg');
+    const fill  = root.querySelector('.trimtab-track-fill');
+    const thumb = root.querySelector('.trimtab-thumb');
+    const up    = root.querySelector('.throttle-up');
+    const down  = root.querySelector('.throttle-down');
+    if (!track || !fill || !thumb) return;
+
+    // keep fill growing from TOP
+    fill.style.top = '0'; fill.style.bottom = 'auto';
+
+    // apply UI from top% (0 top .. 100 bottom)
+    const applyFromTopPct = (t) => {
+      const pct = Math.max(0, Math.min(100, t));
+      thumb.style.top   = pct + '%';
+      fill.style.height = pct + '%';
+    };
+
+    const getTopPct = () => {
+      const v = parseFloat(thumb.style.top);
+      return Number.isFinite(v) ? v : 50;
+    };
+
+    // arrows
+    up   && up.addEventListener('click',  (e)=>{ e.preventDefault(); applyFromTopPct(getTopPct() - STEP); });
+    down && down.addEventListener('click',(e)=>{ e.preventDefault(); applyFromTopPct(getTopPct() + STEP); });
+
+    // drag & click on track
+    const pointToTopPct = (clientY) => {
+      const r = track.getBoundingClientRect();
+      let rel = (clientY - r.top) / r.height; // 0..1
+      return Math.max(0, Math.min(1, rel)) * 100;
+    };
+    const moveMouse = (e)=> applyFromTopPct(pointToTopPct(e.clientY));
+    const moveTouch = (e)=> { e.preventDefault(); applyFromTopPct(pointToTopPct(e.touches[0].clientY)); };
+
+    const stop = ()=>{
+      document.removeEventListener('mousemove', moveMouse);
+      document.removeEventListener('mouseup', stop);
+      document.removeEventListener('touchmove', moveTouch);
+      document.removeEventListener('touchend', stop);
+    };
+    const start = (e)=>{
+      e.preventDefault();
+      if (e.touches) moveTouch(e); else moveMouse(e);
+      document.addEventListener('mousemove', moveMouse);
+      document.addEventListener('mouseup', stop, { once:true });
+      document.addEventListener('touchmove', moveTouch, { passive:false });
+      document.addEventListener('touchend', stop, { once:true });
+    };
+
+    thumb.addEventListener('mousedown', start);
+    thumb.addEventListener('touchstart', start, { passive:false });
+    track.addEventListener('mousedown', start);
+    track.addEventListener('touchstart', start, { passive:false });
+
+    // init
+    applyFromTopPct(getTopPct());
+  };
+
+  // init all instances
+  document.querySelectorAll('.trimtab-slider-overlay').forEach(initTrimtab);
+})();
+
+// Robust rudder binding: waits for elements, survives other init errors
+(() => {
+  const clamp = v => Math.max(-35, Math.min(35, v));
+
+  const bind = () => {
+    const boat  = document.querySelector('.trimtab-boat-image');
+    const input = document.getElementById('rudder-input');
+    if (!boat || !input) return false;
+
+    // center pivot + smooth motion
+    boat.style.transformOrigin = '50% 50%';
+    boat.style.transition = 'transform 180ms ease';
+
+    const apply = () => {
+      let v = parseFloat(input.value);
+      if (!Number.isFinite(v)) v = 0;
+      v = clamp(v);
+      input.value = v;
+      boat.style.transform = `rotate(${v}deg)`;
+    };
+
+    // expose for inline handler if present
+    window.updateRudderFromInput = apply;
+
+    input.addEventListener('input',  apply);
+    input.addEventListener('change', apply);
+    apply();
+    return true;
+  };
+
+  // Try until elements exist
+  const tryBind = () => { if (!bind()) requestAnimationFrame(tryBind); };
+  tryBind();
+})();
+
+
+
+
+
+
+
+
+
+
+// Simple gyro: rotate #gyro-boat with left/right arrows
+(() => {
+  const clamp = v => Math.max(-35, Math.min(35, v));
+
+  const ready = () => {
+    const boat  = document.getElementById('gyro-boat');
+    const left  = document.getElementById('gyro-left');
+    const right = document.getElementById('gyro-right');
+    const angleEl = document.getElementById('gyro-angle');
+    if (!boat || !left || !right || !angleEl) return requestAnimationFrame(ready);
+
+    let angle = 0;
+    const STEP = 1;
+
+    const apply = () => {
+      boat.style.transform = `rotate(${angle}deg)`;
+      angleEl.textContent = `${angle}°`;
+    };
+
+    const startHold = (dir) => {
+      if (startHold.t) return;
+      startHold.t = setInterval(() => { angle = clamp(angle + dir * STEP); apply(); }, 60);
+    };
+    const stopHold = () => { clearInterval(startHold.t); startHold.t = null; };
+
+    left .addEventListener('click', (e)=>{ e.preventDefault(); angle = clamp(angle - STEP); apply(); });
+    right.addEventListener('click', (e)=>{ e.preventDefault(); angle = clamp(angle + STEP); apply(); });
+
+    left .addEventListener('mousedown', ()=> startHold(-1));
+    right.addEventListener('mousedown',()=> startHold(+1));
+    document.addEventListener('mouseup', stopHold);
+    left .addEventListener('touchstart', (e)=>{ e.preventDefault(); startHold(-1); }, {passive:false});
+    right.addEventListener('touchstart',(e)=>{ e.preventDefault(); startHold(+1); }, {passive:false});
+    document.addEventListener('touchend', stopHold);
+
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'ArrowLeft')  { angle = clamp(angle - STEP); apply(); }
+      if (e.key === 'ArrowRight') { angle = clamp(angle + STEP); apply(); }
+    });
+
+    apply();
+  };
+
+  ready();
+})();
+
+
+
+
+
+
+
+// ==============
+// ANCHOR MODAL
+// ==============
+
+// Open/close using existing ids/classes only
+document.addEventListener('DOMContentLoaded', () => {
+  const openBtn   = document.getElementById('anchor-modal');            // the button
+  const backdrop  = document.getElementById('anchor-modal-backdrop');   // dark overlay
+  const container = document.getElementById('anchor-modal-container');  // modal container
+  const windowEl  = container?.querySelector('.editor-modal-window');   // modal window
+
+  if (!openBtn || !backdrop || !container || !windowEl) return;
+
+  const open  = () => { backdrop.style.display = 'block'; container.style.display = 'block'; };
+  const close = () => { backdrop.style.display = 'none';  container.style.display = 'none'; };
+
+  openBtn.addEventListener('click', open);     // open by button
+  backdrop.addEventListener('click', close);   // close by dark overlay
+
+  // close when clicking outside the modal window
+  container.addEventListener('click', (e) => {
+    if (!windowEl.contains(e.target)) close();
+  });
+
+  // close on Esc
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+  // close button hook from markup: onclick="anchorApplySettings()"
+  window.anchorApplySettings = function () {
+    // apply settings if needed…
+    close();
+  };
+});
+
+
+
+// === Anchor slider: unified logic (buttons + drag, top-anchored fill) ===
+(() => {
+  const thumb   = document.getElementById('anchor-thumb');
+  const fill    = document.getElementById('anchor-fill');
+  const readout = document.getElementById('anchor-readout');
+  const track   = document.querySelector('.anchor-track-bg');          // bounds = track
+  const upBtn   = document.getElementById('anchor-throttle-up');
+  const downBtn = document.getElementById('anchor-throttle-down');
+  const pointer = document.querySelector('.anchor-pointer-img');       // optional
+
+  if (!thumb || !fill || !track) return;
+
+  // force fill to grow from TOP (override any CSS bottom)
+  fill.style.bottom = 'auto';
+  fill.style.top = '0';
+
+  // apply UI from top% (0 = top, 100 = bottom)
+  const applyFromTopPct = (t) => {
+    const pct = Math.max(0, Math.min(100, t));
+    thumb.style.top   = pct + '%';
+    fill.style.height = pct + '%';                 // fill to thumb from top
+
+    // percent 1..0 for any extra mapping
+    const percent = 1 - (pct / 100);              // 1 at top, 0 at bottom
+
+    // optional pointer rotation
+    if (pointer) {
+      const angle = Math.round((percent * 30) - 15); // -15..+15
+      pointer.style.transform = `rotate(${angle}deg)`;
+    }
+
+    // readout 1..15 (same as before)
+    if (readout) {
+      const raw = Math.round((1 - percent) * 14) + 1;
+      readout.textContent = Math.max(1, Math.min(15, raw));
+    }
+  };
+
+  // make updater available if needed elsewhere
+  window.anchorApplyFromTopPct = applyFromTopPct;
+
+  // current top% (defaults to 50 if unset)
+  const getTopPct = () => {
+    const v = parseFloat(thumb.style.top);
+    return Number.isFinite(v) ? v : 50;
+  };
+
+  // ---- Buttons (↑ / ↓) ----
+  const STEP = 5; // percent points
+  const moveUp   = () => applyFromTopPct(getTopPct() - STEP); // up = smaller top%
+  const moveDown = () => applyFromTopPct(getTopPct() + STEP); // down = larger top%
+
+  upBtn   && upBtn.addEventListener('click', (e) => { e.preventDefault(); moveUp();   });
+  downBtn && downBtn.addEventListener('click', (e) => { e.preventDefault(); moveDown(); });
+
+  // ---- Drag on thumb (and click/drag on track) ----
+  const pointToTopPct = (clientY) => {
+    const r = track.getBoundingClientRect();
+    let rel = (clientY - r.top) / r.height;   // 0 at top .. 1 at bottom
+    rel = Math.max(0, Math.min(1, rel));
+    return rel * 100;
+  };
+
+  const onMoveMouse = (e) => applyFromTopPct(pointToTopPct(e.clientY));
+  const onMoveTouch = (e) => { e.preventDefault(); applyFromTopPct(pointToTopPct(e.touches[0].clientY)); };
+
+  const endDrag = () => {
+    document.removeEventListener('mousemove', onMoveMouse);
+    document.removeEventListener('mouseup', endDrag);
+    document.removeEventListener('touchmove', onMoveTouch);
+    document.removeEventListener('touchend', endDrag);
+  };
+
+  const startDrag = (e) => {
+    e.preventDefault();
+    if (e.touches) onMoveTouch(e); else onMoveMouse(e);
+    document.addEventListener('mousemove', onMoveMouse);
+    document.addEventListener('mouseup', endDrag, { once: true });
+    document.addEventListener('touchmove', onMoveTouch, { passive: false });
+    document.addEventListener('touchend', endDrag, { once: true });
+  };
+
+  thumb.addEventListener('mousedown', startDrag);
+  thumb.addEventListener('touchstart', startDrag, { passive: false });
+  track.addEventListener('mousedown', startDrag);                // click track to move
+  track.addEventListener('touchstart', startDrag, { passive:false });
+
+  // init to current position (or 50%)
+  applyFromTopPct(getTopPct());
+})();
+
+
+
+
+
+
+
+
+
+
 
 // =======================
 // MODAL GAUGES PANEL
@@ -2026,14 +2368,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         group.dataset.mode = mode;
                     };
 
-                    // Инициализация: Auto по умолчанию
                     setMode(group.dataset.mode || 'auto');
 
-                    // Обработчики кликов
                     autoBtn.addEventListener('click', () => setMode('auto'));
                     onBtn.addEventListener('click', () => setMode('on'));
 
-                    // Внешнее обновление (например, по телеметрии)
                     group.updateLive = (isOn) => {
                         if ((group.dataset.mode || 'auto') !== 'auto') return;
                         autoBtn.classList.remove('live');
@@ -2041,7 +2380,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         (isOn ? onBtn : autoBtn).classList.add('live');
                     };
 
-                    // Сейчас: live = On
                     onBtn.classList.add('live');
                     });
                 });
@@ -2077,20 +2415,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const setState = (n) => btn.setAttribute('data-state', String(n));
 
-            // Клик по всей кнопке в состояниях 1 и 3 -> переход в сплит (2)
             btn.addEventListener('click', (e) => {
                 const s = Number(btn.getAttribute('data-state') || 1);
                 if (s === 1 || s === 3) setState(2);
             });
 
-            // Обработчики половинок в состоянии 2
             btn.querySelector('.half-off').addEventListener('click', (e) => {
-                e.stopPropagation();           // не пускаем событие вверх
-                setState(1);                   // Off -> назад в 1
+                e.stopPropagation();           
+                setState(1);                   
             });
             btn.querySelector('.half-start').addEventListener('click', (e) => {
                 e.stopPropagation();
-                setState(3);                   // Start -> в 3 (зелёный)
+                setState(3);                   
             });
             });
      
@@ -2404,67 +2740,172 @@ document.addEventListener('DOMContentLoaded', () => {
      
 
           // TAB 8: Communication   //
-            // Drive display from the nearest .drawer-button-toggle group (no ids, no comm-*)
-            document.addEventListener('DOMContentLoaded', () => {
-            // For each toggle container on the page…
-            document.querySelectorAll('.drawer-button-toggle').forEach(container => {
-                // Root scope = the parent element that contains both toggle and display
-                const root = container.parentElement;
-                if (!root) return;
 
-                const buttons       = container.querySelectorAll('.toggle-btn');
-                const displaySignal = root.querySelector('[data-key="signal"]');
-                const displayDbm    = root.querySelector('[data-key="dbm"]');
 
-                // helper: apply values from a button to the display
-                const applyFromBtn = (btn) => {
-                if (displaySignal) displaySignal.textContent = btn.dataset.signal ?? '--';
-                if (displayDbm)    displayDbm.textContent    = btn.dataset.dbm ?? '--';
-                };
+            /** Apply readout for one drawer-button-block */
+            function applyCommState(block, isOn) {
+            // Ensure we have a display area
+            const valueEl = block.querySelector('.drawer-display .display-value');
+            const unitEl  = block.querySelector('.drawer-display .display-unit');
+            if (!valueEl || !unitEl) return;
 
-                // init from pre-active or first
-                applyFromBtn(container.querySelector('.toggle-btn.active') || buttons[0]);
+            // Cache original ON readout once per block
+            if (!block.dataset.onValue) {
+                block.dataset.onValue = valueEl.textContent.trim();
+                block.dataset.onUnit  = unitEl.textContent.trim();
+            }
 
-                // clicks (event delegation on the container)
-                container.addEventListener('click', (e) => {
-                const btn = e.target.closest('.toggle-btn');
-                if (!btn || !container.contains(btn)) return;
-                buttons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                applyFromBtn(btn);
-                });
+            if (isOn) {
+                valueEl.textContent = block.dataset.onValue;
+                unitEl.textContent  = block.dataset.onUnit;
+            } else {
+                valueEl.textContent = '---';
+                unitEl.textContent  = '';
+            }
+            }
+
+            /** Set active button within a toggle group */
+            function setActiveToggle(btn) {
+            const block  = btn.closest('.drawer-button-block');
+            const group  = btn.closest('.drawer-button-toggle');
+            if (!block || !group) return;
+
+            // Toggle visual state (only siblings inside this group)
+            group.querySelectorAll('.toggle-btn').forEach(b => {
+                const isActive = b === btn;
+                b.classList.toggle('active', isActive);
+                b.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
+
+            // Apply readout only for two-state controls (off/on)
+            const isOn = btn.classList.contains('on');
+            applyCommState(block, isOn);
+            }
+
+            // Global delegated click handler (covers SAT/CELL/LOS and others)
+            document.addEventListener('click', function (ev) {
+            const btn = ev.target.closest('.drawer-button-block .toggle-btn');
+            if (!btn) return;
+            setActiveToggle(btn);
             });
 
-
-
-
-      
-            document.addEventListener("DOMContentLoaded", () => {
-            const toggles = document.querySelectorAll(".drawer-button-toggle");
-
-            toggles.forEach(toggle => {
-                const buttons = toggle.querySelectorAll(".toggle-btn");
-                const display = toggle.parentElement.querySelector(".drawer-button");
-                const valueEl = display.querySelector(".display-value");
-
-                buttons.forEach(btn => {
-                btn.addEventListener("click", () => {
-                    // remove active from all
-                    buttons.forEach(b => b.classList.remove("active"));
-                    // set active
-                    btn.classList.add("active");
-
-                    // update only value (unit stays the same)
-                    const value = btn.dataset.value || "--";
-                    valueEl.textContent = value;
-                });
-                });
+            // Initial sync for any pre-marked .active states (optional but helpful)
+            (function initialCommSync() {
+            document.querySelectorAll('.drawer-button-block').forEach(block => {
+                const activeBtn = block.querySelector('.drawer-button-toggle .toggle-btn.active');
+                if (!activeBtn) return;
+                // Do not re-run setActiveToggle if it is already in correct state,
+                // but ensure readout matches the current active button.
+                applyCommState(block, activeBtn.classList.contains('on'));
             });
-            });
-     
+            })();
 
 
+
+
+
+
+            // Lock/unlock Frequency block when LOS is Off/On
+
+// Cache original classes of Frequency buttons once
+function initFrequencyCache() {
+  const freq = document.getElementById('btn-frequency');
+  if (!freq) return;
+  freq.querySelectorAll('.toggle-btn').forEach(btn => {
+    if (!btn.dataset.origClass) {
+      btn.dataset.origClass = btn.className; // e.g., "toggle-btn on active"
+    }
+  });
+}
+
+// Dim (lock) or undim (unlock) the Frequency block
+function setFrequencyLocked(locked) {
+  const freq = document.getElementById('btn-frequency');
+  if (!freq) return;
+
+  const buttons = freq.querySelectorAll('.toggle-btn');
+
+  if (locked) {
+    // Save currently active target to restore later
+    const active = freq.querySelector('.toggle-btn.active');
+    if (active) {
+      // Prefer data-action, fallback to text
+      freq.dataset.prevTarget = active.dataset.action || active.textContent.trim();
+    }
+    // Force all buttons to "toggle-btn off" and clear ARIA active
+    buttons.forEach(btn => {
+      btn.className = 'toggle-btn off';
+      btn.setAttribute('aria-selected', 'false');
+    });
+    // Visual dim
+    freq.style.opacity = '0.5';
+    freq.dataset.locked = '1';
+  } else {
+    // Restore original classes
+    buttons.forEach(btn => {
+      if (btn.dataset.origClass) {
+        btn.className = btn.dataset.origClass;
+      }
+      // Clear ARIA; will set on the chosen active below
+      btn.setAttribute('aria-selected', 'false');
+    });
+
+    // Restore previously active (by data-action or text), else keep existing .active, else first .on, else first button
+    let target =
+      (freq.dataset.prevTarget &&
+        Array.from(buttons).find(b => (b.dataset.action || b.textContent.trim()) === freq.dataset.prevTarget)) ||
+      freq.querySelector('.toggle-btn.active') ||
+      freq.querySelector('.toggle-btn.on') ||
+      buttons[0];
+
+    if (target) {
+      target.classList.add('active');
+      target.setAttribute('aria-selected', 'true');
+    }
+
+    // Clear dim
+    freq.style.opacity = '';
+    freq.dataset.locked = '0';
+  }
+}
+
+// Sync lock with current LOS state
+function syncFrequencyByLos() {
+  const losOnActive = document.querySelector('#btn-los .toggle-btn.on.active');
+  setFrequencyLocked(!losOnActive); // lock when LOS is Off
+}
+
+// Block clicks on Frequency when locked
+function preventClicksWhenLocked(e) {
+  const btn = e.target.closest('#btn-frequency .toggle-btn');
+  if (!btn) return;
+  const freq = document.getElementById('btn-frequency');
+  if (freq && freq.dataset.locked === '1') {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}
+
+// Wire once
+(function () {
+  initFrequencyCache();
+  syncFrequencyByLos();
+
+  // Re-sync on any LOS toggle click
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('#btn-los .toggle-btn')) {
+      syncFrequencyByLos();
+    }
+  });
+
+  // Prevent frequency clicks while locked
+  document.addEventListener('click', preventClicksWhenLocked, true);
+})();
+
+
+
+
+            
 
       // MODAL ACTIVE HELM PANEL  //
       
@@ -2538,7 +2979,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         });
-     
+
+        
 
       // MODAL AUTO PILOT PANEL   //
       
@@ -2586,7 +3028,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const helmContent  = helmModal?.querySelector(".status-modal-content");
 
             const apToggle     = document.getElementById("ap-toggle");
-            const apModal      = document.getElementById("status-modal");
+            const apModal      = document.getElementById("auto-pilot-modal");
             const apContent    = apModal?.querySelector(".status-modal-content");
 
             // Helper: close a modal safely
@@ -2691,11 +3133,306 @@ document.addEventListener('DOMContentLoaded', () => {
         setupDocking('#auto-pilot-modal', { gap: 4 });  // 10px spacer
      
 
+// === Engine Start Button State Machine ===
+// === UNIVERSAL CLICK COMMAND HANDLER ===
+    document.body.addEventListener('click', (e) => {
+        if (!window.ws || window.ws.readyState !== WebSocket.OPEN) {
+            console.warn('WebSocket is not connected. Cannot send command.');
+            return;
+        }
 
+        const ignitionBtn = e.target.closest('#ignitionBtn');
+        const aisBtn = e.target.closest('#ais-controls button[data-action]');
+        const m20Btn = e.target.closest('[data-component="m20relay"] button[data-state]');
+        const egisBtn = e.target.closest('.battery-button-block button');
 
+        // --- 1. ENGINE BUTTON LOGIC ---
+        if (ignitionBtn && !ignitionBtn.disabled) {
+            const stateOne = ignitionBtn.querySelector('.state-one');
+            const stateTwo = ignitionBtn.querySelector('.state-two');
+            const stateThree = ignitionBtn.querySelector('.state-three');
 
+            const setVisualState = (targetState) => {
+                ignitionBtn.dataset.state = targetState;
+                stateOne.hidden = (targetState !== 1);
+                stateTwo.hidden = (targetState !== 2);
+                stateThree.hidden = (targetState !== 3);
+                ignitionBtn.classList.toggle('is-running', targetState === 3);
+            };
 
+            const stateBeforeClick = Number(ignitionBtn.dataset.state || 1);
 
+            if (stateBeforeClick === 1) {
+                console.log('Action: Ignition ON');
+                window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 1, state: 1 }));
+                setVisualState(2);
+            } else if (stateBeforeClick === 2) {
+                const rect = ignitionBtn.getBoundingClientRect();
+                const isRightHalf = e.clientX > (rect.left + rect.width / 2);
+                if (isRightHalf) { // START
+                    console.log('Action: Starting Engine Sequence...');
+                    ignitionBtn.disabled = true;
+                    window.ws.send(JSON.stringify({ type: "relay.set", bank: 7, "switch": 1, state: 1 }));
+                    setTimeout(() => {
+                        window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 2, state: 1 }));
+                        setTimeout(() => {
+                            window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 2, state: 0 }));
+                            ignitionBtn.disabled = false;
+                        }, 2000);
+                    }, 2000);
+                    setVisualState(3);
+                } else { // OFF
+                    console.log('Action: Ignition OFF');
+                    window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 1, state: 0 }));
+                    setVisualState(1);
+                }
+            } else if (stateBeforeClick === 3) {
+                console.log('Action: Stop Engine');
+                window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 1, state: 0 }));
+                setVisualState(1);
+            }
+            return;
+        }
+
+        // --- 2. AIS BUTTON LOGIC ---
+        if (aisBtn) {
+            const action = aisBtn.dataset.action;
+            const payloads = [];
+            if (action === 'off') {
+                payloads.push({ type: "m20relay.set", "switch": 4, state: 0 });
+                payloads.push({ type: "m20relay.set", "switch": 24, state: 0 });
+            } else if (action === 'silent') {
+                payloads.push({ type: "m20relay.set", "switch": 4, state: 1 });
+                payloads.push({ type: "m20relay.set", "switch": 24, state: 0 });
+            } else if (action === 'on') {
+                payloads.push({ type: "m20relay.set", "switch": 4, state: 1 });
+                payloads.push({ type: "m20relay.set", "switch": 24, state: 1 });
+            }
+            payloads.forEach(p => window.ws.send(JSON.stringify(p)));
+            console.log(`Sent AIS Command(s) for action: ${action}`);
+            return;
+        }
+
+        // --- 3. GENERIC M20 RELAY LOGIC ---
+        if (m20Btn) {
+            const block = m20Btn.closest('[data-component="m20relay"]');
+            const payload = {
+                type: 'm20relay.set',
+                switch: parseInt(block.dataset.switch, 10),
+                state: parseInt(m20Btn.dataset.state, 10)
+            };
+            window.ws.send(JSON.stringify(payload));
+            console.log('Sent M20 Relay Command:', payload);
+            return;
+        }
+
+        // --- 4. EGIS RELAY LOGIC ---
+        if (egisBtn) {
+            const block = egisBtn.closest('.battery-button-block');
+            const payload = {
+                type: 'relay.set',
+                bank: Number(block?.dataset.bank),
+                switch: Number(block?.dataset.switch),
+                state: Number(egisBtn.dataset.state)
+            };
+            window.ws.send(JSON.stringify(payload));
+            console.log('Sent EGIS Relay Command:', payload);
+            return;
+        }
+        
+    });
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing application');
+
+    // === Screen Navigation Logic ===
+    const indicators = document.querySelectorAll('.indicator-dot');
+    const screens = document.querySelectorAll('.screen');
+
+    indicators.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const screenNumber = dot.dataset.screen;
+            
+            screens.forEach(s => s.classList.remove('active'));
+            const targetScreen = document.getElementById(`screen-${screenNumber}`);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+            }
+
+            indicators.forEach(d => d.classList.remove('active'));
+            dot.classList.add('active');
+        });
+    });
+
+    // === Modal Popup Logic ===
+    const helmModal = document.getElementById('helm-modal');
+    const apModal = document.getElementById('auto-pilot-modal');
+    const helmToggle = document.getElementById('helm-toggle');
+    const apToggle = document.getElementById('ap-toggle');
+
+    [helmToggle, apToggle].forEach(toggle => {
+        if (!toggle) return;
+        const modal = (toggle === helmToggle) ? helmModal : apModal;
+        toggle.addEventListener('click', () => modal?.classList.toggle('is-open'));
+    });
+
+    document.addEventListener('click', (e) => {
+        if (helmModal?.classList.contains('is-open') && !helmModal.contains(e.target) && !helmToggle?.contains(e.target)) {
+            helmModal.classList.remove('is-open');
+        }
+        if (apModal?.classList.contains('is-open') && !apModal.contains(e.target) && !apToggle?.contains(e.target)) {
+            apModal.classList.remove('is-open');
+        }
+    });
+
+    // === Drawer Toggle Logic ===
+    const drawerToggle = document.getElementById('drawer-toggle');
+    const drawer = document.getElementById('drawer');
+    const drawerContent = document.getElementById('drawerContent');
+    
+    drawerToggle?.addEventListener('click', () => {
+        const isOpening = !drawer.classList.contains('open');
+        drawer.classList.toggle('open');
+        drawerToggle.setAttribute('aria-expanded', isOpening);
+        drawerContent.setAttribute('aria-hidden', !isOpening);
+    });
+
+    // === Tab Navigation in Drawer ===
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tabId = button.dataset.tab;
+
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            tabPanes.forEach(pane => {
+                pane.classList.toggle('active', pane.dataset.tab === tabId);
+            });
+        });
+    });
+
+    // === Payload Button Safety Caps ===
+    const safetyCaps = document.querySelectorAll('.safety-cap');
+    safetyCaps.forEach(cap => {
+        cap.addEventListener('click', () => {
+            cap.style.display = 'none';
+            setTimeout(() => {
+                cap.style.display = 'block';
+            }, 5000); // Reset after 5 seconds
+        });
+    });
+    
+    // === UNIVERSAL CLICK COMMAND HANDLER ===
+    document.body.addEventListener('click', (e) => {
+        if (!window.ws || window.ws.readyState !== WebSocket.OPEN) {
+            console.warn('WebSocket is not connected. Cannot send command.');
+            return;
+        }
+
+        const ignitionBtn = e.target.closest('#ignitionBtn');
+        const aisBtn = e.target.closest('#ais-controls button[data-action]');
+        const m20Btn = e.target.closest('[data-component="m20relay"] button[data-state]');
+        const egisBtn = e.target.closest('.battery-button-block button');
+
+        // --- 1. ENGINE BUTTON LOGIC ---
+        if (ignitionBtn && !ignitionBtn.disabled) {
+            const stateOne = ignitionBtn.querySelector('.state-one');
+            const stateTwo = ignitionBtn.querySelector('.state-two');
+            const stateThree = ignitionBtn.querySelector('.state-three');
+
+            const setVisualState = (targetState) => {
+                ignitionBtn.dataset.state = targetState;
+                stateOne.hidden = (targetState !== 1);
+                stateTwo.hidden = (targetState !== 2);
+                stateThree.hidden = (targetState !== 3);
+                ignitionBtn.classList.toggle('is-running', targetState === 3);
+            };
+
+            const stateBeforeClick = Number(ignitionBtn.dataset.state || 1);
+
+            if (stateBeforeClick === 1) {
+                console.log('Action: Ignition ON');
+                window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 1, state: 1 }));
+                setVisualState(2);
+            } else if (stateBeforeClick === 2) {
+                const rect = ignitionBtn.getBoundingClientRect();
+                const isRightHalf = e.clientX > (rect.left + rect.width / 2);
+                if (isRightHalf) { // START
+                    console.log('Action: Starting Engine Sequence...');
+                    ignitionBtn.disabled = true;
+                    window.ws.send(JSON.stringify({ type: "relay.set", bank: 7, "switch": 1, state: 1 }));
+                    setTimeout(() => {
+                        window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 2, state: 1 }));
+                        setTimeout(() => {
+                            window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 2, state: 0 }));
+                            ignitionBtn.disabled = false;
+                        }, 2000);
+                    }, 2000);
+                    setVisualState(3);
+                } else { // OFF
+                    console.log('Action: Ignition OFF');
+                    window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 1, state: 0 }));
+                    setVisualState(1);
+                }
+            } else if (stateBeforeClick === 3) {
+                console.log('Action: Stop Engine');
+                window.ws.send(JSON.stringify({ type: "m20relay.set", "switch": 1, state: 0 }));
+                setVisualState(1);
+            }
+            return;
+        }
+
+        // --- 2. AIS BUTTON LOGIC ---
+        if (aisBtn) {
+            const action = aisBtn.dataset.action;
+            const payloads = [];
+            if (action === 'off') {
+                payloads.push({ type: "m20relay.set", "switch": 4, state: 0 });
+                payloads.push({ type: "m20relay.set", "switch": 24, state: 0 });
+            } else if (action === 'silent') {
+                payloads.push({ type: "m20relay.set", "switch": 4, state: 1 });
+                payloads.push({ type: "m20relay.set", "switch": 24, state: 0 });
+            } else if (action === 'on') {
+                payloads.push({ type: "m20relay.set", "switch": 4, state: 1 });
+                payloads.push({ type: "m20relay.set", "switch": 24, state: 1 });
+            }
+            payloads.forEach(p => window.ws.send(JSON.stringify(p)));
+            console.log(`Sent AIS Command(s) for action: ${action}`);
+            return;
+        }
+
+        // --- 3. GENERIC M20 RELAY LOGIC ---
+        if (m20Btn) {
+            const block = m20Btn.closest('[data-component="m20relay"]');
+            const payload = {
+                type: 'm20relay.set',
+                switch: parseInt(block.dataset.switch, 10),
+                state: parseInt(m20Btn.dataset.state, 10)
+            };
+            window.ws.send(JSON.stringify(payload));
+            console.log('Sent M20 Relay Command:', payload);
+            return;
+        }
+
+        // --- 4. EGIS RELAY LOGIC ---
+        if (egisBtn) {
+            const block = egisBtn.closest('.battery-button-block');
+            if(!block) return;
+            const payload = {
+                type: 'relay.set',
+                bank: Number(block.dataset.bank),
+                switch: Number(block.dataset.switch),
+                state: Number(egisBtn.dataset.state)
+            };
+            window.ws.send(JSON.stringify(payload));
+            console.log('Sent EGIS Relay Command:', payload);
+            return;
+        }
+    });
+});
 
 
 
