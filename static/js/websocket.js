@@ -102,6 +102,89 @@
       }
   });
 
+    /* Heartbeat framework */
+        const ws = new WebSocket("ws://" + window.location.host + "/ws");
+
+        // === Status bar & heartbeat (stalls) ===
+        (function () {
+        if (window.__kiloHeartbeatInit) return;
+        window.__kiloHeartbeatInit = true;
+
+        const statusTextEl = document.querySelector('.status-text');
+        const connEl = document.getElementById('connection-indicator');
+
+        const hbState = { lastSig: null, repeats: 0, stalled: false };
+
+        function arrowFromHeading(deg) {
+            const arrows = ['↑','↗','→','↘','↓','↙','←','↖'];
+            const idx = Math.floor(((deg % 360) + 360) % 360 / 45) % 8;
+            return arrows[idx];
+        }
+
+        function renderStatusLine(msg) {
+            const name = 'Kilo #2';
+            const hdg = Number(msg.heading_deg ?? 0);
+            const spd = Number(msg.gps_speed_ms ?? 0);
+            const time = (msg.utc_time_str || '--:--:--').toString();
+            const arr = arrowFromHeading(hdg);
+            const eventTail = ' Buoy Release Safety Designated';
+            return `${name} ${arr} ${Math.round(hdg)}° ${Math.round(spd)}m/s [${time}]${eventTail}`;
+        }
+
+        function setHeartbeatStalled(isStalled) {
+            if (!connEl) return;
+            if (isStalled) {
+            connEl.classList.add('disconnected');
+            connEl.classList.add('stalled');
+            connEl.classList.remove('connected');
+            } else {
+            connEl.classList.remove('disconnected');
+            connEl.classList.remove('stalled');
+            connEl.classList.add('connected');
+            }
+        }
+
+        function signatureOf(msg) {
+            const r = (n, p=3) => (typeof n === 'number' ? n.toFixed(p) : String(n));
+            return [
+            msg.ap_connected,
+            msg.ap_mode,
+            r(msg.imu_roll_deg), r(msg.imu_pitch_deg), r(msg.imu_yaw_deg),
+            r(msg.gps_lat_deg, 5), r(msg.gps_lng_deg, 5),
+            r(msg.heading_deg, 1),
+            r(msg.gps_speed_ms, 2),
+            msg.utc_time_str
+            ].join('|');
+        }
+
+        window.__kiloOnMavlinkState = function (msg) {
+            if (statusTextEl) {
+            statusTextEl.textContent = renderStatusLine(msg);
+            }
+
+            const sig = signatureOf(msg);
+            if (hbState.lastSig === sig) {
+            hbState.repeats += 1;
+            } else {
+            hbState.lastSig = sig;
+            hbState.repeats = 1;
+            if (hbState.stalled) {
+                hbState.stalled = false;
+                setHeartbeatStalled(false);
+            }
+            }
+
+            if (!hbState.stalled && hbState.repeats >= 10) {
+            hbState.stalled = true;
+            setHeartbeatStalled(true);
+            }
+
+            if (!hbState.stalled) setHeartbeatStalled(false);
+        };
+        })();
+    /* End of Heartbeat framework */
+
+
 
   /* == 2) Incoming messages -> update UI - This part also remains the same == */
   ws.onmessage = (evt) => {
@@ -221,6 +304,11 @@
           }
       // Check if the message is a mavlink.state update
       if (msg.type === 'mavlink.state') {
+
+
+            // call our status/heartbeat updater (singleton-safe)
+            window.__kiloOnMavlinkState && window.__kiloOnMavlinkState(msg);
+
           // --- 1. Update Text Values ---
           const textFields = ['utc_time_str', 'gps_satellites', 'gps_lat_deg', 'gps_lng_deg'];
           textFields.forEach(key => {
