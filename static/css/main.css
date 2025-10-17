@@ -1,29 +1,157 @@
+/* Fonts & colors facelifting Kate */
+
+ :root{
+    /* Sans stack with robust fallbacks */
+    --font-sans: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
+    --font-mono: "Roboto Mono", "Consolas", "SFMono-Regular", "Menlo", "ui-monospace", "monospace";
+    
+
+    /* === Weight size/line-height family === */
+
+    /* TITLE Fonts */
+    --type-h1: 800 clamp(48px, 6.4vw, 64px)/1.2 var(--font-sans);
+    --type-h2: 700 clamp(18px, 2.2vw, 28px)/1.2 var(--font-sans);
+    --type-h3: 800 18px/1.25 var(--font-sans); 
+    --type-h4: 400 14px/1.3 var(--font-sans); 
+
+    /* BODY Fonts */
+    --type-button-regular: 400 16px/1.35 var(--font-sans); 
+    --type-button-bold: 700 16px/1.35 var(--font-sans); 
+
+    /* CAPTION Small Fonts */
+    --type-caption-regular:  400 12px/1.3  var(--font-sans);
+    --type-caption-bold:  700 12px/1.3  var(--font-sans);
+
+    /* Display Fonts */
+    --type-display-mono-regular: 400 16px/1.35 var(--font-mono);
+    --type-display-mono-bold:    700 16px/1.35 var(--font-mono);
+    
+    /* INFO BAR Fonts */
+    --type-caption-mono-regular:   400 14px/1.30 var(--font-mono);
+    --type-caption-mono-bold:      700 14px/1.30 var(--font-mono);
 
 
-    
-    
-    
-    /* Testing git. Good Test Scott Kate */
 
+    /* === Palette === */
+
+    /* Active font: button-text-active, icon-active, */
+    --color-white: #ffffff;
+
+    /* Title font */
+    --color-light: #dadada; 
+    --text-inactive: #757575;
+
+    --button-active:  #707070;
+    --button-inactive: #404040;
+
+
+    /* Drawer active background, Drawer inactive icons */
+    --color-drawer-bg: #303030;
+
+    /* Inactive drawer */
+    --color-drawer-inactive-bg: #252525;
+
+    /* Main background */
+    --color-bg: #202020;
+
+    /* Display, button strips */
+    --color-black: black;
+
+
+    /* KILL ALL Aactive, Attention Icons, Throttle fill */
+    --active-yellow: #FFBD0A;
     
+    /* Payload buttons, KILL ALL Inactive */
+    --inactive-yellow: #9a7000;
+
+    --gauge-red: #D0021B;
+    --gauge-green: #009100;
+    --gauge-blue: #1f8fff;
+    --color-tech: rgb(255, 0, 200); 
+    } 
+
+
+
+
+/* DISPLAY FONTS styles */
+
+    .display-value, 
+    .display-unit, 
+    .display-value-small, 
+    .display-unit-small { 
+    letter-spacing: 0.4px; /* mono tracking tech look */
+    } 
+
+    .display-label { 
+    font: var(--type-button-regular); 
+    color: var(--color-light);
+    }
+    .display-value{
+    /* mono 16px bold */
+    font: var(--type-display-mono-bold);
+    color: var(--color-white);
+    }
+    .display-unit{
+    /* mono 16px regular */
+    font: var(--type-display-mono-regular);
+    color: var(--color-light);
+    }
+
+    .display-value-small { font: var(--type-caption-mono-bold);   }
+    .display-unit-small  { font: var(--type-caption-mono-regular); }
+    .display-label-small { font: var(--type-caption-regular); 
+    color: var(--color-light);
+    }
+    
+
+
+
+
+
+/* Kill hover/press/focus styles when locked */
+#btn-frequency[data-locked="1"] .toggle-btn {
+  pointer-events: none;         /* no hover/click */
+  cursor: default;
+}
+#btn-frequency[data-locked="1"] .toggle-btn:hover,
+#btn-frequency[data-locked="1"] .toggle-btn:active,
+#btn-frequency[data-locked="1"] .toggle-btn:focus,
+#btn-frequency[data-locked="1"] .toggle-btn:focus-visible {
+  filter: none;
+  transform: none;
+  box-shadow: none;
+  outline: none;
+}
+
+
+
+
+
+
     /* Reset and base styles */
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+
+        /* ban on allocation */
+        user-select: none; 			
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
         }
+
+
+
+
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #202020;
-            color: #ffffff;
-            line-height: 1.6;
-            overflow: hidden;
-            overflow-y: auto;
-            height: auto;
+        font-family: var(--font-sans);
+        background-color: var(--color-bg);
+        color: var(--color-white);
+        line-height: 1.6;
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
         }
         
         html, body {
@@ -51,96 +179,28 @@
         }
 
         .control-screen {
-          display: flex;
-          flex-direction: column;
-          min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
         }
 
         #main {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-            overflow-y: auto;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        overflow-y: auto;
         }
         .main-content {
         overflow-y: auto;
-        max-height: calc(100vh - 160px); /* примерно: хедер (100px) + футер (60px) */
+        max-height: calc(100vh - 160px);
         }
 
 
 
 
-    :root{
-    /* Sans stack with robust fallbacks */
-    --font-sans: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
-    --font-mono: "Roboto Mono", Consolas, SFMono-Regular, Menlo, ui-monospace, monospace;
-    /* weight size/line-height family */
-    /* clamp() keeps it responsive across viewports */
-    --type-h2: 700 clamp(18px, 2.2vw, 28px)/1.2 var(--font-sans);
-    --c-h: rgb(255, 255, 255); 
-    --type-h3: 700 18px/1.25 var(--font-sans); 
+    /* INFO BAR */
 
-    --type-h4: 400 16px/1.3 var(--font-sans); 
-
-    --type-h5: 500 14px/1.35 var(--font-sans); 
-    --type-body: 400 14px/1.35 var(--font-sans); 
-
-
-
-    --type-h4-mono: 600 16px/1.3 var(--font-mono); 
-    --type-16body-mono: 500 16px/1.3 var(--font-mono); 
-    
-    --type-h5-mono: 500 14px/1.35 var(--font-mono); 
-    --type-14body-mono: 400 14px/1.35 var(--font-mono); 
-
-
-
-    /* === Palette === */
-
-
-    /* Active font: button-text-active, icon-active, */
-    --color-white: white;
-
-    /* Title font */
-    --color-light: #909090;
-
-    --button-text-inactive: #606060;
-    --button-active: #707070;
-    --button-inactive: #404040;
-
-
-
-
-    /* Drawer active background, Drawer inactive icons */
-    --color-drawer-bg: #303030;
-
-    /* Inactive drawer */
-    --color-drawer-bg: #252525;
-
-    /* Main background */
-    --color-bg: #202020;
-
-    /* Display, button strips */
-    --color-black: black;
-
-
-
-
-    /* KILL ALL Aactive, Attention Icons, Throttle fill */
-    --active-yellow: #FFBD0A;
-    
-    /* Payload buttons, KILL ALL Inactive */
-    --inactive-yellow: #9a7000;
-
-
-    --gauge-red: #be000a;
-    --gauge-green: #009100;
-    --gauge-blue: #1f8fff;
-
-
-
-    } 
 
 
         .info-bar {
@@ -148,10 +208,10 @@
         justify-content: space-between; /* spread elements across the width */
         align-items: center;          /* vertical centering */
         padding: 8px 16px;
-        background-color: #202020;    /* dark background */
-        color: #ffffff;               /* white text */
+        background-color:  var(--color-bg);    /* dark background */
+        color: var(--color-white);
         font-size: 14px;
-        border-bottom: 1px solid #202020; /* subtle separator */
+        border-bottom: 1px solid  var(--color-bg); /* subtle separator */
         }
 
         /* Put icon + text on one line and center them vertically */
@@ -186,7 +246,7 @@
         font-weight: 600;
         font-size: 14px;
         letter-spacing: 0.6px;         /* tech look */
-        color: #757575;              /* muted gray */
+        color:  var(--text-inactive);              /* muted gray */
         }
 
         /* Value text (e.g., "Locked") */
@@ -286,7 +346,7 @@
             background: none;        /* no background */
             border: none;            /* no border */
             border-radius: 0;        /* no rounding */
-            color: #757575;
+            color:  var(--text-inactive);
             font-size: 32px;         /* make triangle bigger if needed */
             cursor: pointer;
             z-index: 1000;
@@ -325,7 +385,7 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background-color: #505050;
+            background-color:  var(--button-inactive);
             transition: background-color 0.3s ease;
         }
         .indicator-dot.active {
@@ -348,7 +408,7 @@
           transform: translateX(-50%);
           font-size: 2.1rem;
           font-weight: 600;
-          color: #ffffff;
+        color: var(--color-white);
           z-index: 100;
         }
 
@@ -400,7 +460,7 @@
         .column {
           flex: 1;
           text-align: center;
-          color: #fff;
+          color: var(--color-white);
           font-weight: bold;
           display: flex;
           align-items: center;
@@ -475,7 +535,7 @@
         display: flex;
         align-items: flex-start;
         gap: 8px;
-        background-color: #202020;
+        background-color:  var(--color-bg);
         border-radius: 8px;
         padding: 8px 12px;
         font-family: sans-serif;
@@ -809,14 +869,14 @@
         width: 50px;                  /* Fixed width for neat alignment */
         padding: 4px;                 /* Inner padding for comfort */
         font-size: 14px;              /* Match text size to label */
-        color: #ffffff;       
-        background: #000000;  
-        border: 1px solid #757575; 
+        color: var(--color-white);    
+        background:  var(--color-black);  
+        border: 1px solid  var(--text-inactive); 
         border-radius: 4px;
         
         }
         .rudder-input-control label {
-        color: #757575; 
+        color:  var(--text-inactive); 
         font-size: 14px;
         }
 
@@ -987,7 +1047,7 @@
             margin-bottom: 10px;
         }
         .debug-box pre {
-            background-color: #202020;
+            background-color:  var(--color-bg);
             padding: 10px;
             border-radius: 4px;
             overflow-x: auto;
@@ -1012,8 +1072,8 @@
             margin-top: 10px;
         }
         .options-icon {
-            width: 32px;
-            height: 32px;
+            width: 24px;
+            height: 24px;
             filter: brightness(0) invert(1);
             transition: transform 0.2s ease;
             cursor: pointer;
@@ -1044,11 +1104,11 @@
 
 
         body.editing-mode {
-            background-color: #000000;
+            background-color:  var(--color-black);
         }
         body.editing-mode .control-button button {
-            background-color: #757575 !important;
-            border: 2px dashed #ffffff;
+            background-color:  var(--text-inactive) !important;
+            border: 2px dashed,  var(--color-white);
             box-shadow: none !important;
         }
         body.editing-mode .safety-cap {
@@ -1070,8 +1130,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #202020;
-            color: #fff;
+            background-color:  var(--color-bg);
+            color: var(--color-white);
             border-radius: 8px;
             padding: 20px;
             width: 400px;
@@ -1093,7 +1153,7 @@
             text-align: center;
             font-size: 2.1rem;
             font-weight: 600;
-            color: #757575;
+            color:  var(--text-inactive);
             padding: 4vh 0;
         }
 
@@ -1111,7 +1171,7 @@
             z-index: 999;
         }
         .editor-modal-window {
-            background-color: #202020;
+            background-color:  var(--color-bg);
             padding: 0px 0px;
             border-radius: 1px;
             width: 360px;
@@ -1204,7 +1264,7 @@
             margin-top: 6px;
             font-size: 0.9rem;
             text-align: center;
-            color: #757575;
+            color:  var(--text-inactive);
         }
 
     /* Change Preview Button Icon */
@@ -1221,8 +1281,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #202020;
-            border: 1px solid #757575;
+            background-color:  var(--color-bg);
+            border: 1px solid  var(--text-inactive);
             padding: 20px;
             border-radius: 8px;
             display: none; /* Hidden by default */
@@ -1289,7 +1349,7 @@
             background:  #2a2a2a;
             border-radius: 10px;
             z-index: 2;
-            outline: 2px dotted #757575;
+            outline: 2px dotted  var(--text-inactive);
             box-shadow: 0 0 0 3px #2a2a2a; /* solid outer border */
             display: flex;
             justify-content: center;
@@ -1314,7 +1374,7 @@
             transform: translateX(-50%) translateY(-110%);
             width: 150px;
             height: 75px;
-            background: repeating-linear-gradient(-45deg, #41361c, #41361c 12px, #202020 8px, #202020 25px);
+            background: repeating-linear-gradient(-45deg, #41361c, #41361c 12px,  var(--color-bg) 8px,  var(--color-bg) 25px);
             border-radius: 10px;
             z-index: 2;
             outline: 2px solid #41361c;
@@ -1393,7 +1453,7 @@
 
     /* Label below Preview button */
         .editor-button-label[contenteditable="true"]:hover {
-            color: #ffffff;
+            color: var(--color-white);
             font-weight: bold;
             cursor: text;
         }
@@ -1401,26 +1461,26 @@
             margin-top: 6px;
             font-size: 0.9rem;
             text-align: center;
-            color: #ffffff;
+            color: var(--color-white);
             background-color: transparent;
             border: none;
             outline: none;
-            border-bottom: 1px solid #757575;
+            border-bottom: 1px solid  var(--text-inactive);
             width: 100px;
             text-transform: uppercase;
         }
         .editor-button-label-input:focus {
-            border-bottom: 1px solid #ffffff;
+            border-bottom: 1px solid color var(--color-white);
         }
         .editor-button-label[contenteditable="true"]:focus {
             outline: none; /* remove default focus outline */
             padding: 4px 6px; /* add inner spacing around the text */
-            border: 1px dashed #757575; /* show a dashed border during editing */
+            border: 1px dashed  var(--text-inactive); /* show a dashed border during editing */
             border-radius: 4px; /* slightly rounded corners */
             background-color: #2a2a2a; /* optional: gives subtle contrast while editing */
         }
         .editor-button-label.edited {
-            color: #ffffff;        
+            color: var(--color-white);        
             font-weight: bold;
             white-space: nowrap;
     
@@ -1457,12 +1517,12 @@
         .editor-option-label {
             margin-top: 6px;
             font-size: 12px;
-            color: #757575;
+            color:  var(--text-inactive);
             text-align: center;
         }
         .editor-option-wrapper.active .editor-option-block {
-            outline: 2px solid #ffffff;
-            box-shadow: 0 0 4px #ffffff;
+            outline: 2px solid var(--color-white);
+            box-shadow: 0 0 4px var(--color-white);
         }
 
     /* Active Function Buttons */
@@ -1470,13 +1530,13 @@
             filter: none; /* Show the original white icon */
         }
         .editor-option-wrapper.active .editor-value-box {
-            border-color: #ffffff;
+            border-color: var(--color-white);
         }
         .editor-option-wrapper.active .editor-value-box span {
-            color: #ffffff;
+            color: var(--color-white);
         }
         .editor-option-wrapper.active .editor-option-label {
-            color: #ffffff;
+            color: var(--color-white);
             font-weight: bold;
         }
 
@@ -1486,7 +1546,7 @@
             position: relative;
             width: 90px;
             height: 30px;
-            border: 1px solid #757575;
+            border: 1px solid  var(--text-inactive);
             border-radius: 4px;
             display: flex;
             align-items: center;
@@ -1514,7 +1574,7 @@
             outline: none;
             position: relative;
             z-index: 2;
-            color: #757575;
+            color:  var(--text-inactive);
 
             
             /* remove arrows */
@@ -1523,11 +1583,11 @@
             -webkit-appearance: none;
         }
         .editor-value-input:disabled {
-            color: #757575;
+            color: var(--text-inactive);
             cursor: not-allowed;
         }
         .editor-modal-window:not(.timer-active) .editor-arrow-controls {
-            color: #757575;
+            color: var(--text-inactive);
             pointer-events: none;
         }
         .editor-arrow-controls {
@@ -1541,7 +1601,7 @@
         .editor-arrow-controls button {
             background: none;
             border: none;
-            color: #757575;
+            color:  var(--text-inactive);
             font-size: 8px;
             line-height: 10px;
             padding: 0;
@@ -1550,18 +1610,18 @@
         }
        /* Up arrow when timer button is activated */
         .editor-modal-window.timer-active .arrow-up:hover {
-            color: #ffffff;
+            color: var(--color-white);
             font-weight: bold;
-            text-shadow: 0 -1px 2px #ffffff;
+            text-shadow: 0 -1px 2px var(--color-white);
         }
         /* Up down when timer button is activated */
         .editor-modal-window.timer-active .arrow-down:hover {
-            color: #ffffff;
+            color: var(--color-white);
             font-weight: bold;
-            text-shadow: 0 1px 2px #ffffff;
+            text-shadow: 0 1px 2px var(--color-white);
         }
         .editor-option-wrapper.active .editor-arrow-controls button {
-            color: #ffffff;
+            color: var(--color-white);
             font-weight: bold;
         }
         .editor-value-input::-webkit-outer-spin-button,
@@ -1576,20 +1636,20 @@
             right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            color: #757575;
+            color:  var(--text-inactive);
             font-size: 14px;
             pointer-events: none;
             transition: opacity 0.2s ease;
         }
         /* Active white text */
         .editor-modal-window.timer-active .editor-value-box {
-            border-color: #ffffff;
+            border-color: var(--color-white);
         }
         .editor-modal-window.timer-active .editor-value-input {
-            color: #ffffff;
+            color: var(--color-white);
         }
         .editor-modal-window.timer-active .editor-unit-label {
-            color: #ffffff;
+            color: var(--color-white);
         }
 
 
@@ -1612,7 +1672,7 @@
         .editor-custom-label {
         min-width: 40px;
         font-weight: normal;
-        color: #757575;
+        color:  var(--text-inactive);
         height: 32px;
         line-height: 32px;
         font-size: 12px;
@@ -1623,8 +1683,8 @@
         .hex-wrapper {
         display: flex;
         align-items: center;
-        background-color: #202020;
-        border: 1px solid #757575;
+        background-color:  var(--color-bg);
+        border: 1px solid var(--text-inactive);
         border-radius: 4px;
         overflow: hidden;
         height: 32px;
@@ -1637,7 +1697,7 @@
         .bn-wrapper .editor-prefix,
         .editor-prefix {
         padding: 0 6px;
-        color: #757575;
+        color:  var(--text-inactive);
         font-family: monospace;
         font-size: 12px;
         display: flex;
@@ -1654,7 +1714,7 @@
         font-size: 12px;
         background: none;
         border: none;
-        color: #757575;
+        color:  var(--text-inactive);
         height: 100%;
         outline: none;
         }
@@ -1665,7 +1725,7 @@
         font-size: 12px;
         background: none;
         border: none;
-        color: #757575;
+        color:  var(--text-inactive);
         height: 100%;
         outline: none;
         }
@@ -1680,9 +1740,9 @@
         appearance: none;
         -webkit-appearance: none;
         -moz-appearance: none;
-        background-color: #202020;
-        color: #757575;
-        border: 1px solid #757575;
+        background-color:  var(--color-bg);
+        color:  var(--text-inactive);
+        border: 1px solid  var(--text-inactive);
         border-radius: 4px;
         padding: 6px 10px;
         font-size: 14px;
@@ -1724,18 +1784,18 @@
         }
         .editor-cancel-button {
             background-color: transparent;
-            color: #757575;
-            border: 1px solid #757575;
+            color:  var(--text-inactive);
+            border: 1px solid  var(--text-inactive);
         }
         .editor-apply-button {
             background-color: transparent;
-            color: #757575;
-            border: 1px solid #757575;
+            color:  var(--text-inactive);
+            border: 1px solid  var(--text-inactive);
         }
         .editor-cancel-button:hover,
         .editor-apply-button:hover {
-            outline: 2px solid #ffffff;
-            color: #ffffff;
+            outline: 2px solid var(--color-white);
+            color: var(--color-white);
             font-weight: bold;
         }
 
@@ -1758,11 +1818,11 @@
         
         /* Buttons Fuctions Hover */
         .editor-option-wrapper:hover .editor-option-block {
-            box-shadow: 0 0 6px #ffffff;
+            box-shadow: 0 0 6px var(--color-white);
             transition: all 0.2s ease;
         }
         .editor-option-wrapper:hover .editor-option-label {
-            color: #ffffff;
+            color: var(--color-white);
             transition: all 0.2s ease;
 
         }
@@ -1854,7 +1914,7 @@
         font-size: 10px;
         font-family: 'Roboto', sans-serif;
         font-weight: 700;
-        color: #757575;
+        color:  var(--text-inactive);
         line-height: 15px;
         text-align: center;
         pointer-events: none;
@@ -1872,7 +1932,7 @@
         /* Fill Yellow area */
         .trim-track-fill {
         position: absolute;
-        background-color: #FFBD0A;
+        background-color: var(--active-yellow);
         border-radius: 9px;
         left: 0;
         bottom: 0; /* ✅ Anchor to bottom */
@@ -1916,8 +1976,8 @@
         bottom: 0;
         width: 60px;
         height: 40px;
-        background-color: #000000;
-        color: #fff;
+        background-color:  var(--color-black);
+        color: var(--color-white);
         font-family: Roboto, sans-serif;
         font-weight: normal;
         font-size: 28px;
@@ -1959,7 +2019,7 @@
             width: 40px;
             max-width: 40px;
             height: 200px;
-            background-color: #404040;
+            background-color:  var(--button-inactive);
             border-radius: 8px;
             margin: auto;
         }
@@ -2301,7 +2361,7 @@
     display: grid; place-items: center;
     background: rgba(0,0,0,0.45);
     font: 600 18px/1.2 Inter, system-ui, sans-serif;
-    color: #fff; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--color-white); text-transform: uppercase; letter-spacing: .08em;
     }
 
     /* (optional) background pulse – remove if you don't use it */
@@ -2332,7 +2392,7 @@
     /* Track circle (latest: black) */
     .start-power__track{
     fill: none;
-    stroke: #000000;
+    stroke:  var(--color-black);
     stroke-width: 10;
     }
 
@@ -2343,7 +2403,7 @@
     --ARC: var(--sweep-frac, 0.8333333);  /* 300°/360 */
 
     fill: none;
-    stroke: #ffffff;
+    stroke: var(--color-white);
     stroke-width: 10;
     stroke-linecap: round;
 
@@ -2394,7 +2454,7 @@
 
     /* Vertical bar (phase 2) */
     .start-power__line{
-    stroke: #ffffff;
+    stroke: var(--color-white);
     stroke-width: 10;
     stroke-linecap: round;
     opacity: 0;
@@ -2502,7 +2562,7 @@
             font-family: Inter, sans-serif;
             font-size: 14px;
             font-weight: 500;
-            color: #757575;
+            color:  var(--text-inactive);
             line-height: 21px;
             text-align: center;
             }
@@ -2537,7 +2597,7 @@
             font-family: Inter, sans-serif;
             font-size: 14px;
             font-weight: 500;
-            color: #757575;
+            color:  var(--text-inactive);
             line-height: 21px;
             text-align: center;
             }
@@ -2574,7 +2634,7 @@
             display: inline-flex;
             align-items: baseline;
             gap: 4px;
-            color: #ffffff; /* values are white by default */
+            color: var(--color-white); /* values are white by default */
             font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             }
 
@@ -2587,7 +2647,7 @@
             font-size: 16px;
             line-height: 24px;
             font-weight: 400;
-            color: #757575; /* muted unit */
+            color:  var(--text-inactive); /* muted unit */
             }
 
             /* AVG row style */
@@ -2596,21 +2656,21 @@
             font-size: 12px;
             line-height: 18px;
             font-weight: 700;
-            color: #fff;
+            color: var(--color-white);
             }
             .speed-avg-gauge .value-sm {
             font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             font-size: 12px;
             line-height: 18px;
             font-weight: 700;
-            color: #fff;
+            color: var(--color-white);
             }
             .speed-avg-gauge .unit-sm {
             font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             font-size: 12px;
             line-height: 18px;
             font-weight: 400;
-            color: #757575;
+            color:  var(--text-inactive);
             }
 
             /* Mini gauge bar (0..100%) */
@@ -2629,7 +2689,7 @@
             /* Fill grows from left to right */
             width: var(--pct);       /* e.g., 39% */
             height: 100%;
-            background: #ffffff;
+            background: var(--color-white);
             border-radius: 3px;      /* keeps rounded cap when near 100% */
             transition: width 180ms ease; /* smooth updates */
             }
@@ -2656,7 +2716,7 @@
             display: inline-flex;
             align-items: baseline;
             gap: 4px;
-            color: #ffffff;
+            color: var(--color-white);
             font-family: "Roboto Mono", monospace;
             }
 
@@ -2669,7 +2729,7 @@
             font-size: 16px;
             line-height: 24px;
             font-weight: 400;
-            color: #757575;
+            color:  var(--text-inactive);
             }
 
             /* Mini bar reused from speed gauge */
@@ -2677,7 +2737,7 @@
             width: 100%;
             max-width: 104px;
             height: 2px;
-            background: #757575;
+            background:  var(--text-inactive);
             border-radius: 3px;
             overflow: hidden;
             }
@@ -2697,7 +2757,7 @@
             /* --pct controls fill width (0..100) */
             --pct: 0%;
             /* --bar-color controls the fill color; default is white */
-            --bar-color: #ffffff;
+            --bar-color: var(--color-white);
 
             display: flex;
             flex-direction: column;
@@ -2714,7 +2774,7 @@
             display: inline-flex;
             align-items: baseline;
             gap: 4px;
-            color: #ffffff;
+            color: var(--color-white);
             font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             }
 
@@ -2727,7 +2787,7 @@
             font-size: 16px;
             line-height: 24px;
             font-weight: 400;
-            color: #757575;
+            color:  var(--text-inactive);
             }
 
             /* Mini bar */
@@ -2735,7 +2795,7 @@
             width: 100%;
             max-width: 104px;
             height: 2px;
-            background: #757575;     /* base track */
+            background:  var(--text-inactive);     /* base track */
             border-radius: 3px;
             overflow: hidden;         /* clip inner fill */
             }
@@ -2749,17 +2809,16 @@
             }
 
             /* Optional state colors (use one of these classes on the root block) */
-            .engine-temperature-gauge.cold  { --bar-color: #0059FF; } /* cool blue */
-            .engine-temperature-gauge.warm  { --bar-color: #FFBD0A; } /* amber */
-            .engine-temperature-gauge.hot   { --bar-color: #D0021B; } /* red */
+            .engine-temperature-gauge.cold  { --bar-color: var(--gauge-blue); } /* cool blue */
+            .engine-temperature-gauge.warm  { --bar-color: var(--active-yellow); } /* amber */
+            .engine-temperature-gauge.hot   { --bar-color: var(--gauge-red); } /* red */
 
-        
 
          /* Battery Voltage Gauge block */
         
             .battery-voltage-gauge {
             --pct: 0%;               /* controls fill width */
-            --bar-color: #ffffff;     /* default bar color */
+            --bar-color: var(--color-white);     /* default bar color */
 
             display: flex;
             flex-direction: column;
@@ -2782,7 +2841,7 @@
 
             .label-muted,
             .unit-muted {
-            color: #757575;
+            color:  var(--text-inactive);
             font-family: Inter, sans-serif;
             font-size: 16px;
             line-height: 24px;
@@ -2790,7 +2849,7 @@
             }
 
             .value-strong {
-            color: #ffffff;
+            color: var(--color-white);
             font-family: Inter, sans-serif;
             font-size: 16px;
             line-height: 24px;
@@ -2802,7 +2861,7 @@
             width: 100%;
             max-width: 104px;
             height: 2px;
-            background: #757575;      /* muted gray track */
+            background:  var(--text-inactive);      /* muted gray track */
             border-radius: 3px;
             overflow: hidden;
             }
@@ -2840,7 +2899,7 @@
             gap: 4px;
             text-align: center;
             justify-content: center;
-            color: #ffffff;
+            color: var(--color-white);
             font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             }
 
@@ -2853,7 +2912,7 @@
             font-size: 16px;
             line-height: 24px;
             font-weight: 400;
-            color: #757575;
+            color:  var(--text-inactive);
             }
 
             /* Mini bar like Speed/RPM */
@@ -2861,14 +2920,14 @@
             width: 100%;
             max-width: 104px;      /* keep consistent with other gauges */
             height: 2px;
-            background: #757575;   /* base track */
+            background:  var(--text-inactive);   /* base track */
             border-radius: 3px;
             overflow: hidden;
             }
             .fuel-gauge .mini-gauge-fill{
             width: var(--pct);     /* e.g., 37% */
             height: 100%;
-            background: #ffffff;   /* fill color */
+            background: var(--color-white);   /* fill color */
             border-radius: 3px;
             transition: width 180ms ease;
             }
@@ -2876,16 +2935,16 @@
             /* Burn rate row styling (uses Inter per your mock for mixed text) */
             .fuel-gauge .gauge-line--rate{
             font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            color: #757575;        /* muted default */
+            color:  var(--text-inactive);        /* muted default */
             }
             .fuel-gauge .value-rate{
-            color: #ffffff;
+            color: var(--color-white);
             font-weight: 500;
             font-size: 16px;
             line-height: 24px;
             }
             .fuel-gauge .unit-rate{
-            color: #757575;
+            color:  var(--text-inactive);
             font-weight: 500;
             font-size: 16px;
             line-height: 24px;
@@ -2920,14 +2979,14 @@
         .kill-all-btn {
         width: 128px;
         height: 90px;
-        background-color: #FFBD0A;
+        background-color: var(--active-yellow);
         border-radius: 6px;
 
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
 
-        color: #000000;
+        color:  var(--color-black);
         opacity: 0.8;
         font: 800 16px/44px Inter, system-ui, sans-serif; /* vertical centering */
         letter-spacing: .6px;
@@ -2961,7 +3020,7 @@
 
             width: 288px;
             height: 896px;
-            background-color: #303030;
+            background-color:  var(--color-drawer-bg);
             border-radius: 6px;
 
             display: flex;
@@ -2974,7 +3033,7 @@
             flex-direction: row;
             justify-content: space-between;
             padding: 4px 0 0 0;
-            background: #252525;
+            background:  var(--color-drawer-inactive-bg);
             border-radius: 6px 6px 0 0;
         }
 
@@ -2987,14 +3046,14 @@
             padding: 6px 0;
             cursor: pointer;
             opacity: 0.2;          /* inactive icons 50% */
-            color: #757575; /* inactive gray */
+            color:  var(--text-inactive); /* inactive gray */
             transition: color 0.2s;
         }
 
         .drawer-tab.active {
-            color: #ffffff; /* active white */
+            color: var(--color-white); /* active white */
             opacity: 1; /* active icon 100% */
-            background-color: #303030; /* darker background */
+            background-color:  var(--color-drawer-bg); /* darker background */
             border-radius: 4px 4px 0 0; /* only top corners rounded */
         }
 
@@ -3053,7 +3112,7 @@
         
         /* === Drawer content layout (skeleton) === */
         .drawer-content{
-            background:#303030; /* to merge with active tab bg */
+            background: var(--color-drawer-bg); /* to merge with active tab bg */
             padding:12px;
             overflow:auto;
         }
@@ -3080,7 +3139,7 @@
 
         /* Firefox */
         .drawer-content { 
-        scrollbar-color: #505050 #303030; /* thumb track */
+        scrollbar-color:  var(--button-inactive)  var(--color-drawer-bg); /* thumb track */
         scrollbar-width: thin;
         }
 
@@ -3100,7 +3159,7 @@
             justify-content:space-between;
             gap:16px;
             padding:14px 16px;
-            background:#000;
+            background: var(--color-black);
             border-radius:8px;
             }
 
@@ -3119,7 +3178,7 @@
             .comm-divider{
             width:1px;
             height:24px;
-            background: #757575;
+            background:  var(--text-inactive);
             opacity:1;
             justify-self:center;
             }
@@ -3128,7 +3187,7 @@
             .comm-toggle{
             margin-top:8px;
             display:flex;
-            background:#404040;
+            background: var(--button-inactive);
             border-radius:8px;
             overflow:hidden;           /* clip inner rounded active */
             }
@@ -3138,7 +3197,7 @@
             flex:1;
             padding:14px 0;
             border:none;
-            background:#505050;
+            background: var(--button-inactive);
             color:#fff;
             font:500 16px/16px Inter, sans-serif;
             cursor:pointer;
@@ -3149,7 +3208,7 @@
             .comm-btn:last-child { border-radius:0 8px 8px 0; }
 
             .comm-btn.active{
-            background:#707070;
+            background: var(--button-active);
             opacity:1;
             font-weight:600;
             border-radius:8px;
@@ -3172,7 +3231,7 @@
             .solo-toggle{
             display:flex;
             width:100%;
-            background:#404040;
+            background: var(--button-inactive);
             border-radius:6px;
             overflow:hidden;
             }
@@ -3182,7 +3241,7 @@
             flex:1;
             padding:14px 0;
             border:none;
-            background:#404040;
+            background: var(--button-inactive);
             color:#fff;
             font:500 16px/16px Inter, sans-serif;
             text-align:center;
@@ -3197,7 +3256,7 @@
 
             /* Active visual */
             .solo-btn.active{
-            background:#707070;
+            background: var(--button-active);
             opacity:1;
             font-weight:600;
             border-radius:6px;
@@ -3214,7 +3273,7 @@
             .solo3-toggle {
             display: flex;
             width: 100%;
-            background: #404040;
+            background:  var(--button-inactive);
             border-radius: 6px;
             overflow: hidden;
             }
@@ -3224,8 +3283,8 @@
             flex: 1;
             padding: 14px 0;
             border: none;
-            background: #404040;
-            color: #fff;
+            background:  var(--button-inactive);
+            color: var(--color-white);
             font: 500 16px/16px Inter, sans-serif;
             text-align: center;
             cursor: pointer;
@@ -3240,7 +3299,7 @@
 
             /* Active visual */
             .solo3-btn.active {
-            background: #707070;
+            background:  var(--button-active);
             opacity: 1;
             font-weight: 600;
             border-radius: 6px;
@@ -3265,9 +3324,9 @@
             flex-direction: column;
             gap: 8px;
             padding: 0px;
-            background: #303030;
+            background:  var(--color-drawer-bg);
             border-radius: 6px;
-            color: #fff;
+            color: var(--color-white);
             font-family: Inter, sans-serif;
             }
 
@@ -3275,7 +3334,7 @@
             flex: 1;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            background: #404040;
+            background:  var(--button-inactive);
             border-radius: 6px;
             overflow: hidden;
             }
@@ -3288,7 +3347,7 @@
             height: 48px;     /* fixed button height */
             padding: 0 16px;
 
-            background: #404040;
+            background:  var(--button-inactive);
             border: none;
             border-radius: 6px;
 
@@ -3301,7 +3360,7 @@
             font-family: Inter, sans-serif;
             font-size: 16px;
             letter-spacing: 0.5px;     /* technical look */
-            color: #fff;
+            color: var(--color-white);
 
             cursor: pointer;
             transition: background 0.2s, transform 0.1s, color 0.2s;
@@ -3315,7 +3374,7 @@
 
             /* Active state highlight */
             .middle-drawer-button.active {
-            background: #757575;
+            background:  var(--text-inactive);
             font-weight: 600;
             }
 
@@ -3333,14 +3392,14 @@
             align-items: center;        /* align icon and text vertically in the middle */
             gap: 8px;                   /* space between icon and text */
             padding: 14px 16px;
-            background: #000;
+            background:  var(--color-black);
             border-radius: 6px;
             font-weight: 500;
             font-size: 16px;
             line-height: 1;             /* consistent vertical alignment */
             width: 100%;
             box-sizing: border-box;
-            color: #fff;                /* make text visible */
+            color: var(--color-white);                /* make text visible */
             }
 
             .drawer-display .display-icon {
@@ -3543,7 +3602,7 @@
         /* Button label (reduced) */
         .button-label {
         margin-top: 6px;         /* was 8px */
-        color: #fff;
+        color: var(--color-white);
         text-align: center;
         font-family: Inter, sans-serif;
         font-size: 14px;
@@ -3591,9 +3650,9 @@
         flex-direction: column;
         gap: 8px; /* space between header and controls */
         padding: 10px;
-        background: #303030;
+        background:  var(--color-drawer-bg);
         border-radius: 6px;
-        color: #fff;
+        color: var(--color-white);
         font-family: Inter, sans-serif;
         }
 
@@ -3634,7 +3693,7 @@
         justify-content: center;
         gap: 4px;
         padding: 6px 6px;
-        background: #000;
+        background:  var(--color-black);
         border-radius: 6px;
         font-weight: 600;
         font-size: 16px;
@@ -3645,13 +3704,13 @@
         .status-display-value {
         font-size: 16px;
         font-weight: 500;
-        color: #fff;
+        color: var(--color-white);
         }
 
         .status-display-unit {
         font-size: 16px;
         font-weight: 500;
-        color: #757575;
+        color:  var(--text-inactive);
         }
 
 
@@ -3672,9 +3731,9 @@
             display: flex;
             flex-direction: column;
             padding: 0 10px;
-            background: #303030;
+            background:  var(--color-drawer-bg);
             border-radius: 6px;
-            color: #fff;
+            color: var(--color-white);
             font-family: Inter, sans-serif;
             }
 
@@ -3688,7 +3747,7 @@
                 position: relative;
                 height: 48px;
                 padding: 2;
-                background: #303030;    /* default = state 1 */
+                background:  var(--color-drawer-bg);    /* default = state 1 */
                 border: none;
                 border-radius: 6px;
                 display: flex;
@@ -3701,7 +3760,7 @@
                 font-size: 16px;
                 font-weight: 600;
                 letter-spacing: 0.5px;
-                color: #fff;
+                color: var(--color-white);
 
                 cursor: pointer;
                 transition: background 0.2s, transform 0.1s, color 0.2s;
@@ -3825,14 +3884,14 @@
             transition: filter 0.2s;
             }
             .battery-engine-status .battery-engine-label {
-            color: #fff;
+            color: var(--color-white);
             transition: color 0.2s;
             }
 
             /* Ensure label stays white in all states (can be tuned per state if needed) */
             .battery-engine-status[data-state="2"] .battery-engine-label,
             .battery-engine-status[data-state="3"] .battery-engine-label {
-            color: #fff;
+            color: var(--color-white);
             }
 
             /* --- state backgrounds --- */
@@ -3857,7 +3916,7 @@
 
             /* --- hover per state (place AFTER the rules above) --- */
             .battery-engine-status[data-state="1"]:hover { 
-            background:#707070;          /* darker gray on hover */
+            background: var(--button-active);          /* darker gray on hover */
             box-shadow: 0 0 14px rgba(255, 255, 255, 0.15);
             }
 
@@ -3882,7 +3941,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            color: #fff;             /* choose text color for green bg */
+            color: var(--color-white);             /* choose text color for green bg */
             pointer-events: none;    /* keep hover on the parent */
             }
 
@@ -3905,7 +3964,7 @@
             /* Toggle buttons */
             .drawer-button-relay {
             display: flex;
-            background: #404040;
+            background:  var(--button-inactive);
             border-radius: 6px;
             overflow: hidden;
             }
@@ -3914,8 +3973,8 @@
             flex: 1;
             padding: 14px 0;
             border: none;
-            background: #404040;
-            color: #fff;
+            background:  var(--button-inactive);
+            color: var(--color-white);
             font-size: 16px;
             line-height: 16px;
             font-weight: 500;
@@ -3929,8 +3988,8 @@
             .relay-btn.on  { border-radius: 6px; }
 
             .relay-btn.active {
-                background: #707070;
-                color: #fff;
+                background:  var(--button-active);
+                color: var(--color-white);
                 opacity: 1;   /* fully opaque */
                 font-weight: 600;
                 border-radius: 6px;
@@ -4020,10 +4079,10 @@
 
         /* Container */
         .mission-card {
-        background: #404040;
+        background:  var(--button-inactive);
         border-radius: 8px;
         padding: 12px 14px;
-        color: #fff;
+        color: var(--color-white);
         font-family: Inter, sans-serif;
         }
         .mission-card + .mission-card { margin-top: 12px; } /* stack spacing */
@@ -4089,17 +4148,17 @@
             flex-direction: column;
             gap: 4px;
             padding-bottom: 12px;
-            background: #303030;
+            background:  var(--color-drawer-bg);
             border-radius: 6px;
-            color: #fff;
+            color: var(--color-white);
             font-family: Inter, sans-serif;
             }
 
             .mission-pleer {
-            background: #404040;
+            background:  var(--button-inactive);
             border-radius: 8px;
             padding: 8px 14px;
-            color: #fff;
+            color: var(--color-white);
             font-family: Inter, sans-serif;
             }
 
@@ -4151,7 +4210,7 @@
             width: 12px; height: 12px; border-radius: 50%;
             background: #d9d9d9;
             transform: translate(-50%, -50%);
-            box-shadow: inset 0 0 0 2px #404040;
+            box-shadow: inset 0 0 0 2px  var(--button-inactive);
 
             /* center the text and make it readable */
             display: flex;                    /* center label horizontally/vertically */
@@ -4170,7 +4229,7 @@
             left: 50%;
             transform: translateX(-50%);
             font: 500 12px/1 Inter, system-ui, sans-serif; /* compact line height */
-            color: #ffffff;
+            color: var(--color-white);
             white-space: nowrap;
             pointer-events: none;              /* label doesn't catch hover/clicks */
             z-index: 2;
@@ -4185,7 +4244,7 @@
             position:absolute; top:50%;
             width:16px; height:16px; border-radius:50%;
             transform:translate(-50%,-50%);
-            box-shadow: inset 0 0 0 2px #ffffff;
+            box-shadow: inset 0 0 0 2px var(--color-white);
             background:transparent;
             transition:left .22s ease;
             pointer-events:none;
@@ -4236,7 +4295,7 @@
             font-family: Inter, system-ui, sans-serif;
             font-weight: 600;
             font-size: 14px;
-            color: #ffffff;  /* brighter than unit */
+            color: var(--color-white);  /* brighter than unit */
             }
 
 
@@ -4262,7 +4321,7 @@
             font-family: Inter, system-ui, sans-serif;
             font-weight: 600;
             font-size: 12px;
-            color: #ffffff;  /* brighter than unit */
+            color: var(--color-white);  /* brighter than unit */
             }
 
             .pleer-data-unit {
@@ -4288,7 +4347,7 @@
         align-items: center;
         gap: 4px;
         padding: 14px 16px;
-        background: #000;
+        background:  var(--color-black);
         border-radius: 6px;
         font-weight: 500;
         font-size: 16px;
@@ -4302,9 +4361,9 @@
         flex-direction: column;
         gap: 8px; /* space between header and controls */
         padding: 10px;
-        background: #303030;
+        background:  var(--color-drawer-bg);
         border-radius: 6px;
-        color: #fff;
+        color: var(--color-white);
         font-family: Inter, sans-serif;
         }
 
@@ -4313,7 +4372,7 @@
         height: 48px;               /* fixed button height */
         padding: 0;              /* remove extra padding */
 
-        background: #707070;
+        background:  var(--button-active);
         border: none;
         border-radius: 6px;
 
@@ -4327,7 +4386,7 @@
         font-size: 16px;
         font-weight: 600;
         letter-spacing: 0.5px;     /* technical look */
-        color: #fff;
+        color: var(--color-white);
 
         cursor: pointer;
         transition: background 0.2s, transform 0.1s, color 0.2s;
@@ -4344,7 +4403,7 @@
         }
 
         .big-drawer-button .button-drawer-label {
-        color: #fff;
+        color: var(--color-white);
         transition: color 0.2s;
         display: inline-block;    /* behaves well with flex parent */
         }
@@ -4371,7 +4430,7 @@
         }
 
         .big-drawer-button.active .button-drawer-label {
-        color: #757575; /* gray text */
+        color:  var(--text-inactive); /* gray text */
         }
 
         .big-drawer-button.active .button-icon {
@@ -4402,8 +4461,8 @@
         }
         /* Single asset card */
         .asset-card{
-            background: #404040;
-            border: 1px solid #404040;
+            background:  var(--button-inactive);
+            border: 1px solid  var(--button-inactive);
             border-radius: 4px;
             padding: 10px;
             display: flex;
@@ -4467,29 +4526,29 @@
         }
         .metric{
             display: inline-flex; align-items: center; gap: 6px;
-            color: #fff;
+            color: var(--color-white);
             font: 600 16px/16px Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
             white-space: nowrap;
         }
         .metric .m-icon{
             width: 24px; height: 24px;
-            color: #fff;
+            color: var(--color-white);
 
         }
         .metric .unit{
             font: 500 16px/16px Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            color: #fff;
+            color: var(--color-white);
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         /* --- ASSETS: ensure cards remain visible --- */
         .pane-card {
             /* Card surface + spacing */
-            background: #404040;            /* visible against #303030 panel */
-            border: 1px solid #404040;      /* make border visible (was #404040 on #404040) */
+            background:  var(--button-inactive);            
+            border: 1px solid  var(--button-inactive);      /* make border visible (was  var(--button-inactive) on  var(--button-inactive)) */
             border-radius: 6px;
             padding: 6px 10px 6px 10px ;
             margin-bottom: 2px;             /* stack multiple cards */
-            color: #fff;                    /* readable text */
+            color: var(--color-white);                    /* readable text */
         }
 
         /* Parent layout: two columns (left info / right metrics) */
@@ -4535,7 +4594,7 @@
         .pane-card .asset-sub {
             grid-row: 2;
             font: 500 12px/16px Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            color: #757575;
+            color:  var(--text-inactive);
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
@@ -4555,7 +4614,7 @@
             align-items: center;
             gap: 6px;
             font: 600 16px/18px Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            color: #fff;
+            color: var(--color-white);
         }
 
         .pane-card .metric .m-icon {
@@ -4563,7 +4622,7 @@
         }
 
         .pane-card .metric .unit {
-            color: #757575; font-weight: 500;
+            color:  var(--text-inactive); font-weight: 500;
         }
 
         
@@ -4576,9 +4635,9 @@
         flex-direction: column;
         gap: 8px; /* space between header and controls */
         padding: 10px;
-        background: #303030;
+        background:  var(--color-drawer-bg);
         border-radius: 6px;
-        color: #fff;
+        color: var(--color-white);
         font-family: Inter, sans-serif;
         }
 
@@ -4611,7 +4670,7 @@
         /* Toggle buttons */
         .drawer-button-toggle {
         display: flex;
-        background: #404040;
+        background:  var(--button-inactive);
         border-radius: 6px;
         overflow: hidden;
         }
@@ -4620,8 +4679,8 @@
         flex: 1;
         padding: 14px 0;
         border: none;
-        background: #404040;
-        color: #fff;
+        background:  var(--button-inactive);
+        color: var(--color-white);
         font-size: 16px;
         line-height: 16px;
         font-weight: 500;
@@ -4635,8 +4694,8 @@
         .toggle-btn.on  { border-radius: 6px; }
 
         .toggle-btn.active {
-            background: #707070;
-            color: #fff;
+            background:  var(--button-active);
+            color: var(--color-white);
             opacity: 1;   /* fully opaque */
             font-weight: 600;
         }
@@ -4648,7 +4707,7 @@
         justify-content: center;
         gap: 4px;
         padding: 14px 14px;
-        background: #000;
+        background:  var(--color-black);
         border-radius: 6px;
         font-weight: 600;
         font-size: 16px;
@@ -4660,13 +4719,13 @@
         .display-value {
         font-size: 16px;
         font-weight: 500;
-        color: #fff;
+        color: var(--color-white);
         }
 
         .display-unit {
         font-size: 16px;
         font-weight: 500;
-        color: #757575;
+        color:  var(--text-inactive);
         }
 
 
@@ -4681,7 +4740,7 @@
         justify-content: center;
         gap: 4px;
         padding: 14px 16px;
-        background: #000;
+        background:  var(--color-black);
         border-radius: 6px;
         font-size: 16px;
         line-height: 20px;
@@ -4690,7 +4749,7 @@
         .helm-display-value {
         font-size: 16px;
         font-weight: 500;
-        color: #757575;
+        color:  var(--text-inactive);
         }
     
 
@@ -4732,7 +4791,7 @@
         height: 48px;     /* fixed button height */
         padding: 0;       /* remove extra padding */
 
-        background: #404040;
+        background:  var(--button-inactive);
         border: none;
         border-radius: 6px;
 
@@ -4746,7 +4805,7 @@
         font-size: 16px;
         font-weight: 500;
         letter-spacing: 0.5px;     /* technical look */
-        color: #757575;
+        color:  var(--text-inactive);
 
         cursor: pointer;
         transition: background 0.2s, transform 0.1s, color 0.2s;
@@ -4755,11 +4814,11 @@
 
         .ap-mode-btn:hover {
         background: #505050;
-        color: #fff;
+        color: var(--color-white);
         }
         .ap-mode-btn.active {
         font-weight: 600;
-        color: #fff;
+        color: var(--color-white);
         background: #454545;
 
         }
@@ -4780,14 +4839,6 @@
 
 
 
-
-     /* MAGENTA / ERROR / BORDER */
-
-
-    * {
-    outline: 1px dashed rgba(181, 90, 169, 0.01);
-    
-    }
 
         /* Gamepad Indicator Styles */
         #joystick-indicator {
@@ -4841,3 +4892,13 @@
         .gauge-block.is-low .mini-gauge-fill {
             background-color: #e12d39; /* A standard red color */
         }
+
+
+
+        
+
+
+        /* MAGENTA / ERROR / BORDER / TECH TEST COLOR*/
+    * {
+    outline: 1px dashed rgba(181, 90, 169, 0);
+    }
