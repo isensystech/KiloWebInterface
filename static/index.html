@@ -135,8 +135,8 @@
             <div class="debug-panel" id="debug-panel">
                 <div class="debug-content">
                     <div class="debug-box">
-                        <h3>Controller Heartbeat</h3>
-                        <pre id="controller-heartbeat">Waiting for data...</pre>
+                        <h3>Controller Heartbeat 00</h3>
+                        <pre id="controller-heartbeat">Waiting for data 00 ...</pre>
                     </div>
                     <div class="debug-box">
                         <h3>Device Heartbeats</h3>
@@ -397,7 +397,7 @@
                         <!-- value line -->
                         <div class="gauge-line">
                             <span id="groundspeed_ms" class="value value-lg">38.6</span>
-                            <span class=""> km/h</span>
+                            <span class="unit unit-lg"> km/h</span>
                         </div>
 
                         <!-- mini gauge bar -->
@@ -460,7 +460,7 @@
                     <div class="gauge-line">
                         <span class="label-muted">Start&nbsp;</span>
                         <span class="value-strong js-voltage">--</span>
-                        <span class="unit-muted">&nbsp;v</span>
+                        <span class="unit-muted">V</span>
                     </div>
                     
                     <div class="mini-gauge" role="img" aria-label="Battery level">
@@ -478,7 +478,7 @@
                         <!-- main value (gallons) -->
                         <div class="gauge-line">
                             <span class="value value-lg">12.23</span>
-                            <span class="unit unit-lg"> gal</span>
+                            <span class="unit unit-lg">gal</span>
                         </div>
 
                         <!-- mini gauge bar: level 0..100% -->
@@ -489,7 +489,7 @@
                         <!-- burn rate -->
                         <div class="gauge-line gauge-line--rate">
                             <span class="value-rate">3.5</span>
-                            <span class="unit-rate">&nbsp;G/Hr</span>
+                            <span class="unit-rate">G/Hr</span>
                         </div>
                     </div>
                 </div>
@@ -1106,9 +1106,6 @@
         <button class="relay-btn on"   data-state="1">On</button>
       </div>
       <div class="drawer-button-display">
-        <!-- your table has "Starter -> House Input/Output";
-             you had bank:7 there, но по смыслу это должен быть bank 9.
-             Поставлю примером stud="7" (Input). При необходимости поменяешь. -->
         <span class="display-value" data-bank="9" data-stud="7">--</span>
         <span class="display-unit">V</span>
       </div>

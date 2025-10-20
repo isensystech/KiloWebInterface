@@ -38,7 +38,7 @@
     --color-white: #ffffff;
 
     /* Title font */
-    --color-light: #dadada; 
+    --color-light: #cccccc; 
     --text-inactive: #757575;
 
     --button-active:  #707070;
@@ -82,7 +82,6 @@
 
 /* My technical comments 
 
-
         background-color: var(--color-bg);
         background-color: var(--color-white);
         background-color: var(--color-black);
@@ -92,15 +91,19 @@
         var(--color-bg);
         var(--color-light);
         var(--inactive-yellow);
-        border: 1px solid var(--button-inactive);
+        var(--button-inactive);
 
+    var(--type-display-mono-regular);
 
-
+        DELETE:
         color: rgba(0, 0, 0, 0.7);
-        color: rgb(120, 120, 120
+        color: rgb(120, 120, 120);
         color: #
-*/
 
+        font-weight: 
+        font-size:
+        line-height:
+*/
 
 
 
@@ -109,23 +112,21 @@
     .display-value, 
     .display-unit, 
     .display-value-small, 
+    .info-unit, 
+    .info-bar,
     .display-unit-small { 
-    letter-spacing: 0.4px; /* mono tracking tech look */
+    letter-spacing: 0.6px; /* mono tracking tech look */
     } 
 
-    .display-label { 
-    font: var(--type-button-regular); 
+    .display-label 
+    .display-unit { 
+    font: var(--type-caption-regular); 
     color: var(--color-light);
     }
-    .display-value{
-    /* mono 16px bold */
+
+    .display-value {
     font: var(--type-display-mono-bold);
     color: var(--color-white);
-    }
-    .display-unit{
-    /* mono 16px regular */
-    font: var(--type-display-mono-regular);
-    color: var(--color-light);
     }
 
     .display-value-small { font: var(--type-caption-mono-bold);   }
@@ -176,10 +177,9 @@
 
 
         body {
-        font-family: var(--font-sans);
+        font: var(--type-button-regular);
         background-color: var(--color-bg);
         color: var(--color-white);
-        line-height: 1.6;
         overflow-x: hidden;
         overflow-y: auto;
         height: auto;
@@ -241,7 +241,6 @@
         padding: 8px 16px;
         background-color:  var(--color-bg);    /* dark background */
         color: var(--color-white);
-        font-size: 14px;
         border-bottom: 1px solid  var(--color-bg); /* subtle separator */
         }
 
@@ -273,19 +272,14 @@
         /* Unit label (e.g., "GPS") */
         .info-unit {
         /* small caps look */
-        font-family: Inter, system-ui, sans-serif;
-        font-weight: 600;
-        font-size: 14px;
-        letter-spacing: 0.6px;         /* tech look */
-        color:  var(--text-inactive);              /* muted gray */
+        font: var(--type-caption-mono-regular);
+        color:  var(--color-light);              /* muted gray */
         }
 
         /* Value text (e.g., "Locked") */
         .info-value {
-        font-family: Inter, system-ui, sans-serif;
-        font-weight: 600;
-        font-size: 14px;
-        color: var(--color-light);
+        font: var(--type-caption-mono-bold);
+        color: var(--color-white);
         }
 
 
@@ -537,7 +531,6 @@
     pointer-events: none;
     }
 
-    /* Левая колонка (вторая из пяти) = примерно 20% экрана */
     #gauges-all > .gauge-1,
     #gauges-all > .gauge-2,
     #gauges-all > .gauge-3,
@@ -545,7 +538,6 @@
     grid-column: 2;
     }
 
-    /* Правая колонка (четвёртая из пяти) = примерно 80% экрана */
     #gauges-all > .gauge-5,
     #gauges-all > .gauge-6,
     #gauges-all > .gauge-7,
@@ -553,7 +545,6 @@
     grid-column: 6;
     }
 
-    /* Общий стиль */
     #gauges-all > div {
     display: flex;
     flex-direction: column;
@@ -572,7 +563,7 @@
         background-color:  var(--color-bg);
         border-radius: 8px;
         padding: 8px 12px;
-        font-family: sans-serif;
+        font: var(--type-caption-mono-regular);
         }
 
         .gauge-icon {
@@ -595,19 +586,8 @@
         gap: 4px;
         }
 
-        .value {
-        font-size: 40px;
-        font-weight: 600;
-        color: var(--color-white);
-        }
-
-        .unit {
-        font-size: 40px;
-        color: var(--color-tech); 
-        }
-
         .caption {
-        font-size: 10px;
+        font:var(--type-caption-regular);
         color: var(--color-tech); 
         margin-top: 6px;
         padding-left: 1px; /* Slight indent to align visually under value */
@@ -835,8 +815,6 @@
             
         font: var(--type-caption-mono-regular); /* single source of truth */
         line-height: 1; /* optional: crisper vertical alignment */
-        /* optional: lock mono family if you use it via tokens */
-        /* font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); */
         }
 
         .throttle-wrapper .gear-thumb-text {
@@ -847,23 +825,19 @@
 
     /* RULE RUDDER ANGLE INDICATOR */
 
-
-    /* RUDDER ANGLE INDICATOR */
        .rudder-wrapper {
-            top: 15%;                       /* Vertical offset from the top of the container */
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            display: flex;                  /* Use flexbox for vertical layout */
-            flex-direction: column;        /* Stack child elements vertically */
-            align-items: center;           /* Center child elements horizontally */
-
-            width: 100%;                   /* Take full available width */
-            max-width: 300px;              /* But don't exceed 200px */
-            box-sizing: border-box;        /* Include padding in width/height calculation */
-            padding: 50px;                 /* Inner spacing */
-
-            z-index: 6;                    /* Layer position (on top of lower elements) */
+        top: 15%;                       /* Vertical offset from the top of the container */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        display: flex;                  /* Use flexbox for vertical layout */
+        flex-direction: column;        /* Stack child elements vertically */
+        align-items: center;           /* Center child elements horizontally */
+        width: 100%;                   /* Take full available width */
+        max-width: 300px;              /* But don't exceed 200px */
+        box-sizing: border-box;        /* Include padding in width/height calculation */
+        padding: 50px;                 /* Inner spacing */
+        z-index: 6;                    /* Layer position (on top of lower elements) */
         }
 
         .rudder-gauge {
@@ -878,31 +852,31 @@
         justify-content: center;
         align-items: center;
         width: 100%;
-        
         }
-        .rudder-gauge svg {
-            display: block;
-            margin: 0 auto;
-            width: 100%;
-            height: auto;
-        }
-        /* Rudder Angle UNPUT */
-        /* Rudder input container */
-        .rudder-input-control {
 
-        display: flex;                /* Align elements horizontally */
+        .rudder-gauge svg {
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+        height: auto;
+        }
+        
+        /* Rudder Angle INPUT container  */
+        .rudder-input-control {
+        display: inline;                /* Align elements horizontally */
         gap: 6px;                     /* Space between input and ° sign */
         justify-content: center;
-        font-family: sans-serif;
-        font-size: 14px;
+        font: var(--type-caption-regular);
+        color: var(--color-light);    
         z-index: 10;
         white-space: nowrap
         }
-        /* Input field styling */
+
+        /* Input field styling (small black display) */
         #rudder-input {
         width: 50px;                  /* Fixed width for neat alignment */
         padding: 4px;                 /* Inner padding for comfort */
-        font-size: 14px;              /* Match text size to label */
+        font: var(--type-display-mono-regular);
         color: var(--color-white);    
         background:  var(--color-black);  
         border: 1px solid  var(--text-inactive); 
@@ -911,8 +885,9 @@
         }
         .rudder-input-control label {
         color:  var(--text-inactive); 
-        font-size: 14px;
         }
+
+
 
     /* BOAT // Rudder & Trim GAUGE row */
 
@@ -930,8 +905,8 @@
     display: inline-flex;
     align-items: center;  /* icon and number share baseline */
     gap: 10px;
-    color: var(--color-white);         /* inherit or override to your palette */
-    font-family: inherit;
+    color: var(--text-inactiv);         /* inherit or override to your palette */
+    font: var(--type-display-mono-regular);
     }
 
     /* Icon container */
@@ -960,8 +935,8 @@
     }
     .boat-stat__value #rudder-angle-value,
     .boat-stat__value #trim-value {
-    font-size: 16px;      /* main number size */
-    line-height: 1;
+        font: var(--type-display-mono-bold);
+        line-height: 1;
     }
 
     /* Small degree sign */
@@ -1084,7 +1059,7 @@
             padding: 10px;
             border-radius: 4px;
             overflow-x: auto;
-            font-family: 'Courier New', monospace;
+            font: var(--type-display-mono-regular);
             font-size: 12px;
             color: var(--color-white);
             border: 1px solid var(--button-inactive);
@@ -1602,14 +1577,12 @@
             padding-right: 36px;
             background-color: transparent;
             border: none;
-            font-size: 14px;
-            font-family: 'Roboto', sans-serif;
-            font-weight: 400;
+            font: var(--type-display-mono-regular);
             text-align: right;
             outline: none;
             position: relative;
             z-index: 2;
-            color:  var(--text-inactive);
+            color:  var(--color-tech);
 
             
             /* remove arrows */
@@ -1697,7 +1670,7 @@
         gap: 10px;                        /* space between label and field */
         margin-top: 16px;            /* top & bottom spacing */
         margin-bottom: 0px;
-        font-family: 'Roboto', sans-serif;
+        font: var(--text-inactive);
         }
         .editor-custom-input-row:nth-of-type(2) {
         margin-top: 0px;
@@ -1732,9 +1705,8 @@
         .bn-wrapper .editor-prefix,
         .editor-prefix {
         padding: 0 6px;
-        color:  var(--text-inactive);
-        font-family: monospace;
-        font-size: 12px;
+        color:  var(--color-tech);
+        font: var(--type-display-mono-regular);
         display: flex;
         align-items: center;
         background: none;
@@ -1746,10 +1718,10 @@
         .editor-prefixed-input {
         width: 45px;
         padding: 0 6px;
-        font-size: 12px;
         background: none;
         border: none;
-        color:  var(--text-inactive);
+        color:  var(--color-tech);
+        font: var(--type-display-mono-regular);
         height: 100%;
         outline: none;
         }
@@ -1757,10 +1729,10 @@
         .hex-wrapper input {
         width: 154px;
         padding: 0 10px;
-        font-size: 12px;
+        color:  var(--color-tech);
+        font: var(--type-display-mono-regular);        
         background: none;
         border: none;
-        color:  var(--text-inactive);
         height: 100%;
         outline: none;
         }
@@ -1780,8 +1752,8 @@
         border: 1px solid  var(--text-inactive);
         border-radius: 4px;
         padding: 6px 10px;
-        font-size: 14px;
-        font-family: 'Roboto', sans-serif;
+        color:  var(--color-tech);
+        font: var(--type-display-mono-regular);
         width: 196px;
         background-image: url('data:image/svg+xml;utf8,<svg fill="%23aaa" height="20" width="20" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
         background-repeat: no-repeat;
@@ -1946,9 +1918,8 @@
         top: 0;
         width: 30px;
         height: 90%;
-        font-size: 10px;
-        font-family: 'Roboto', sans-serif;
-        font-weight: 700;
+        color:  var(--color-tech);
+        font: var(--type-display-mono-regular);
         color:  var(--text-inactive);
         line-height: 15px;
         text-align: center;
@@ -2012,10 +1983,8 @@
         width: 60px;
         height: 40px;
         background-color:  var(--color-black);
-        color: var(--color-white);
-        font-family: Roboto, sans-serif;
-        font-weight: normal;
-        font-size: 28px;
+        color:  var(--color-tech);
+        font: var(--type-display-mono-regular);
         text-align: center;
         line-height: 40px;
         border-radius: 4px;
@@ -2093,7 +2062,7 @@
         flex-wrap: wrap;
         flex-direction: row;
         gap: 12px;
-        justify-content: space-between; /* или flex-start / center */
+        justify-content: space-between; 
         justify-content: center;
         padding-bottom: 30px;
         }
@@ -2102,7 +2071,7 @@
         /* GAUGES BLOCK */
         .gauge-1, .gauge-2, .gauge-3, .gauge-4,
         .gauge-5, .gauge-6, .gauge-7, .gauge-8 {
-            flex: 1 1 calc(25% - 12px); /* 4 в ряд */
+            flex: 1 1 calc(25% - 12px); 
             order: 1;
             margin: 5px;
             display: flex;
@@ -2172,20 +2141,19 @@
             overflow: hidden;
         }
 
-        /* Левый throttle */
+        /* Left throttle */
         .throttle-wrapper {
             grid-column: 1;
             grid-row: 2;
             justify-self: center;
         }
 
-        /* Левые gauges */
+        /* Right gauges */
         .gauge-1 { grid-column: 2; grid-row: 1; }
         .gauge-2 { grid-column: 2; grid-row: 2; }
         .gauge-3 { grid-column: 2; grid-row: 3; }
         .gauge-4 { grid-column: 2; grid-row: 4; }
 
-        /* Левые кнопки (по центру блока, визуально как gauges) */
         .button-1 { grid-column: 3; grid-row: 1; }
         .button-2 { grid-column: 3; grid-row: 2; }
         .button-3 { grid-column: 3; grid-row: 3; }
@@ -2195,8 +2163,8 @@
 
 
 
-        
-        /* Центр (rudder + лодка) */
+
+        /* Center (rudder + boat) */
         .rudder-wrapper {
             grid-column: 4;
             grid-row: 1 / span 4;
@@ -2215,19 +2183,17 @@
             transform: scale(1);
         }
 
-        /* Правые кнопки */
         .button-5 { grid-column: 5; grid-row: 1; }
         .button-6 { grid-column: 5; grid-row: 2; }
         .button-7 { grid-column: 5; grid-row: 3; }
         .button-8 { grid-column: 5; grid-row: 4; }
 
-        /* Правые gauges */
+        /* Right gauges */
         .gauge-5 { grid-column: 6; grid-row: 1; }
         .gauge-6 { grid-column: 6; grid-row: 2; }
         .gauge-7 { grid-column: 6; grid-row: 3; }
         .gauge-8 { grid-column: 6; grid-row: 4; }
 
-        /* Общие отступы и центрирование */
         .gauge-1, .gauge-2, .gauge-3, .gauge-4,
         .gauge-5, .gauge-6, .gauge-7, .gauge-8,
         .button-1, .button-2, .button-3, .button-4,
@@ -2235,7 +2201,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 20px 0; /* добавлено для согласованности с gauges */
+            margin: 20px 0; 
         }
 
         .control-button {
@@ -2324,7 +2290,7 @@
 
             .throttle-wrapper {
             grid-column: 1;
-            grid-row: 2; /* или другой ряд, если нужно ниже/выше */
+            grid-row: 2; 
             justify-self: start;
             align-self: center;
             margin-top: 0;
@@ -2503,214 +2469,176 @@
 
 
 
-    /* MODAL GAUGES PANEL */
+/* MODAL GAUGES PANEL */
+
+        .gauges-button-panel {
+        display: flex;            /* vertical stack */
+        flex-direction: column;
+        align-items: stretch;     /* children take full width */
+        position: absolute;
+        top: 50%;
+        left: 3vh;
+        transform: translateY(-50%);
+        z-index: 999;
+        width: 128px;
+        height: 896px;            /* total column height */
+        }
+
+        .gauges-panel {
+        position: static;
+        z-index: 999;
+
+        width: 128px;
+        height: 736px;
+        background-color: var(--color-black);
+        border-radius: 6px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        }
+
+        .gauge-block {
+        width: 100%;
+        text-align: center;
+        }
+
+        .gauge-icon {
+        opacity: 1;
+        filter: none;
+        mix-blend-mode: normal;
+        }
+
+        /* When safety sits to the right of the gauges panel */
+        .gauges-button-panel.side-safety .safety-block {
+        /* width stays the same; position will be set inline by JS */
+        width: 128px;
+        }
+        .gauges-button-panel.side-safety .kill-all-btn {
+        width: 100%;
+        }
 
 
-            .gauges-button-panel {
-            display: flex;            /* vertical stack */
-            flex-direction: column;
-            align-items: stretch;     /* children take full width */
+        /* CSS-only switch: when safety moves to the right, fix parent height */
+        @media (max-height: 1024px) {
+        .gauges-button-panel {
+            height: 736px;                 /* parent becomes 736px tall */
+            overflow: visible;             /* allow the side block to overflow */
+        }
+
+        .gauges-button-panel .safety-block {
             position: absolute;
-            top: 50%;
-            left: 3vh;
-            transform: translateY(-50%);
-            z-index: 999;
-
+            left: calc(100% + 12px);       /* gap to the right of the panel */
+            bottom: 0px;                 /* align bottoms: 896 - 736 = 160 */
+            margin-top: 0;
             width: 128px;
-            height: 896px;            /* total column height */
+        }
+        }
+
+
+
+
+
+        /* ICON */
+            .active-helm-gauge .gauge-icon,
+            .ap-status-gauge .gauge-icon,
+            .speed-avg-gauge .gauge-icon,
+            .rpm-gauge .gauge-icon,
+            .engine-temperature-gauge .gauge-icon,
+            .battery-voltage-gauge .gauge-icon,
+            .fuel-gauge .gauge-icon {
+            width: 24px;
+            height: 24px;
             }
 
-            .gauges-panel {
-            position: static;
-            z-index: 999;
+        /* LABLE VALUE UNIT */
 
-            width: 128px;
-            height: 736px;
-            background-color: var(--color-black);
-            border-radius: 6px;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
+            .gauge-label,
+            .speed-avg-gauge .gauge-line,
+            .label-muted { 
+            font: var(--type-caption-regular); 
+            color: var(--color-light);
             }
 
-            .gauge-block {
-            width: 100%;
-            text-align: center;
+            .value,
+            .gauge-value,
+            .speed-avg-gauge .value-lg,
+            .speed-avg-gauge .value-lg,
+            .rpm-gauge .value-lg,
+            .engine-temperature-gauge .value-lg,
+            .value-strong,
+            .fuel-gauge .value-lg  {
+            font: var(--type-display-mono-bold);
             color: var(--color-white);
-            font-family: sans-serif;
-            font-size: 16px;
-            font-weight: 500;
             }
 
-            .gauge-icon {
-            opacity: 1;
-            filter: none;
-            mix-blend-mode: normal;
+            .unit,
+            .speed-avg-gauge .unit-lg,
+            .rpm-gauge .unit-lg,
+            .engine-temperature-gauge .unit-lg,
+            .unit-muted,
+            .fuel-gauge .unit-lg { 
+            font: var(--type-display-mono-regular); 
+            color: var(--color-light);
             }
 
-            /* When safety sits to the right of the gauges panel */
-            .gauges-button-panel.side-safety .safety-block {
-            /* width stays the same; position will be set inline by JS */
-            width: 128px;
-            }
-            .gauges-button-panel.side-safety .kill-all-btn {
-            width: 100%;
+        /* LABLE VALUE UNIT SMALL BOTTOM */
+
+            .speed-avg-gauge .gauge-line--small .label { 
+            font: var(--type-caption-regular); 
+            color: var(--color-light);
+            font-size: 11px;
             }
 
-
-            /* CSS-only switch: when safety moves to the right, fix parent height */
-            @media (max-height: 1024px) {
-            .gauges-button-panel {
-                height: 736px;                 /* parent becomes 736px tall */
-                overflow: visible;             /* allow the side block to overflow */
+            .speed-avg-gauge .value-sm,
+            .fuel-gauge .value-rate {
+            font: var(--type-display-mono-bold);
+            color: var(--color-white);
+            font-size: 13px;
             }
 
-            .gauges-button-panel .safety-block {
-                position: absolute;
-                left: calc(100% + 12px);       /* gap to the right of the panel */
-                bottom: 0px;                 /* align bottoms: 896 - 736 = 160 */
-                margin-top: 0;
-                width: 128px;
-            }
+            .speed-avg-gauge .unit-sm,
+            .fuel-gauge .unit-rate { 
+            font: var(--type-display-mono-regular); 
+            color: var(--color-light);
+            font-size: 11px;
             }
 
 
 
-
-       /* Active Helm block */
-
-            /* Active Helm block */
-            .active-helm-gauge {
+        /* Active Helm block */
+        /* AP Status block */
+        /* Speed / Avg gauge block */
+            .active-helm-gauge,
+            .ap-status-gauge,
+            .speed-avg-gauge,
+            .rpm-gauge,
+            .engine-temperature-gauge,
+            .battery-voltage-gauge,
+            .fuel-gauge { 
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 4px; 
             }
 
-            .active-helm-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
-            .active-helm-gauge .gauge-label {
-            font-family: Inter, sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            color:  var(--text-inactive);
-            line-height: 21px;
-            text-align: center;
-            }
-
-            .active-helm-gauge .gauge-value {
-            font-family: Inter, sans-serif;
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--color-white);
-            line-height: 24px;
-            text-align: center;
-            }
-            
-
-
-        /* AP Status block */
-
-            /* AP Status block */
-            .ap-status-gauge {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            }
-
-            .ap-status-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
-            .ap-status-gauge .gauge-label {
-            font-family: Inter, sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            color:  var(--text-inactive);
-            line-height: 21px;
-            text-align: center;
-            }
-
-            .ap-status-gauge .gauge-value {
-            font-family: Inter, sans-serif;
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--color-white);
-            line-height: 24px;
-            text-align: center;
-            }
-        
-
-         /* Speed / Avg gauge block */
-        
-            .speed-avg-gauge {
-            /* --pct controls the white fill width (0%..100%) */
-            --pct: 0%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px; /* vertical spacing between rows */
-            }
-
-            /* Icon size same as в предыдущих блоках */
-            .speed-avg-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
-            /* Top and bottom text rows */
-            .speed-avg-gauge .gauge-line {
+        /* Top and bottom text rows (values + units) */
+            .speed-avg-gauge .gauge-line,
+            .rpm-gauge .gauge-line,
+            .battery-voltage-gauge .battery-line,
+            .fuel-gauge .gauge-line,
+            .engine-temperature-gauge .gauge-line {
             display: inline-flex;
             align-items: baseline;
             gap: 4px;
-            color: var(--color-white); /* values are white by default */
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             }
 
-            .speed-avg-gauge .value-lg { /* main value */
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-            .speed-avg-gauge .unit-lg {
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 400;
-            color:  var(--text-inactive); /* muted unit */
-            }
-
-            /* AVG row style */
-            .speed-avg-gauge .gauge-line--small .label {
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            font-size: 12px;
-            line-height: 18px;
-            font-weight: 700;
-            color: var(--color-white);
-            }
-            .speed-avg-gauge .value-sm {
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            font-size: 12px;
-            line-height: 18px;
-            font-weight: 700;
-            color: var(--color-white);
-            }
-            .speed-avg-gauge .unit-sm {
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            font-size: 12px;
-            line-height: 18px;
-            font-weight: 400;
-            color:  var(--text-inactive);
-            }
-
-            /* Mini gauge bar (0..100%) */
-            .speed-avg-gauge .mini-gauge {
-            /* Base bar */
+            /* Mini gauge bar (0..100%) BASE TRAC */
+            .speed-avg-gauge .mini-gauge,
+            .rpm-gauge .mini-gauge,
+            .engine-temperature-gauge .mini-gauge,
+            .battery-voltage-gauge .mini-gauge,
+            .fuel-gauge .mini-gauge {
             width: 100%;
             max-width: 104px;        /* tweak to your panel width */
             height: 2px;             /* bar height */
@@ -2719,8 +2647,11 @@
             overflow: hidden;        /* clip inner fill */
             }
 
-            /* White fill controlled by --pct */
-            .speed-avg-gauge .mini-gauge-fill {
+            /* White fill controlled by --pct  DATA TRACK */
+            .speed-avg-gauge .mini-gauge-fill,
+            .rpm-gauge .mini-gauge-fill,
+            .battery-voltage-gauge .mini-gauge-fill,
+            .fuel-gauge .mini-gauge-fill {
             /* Fill grows from left to right */
             width: var(--pct);       /* e.g., 39% */
             height: 100%;
@@ -2729,110 +2660,16 @@
             transition: width 180ms ease; /* smooth updates */
             }
 
-        
-
-         /* RPM gauge block */
-        
-            /* ===== RPM gauge block ===== */
-            .rpm-gauge {
+            .speed-avg-gauge,
+            .rpm-gauge,
+            .engine-temperature-gauge {
+            /* --pct controls the white fill width (0%..100%) */
             --pct: 0%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
             }
-
-            .rpm-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
-            .rpm-gauge .gauge-line {
-            display: inline-flex;
-            align-items: baseline;
-            gap: 4px;
-            color: var(--color-white);
-            font-family: "Roboto Mono", monospace;
-            }
-
-            .rpm-gauge .value-lg {
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-            .rpm-gauge .unit-lg {
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 400;
-            color:  var(--text-inactive);
-            }
-
-            /* Mini bar reused from speed gauge */
-            .rpm-gauge .mini-gauge {
-            width: 100%;
-            max-width: 104px;
-            height: 2px;
-            background:  var(--button-inactive);
-            border-radius: 3px;
-            overflow: hidden;
-            }
-            .rpm-gauge .mini-gauge-fill {
-            width: var(--pct);
-            height: 100%;
-            background: var(--color-white);
-            border-radius: 3px;
-            transition: width 180ms ease;
-            }
-        
 
          /* Engine Temperature gauge block */
-        
-            /* ===== Engine Temperature gauge block ===== */
-            .engine-temperature-gauge {
-            /* --pct controls fill width (0..100) */
-            --pct: 0%;
-            /* --bar-color controls the fill color; default is white */
+            .engine-temperature-gauge { /* --bar-color controls the fill color; default is white */
             --bar-color: var(--color-white);
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            }
-
-            .engine-temperature-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
-            .engine-temperature-gauge .gauge-line {
-            display: inline-flex;
-            align-items: baseline;
-            gap: 4px;
-            color: var(--color-white);
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            }
-
-            .engine-temperature-gauge .value-lg {
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-            .engine-temperature-gauge .unit-lg {
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 400;
-            color:  var(--text-inactive);
-            }
-
-            /* Mini bar */
-            .engine-temperature-gauge .mini-gauge {
-            width: 100%;
-            max-width: 104px;
-            height: 2px;
-            background:  var(--text-inactive);     /* base track */
-            border-radius: 3px;
-            overflow: hidden;         /* clip inner fill */
             }
 
             .engine-temperature-gauge .mini-gauge-fill {
@@ -2844,146 +2681,27 @@
             }
 
             /* Optional state colors (use one of these classes on the root block) */
-            .engine-temperature-gauge.cold  { --bar-color: var(--gauge-blue); } /* cool blue */
-            .engine-temperature-gauge.warm  { --bar-color: var(--active-yellow); } /* amber */
-            .engine-temperature-gauge.hot   { --bar-color: var(--gauge-red); } /* red */
+            .engine-temperature-gauge.norm  { --bar-color: var(--color-white); }
+            .engine-temperature-gauge.cold  { --bar-color: var(--gauge-blue); }
+            .engine-temperature-gauge.warm  { --bar-color: var(--active-yellow); }
+            .engine-temperature-gauge.hot   { --bar-color: var(--gauge-red); }
 
 
-         /* Battery Voltage Gauge block */
-        
+            /* Battery Voltage Gauge block */
             .battery-voltage-gauge {
-            --pct: 0%;               /* controls fill width */
-            --bar-color: var(--color-white);     /* default bar color */
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
+            --pct: 0%; /* controls fill width */
             }
 
-            .battery-voltage-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
-            /* Text line: muted label + strong value + muted unit */
-            .battery-voltage-gauge .battery-line {
-            display: inline-flex;
-            align-items: baseline;
-            gap: 2px;
-            text-align: center;
-            }
-
-            .label-muted,
-            .unit-muted {
-            color:  var(--text-inactive);
-            font-family: Inter, sans-serif;
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 500;
-            }
-
-            .value-strong {
-            color: var(--color-white);
-            font-family: Inter, sans-serif;
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-
-            /* Mini bar (same logic as RPM/Speed) */
-            .battery-voltage-gauge .mini-gauge {
-            width: 100%;
-            max-width: 104px;
-            height: 2px;
-            background:  var(--text-inactive);      /* muted gray track */
-            border-radius: 3px;
-            overflow: hidden;
-            }
-
-            .battery-voltage-gauge .mini-gauge-fill {
-            width: var(--pct);
-            height: 100%;
-            background: var(--bar-color);
-            border-radius: 3px;
-            transition: width 180ms ease;
-            }
-
-        
-
-         /* Fuel Gauge block */
-        
-            .fuel-gauge{
-            /* --pct controls the white fill width (0..100%) */
-            --pct: 0%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px; /* vertical spacing between rows */
-            }
-
-            .fuel-gauge .gauge-icon{
-            width: 24px;
-            height: 24px;
-            }
-
-            /* Top and bottom text rows (values + units) */
-            .fuel-gauge .gauge-line{
-            display: inline-flex;
-            align-items: baseline;
-            gap: 4px;
-            text-align: center;
-            justify-content: center;
-            color: var(--color-white);
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            }
-
-            .fuel-gauge .value-lg{
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-            .fuel-gauge .unit-lg{
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 400;
-            color:  var(--text-inactive);
-            }
-
-            /* Mini bar like Speed/RPM */
-            .fuel-gauge .mini-gauge{
-            width: 100%;
-            max-width: 104px;      /* keep consistent with other gauges */
-            height: 2px;
-            background:  var(--text-inactive);   /* base track */
-            border-radius: 3px;
-            overflow: hidden;
-            }
-            .fuel-gauge .mini-gauge-fill{
-            width: var(--pct);     /* e.g., 37% */
-            height: 100%;
-            background: var(--color-white);   /* fill color */
-            border-radius: 3px;
-            transition: width 180ms ease;
+            /* Fuel Gauge block */
+            .fuel-gauge {
+            --pct: 0%; /* --pct controls the white fill width (0..100%) */
             }
 
             /* Burn rate row styling (uses Inter per your mock for mixed text) */
-            .fuel-gauge .gauge-line--rate{
-            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            color:  var(--text-inactive);        /* muted default */
+            .fuel-gauge .gauge-line--rate {
+            color: var(--color-tech); /* muted default */
             }
-            .fuel-gauge .value-rate{
-            color: var(--color-white);
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
-            }
-            .fuel-gauge .unit-rate{
-            color:  var(--text-inactive);
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
-            }
+
 
         
 
