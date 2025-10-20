@@ -76,11 +76,16 @@
     /* HOVER */
     --hover-brightness: 1.08; 
     --hover-transition: filter .15s ease;
-    --hover-scale: scale(1.2);
+    --hover-scale: scale(1.02);
     } 
 
 
 /* My technical comments 
+
+    :hover {
+    filter: brightness(var(--hover-brightness));
+    transform: var(--hover-scale);
+    }
 
         background-color: var(--color-bg);
         background-color: var(--color-white);
@@ -114,7 +119,8 @@
     .display-value-small, 
     .info-unit, 
     .info-bar,
-    .display-unit-small { 
+    .display-unit-small,
+    .kill-all-btn { 
     letter-spacing: 0.6px; /* mono tracking tech look */
     } 
 
@@ -2707,7 +2713,6 @@
 
 
      /* KILL ALL BUTTON */
-        
 
         .safety-block {
         margin-top: auto;
@@ -2723,16 +2728,15 @@
         gap: 4px;  /* optional: spacing between title and button */
         }
 
-        /* Make "Safety" label normal weight */
+        /* "Safety" title */
         .safety-block .drawer-button-title {
-        font-weight: 400; /* normal */
+        font: var(--type-h4);
         }
-
 
         .kill-all-btn {
         width: 128px;
         height: 90px;
-        background-color: var(--active-yellow);
+        background-color: var(--inactive-yellow);
         border-radius: 6px;
 
         display: flex;
@@ -2740,24 +2744,33 @@
         justify-content: space-evenly;
 
         color:  var(--color-black);
-        opacity: 0.8;
-        font: 800 16px/44px Inter, system-ui, sans-serif; /* vertical centering */
-        letter-spacing: .6px;
+        font: var(--type-h3);
         text-transform: uppercase;
         text-align: center;
         cursor: pointer;
+
+        /* Transition only the properties we change on hover */
+        transition: var(--hover-transition);
+        will-change: transform; /* perf hint */
         }
                     
-        .kill-all-btn:hover  { 
-        filter: brightness(1.05); 
-        opacity: 1;
+        .kill-all-btn:hover {
+        background-color: var(--active-yellow);
+        transform: var(--hover-scale);
         }
+
         .kill-all-btn:active {
+        background-color: var(--active-yellow);
         transform: translateY(1px);
-        box-shadow: 0 1px 0 rgba(255,255,255,.10) inset, 0 4px 10px rgba(0,0,0,.5);
+        box-shadow: 0 1px 0 rgba(246, 255, 127, 0.1) inset, 0 4px 10px rgba(0,0,0,.5);
         }
 
         
+
+
+
+
+
 
 
      /* MODAL DRAWER PANEL */
