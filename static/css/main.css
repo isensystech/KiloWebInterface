@@ -885,7 +885,7 @@
         #rudder-input {
         width: 50px;                  /* Fixed width for neat alignment */
         padding: 4px;                 /* Inner padding for comfort */
-        font: var(--type-display-mono-regular);
+        font: var(--type-caption-mono-regular);
         color: var(--color-white);    
         background:  var(--color-black);  
         border: 1px solid  var(--text-inactive); 
@@ -931,7 +931,6 @@
     display: block;
     object-fit: contain;   /* ensures <img> scales correctly */
     flex-shrink: 0;        /* prevents icon from shrinking */
-    color: currentColor;   /* for inline SVGs still allows inheriting text color */
     }
 
     /* Value */
@@ -939,21 +938,22 @@
     display: inline-flex;
     align-items: baseline;  /* number + degree on one line bottom-aligned */
     gap: 4px;
-    font-weight: 600;
+    font: var(--type-display-mono-regular);
     letter-spacing: 0.2px;
     }
     .boat-stat__value #rudder-angle-value,
     .boat-stat__value #trim-value {
-        font: var(--type-display-mono-bold);
-        line-height: 1;
+    font: var(--type-display-mono-regular);
+    line-height: 1;
     }
 
     /* Small degree sign */
     .boat-stat__value .deg {
-    font-size: 16px;
+    font: var(--type-display-mono-regular);
+    color: var(--text-inactiv);
     line-height: 1;
     vertical-align: top;   /* raises degree slightly */
-    opacity: 0.85;
+    opacity: 0.5;
     }
 
     /* Update feedback effect */
