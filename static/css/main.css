@@ -268,8 +268,8 @@
         display: inline-flex;      /* keep it inline with text */
         align-items: center;       /* vertical centering */
         justify-content: center;   /* horizontal centering */
-        width: 22px;               /* tweak if you need larger icon */
-        height: 22px;
+        width: 24px;               /* tweak if you need larger icon */
+        height: 24px;
         }
 
         .info-icon img {
