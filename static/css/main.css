@@ -80,6 +80,10 @@
     } 
 
 
+
+
+
+
 /* My technical comments 
 
     :hover {
@@ -237,7 +241,6 @@
 
 
     /* INFO BAR */
-
 
 
         .info-bar {
@@ -2769,12 +2772,9 @@
 
 
 
-
-
-
-
      /* MODAL DRAWER PANEL */
 
+     
          /* Tabs container */
         
         .drawer-panel {
@@ -2890,12 +2890,11 @@
             justify-content:center;
             margin-bottom:12px;
             font: var(--type-h3);
-            color: var(--c-h);
+            color: var(--color-light);
         }
         
 
         /* Scroll */
-
 
         /* Chrome/Safari/Edge */
         .drawer-content::-webkit-scrollbar { width: 8px; }
@@ -2910,6 +2909,15 @@
         }
 
         
+        /* BUTTONS DRAWER BUTTONS */
+
+
+
+
+
+
+
+
 
          /* TAB 1: Boat Control */
         
