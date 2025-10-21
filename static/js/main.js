@@ -547,3 +547,148 @@
             }
         }, 20); // Send every 20ms
         
+
+
+
+
+
+
+
+// ===== ANIMATION INFO MODAL =====
+// Transparent 1x1 pixel placeholder (keeps layout without showing anything)
+const INFO_PLACEHOLDER_SRC =
+  "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+
+// Play GIF once when modal opens, then smoothly fade to poster (SVG)
+function playGifOnce(){
+  const img = document.getElementById('info-gif');
+  if (!img) return;
+
+  const gifUrl   = img.dataset.gif;
+  const poster   = img.dataset.poster;
+  const duration = img.dataset.gifDuration ? parseInt(img.dataset.gifDuration, 10) : null;
+
+  // Clean previous timers/listeners
+  clearTimeout(img._stopTimer);
+  if (img._onLoadOnce) {
+    img.removeEventListener('load', img._onLoadOnce);
+    img._onLoadOnce = null;
+  }
+
+  // Ensure we have a transition; you can also put this in CSS
+  // (Avoid visibility to keep layout stable; rely on aspect-ratio in CSS)
+  img.style.transition = img.style.transition || 'opacity .35s ease';
+
+  // Start hidden but reserving space (opacity doesn't affect layout)
+  img.style.opacity = '0';
+
+  // Restart GIF with cache-busting
+  const busted = `${gifUrl}?t=${Date.now()}`;
+  img._onLoadOnce = function onLoadOnce(){
+    // Decode before showing to avoid first-frame flash
+    img.decode?.().catch(()=>{}).finally(() => {
+      // Fade GIF in
+      requestAnimationFrame(() => { img.style.opacity = '1'; });
+
+      // If we know the duration, schedule smooth cross-fade to poster
+      if (duration && poster) {
+        clearTimeout(img._stopTimer);
+        img._stopTimer = setTimeout(() => {
+          // Fade GIF out
+          img.style.opacity = '0';
+
+          // After fade-out completes, swap to poster and fade back in
+          const FADE_MS = 350; // must match CSS/inline transition duration
+          setTimeout(() => {
+            // Swap src to poster
+            img.src = poster;
+
+            // Wait for poster to load, then fade in
+            const onPosterLoad = () => {
+              img.decode?.().catch(()=>{}).finally(() => {
+                requestAnimationFrame(() => { img.style.opacity = '1'; });
+              });
+              img.removeEventListener('load', onPosterLoad);
+            };
+            img.addEventListener('load', onPosterLoad, { once:true });
+          }, FADE_MS);
+        }, duration);
+      }
+    });
+
+    img.removeEventListener('load', onLoadOnce);
+    img._onLoadOnce = null;
+  };
+  img.addEventListener('load', img._onLoadOnce, { once:true });
+
+  // Kick off loading
+  img.src = busted;
+}
+
+// ===== INFO MODAL =====
+(() => {
+  const trigger  = document.getElementById('info-trigger');    // Info icon
+  const modal    = document.getElementById('info-modal');      // Modal window
+  const backdrop = document.getElementById('info-backdrop');   // Backdrop
+  const closeBtn = modal ? modal.querySelector('.info-modal-close') : null;
+
+  if (!trigger || !modal || !backdrop || !closeBtn) {
+    console.warn('[InfoModal] Missing required elements.');
+    return;
+  }
+
+  // Timer for delayed GIF start
+  let infoGifDelayTimer = null;
+
+  function openModal(){
+    modal.hidden = false;
+    backdrop.hidden = false;
+    closeBtn.focus({ preventScroll:true });
+
+    // Prepare image: placeholder + hidden (opacity=0)
+    const img = document.getElementById('info-gif');
+    if (img) {
+      clearTimeout(img._stopTimer);
+      if (img._onLoadOnce) {
+        img.removeEventListener('load', img._onLoadOnce);
+        img._onLoadOnce = null;
+      }
+      img.src = INFO_PLACEHOLDER_SRC; // clean start
+      img.style.opacity = '0';        // keep space, no flicker
+    }
+
+    // Delayed GIF start (500ms after opening)
+    clearTimeout(infoGifDelayTimer);
+    infoGifDelayTimer = setTimeout(() => {
+      playGifOnce();
+    }, 500);
+  }
+
+  function closeModal(){
+    modal.hidden = true;
+    backdrop.hidden = true;
+
+    clearTimeout(infoGifDelayTimer);
+
+    // Reset image to placeholder and hidden
+    const img = document.getElementById('info-gif');
+    if (img) {
+      clearTimeout(img._stopTimer);
+      if (img._onLoadOnce) {
+        img.removeEventListener('load', img._onLoadOnce);
+        img._onLoadOnce = null;
+      }
+      img.src = INFO_PLACEHOLDER_SRC;
+      img.style.opacity = '0';
+    }
+
+    trigger?.focus({ preventScroll:true });
+  }
+
+  trigger.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => {
+    if (!modal.hidden && e.key === 'Escape') closeModal();
+  });
+})();

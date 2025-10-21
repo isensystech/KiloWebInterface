@@ -339,7 +339,7 @@
 
 
     /* Navigation arrows */
-               .header-inner {
+        .header-inner {
         position: relative;
         display: flex;
         justify-content: center;
@@ -4592,6 +4592,90 @@
         }
 
 
+
+
+
+/* === INFO MODAL === */
+
+.modal-backdrop{
+  /* Fullscreen overlay */
+  position: fixed; inset: 0;
+  background: var(--color-black);
+  opacity: 0.8;
+  z-index: 9998;
+  pointer-events: auto; /* ensure backdrop catches clicks */
+}
+
+.info-modal-window{
+  /* Fixed and centered */
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px; 
+  max-width: 90vw;
+  background: var(--color-bg);
+  color: var(--color-light);
+  padding: 50px;
+  border-radius: 12px;
+  z-index: 9999; /* Above backdrop */
+}
+
+.modal-text{
+  color: var(--color-light);
+  font: var(--type-caption-regular);
+}
+
+/* Hidden utility */
+[hidden]{ display: none !important; }
+
+
+.info-modal-close{
+  position: absolute;
+  top: 16px; right: 16px;
+  font-size: 18px;
+  background: var(--color-bg);
+  color: var(--text-inactive);
+  cursor: pointer;
+  border: none;              /* make it look like an icon */
+  line-height: 1;
+  transition: color .2s ease;
+}
+.info-modal-close:hover{ color: var(--color-white); }
+
+.modal-illustration {
+  display: block;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 1 / 1;      /* reserve stable space */
+  object-fit: contain;
+  height: auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Static logo positioned on top of the GIF */
+.logo-overlay {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;               /* hidden by default */
+  transition: opacity 1s ease;  /* fade duration */
+  pointer-events: none;     /* clicks pass through */
+  z-index: 2;
+}
+
+/* Wrapper ensures relative positioning for overlay */
+.modal-content {
+  display: grid; 
+  gap: 18px;
+  justify-items: center;
+  position: relative; /* allows absolute positioning of overlay */
+}
+
+
+
+    
 
 
 

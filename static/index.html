@@ -147,8 +147,9 @@
                         <pre id="options-panel">No options set</pre>
                         <div class="options-icons">
                             <img alt="Settings" class="options-icon" src="/static/images/edit.svg"/>
+                            <img alt="Help" class="options-icon" src="/static/images/help.svg"/>
+                            <img alt="Info" class="options-icon" id="info-trigger" src="/static/images/info.svg"/>
                             <img alt="Exit" class="options-icon" src="/static/images/exit.svg"/>
-                            <img alt="Info" class="options-icon" src="/static/images/info.svg"/>
                         </div>
                     </div>
                 </div>
@@ -1970,7 +1971,40 @@
 
 
     </div>
+        </div>
+
+
+<!-- === INFO MODAL === -->
+
+<img id="info-trigger" alt="Info" class="options-icon" src="/static/images/info.svg"/>
+
+<div id="info-backdrop" class="modal-backdrop" hidden></div>
+
+<div id="info-modal" class="info-modal-window" role="dialog" aria-modal="true" aria-labelledby="info-title" hidden>
+  <button type="button" class="info-modal-close" aria-label="Close">✕</button>
+<div class="modal-content">
+  <!-- Animated logo -->
+  <img id="info-gif"
+       class="modal-illustration"
+       src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+       alt="KILO animated logo"
+       data-gif="/static/images/kilo-logo-animate.gif"
+       data-gif-duration="4800"
+       style="cursor:pointer;" />
+
+  <!-- Static logo (poster) -->
+  <img id="info-logo"
+       class="modal-illustration logo-overlay"
+       src="/static/images/kilo-logo.svg"
+       alt="KILO static logo" />
+  
+  <h3 id="info-title">Info</h3>
+  <p class="modal-text">This is a simple info modal. Replace image and text later.</p>
 </div>
+
+</div>
+
+
 
 <script src="/static/js/websocket.js"></script>
 
