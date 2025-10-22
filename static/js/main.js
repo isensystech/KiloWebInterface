@@ -70,7 +70,7 @@ function pollDrawerScroll() {
             }
         }
     }
-    
+
     requestAnimationFrame(pollDrawerScroll);
 }
 
@@ -128,3 +128,142 @@ setupDocking('#helm-modal', { gap: 4 });
 setupDocking('#auto-pilot-modal', { gap: 4 });
 
 window.requestStatus = () => {}; // no-op placeholder
+
+// ===== ANIMATION INFO MODAL =====
+// ===== CROSSFADE TIMINGS (tweak these) =====
+// Delay after modal opens before starting GIF
+const START_DELAY_MS       = 500;   // start delay
+// Fallback GIF duration if data-gif-duration is missing
+const GIF_DURATION_FALLBACK= 4800;  // full GIF length in ms
+// How much earlier SVG starts fading in before GIF ends
+const CROSSFADE_OVERLAP_MS = 600;   // overlap window (bigger = earlier SVG)
+// Fade duration for both layers (keep in sync with CSS if set there)
+const FADE_MS              = 600;   // crossfade duration
+// Small safety lead to start fade slightly before theoretical end
+const EXTRA_TAIL_MS        = 120;   // compensates decode/refresh jitter
+
+// ===== ANIMATION (GIF + SVG layered crossfade) =====
+const INFO_PLACEHOLDER_SRC =
+  "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+
+function ensureFadeTransitions(gifEl, logoEl){
+  const t = `opacity ${FADE_MS}ms ease`;
+  // Set inline transitions only if none defined in CSS
+  if (gifEl && !gifEl.style.transition)  gifEl.style.transition  = t;
+  if (logoEl && !logoEl.style.transition) logoEl.style.transition = t;
+}
+
+function playGifWithCrossfade(){
+  const gifEl  = document.getElementById('info-gif');
+  const logoEl = document.getElementById('info-logo');
+  if (!gifEl || !logoEl) return;
+
+  // Read duration from data-attribute, fallback if absent
+  const dataDur = gifEl.dataset.gifDuration ? parseInt(gifEl.dataset.gifDuration, 10) : null;
+  const GIF_MS  = Number.isFinite(dataDur) ? dataDur : GIF_DURATION_FALLBACK;
+
+  // Cleanup any previous timers/listeners
+  clearTimeout(gifEl._xfadeTimer);
+  clearTimeout(gifEl._startTimer);
+  gifEl.onload = null;
+
+  // Initial visual states
+  gifEl.style.opacity  = '0'; // hidden (space reserved by CSS aspect-ratio)
+  logoEl.style.opacity = '0'; // svg hidden, will fade in later
+
+  // Make sure both layers have the same fade timing
+  ensureFadeTransitions(gifEl, logoEl);
+
+  // Bust cache to truly restart GIF
+  const busted = `${gifEl.dataset.gif}?t=${Date.now()}`;
+  gifEl.onload = () => {
+    // Wait for decode to avoid flash of first frame
+    gifEl.decode?.().catch(()=>{}).finally(() => {
+      // Fade GIF in
+      requestAnimationFrame(() => { gifEl.style.opacity = '1'; });
+
+      // Schedule crossfade: start SVG before GIF "ends"
+      const startAt = Math.max(0, GIF_MS - CROSSFADE_OVERLAP_MS - EXTRA_TAIL_MS);
+      gifEl._xfadeTimer = setTimeout(() => {
+        // Overlap: SVG fades in while GIF fades out
+        requestAnimationFrame(() => {
+          logoEl.style.opacity = '1'; // fade in svg (top layer)
+          gifEl.style.opacity  = '0'; // fade out gif (bottom layer)
+        });
+      }, startAt);
+    });
+  };
+
+  // Kick off GIF loading
+  gifEl.src = busted;
+}
+
+
+// ===== INFO MODAL =====
+// ===== INFO MODAL (hooks) =====
+(function(){
+  const trigger  = document.getElementById('info-trigger');
+  const modal    = document.getElementById('info-modal');
+  const backdrop = document.getElementById('info-backdrop');
+  const closeBtn = modal ? modal.querySelector('.info-modal-close') : null;
+
+  if (!trigger || !modal || !backdrop || !closeBtn) {
+    console.warn('[InfoModal] Missing required elements.');
+    return;
+  }
+
+  let startDelayTimer = null;
+
+  function openModal(){
+    modal.hidden = false;
+    backdrop.hidden = false;
+    closeBtn.focus({ preventScroll:true });
+
+    const gifEl  = document.getElementById('info-gif');
+    const logoEl = document.getElementById('info-logo');
+
+    // Reset to a clean state each open
+    if (gifEl){
+      clearTimeout(gifEl._xfadeTimer);
+      clearTimeout(gifEl._startTimer);
+      gifEl.src = INFO_PLACEHOLDER_SRC; // placeholder keeps layout
+      gifEl.style.opacity = '0';
+    }
+    if (logoEl){
+      logoEl.style.opacity = '0';
+    }
+
+    clearTimeout(startDelayTimer);
+    startDelayTimer = setTimeout(() => {
+      playGifWithCrossfade();
+    }, START_DELAY_MS);
+  }
+
+  function closeModal(){
+    modal.hidden = true;
+    backdrop.hidden = true;
+
+    clearTimeout(startDelayTimer);
+
+    const gifEl  = document.getElementById('info-gif');
+    const logoEl = document.getElementById('info-logo');
+    if (gifEl){
+      clearTimeout(gifEl._xfadeTimer);
+      clearTimeout(gifEl._startTimer);
+      gifEl.src = INFO_PLACEHOLDER_SRC;
+      gifEl.style.opacity = '0';
+    }
+    if (logoEl){
+      logoEl.style.opacity = '0';
+    }
+
+    trigger?.focus({ preventScroll:true });
+  }
+
+  trigger.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => {
+    if (!modal.hidden && e.key === 'Escape') closeModal();
+  });
+})();

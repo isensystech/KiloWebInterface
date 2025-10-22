@@ -1,29 +1,198 @@
+/* Fonts & colors facelifting Kate */
+
+ :root{
+    /* Sans stack with robust fallbacks */
+    --font-sans: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
+    --font-mono: "Roboto Mono", "Consolas", "SFMono-Regular", "Menlo", "ui-monospace", "monospace";
+    
+
+    /* === Weight size/line-height family === */
+
+    /* TITLE Fonts */
+    --type-h1: 800 clamp(48px, 6.4vw, 64px)/1.2 var(--font-sans);
+    --type-h2: 700 clamp(18px, 2.2vw, 28px)/1.2 var(--font-sans);
+    --type-h3: 800 18px/1.25 var(--font-sans); 
+    --type-h4: 400 14px/1.3 var(--font-sans); 
+
+    /* BODY Fonts */
+    --type-button-regular: 400 16px/1.35 var(--font-sans); 
+    --type-button-bold: 700 16px/1.35 var(--font-sans); 
+
+    /* CAPTION Small Fonts */
+    --type-caption-regular:  400 12px/1.3  var(--font-sans);
+    --type-caption-bold:  700 12px/1.3  var(--font-sans);
+
+    /* Display Fonts */
+    --type-display-mono-regular: 400 16px/1.35 var(--font-mono);
+    --type-display-mono-bold:    700 16px/1.35 var(--font-mono);
+    
+    /* INFO BAR Fonts */
+    --type-caption-mono-regular:   400 14px/1.30 var(--font-mono);
+    --type-caption-mono-bold:      700 14px/1.30 var(--font-mono);
 
 
-    
-    
-    
-    /* Testing git. Good Test Scott Kate */
 
+    /* === Palette === */
+
+    /* Active font: button-text-active, icon-active, */
+    --color-white: #ffffff;
+
+    /* Title font */
+    --color-light: #cccccc; 
+    --text-inactive: #757575;
+
+    --button-active:  #707070;
+    --button-inactive: #404040;
+
+
+    /* Drawer active background, Drawer inactive icons */
+    --color-drawer-bg: #303030;
+
+    /* Inactive drawer */
+    --color-drawer-inactive-bg: #252525;
+
+    /* Main background */
+    --color-bg: #202020;
+
+    /* Status-bar */
+    --color-black-hover: #101010;
+
+    /* Display, button strips */
+    --color-black: black;
+
+
+    /* KILL ALL Active, Attention Icons, Throttle fill */
+    --active-yellow: #FFBD0A;
     
+    /* Payload buttons, KILL ALL Inactive */
+    --inactive-yellow: #9a7000;
+
+    --gauge-red: #D0021B;
+    --gauge-green: #009100;
+    --gauge-blue: #1f8fff;
+    --color-tech: rgb(255, 0, 200); 
+
+
+    /* HOVER */
+    --hover-brightness: 1.08; 
+    --hover-transition: filter .15s ease;
+    --hover-scale: scale(1.02);
+    } 
+
+
+
+
+
+
+/* My technical comments 
+
+    :hover {
+    filter: brightness(var(--hover-brightness));
+    transform: var(--hover-scale);
+    }
+
+        background-color: var(--color-bg);
+        background-color: var(--color-white);
+        background-color: var(--color-black);
+        background-color: var(--color-drawer-inactive-bg);
+        background-color: var(--color-tech);
+
+        var(--color-bg);
+        var(--color-light);
+        var(--inactive-yellow);
+        var(--button-inactive);
+
+    var(--type-display-mono-regular);
+
+        DELETE:
+        color: rgba(0, 0, 0, 0.7);
+        color: rgb(120, 120, 120);
+        color: #
+
+        font-weight: 
+        font-size:
+        line-height:
+*/
+
+
+
+/* DISPLAY FONTS styles */
+
+    .display-value, 
+    .display-unit, 
+    .display-value-small, 
+    .info-unit, 
+    .info-bar,
+    .display-unit-small,
+    .kill-all-btn { 
+    letter-spacing: 0.6px; /* mono tracking tech look */
+    } 
+
+    .display-label 
+    .display-unit { 
+    font: var(--type-caption-regular); 
+    color: var(--color-light);
+    }
+
+    .display-value {
+    font: var(--type-display-mono-bold);
+    color: var(--color-white);
+    }
+
+    .display-value-small { font: var(--type-caption-mono-bold);   }
+    .display-unit-small  { font: var(--type-caption-mono-regular); }
+    .display-label-small { font: var(--type-caption-regular); 
+    color: var(--color-light);
+    }
+    
+
+
+
+
+
+/* Kill hover/press/focus styles when locked */
+#btn-frequency[data-locked="1"] .toggle-btn {
+  pointer-events: none;         /* no hover/click */
+  cursor: default;
+}
+#btn-frequency[data-locked="1"] .toggle-btn:hover,
+#btn-frequency[data-locked="1"] .toggle-btn:active,
+#btn-frequency[data-locked="1"] .toggle-btn:focus,
+#btn-frequency[data-locked="1"] .toggle-btn:focus-visible {
+  filter: none;
+  transform: none;
+  box-shadow: none;
+  outline: none;
+}
+
+
+
+
+
+
     /* Reset and base styles */
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+
+        /* ban on allocation */
+        user-select: none; 			
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
         }
+
+
+
+
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #202020;
-            color: #ffffff;
-            line-height: 1.6;
-            overflow: hidden;
-            overflow-y: auto;
-            height: auto;
+        font: var(--type-button-regular);
+        background-color: var(--color-bg);
+        color: var(--color-white);
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
         }
         
         html, body {
@@ -51,96 +220,27 @@
         }
 
         .control-screen {
-          display: flex;
-          flex-direction: column;
-          min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
         }
 
         #main {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-            overflow-y: auto;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        overflow-y: auto;
         }
         .main-content {
         overflow-y: auto;
-        max-height: calc(100vh - 160px); /* примерно: хедер (100px) + футер (60px) */
+        max-height: calc(100vh - 160px);
         }
 
 
 
 
-    :root{
-    /* Sans stack with robust fallbacks */
-    --font-sans: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
-    --font-mono: "Roboto Mono", Consolas, SFMono-Regular, Menlo, ui-monospace, monospace;
-    /* weight size/line-height family */
-    /* clamp() keeps it responsive across viewports */
-    --type-h2: 700 clamp(18px, 2.2vw, 28px)/1.2 var(--font-sans);
-    --c-h: rgb(255, 255, 255); 
-    --type-h3: 700 18px/1.25 var(--font-sans); 
-
-    --type-h4: 400 16px/1.3 var(--font-sans); 
-
-    --type-h5: 500 14px/1.35 var(--font-sans); 
-    --type-body: 400 14px/1.35 var(--font-sans); 
-
-
-
-    --type-h4-mono: 600 16px/1.3 var(--font-mono); 
-    --type-16body-mono: 500 16px/1.3 var(--font-mono); 
-    
-    --type-h5-mono: 500 14px/1.35 var(--font-mono); 
-    --type-14body-mono: 400 14px/1.35 var(--font-mono); 
-
-
-
-    /* === Palette === */
-
-
-    /* Active font: button-text-active, icon-active, */
-    --color-white: white;
-
-    /* Title font */
-    --color-light: #909090;
-
-    --button-text-inactive: #606060;
-    --button-active: #707070;
-    --button-inactive: #404040;
-
-
-
-
-    /* Drawer active background, Drawer inactive icons */
-    --color-drawer-bg: #303030;
-
-    /* Inactive drawer */
-    --color-drawer-bg: #252525;
-
-    /* Main background */
-    --color-bg: #202020;
-
-    /* Display, button strips */
-    --color-black: black;
-
-
-
-
-    /* KILL ALL Aactive, Attention Icons, Throttle fill */
-    --active-yellow: #FFBD0A;
-    
-    /* Payload buttons, KILL ALL Inactive */
-    --inactive-yellow: #9a7000;
-
-
-    --gauge-red: #be000a;
-    --gauge-green: #009100;
-    --gauge-blue: #1f8fff;
-
-
-
-    } 
+    /* INFO BAR */
 
 
         .info-bar {
@@ -148,10 +248,9 @@
         justify-content: space-between; /* spread elements across the width */
         align-items: center;          /* vertical centering */
         padding: 8px 16px;
-        background-color: #202020;    /* dark background */
-        color: #ffffff;               /* white text */
-        font-size: 14px;
-        border-bottom: 1px solid #202020; /* subtle separator */
+        background-color:  var(--color-bg);    /* dark background */
+        color: var(--color-white);
+        border-bottom: 1px solid  var(--color-bg); /* subtle separator */
         }
 
         /* Put icon + text on one line and center them vertically */
@@ -169,8 +268,8 @@
         display: inline-flex;      /* keep it inline with text */
         align-items: center;       /* vertical centering */
         justify-content: center;   /* horizontal centering */
-        width: 22px;               /* tweak if you need larger icon */
-        height: 22px;
+        width: 24px;               /* tweak if you need larger icon */
+        height: 24px;
         }
 
         .info-icon img {
@@ -182,19 +281,14 @@
         /* Unit label (e.g., "GPS") */
         .info-unit {
         /* small caps look */
-        font-family: Inter, system-ui, sans-serif;
-        font-weight: 600;
-        font-size: 14px;
-        letter-spacing: 0.6px;         /* tech look */
-        color: #757575;              /* muted gray */
+        font: var(--type-caption-mono-regular);
+        color:  var(--color-light);              /* muted gray */
         }
 
         /* Value text (e.g., "Locked") */
         .info-value {
-        font-family: Inter, system-ui, sans-serif;
-        font-weight: 600;
-        font-size: 14px;
-        color: #909090;  /* brighter than unit */
+        font: var(--type-caption-mono-bold);
+        color: var(--color-white);
         }
 
 
@@ -255,60 +349,54 @@
         }
 
         .carousel-titles {
-          position: absolute;
-          top: 5vh;
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 999;
-          pointer-events: none;
+        position: absolute;
+        top: 5vh;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        pointer-events: none;
         }
 
         .carousel-title {
-            font: var(--type-h2);
-            color: var(--c-h); /* <- apply the pink you defined */
-
-          text-align: center;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          white-space: nowrap; 
+        font: var(--type-h2);
+        color: var(--color-light); 
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap; 
         }
 
         .carousel-title.active {
-          opacity: 1;
+        opacity: 1;
         }
 
         .nav-arrow {
-            position: absolute;
-            top: 5vh;
-            background: none;        /* no background */
-            border: none;            /* no border */
-            border-radius: 0;        /* no rounding */
-            color: #757575;
-            font-size: 32px;         /* make triangle bigger if needed */
-            cursor: pointer;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: auto;             /* no fixed size */
-            height: auto;
-            padding: 0;              /* no padding */
+        position: absolute;
+        top: 5vh;
+        background: none;        /* no background */
+        border: none;            /* no border */
+        color: var(--text-inactive);            
+        font-size: var(--type-h1);     
+        cursor: pointer;
+        z-index: 1000;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;             /* no fixed size */
+        height: auto;
+        padding: 0;              /* no padding */
         }
         .nav-arrow:hover {
-            transform: scale(1.2);   /* still animate on hover */
-            filter: drop-shadow(0 0 8px rgb(100, 100, 100));
-            color: rgb(255, 255, 255);
+        transform: var(--hover-scale);
+        filter: drop-shadow(0 0 8px var(--color-light));
+        color: var(--color-light);
         }
-        .nav-arrow.left {
-            left: 5vh;
-        }
-        .nav-arrow.right {
-            right: 5vh;
-        }
+        .nav-arrow.left{ left: 40vh; }
+        .nav-arrow.right{ right: 40vh; }
 
         
     /* Screen indicator dots */
@@ -325,12 +413,21 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background-color: #505050;
+            background-color:  var(--button-inactive);
             transition: background-color 0.3s ease;
         }
         .indicator-dot.active {
-            background-color: white;
+            background-color: var(--color-light);
         }
+        .indicator-dot:hover { 
+            filter: brightness(var(--hover-brightness)); 
+            transition: var(--hover-transition); 
+        }
+
+
+
+
+
 
     /* Screens */
         .screen-main {
@@ -348,7 +445,7 @@
           transform: translateX(-50%);
           font-size: 2.1rem;
           font-weight: 600;
-          color: #ffffff;
+        color: var(--color-white);
           z-index: 100;
         }
 
@@ -400,25 +497,25 @@
         .column {
           flex: 1;
           text-align: center;
-          color: #fff;
+          color: var(--color-tech); 
           font-weight: bold;
           display: flex;
           align-items: center;
           justify-content: center;
         }
         .column.col-center {
-          background-color: #444;
+          background-color: var(--color-tech); 
         }
         .column.col-left-center,
         .column.col-right-center {
-          background-color: #3a3a3a;
+          background-color: var(--color-tech); 
           flex-direction: column;
           justify-content: space-evenly;
 
         }
         .column.left,
         .column.right {
-          background-color: #3a3a3a;
+          background-color: var(--color-tech); 
           flex-direction: column;
           justify-content: space-evenly;
         }
@@ -443,7 +540,6 @@
     pointer-events: none;
     }
 
-    /* Левая колонка (вторая из пяти) = примерно 20% экрана */
     #gauges-all > .gauge-1,
     #gauges-all > .gauge-2,
     #gauges-all > .gauge-3,
@@ -451,7 +547,6 @@
     grid-column: 2;
     }
 
-    /* Правая колонка (четвёртая из пяти) = примерно 80% экрана */
     #gauges-all > .gauge-5,
     #gauges-all > .gauge-6,
     #gauges-all > .gauge-7,
@@ -459,7 +554,6 @@
     grid-column: 6;
     }
 
-    /* Общий стиль */
     #gauges-all > div {
     display: flex;
     flex-direction: column;
@@ -475,10 +569,10 @@
         display: flex;
         align-items: flex-start;
         gap: 8px;
-        background-color: #202020;
+        background-color:  var(--color-bg);
         border-radius: 8px;
         padding: 8px 12px;
-        font-family: sans-serif;
+        font: var(--type-caption-mono-regular);
         }
 
         .gauge-icon {
@@ -501,20 +595,9 @@
         gap: 4px;
         }
 
-        .value {
-        font-size: 40px;
-        font-weight: 600;
-        color: white;
-        }
-
-        .unit {
-        font-size: 40px;
-        color: #454545;
-        }
-
         .caption {
-        font-size: 10px;
-        color: #555555;
+        font:var(--type-caption-regular);
+        color: var(--color-tech); 
         margin-top: 6px;
         padding-left: 1px; /* Slight indent to align visually under value */
         }
@@ -741,8 +824,6 @@
             
         font: var(--type-caption-mono-regular); /* single source of truth */
         line-height: 1; /* optional: crisper vertical alignment */
-        /* optional: lock mono family if you use it via tokens */
-        /* font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); */
         }
 
         .throttle-wrapper .gear-thumb-text {
@@ -753,23 +834,19 @@
 
     /* RULE RUDDER ANGLE INDICATOR */
 
-
-    /* RUDDER ANGLE INDICATOR */
        .rudder-wrapper {
-            top: 15%;                       /* Vertical offset from the top of the container */
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            display: flex;                  /* Use flexbox for vertical layout */
-            flex-direction: column;        /* Stack child elements vertically */
-            align-items: center;           /* Center child elements horizontally */
-
-            width: 100%;                   /* Take full available width */
-            max-width: 300px;              /* But don't exceed 200px */
-            box-sizing: border-box;        /* Include padding in width/height calculation */
-            padding: 50px;                 /* Inner spacing */
-
-            z-index: 6;                    /* Layer position (on top of lower elements) */
+        top: 15%;                       /* Vertical offset from the top of the container */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        display: flex;                  /* Use flexbox for vertical layout */
+        flex-direction: column;        /* Stack child elements vertically */
+        align-items: center;           /* Center child elements horizontally */
+        width: 100%;                   /* Take full available width */
+        max-width: 300px;              /* But don't exceed 200px */
+        box-sizing: border-box;        /* Include padding in width/height calculation */
+        padding: 50px;                 /* Inner spacing */
+        z-index: 6;                    /* Layer position (on top of lower elements) */
         }
 
         .rudder-gauge {
@@ -784,41 +861,42 @@
         justify-content: center;
         align-items: center;
         width: 100%;
-        
         }
-        .rudder-gauge svg {
-            display: block;
-            margin: 0 auto;
-            width: 100%;
-            height: auto;
-        }
-        /* Rudder Angle UNPUT */
-        /* Rudder input container */
-        .rudder-input-control {
 
-        display: flex;                /* Align elements horizontally */
+        .rudder-gauge svg {
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+        height: auto;
+        }
+        
+        /* Rudder Angle INPUT container  */
+        .rudder-input-control {
+        display: inline;                /* Align elements horizontally */
         gap: 6px;                     /* Space between input and ° sign */
         justify-content: center;
-        font-family: sans-serif;
-        font-size: 14px;
+        font: var(--type-caption-regular);
+        color: var(--color-light);    
         z-index: 10;
         white-space: nowrap
         }
-        /* Input field styling */
+
+        /* Input field styling (small black display) */
         #rudder-input {
         width: 50px;                  /* Fixed width for neat alignment */
         padding: 4px;                 /* Inner padding for comfort */
-        font-size: 14px;              /* Match text size to label */
-        color: #ffffff;       
-        background: #000000;  
-        border: 1px solid #757575; 
+        font: var(--type-caption-mono-regular);
+        color: var(--color-white);    
+        background:  var(--color-black);  
+        border: 1px solid  var(--text-inactive); 
         border-radius: 4px;
         
         }
         .rudder-input-control label {
-        color: #757575; 
-        font-size: 14px;
+        color:  var(--text-inactive); 
         }
+
+
 
     /* BOAT // Rudder & Trim GAUGE row */
 
@@ -836,8 +914,8 @@
     display: inline-flex;
     align-items: center;  /* icon and number share baseline */
     gap: 10px;
-    color: #e7e7e7;         /* inherit or override to your palette */
-    font-family: inherit;
+    color: var(--text-inactiv);         /* inherit or override to your palette */
+    font: var(--type-display-mono-regular);
     }
 
     /* Icon container */
@@ -853,7 +931,6 @@
     display: block;
     object-fit: contain;   /* ensures <img> scales correctly */
     flex-shrink: 0;        /* prevents icon from shrinking */
-    color: currentColor;   /* for inline SVGs still allows inheriting text color */
     }
 
     /* Value */
@@ -861,21 +938,22 @@
     display: inline-flex;
     align-items: baseline;  /* number + degree on one line bottom-aligned */
     gap: 4px;
-    font-weight: 600;
+    font: var(--type-display-mono-regular);
     letter-spacing: 0.2px;
     }
     .boat-stat__value #rudder-angle-value,
     .boat-stat__value #trim-value {
-    font-size: 16px;      /* main number size */
+    font: var(--type-display-mono-regular);
     line-height: 1;
     }
 
     /* Small degree sign */
     .boat-stat__value .deg {
-    font-size: 16px;
+    font: var(--type-display-mono-regular);
+    color: var(--text-inactiv);
     line-height: 1;
     vertical-align: top;   /* raises degree slightly */
-    opacity: 0.85;
+    opacity: 0.5;
     }
 
     /* Update feedback effect */
@@ -897,8 +975,8 @@
         width: 100%;
 
         height: 60px;
-        background-color: #101010;
-        border-top: 1px solid #333;
+        background-color: var(--color-black);  
+        border-top: 1px solid var(--color-drawer-inactive-bg);
         display: flex;
         align-items: center;
         padding: 0 20px;
@@ -907,7 +985,7 @@
         }
 
         .status-bar:hover {
-            background-color: #171717;
+            background-color: var(--color-black-hover);
         }
         .status-content {
             display: flex;
@@ -940,7 +1018,7 @@
             animation: none;
         }
         .status-text {
-            color: #e0e0e0;
+            color: var(--color-light);
             font-size: 16px;
         }
 
@@ -958,8 +1036,8 @@
             bottom: 60px;
             left: 0;
             right: 0;
-            background-color: black;
-            border-top: 1px solid #353535;
+            background-color: var(--color-black);
+            border-top: 1px solid var(--color-drawer-inactive-bg);
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease;
@@ -975,8 +1053,7 @@
             gap: 0px;
         }
         .debug-box {
-            background-color: black;
-            border: 1px solid black;
+            background-color: var(--color-drawer-bg);
             border-radius: 0px;
             padding: 15px;
         }
@@ -987,14 +1064,14 @@
             margin-bottom: 10px;
         }
         .debug-box pre {
-            background-color: #202020;
+            background-color:  var(--color-black);
             padding: 10px;
             border-radius: 4px;
             overflow-x: auto;
-            font-family: 'Courier New', monospace;
+            font: var(--type-display-mono-regular);
             font-size: 12px;
-            color: #ecf0f1;
-            border: 1px solid #353535;
+            color: var(--color-white);
+            border: 1px solid var(--button-inactive);
             max-height: 150px;
             overflow-y: auto;
         }
@@ -1012,8 +1089,8 @@
             margin-top: 10px;
         }
         .options-icon {
-            width: 32px;
-            height: 32px;
+            width: 24px;
+            height: 24px;
             filter: brightness(0) invert(1);
             transition: transform 0.2s ease;
             cursor: pointer;
@@ -1044,11 +1121,11 @@
 
 
         body.editing-mode {
-            background-color: #000000;
+            background-color:  var(--color-black);
         }
         body.editing-mode .control-button button {
-            background-color: #757575 !important;
-            border: 2px dashed #ffffff;
+            background-color:  var(--text-inactive) !important;
+            border: 2px dashed,  var(--color-white);
             box-shadow: none !important;
         }
         body.editing-mode .safety-cap {
@@ -1070,8 +1147,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #202020;
-            color: #fff;
+            background-color:  var(--color-bg);
+            color: var(--color-white);
             border-radius: 8px;
             padding: 20px;
             width: 400px;
@@ -1093,7 +1170,7 @@
             text-align: center;
             font-size: 2.1rem;
             font-weight: 600;
-            color: #757575;
+            color:  var(--text-inactive);
             padding: 4vh 0;
         }
 
@@ -1111,14 +1188,14 @@
             z-index: 999;
         }
         .editor-modal-window {
-            background-color: #202020;
+            background-color:  var(--color-bg);
             padding: 0px 0px;
             border-radius: 1px;
             width: 360px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: white;
+            color: var(--color-white);
             padding-top: 26px;
             padding-bottom: 26px;
         }
@@ -1146,8 +1223,8 @@
         .editor-preview-frame {
             width: 288px;
             height: 240px;
-            border: 1px solid #2a2a2a;
-            background-color: #2a2a2a;
+            border: 1px solid var(--color-tech);
+            background-color: var(--color-tech);
             border-radius: 10px;
             display: flex;
             flex-direction: column;
@@ -1204,7 +1281,7 @@
             margin-top: 6px;
             font-size: 0.9rem;
             text-align: center;
-            color: #757575;
+            color:  var(--text-inactive);
         }
 
     /* Change Preview Button Icon */
@@ -1221,8 +1298,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #202020;
-            border: 1px solid #757575;
+            background-color:  var(--color-bg);
+            border: 1px solid  var(--text-inactive);
             padding: 20px;
             border-radius: 8px;
             display: none; /* Hidden by default */
@@ -1266,10 +1343,10 @@
             transform: translateX(-50%) translateY(-110%);
             width: 150px;
             height: 75px;
-            background: repeating-linear-gradient(-45deg, #9a7000, #9a7000 12px, black 8px, black 25px);
+            background: repeating-linear-gradient(-45deg, var(--inactive-yellow), var(--inactive-yellow) 12px, var(--color-black) 8px, var(--color-black) 25px);
             border-radius: 10px;
             z-index: 2;
-            outline: 2px solid #9a7000;
+            outline: 2px solid var(--inactive-yellow);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1286,11 +1363,11 @@
             transform: translateX(-50%) translateY(-110%);
             width: 150px;
             height: 75px;
-            background:  #2a2a2a;
+            background:  var(--color-black);
             border-radius: 10px;
             z-index: 2;
-            outline: 2px dotted #757575;
-            box-shadow: 0 0 0 3px #2a2a2a; /* solid outer border */
+            outline: 2px dotted  var(--text-inactive);
+            box-shadow: 0 0 0 3px var(--color-black); /* solid outer border */
             display: flex;
             justify-content: center;
             pointer-events: none;
@@ -1314,17 +1391,19 @@
             transform: translateX(-50%) translateY(-110%);
             width: 150px;
             height: 75px;
-            background: repeating-linear-gradient(-45deg, #41361c, #41361c 12px, #202020 8px, #202020 25px);
+
+                /*  background: repeating-linear-gradient(-45deg, #41361c, #41361c 12px,  var(--color-bg) 8px,  var(--color-bg) 25px); */
+            background: repeating-linear-gradient(-45deg, var(--color-tech), var(--color-tech) 12px,  var(--color-bg) 8px,  var(--color-bg) 25px);
             border-radius: 10px;
             z-index: 2;
-            outline: 2px solid #41361c;
+            outline: 2px solid var(--color-tech);
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 10px;
-            color: rgba(0, 0, 0, 0.7);
+            color: var(--color-black);
             font-weight: bold;
-            text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+            text-shadow: 1px 1px 0 var(--color-light);
             pointer-events: none;
         }
         .editor-cap-container {
@@ -1381,19 +1460,19 @@
             height: 50px;        
             filter: 
             brightness(0)
-            drop-shadow(2px 0 0 #9a7000)
-            drop-shadow(-2px 0 0 #9a7000)
-            drop-shadow(0 2px 0 #9a7000)
-            drop-shadow(0 -2px 0 #9a7000)
-            drop-shadow(3px 3px 0 #9a7000)
-            drop-shadow(-3px 3px 0 #9a7000)
-            drop-shadow(3px -3px 0 #9a7000)
-            drop-shadow(-3px -3px 0 #9a7000);
+            drop-shadow(2px 0 0 var(--inactive-yellow))
+            drop-shadow(-2px 0 0 var(--inactive-yellow))
+            drop-shadow(0 2px 0 var(--inactive-yellow))
+            drop-shadow(0 -2px 0 var(--inactive-yellow))
+            drop-shadow(3px 3px 0 var(--inactive-yellow))
+            drop-shadow(-3px 3px 0 var(--inactive-yellow))
+            drop-shadow(3px -3px 0 var(--inactive-yellow))
+            drop-shadow(-3px -3px 0 var(--inactive-yellow));
         }
 
     /* Label below Preview button */
         .editor-button-label[contenteditable="true"]:hover {
-            color: #ffffff;
+            color: var(--color-white);
             font-weight: bold;
             cursor: text;
         }
@@ -1401,26 +1480,26 @@
             margin-top: 6px;
             font-size: 0.9rem;
             text-align: center;
-            color: #ffffff;
+            color: var(--color-white);
             background-color: transparent;
             border: none;
             outline: none;
-            border-bottom: 1px solid #757575;
+            border-bottom: 1px solid  var(--text-inactive);
             width: 100px;
             text-transform: uppercase;
         }
         .editor-button-label-input:focus {
-            border-bottom: 1px solid #ffffff;
+            border-bottom: 1px solid color var(--color-white);
         }
         .editor-button-label[contenteditable="true"]:focus {
             outline: none; /* remove default focus outline */
             padding: 4px 6px; /* add inner spacing around the text */
-            border: 1px dashed #757575; /* show a dashed border during editing */
+            border: 1px dashed  var(--text-inactive); /* show a dashed border during editing */
             border-radius: 4px; /* slightly rounded corners */
-            background-color: #2a2a2a; /* optional: gives subtle contrast while editing */
+            background-color: var(--color-bg); /* optional: gives subtle contrast while editing */
         }
         .editor-button-label.edited {
-            color: #ffffff;        
+            color: var(--color-white);        
             font-weight: bold;
             white-space: nowrap;
     
@@ -1443,7 +1522,7 @@
         .editor-option-block {
             width: 64px;
             height: 64px;
-            background-color: #2a2a2a;
+            background-color: var(--color-drawer-inactive-bg);
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -1457,12 +1536,12 @@
         .editor-option-label {
             margin-top: 6px;
             font-size: 12px;
-            color: #757575;
+            color:  var(--text-inactive);
             text-align: center;
         }
         .editor-option-wrapper.active .editor-option-block {
-            outline: 2px solid #ffffff;
-            box-shadow: 0 0 4px #ffffff;
+            outline: 2px solid var(--color-white);
+            box-shadow: 0 0 4px var(--color-white);
         }
 
     /* Active Function Buttons */
@@ -1470,13 +1549,13 @@
             filter: none; /* Show the original white icon */
         }
         .editor-option-wrapper.active .editor-value-box {
-            border-color: #ffffff;
+            border-color: var(--color-white);
         }
         .editor-option-wrapper.active .editor-value-box span {
-            color: #ffffff;
+            color: var(--color-white);
         }
         .editor-option-wrapper.active .editor-option-label {
-            color: #ffffff;
+            color: var(--color-white);
             font-weight: bold;
         }
 
@@ -1486,7 +1565,7 @@
             position: relative;
             width: 90px;
             height: 30px;
-            border: 1px solid #757575;
+            border: 1px solid  var(--text-inactive);
             border-radius: 4px;
             display: flex;
             align-items: center;
@@ -1507,14 +1586,12 @@
             padding-right: 36px;
             background-color: transparent;
             border: none;
-            font-size: 14px;
-            font-family: 'Roboto', sans-serif;
-            font-weight: 400;
+            font: var(--type-display-mono-regular);
             text-align: right;
             outline: none;
             position: relative;
             z-index: 2;
-            color: #757575;
+            color:  var(--color-tech);
 
             
             /* remove arrows */
@@ -1523,11 +1600,11 @@
             -webkit-appearance: none;
         }
         .editor-value-input:disabled {
-            color: #757575;
+            color: var(--text-inactive);
             cursor: not-allowed;
         }
         .editor-modal-window:not(.timer-active) .editor-arrow-controls {
-            color: #757575;
+            color: var(--text-inactive);
             pointer-events: none;
         }
         .editor-arrow-controls {
@@ -1541,7 +1618,7 @@
         .editor-arrow-controls button {
             background: none;
             border: none;
-            color: #757575;
+            color:  var(--text-inactive);
             font-size: 8px;
             line-height: 10px;
             padding: 0;
@@ -1550,18 +1627,18 @@
         }
        /* Up arrow when timer button is activated */
         .editor-modal-window.timer-active .arrow-up:hover {
-            color: #ffffff;
+            color: var(--color-white);
             font-weight: bold;
-            text-shadow: 0 -1px 2px #ffffff;
+            text-shadow: 0 -1px 2px var(--color-white);
         }
         /* Up down when timer button is activated */
         .editor-modal-window.timer-active .arrow-down:hover {
-            color: #ffffff;
+            color: var(--color-white);
             font-weight: bold;
-            text-shadow: 0 1px 2px #ffffff;
+            text-shadow: 0 1px 2px var(--color-white);
         }
         .editor-option-wrapper.active .editor-arrow-controls button {
-            color: #ffffff;
+            color: var(--color-white);
             font-weight: bold;
         }
         .editor-value-input::-webkit-outer-spin-button,
@@ -1576,20 +1653,20 @@
             right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            color: #757575;
+            color:  var(--text-inactive);
             font-size: 14px;
             pointer-events: none;
             transition: opacity 0.2s ease;
         }
         /* Active white text */
         .editor-modal-window.timer-active .editor-value-box {
-            border-color: #ffffff;
+            border-color: var(--color-white);
         }
         .editor-modal-window.timer-active .editor-value-input {
-            color: #ffffff;
+            color: var(--color-white);
         }
         .editor-modal-window.timer-active .editor-unit-label {
-            color: #ffffff;
+            color: var(--color-white);
         }
 
 
@@ -1602,7 +1679,7 @@
         gap: 10px;                        /* space between label and field */
         margin-top: 16px;            /* top & bottom spacing */
         margin-bottom: 0px;
-        font-family: 'Roboto', sans-serif;
+        font: var(--text-inactive);
         }
         .editor-custom-input-row:nth-of-type(2) {
         margin-top: 0px;
@@ -1612,7 +1689,7 @@
         .editor-custom-label {
         min-width: 40px;
         font-weight: normal;
-        color: #757575;
+        color:  var(--text-inactive);
         height: 32px;
         line-height: 32px;
         font-size: 12px;
@@ -1623,8 +1700,8 @@
         .hex-wrapper {
         display: flex;
         align-items: center;
-        background-color: #202020;
-        border: 1px solid #757575;
+        background-color:  var(--color-bg);
+        border: 1px solid var(--text-inactive);
         border-radius: 4px;
         overflow: hidden;
         height: 32px;
@@ -1637,9 +1714,8 @@
         .bn-wrapper .editor-prefix,
         .editor-prefix {
         padding: 0 6px;
-        color: #757575;
-        font-family: monospace;
-        font-size: 12px;
+        color:  var(--color-tech);
+        font: var(--type-display-mono-regular);
         display: flex;
         align-items: center;
         background: none;
@@ -1651,10 +1727,10 @@
         .editor-prefixed-input {
         width: 45px;
         padding: 0 6px;
-        font-size: 12px;
         background: none;
         border: none;
-        color: #757575;
+        color:  var(--color-tech);
+        font: var(--type-display-mono-regular);
         height: 100%;
         outline: none;
         }
@@ -1662,10 +1738,10 @@
         .hex-wrapper input {
         width: 154px;
         padding: 0 10px;
-        font-size: 12px;
+        color:  var(--color-tech);
+        font: var(--type-display-mono-regular);        
         background: none;
         border: none;
-        color: #757575;
         height: 100%;
         outline: none;
         }
@@ -1680,13 +1756,13 @@
         appearance: none;
         -webkit-appearance: none;
         -moz-appearance: none;
-        background-color: #202020;
-        color: #757575;
-        border: 1px solid #757575;
+        background-color:  var(--color-bg);
+        color:  var(--text-inactive);
+        border: 1px solid  var(--text-inactive);
         border-radius: 4px;
         padding: 6px 10px;
-        font-size: 14px;
-        font-family: 'Roboto', sans-serif;
+        color:  var(--color-tech);
+        font: var(--type-display-mono-regular);
         width: 196px;
         background-image: url('data:image/svg+xml;utf8,<svg fill="%23aaa" height="20" width="20" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
         background-repeat: no-repeat;
@@ -1724,18 +1800,18 @@
         }
         .editor-cancel-button {
             background-color: transparent;
-            color: #757575;
-            border: 1px solid #757575;
+            color:  var(--text-inactive);
+            border: 1px solid  var(--text-inactive);
         }
         .editor-apply-button {
             background-color: transparent;
-            color: #757575;
-            border: 1px solid #757575;
+            color:  var(--text-inactive);
+            border: 1px solid  var(--text-inactive);
         }
         .editor-cancel-button:hover,
         .editor-apply-button:hover {
-            outline: 2px solid #ffffff;
-            color: #ffffff;
+            outline: 2px solid var(--color-white);
+            color: var(--color-white);
             font-weight: bold;
         }
 
@@ -1748,21 +1824,21 @@
             top: 12px;
             right: 12px;
             font-size: 18px;
-            color: #999;
+            color: var(--color-tech);
             cursor: pointer;
             transition: color 0.2s ease;
         }
         .editor-modal-close:hover {
-            color: white;
+            color: var(--color-white);
         }
         
         /* Buttons Fuctions Hover */
         .editor-option-wrapper:hover .editor-option-block {
-            box-shadow: 0 0 6px #ffffff;
+            box-shadow: 0 0 6px var(--color-white);
             transition: all 0.2s ease;
         }
         .editor-option-wrapper:hover .editor-option-label {
-            color: #ffffff;
+            color: var(--color-white);
             transition: all 0.2s ease;
 
         }
@@ -1851,10 +1927,9 @@
         top: 0;
         width: 30px;
         height: 90%;
-        font-size: 10px;
-        font-family: 'Roboto', sans-serif;
-        font-weight: 700;
-        color: #757575;
+        color:  var(--color-tech);
+        font: var(--type-display-mono-regular);
+        color:  var(--text-inactive);
         line-height: 15px;
         text-align: center;
         pointer-events: none;
@@ -1866,13 +1941,13 @@
         left: 40px;
         width: 30px;
         height: 100%;
-        background: black;
+        background: var(--color-black);
         border-radius: 10px;
         }
         /* Fill Yellow area */
         .trim-track-fill {
         position: absolute;
-        background-color: #FFBD0A;
+        background-color: var(--active-yellow);
         border-radius: 9px;
         left: 0;
         bottom: 0; /* ✅ Anchor to bottom */
@@ -1916,11 +1991,9 @@
         bottom: 0;
         width: 60px;
         height: 40px;
-        background-color: #000000;
-        color: #fff;
-        font-family: Roboto, sans-serif;
-        font-weight: normal;
-        font-size: 28px;
+        background-color:  var(--color-black);
+        color:  var(--color-tech);
+        font: var(--type-display-mono-regular);
         text-align: center;
         line-height: 40px;
         border-radius: 4px;
@@ -1959,7 +2032,7 @@
             width: 40px;
             max-width: 40px;
             height: 200px;
-            background-color: #404040;
+            background-color:  var(--button-inactive);
             border-radius: 8px;
             margin: auto;
         }
@@ -1998,7 +2071,7 @@
         flex-wrap: wrap;
         flex-direction: row;
         gap: 12px;
-        justify-content: space-between; /* или flex-start / center */
+        justify-content: space-between; 
         justify-content: center;
         padding-bottom: 30px;
         }
@@ -2007,7 +2080,7 @@
         /* GAUGES BLOCK */
         .gauge-1, .gauge-2, .gauge-3, .gauge-4,
         .gauge-5, .gauge-6, .gauge-7, .gauge-8 {
-            flex: 1 1 calc(25% - 12px); /* 4 в ряд */
+            flex: 1 1 calc(25% - 12px); 
             order: 1;
             margin: 5px;
             display: flex;
@@ -2077,20 +2150,19 @@
             overflow: hidden;
         }
 
-        /* Левый throttle */
+        /* Left throttle */
         .throttle-wrapper {
             grid-column: 1;
             grid-row: 2;
             justify-self: center;
         }
 
-        /* Левые gauges */
+        /* Right gauges */
         .gauge-1 { grid-column: 2; grid-row: 1; }
         .gauge-2 { grid-column: 2; grid-row: 2; }
         .gauge-3 { grid-column: 2; grid-row: 3; }
         .gauge-4 { grid-column: 2; grid-row: 4; }
 
-        /* Левые кнопки (по центру блока, визуально как gauges) */
         .button-1 { grid-column: 3; grid-row: 1; }
         .button-2 { grid-column: 3; grid-row: 2; }
         .button-3 { grid-column: 3; grid-row: 3; }
@@ -2100,8 +2172,8 @@
 
 
 
-        
-        /* Центр (rudder + лодка) */
+
+        /* Center (rudder + boat) */
         .rudder-wrapper {
             grid-column: 4;
             grid-row: 1 / span 4;
@@ -2120,19 +2192,17 @@
             transform: scale(1);
         }
 
-        /* Правые кнопки */
         .button-5 { grid-column: 5; grid-row: 1; }
         .button-6 { grid-column: 5; grid-row: 2; }
         .button-7 { grid-column: 5; grid-row: 3; }
         .button-8 { grid-column: 5; grid-row: 4; }
 
-        /* Правые gauges */
+        /* Right gauges */
         .gauge-5 { grid-column: 6; grid-row: 1; }
         .gauge-6 { grid-column: 6; grid-row: 2; }
         .gauge-7 { grid-column: 6; grid-row: 3; }
         .gauge-8 { grid-column: 6; grid-row: 4; }
 
-        /* Общие отступы и центрирование */
         .gauge-1, .gauge-2, .gauge-3, .gauge-4,
         .gauge-5, .gauge-6, .gauge-7, .gauge-8,
         .button-1, .button-2, .button-3, .button-4,
@@ -2140,7 +2210,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 20px 0; /* добавлено для согласованности с gauges */
+            margin: 20px 0; 
         }
 
         .control-button {
@@ -2229,7 +2299,7 @@
 
             .throttle-wrapper {
             grid-column: 1;
-            grid-row: 2; /* или другой ряд, если нужно ниже/выше */
+            grid-row: 2; 
             justify-self: start;
             align-self: center;
             margin-top: 0;
@@ -2269,8 +2339,8 @@
     transform: translate(-50%, -50%);
     font-size: 30vh;
     font-weight: bold;
-    color: rgba(255,255,255,0.8);
-    text-shadow: 0 0 30px rgba(255,255,255,0.8);
+    color: var(--color-white);
+    text-shadow: 0 0 30px var(--color-white);
     z-index: 100000;
     pointer-events: none;
     opacity: 0;
@@ -2299,9 +2369,9 @@
     #start-loader .loader-slot{
     width: 100vw; height: 100vh;
     display: grid; place-items: center;
-    background: rgba(0,0,0,0.45);
+    background: var(--color-black);
     font: 600 18px/1.2 Inter, system-ui, sans-serif;
-    color: #fff; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--color-white); text-transform: uppercase; letter-spacing: .08em;
     }
 
     /* (optional) background pulse – remove if you don't use it */
@@ -2332,7 +2402,7 @@
     /* Track circle (latest: black) */
     .start-power__track{
     fill: none;
-    stroke: #000000;
+    stroke:  var(--color-black);
     stroke-width: 10;
     }
 
@@ -2343,7 +2413,7 @@
     --ARC: var(--sweep-frac, 0.8333333);  /* 300°/360 */
 
     fill: none;
-    stroke: #ffffff;
+    stroke: var(--color-white);
     stroke-width: 10;
     stroke-linecap: round;
 
@@ -2394,7 +2464,7 @@
 
     /* Vertical bar (phase 2) */
     .start-power__line{
-    stroke: #ffffff;
+    stroke: var(--color-white);
     stroke-width: 10;
     stroke-linecap: round;
     opacity: 0;
@@ -2408,336 +2478,207 @@
 
 
 
-    /* MODAL GAUGES PANEL */
+/* MODAL GAUGES PANEL */
+
+        .gauges-button-panel {
+        display: flex;            /* vertical stack */
+        flex-direction: column;
+        align-items: stretch;     /* children take full width */
+        position: absolute;
+        top: 50%;
+        left: 3vh;
+        transform: translateY(-50%);
+        z-index: 999;
+        width: 128px;
+        height: 896px;            /* total column height */
+        }
+
+        .gauges-panel {
+        position: static;
+        z-index: 999;
+
+        width: 128px;
+        height: 736px;
+        background-color: var(--color-black);
+        border-radius: 6px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        }
+
+        .gauge-block {
+        width: 100%;
+        text-align: center;
+        }
+
+        .gauge-icon {
+        opacity: 1;
+        filter: none;
+        mix-blend-mode: normal;
+        }
+
+        /* When safety sits to the right of the gauges panel */
+        .gauges-button-panel.side-safety .safety-block {
+        /* width stays the same; position will be set inline by JS */
+        width: 128px;
+        }
+        .gauges-button-panel.side-safety .kill-all-btn {
+        width: 100%;
+        }
 
 
-            .gauges-button-panel {
-            display: flex;            /* vertical stack */
-            flex-direction: column;
-            align-items: stretch;     /* children take full width */
+        /* CSS-only switch: when safety moves to the right, fix parent height */
+        @media (max-height: 1024px) {
+        .gauges-button-panel {
+            height: 736px;                 /* parent becomes 736px tall */
+            overflow: visible;             /* allow the side block to overflow */
+        }
+
+        .gauges-button-panel .safety-block {
             position: absolute;
-            top: 50%;
-            left: 3vh;
-            transform: translateY(-50%);
-            z-index: 999;
-
+            left: calc(100% + 12px);       /* gap to the right of the panel */
+            bottom: 0px;                 /* align bottoms: 896 - 736 = 160 */
+            margin-top: 0;
             width: 128px;
-            height: 896px;            /* total column height */
+        }
+        }
+
+
+
+
+
+        /* ICON */
+            .active-helm-gauge .gauge-icon,
+            .ap-status-gauge .gauge-icon,
+            .speed-avg-gauge .gauge-icon,
+            .rpm-gauge .gauge-icon,
+            .engine-temperature-gauge .gauge-icon,
+            .battery-voltage-gauge .gauge-icon,
+            .fuel-gauge .gauge-icon {
+            width: 24px;
+            height: 24px;
             }
 
-            .gauges-panel {
-            position: static;
-            z-index: 999;
+        /* LABLE VALUE UNIT */
 
-            width: 128px;
-            height: 736px;
-            background-color: black;
-            border-radius: 6px;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
+            .gauge-label,
+            .speed-avg-gauge .gauge-line,
+            .label-muted { 
+            font: var(--type-caption-regular); 
+            color: var(--color-light);
             }
 
-            .gauge-block {
-            width: 100%;
-            text-align: center;
-            color: white;
-            font-family: sans-serif;
-            font-size: 16px;
-            font-weight: 500;
+            .value,
+            .gauge-value,
+            .speed-avg-gauge .value-lg,
+            .speed-avg-gauge .value-lg,
+            .rpm-gauge .value-lg,
+            .engine-temperature-gauge .value-lg,
+            .value-strong,
+            .fuel-gauge .value-lg  {
+            font: var(--type-display-mono-bold);
+            color: var(--color-white);
             }
 
-            .gauge-icon {
-            opacity: 1;
-            filter: none;
-            mix-blend-mode: normal;
+            .unit,
+            .speed-avg-gauge .unit-lg,
+            .rpm-gauge .unit-lg,
+            .engine-temperature-gauge .unit-lg,
+            .unit-muted,
+            .fuel-gauge .unit-lg { 
+            font: var(--type-display-mono-regular); 
+            color: var(--color-light);
             }
 
-            /* When safety sits to the right of the gauges panel */
-            .gauges-button-panel.side-safety .safety-block {
-            /* width stays the same; position will be set inline by JS */
-            width: 128px;
-            }
-            .gauges-button-panel.side-safety .kill-all-btn {
-            width: 100%;
+        /* LABLE VALUE UNIT SMALL BOTTOM */
+
+            .speed-avg-gauge .gauge-line--small .label { 
+            font: var(--type-caption-regular); 
+            color: var(--color-light);
+            font-size: 11px;
             }
 
-
-            /* CSS-only switch: when safety moves to the right, fix parent height */
-            @media (max-height: 1024px) {
-            .gauges-button-panel {
-                height: 736px;                 /* parent becomes 736px tall */
-                overflow: visible;             /* allow the side block to overflow */
+            .speed-avg-gauge .value-sm,
+            .fuel-gauge .value-rate {
+            font: var(--type-display-mono-bold);
+            color: var(--color-white);
+            font-size: 13px;
             }
 
-            .gauges-button-panel .safety-block {
-                position: absolute;
-                left: calc(100% + 12px);       /* gap to the right of the panel */
-                bottom: 0px;                 /* align bottoms: 896 - 736 = 160 */
-                margin-top: 0;
-                width: 128px;
-            }
+            .speed-avg-gauge .unit-sm,
+            .fuel-gauge .unit-rate { 
+            font: var(--type-display-mono-regular); 
+            color: var(--color-light);
+            font-size: 11px;
             }
 
 
 
-
-       /* Active Helm block */
-
-            /* Active Helm block */
-            .active-helm-gauge {
+        /* Active Helm block */
+        /* AP Status block */
+        /* Speed / Avg gauge block */
+            .active-helm-gauge,
+            .ap-status-gauge,
+            .speed-avg-gauge,
+            .rpm-gauge,
+            .engine-temperature-gauge,
+            .battery-voltage-gauge,
+            .fuel-gauge { 
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 4px; 
             }
 
-            .active-helm-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
-            .active-helm-gauge .gauge-label {
-            font-family: Inter, sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            color: #757575;
-            line-height: 21px;
-            text-align: center;
-            }
-
-            .active-helm-gauge .gauge-value {
-            font-family: Inter, sans-serif;
-            font-size: 16px;
-            font-weight: 500;
-            color: white;
-            line-height: 24px;
-            text-align: center;
-            }
-            
-
-
-        /* AP Status block */
-
-            /* AP Status block */
-            .ap-status-gauge {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            }
-
-            .ap-status-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
-            .ap-status-gauge .gauge-label {
-            font-family: Inter, sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            color: #757575;
-            line-height: 21px;
-            text-align: center;
-            }
-
-            .ap-status-gauge .gauge-value {
-            font-family: Inter, sans-serif;
-            font-size: 16px;
-            font-weight: 500;
-            color: white;
-            line-height: 24px;
-            text-align: center;
-            }
-        
-
-         /* Speed / Avg gauge block */
-        
-            .speed-avg-gauge {
-            /* --pct controls the white fill width (0%..100%) */
-            --pct: 0%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px; /* vertical spacing between rows */
-            }
-
-            /* Icon size same as в предыдущих блоках */
-            .speed-avg-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
-            /* Top and bottom text rows */
-            .speed-avg-gauge .gauge-line {
-            display: inline-flex;
-            align-items: baseline;
-            gap: 4px;
-            color: #ffffff; /* values are white by default */
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            }
-
-            .speed-avg-gauge .value-lg { /* main value */
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-            .speed-avg-gauge .unit-lg {
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 400;
-            color: #757575; /* muted unit */
-            }
-
-            /* AVG row style */
-            .speed-avg-gauge .gauge-line--small .label {
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            font-size: 12px;
-            line-height: 18px;
-            font-weight: 700;
-            color: #fff;
-            }
-            .speed-avg-gauge .value-sm {
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            font-size: 12px;
-            line-height: 18px;
-            font-weight: 700;
-            color: #fff;
-            }
-            .speed-avg-gauge .unit-sm {
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            font-size: 12px;
-            line-height: 18px;
-            font-weight: 400;
-            color: #757575;
-            }
-
-            /* Mini gauge bar (0..100%) */
-            .speed-avg-gauge .mini-gauge {
-            /* Base bar */
-            width: 100%;
-            max-width: 104px;        /* tweak to your panel width */
-            height: 2px;             /* bar height */
-            background: #2b2b2b;     /* muted gray base */
-            border-radius: 3px;
-            overflow: hidden;        /* clip inner fill */
-            }
-
-            /* White fill controlled by --pct */
-            .speed-avg-gauge .mini-gauge-fill {
-            /* Fill grows from left to right */
-            width: var(--pct);       /* e.g., 39% */
-            height: 100%;
-            background: #ffffff;
-            border-radius: 3px;      /* keeps rounded cap when near 100% */
-            transition: width 180ms ease; /* smooth updates */
-            }
-
-        
-
-         /* RPM gauge block */
-        
-            /* ===== RPM gauge block ===== */
-            .rpm-gauge {
-            --pct: 0%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            }
-
-            .rpm-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
-            .rpm-gauge .gauge-line {
-            display: inline-flex;
-            align-items: baseline;
-            gap: 4px;
-            color: #ffffff;
-            font-family: "Roboto Mono", monospace;
-            }
-
-            .rpm-gauge .value-lg {
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-            .rpm-gauge .unit-lg {
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 400;
-            color: #757575;
-            }
-
-            /* Mini bar reused from speed gauge */
-            .rpm-gauge .mini-gauge {
-            width: 100%;
-            max-width: 104px;
-            height: 2px;
-            background: #757575;
-            border-radius: 3px;
-            overflow: hidden;
-            }
-            .rpm-gauge .mini-gauge-fill {
-            width: var(--pct);
-            height: 100%;
-            background: #fff;
-            border-radius: 3px;
-            transition: width 180ms ease;
-            }
-        
-
-         /* Engine Temperature gauge block */
-        
-            /* ===== Engine Temperature gauge block ===== */
-            .engine-temperature-gauge {
-            /* --pct controls fill width (0..100) */
-            --pct: 0%;
-            /* --bar-color controls the fill color; default is white */
-            --bar-color: #ffffff;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            }
-
-            .engine-temperature-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
+        /* Top and bottom text rows (values + units) */
+            .speed-avg-gauge .gauge-line,
+            .rpm-gauge .gauge-line,
+            .battery-voltage-gauge .battery-line,
+            .fuel-gauge .gauge-line,
             .engine-temperature-gauge .gauge-line {
             display: inline-flex;
             align-items: baseline;
             gap: 4px;
-            color: #ffffff;
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             }
 
-            .engine-temperature-gauge .value-lg {
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-            .engine-temperature-gauge .unit-lg {
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 400;
-            color: #757575;
-            }
-
-            /* Mini bar */
-            .engine-temperature-gauge .mini-gauge {
+            /* Mini gauge bar (0..100%) BASE TRAC */
+            .speed-avg-gauge .mini-gauge,
+            .rpm-gauge .mini-gauge,
+            .engine-temperature-gauge .mini-gauge,
+            .battery-voltage-gauge .mini-gauge,
+            .fuel-gauge .mini-gauge {
             width: 100%;
-            max-width: 104px;
-            height: 2px;
-            background: #757575;     /* base track */
+            max-width: 104px;        /* tweak to your panel width */
+            height: 2px;             /* bar height */
+            background: var(--button-inactive);     /* muted gray base */
             border-radius: 3px;
-            overflow: hidden;         /* clip inner fill */
+            overflow: hidden;        /* clip inner fill */
+            }
+
+            /* White fill controlled by --pct  DATA TRACK */
+            .speed-avg-gauge .mini-gauge-fill,
+            .rpm-gauge .mini-gauge-fill,
+            .battery-voltage-gauge .mini-gauge-fill,
+            .fuel-gauge .mini-gauge-fill {
+            /* Fill grows from left to right */
+            width: var(--pct);       /* e.g., 39% */
+            height: 100%;
+            background: var(--color-white);
+            border-radius: 3px;      /* keeps rounded cap when near 100% */
+            transition: width 180ms ease; /* smooth updates */
+            }
+
+            .speed-avg-gauge,
+            .rpm-gauge,
+            .engine-temperature-gauge {
+            /* --pct controls the white fill width (0%..100%) */
+            --pct: 0%;
+            }
+
+         /* Engine Temperature gauge block */
+            .engine-temperature-gauge { /* --bar-color controls the fill color; default is white */
+            --bar-color: var(--color-white);
             }
 
             .engine-temperature-gauge .mini-gauge-fill {
@@ -2749,153 +2690,32 @@
             }
 
             /* Optional state colors (use one of these classes on the root block) */
-            .engine-temperature-gauge.cold  { --bar-color: #0059FF; } /* cool blue */
-            .engine-temperature-gauge.warm  { --bar-color: #FFBD0A; } /* amber */
-            .engine-temperature-gauge.hot   { --bar-color: #D0021B; } /* red */
+            .engine-temperature-gauge.norm  { --bar-color: var(--color-white); }
+            .engine-temperature-gauge.cold  { --bar-color: var(--gauge-blue); }
+            .engine-temperature-gauge.warm  { --bar-color: var(--active-yellow); }
+            .engine-temperature-gauge.hot   { --bar-color: var(--gauge-red); }
 
-        
 
-         /* Battery Voltage Gauge block */
-        
+            /* Battery Voltage Gauge block */
             .battery-voltage-gauge {
-            --pct: 0%;               /* controls fill width */
-            --bar-color: #ffffff;     /* default bar color */
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
+            --pct: 0%; /* controls fill width */
             }
 
-            .battery-voltage-gauge .gauge-icon {
-            width: 24px;
-            height: 24px;
-            }
-
-            /* Text line: muted label + strong value + muted unit */
-            .battery-voltage-gauge .battery-line {
-            display: inline-flex;
-            align-items: baseline;
-            gap: 2px;
-            text-align: center;
-            }
-
-            .label-muted,
-            .unit-muted {
-            color: #757575;
-            font-family: Inter, sans-serif;
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 500;
-            }
-
-            .value-strong {
-            color: #ffffff;
-            font-family: Inter, sans-serif;
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-
-            /* Mini bar (same logic as RPM/Speed) */
-            .battery-voltage-gauge .mini-gauge {
-            width: 100%;
-            max-width: 104px;
-            height: 2px;
-            background: #757575;      /* muted gray track */
-            border-radius: 3px;
-            overflow: hidden;
-            }
-
-            .battery-voltage-gauge .mini-gauge-fill {
-            width: var(--pct);
-            height: 100%;
-            background: var(--bar-color);
-            border-radius: 3px;
-            transition: width 180ms ease;
-            }
-
-        
-
-         /* Fuel Gauge block */
-        
-            .fuel-gauge{
-            /* --pct controls the white fill width (0..100%) */
-            --pct: 0%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px; /* vertical spacing between rows */
-            }
-
-            .fuel-gauge .gauge-icon{
-            width: 24px;
-            height: 24px;
-            }
-
-            /* Top and bottom text rows (values + units) */
-            .fuel-gauge .gauge-line{
-            display: inline-flex;
-            align-items: baseline;
-            gap: 4px;
-            text-align: center;
-            justify-content: center;
-            color: #ffffff;
-            font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            }
-
-            .fuel-gauge .value-lg{
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 700;
-            }
-            .fuel-gauge .unit-lg{
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 400;
-            color: #757575;
-            }
-
-            /* Mini bar like Speed/RPM */
-            .fuel-gauge .mini-gauge{
-            width: 100%;
-            max-width: 104px;      /* keep consistent with other gauges */
-            height: 2px;
-            background: #757575;   /* base track */
-            border-radius: 3px;
-            overflow: hidden;
-            }
-            .fuel-gauge .mini-gauge-fill{
-            width: var(--pct);     /* e.g., 37% */
-            height: 100%;
-            background: #ffffff;   /* fill color */
-            border-radius: 3px;
-            transition: width 180ms ease;
+            /* Fuel Gauge block */
+            .fuel-gauge {
+            --pct: 0%; /* --pct controls the white fill width (0..100%) */
             }
 
             /* Burn rate row styling (uses Inter per your mock for mixed text) */
-            .fuel-gauge .gauge-line--rate{
-            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            color: #757575;        /* muted default */
+            .fuel-gauge .gauge-line--rate {
+            color: var(--color-tech); /* muted default */
             }
-            .fuel-gauge .value-rate{
-            color: #ffffff;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
-            }
-            .fuel-gauge .unit-rate{
-            color: #757575;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
-            }
+
 
         
 
 
      /* KILL ALL BUTTON */
-        
 
         .safety-block {
         margin-top: auto;
@@ -2911,45 +2731,50 @@
         gap: 4px;  /* optional: spacing between title and button */
         }
 
-        /* Make "Safety" label normal weight */
+        /* "Safety" title */
         .safety-block .drawer-button-title {
-        font-weight: 400; /* normal */
+        font: var(--type-h4);
         }
-
 
         .kill-all-btn {
         width: 128px;
         height: 90px;
-        background-color: #FFBD0A;
+        background-color: var(--inactive-yellow);
         border-radius: 6px;
 
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
 
-        color: #000000;
-        opacity: 0.8;
-        font: 800 16px/44px Inter, system-ui, sans-serif; /* vertical centering */
-        letter-spacing: .6px;
+        color:  var(--color-black);
+        font: var(--type-h3);
         text-transform: uppercase;
         text-align: center;
         cursor: pointer;
+
+        /* Transition only the properties we change on hover */
+        transition: var(--hover-transition);
+        will-change: transform; /* perf hint */
         }
                     
-        .kill-all-btn:hover  { 
-        filter: brightness(1.05); 
-        opacity: 1;
+        .kill-all-btn:hover {
+        background-color: var(--active-yellow);
+        transform: var(--hover-scale);
         }
+
         .kill-all-btn:active {
+        background-color: var(--active-yellow);
         transform: translateY(1px);
-        box-shadow: 0 1px 0 rgba(255,255,255,.10) inset, 0 4px 10px rgba(0,0,0,.5);
+        box-shadow: 0 1px 0 rgba(246, 255, 127, 0.1) inset, 0 4px 10px rgba(0,0,0,.5);
         }
 
         
 
 
+
      /* MODAL DRAWER PANEL */
 
+     
          /* Tabs container */
         
         .drawer-panel {
@@ -2961,7 +2786,7 @@
 
             width: 288px;
             height: 896px;
-            background-color: #303030;
+            background-color:  var(--color-drawer-bg);
             border-radius: 6px;
 
             display: flex;
@@ -2974,7 +2799,7 @@
             flex-direction: row;
             justify-content: space-between;
             padding: 4px 0 0 0;
-            background: #252525;
+            background:  var(--color-drawer-inactive-bg);
             border-radius: 6px 6px 0 0;
         }
 
@@ -2987,14 +2812,14 @@
             padding: 6px 0;
             cursor: pointer;
             opacity: 0.2;          /* inactive icons 50% */
-            color: #757575; /* inactive gray */
+            color:  var(--text-inactive); /* inactive gray */
             transition: color 0.2s;
         }
 
         .drawer-tab.active {
-            color: #ffffff; /* active white */
+            color: var(--color-white); /* active white */
             opacity: 1; /* active icon 100% */
-            background-color: #303030; /* darker background */
+            background-color:  var(--color-drawer-bg); /* darker background */
             border-radius: 4px 4px 0 0; /* only top corners rounded */
         }
 
@@ -3053,7 +2878,7 @@
         
         /* === Drawer content layout (skeleton) === */
         .drawer-content{
-            background:#303030; /* to merge with active tab bg */
+            background: var(--color-drawer-bg); /* to merge with active tab bg */
             padding:12px;
             overflow:auto;
         }
@@ -3065,26 +2890,34 @@
             justify-content:center;
             margin-bottom:12px;
             font: var(--type-h3);
-            color: var(--c-h);
+            color: var(--color-light);
         }
         
 
         /* Scroll */
 
-
         /* Chrome/Safari/Edge */
         .drawer-content::-webkit-scrollbar { width: 8px; }
-        .drawer-content::-webkit-scrollbar-track { background: #9b2ca5; }
-        .drawer-content::-webkit-scrollbar-thumb { background: #a52c2c; border-radius: 4px; }
-        .drawer-content::-webkit-scrollbar-thumb:hover { background: #0c965a; }
+        .drawer-content::-webkit-scrollbar-track { background: var(--color-tech); }
+        .drawer-content::-webkit-scrollbar-thumb { background: var(--gauge-red); border-radius: 4px; }
+        .drawer-content::-webkit-scrollbar-thumb:hover { background: var(--gauge-green); }
 
         /* Firefox */
         .drawer-content { 
-        scrollbar-color: #505050 #303030; /* thumb track */
+        scrollbar-color:  var(--button-inactive)  var(--color-drawer-bg); /* thumb track */
         scrollbar-width: thin;
         }
 
         
+        /* BUTTONS DRAWER BUTTONS */
+
+
+
+
+
+
+
+
 
          /* TAB 1: Boat Control */
         
@@ -3100,7 +2933,7 @@
             justify-content:space-between;
             gap:16px;
             padding:14px 16px;
-            background:#000;
+            background: var(--color-black);
             border-radius:8px;
             }
 
@@ -3111,7 +2944,7 @@
             align-items:center;
             gap:6px;
             font:600 16px/20px Inter, sans-serif;
-            color:#fff;
+            color:var(--color-white);
             }
             .comm-metric .display-unit{ color:#9a9a9a; font-weight:500; }
 
@@ -3119,7 +2952,7 @@
             .comm-divider{
             width:1px;
             height:24px;
-            background: #757575;
+            background:  var(--text-inactive);
             opacity:1;
             justify-self:center;
             }
@@ -3128,7 +2961,7 @@
             .comm-toggle{
             margin-top:8px;
             display:flex;
-            background:#404040;
+            background: var(--button-inactive);
             border-radius:8px;
             overflow:hidden;           /* clip inner rounded active */
             }
@@ -3138,8 +2971,8 @@
             flex:1;
             padding:14px 0;
             border:none;
-            background:#505050;
-            color:#fff;
+            background: var(--button-inactive);
+            color:var(--color-white);
             font:500 16px/16px Inter, sans-serif;
             cursor:pointer;
             opacity:.5;
@@ -3149,7 +2982,7 @@
             .comm-btn:last-child { border-radius:0 8px 8px 0; }
 
             .comm-btn.active{
-            background:#707070;
+            background: var(--button-active);
             opacity:1;
             font-weight:600;
             border-radius:8px;
@@ -3172,7 +3005,7 @@
             .solo-toggle{
             display:flex;
             width:100%;
-            background:#404040;
+            background: var(--button-inactive);
             border-radius:6px;
             overflow:hidden;
             }
@@ -3182,8 +3015,8 @@
             flex:1;
             padding:14px 0;
             border:none;
-            background:#404040;
-            color:#fff;
+            background: var(--button-inactive);
+            color:var(--color-white);
             font:500 16px/16px Inter, sans-serif;
             text-align:center;
             cursor:pointer;
@@ -3197,7 +3030,7 @@
 
             /* Active visual */
             .solo-btn.active{
-            background:#707070;
+            background: var(--button-active);
             opacity:1;
             font-weight:600;
             border-radius:6px;
@@ -3214,7 +3047,7 @@
             .solo3-toggle {
             display: flex;
             width: 100%;
-            background: #404040;
+            background:  var(--button-inactive);
             border-radius: 6px;
             overflow: hidden;
             }
@@ -3224,8 +3057,8 @@
             flex: 1;
             padding: 14px 0;
             border: none;
-            background: #404040;
-            color: #fff;
+            background:  var(--button-inactive);
+            color: var(--color-white);
             font: 500 16px/16px Inter, sans-serif;
             text-align: center;
             cursor: pointer;
@@ -3240,7 +3073,7 @@
 
             /* Active visual */
             .solo3-btn.active {
-            background: #707070;
+            background:  var(--button-active);
             opacity: 1;
             font-weight: 600;
             border-radius: 6px;
@@ -3265,9 +3098,9 @@
             flex-direction: column;
             gap: 8px;
             padding: 0px;
-            background: #303030;
+            background:  var(--color-drawer-bg);
             border-radius: 6px;
-            color: #fff;
+            color: var(--color-white);
             font-family: Inter, sans-serif;
             }
 
@@ -3275,7 +3108,7 @@
             flex: 1;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            background: #404040;
+            background:  var(--button-inactive);
             border-radius: 6px;
             overflow: hidden;
             }
@@ -3288,7 +3121,7 @@
             height: 48px;     /* fixed button height */
             padding: 0 16px;
 
-            background: #404040;
+            background:  var(--button-inactive);
             border: none;
             border-radius: 6px;
 
@@ -3301,7 +3134,7 @@
             font-family: Inter, sans-serif;
             font-size: 16px;
             letter-spacing: 0.5px;     /* technical look */
-            color: #fff;
+            color: var(--color-white);
 
             cursor: pointer;
             transition: background 0.2s, transform 0.1s, color 0.2s;
@@ -3309,13 +3142,12 @@
             }
 
             .middle-drawer-button:hover {
-            background: #505050;
-            font-weight: 600;
+            background:  var(--button-active);
             }
 
             /* Active state highlight */
             .middle-drawer-button.active {
-            background: #757575;
+            background:  var(--button-active);
             font-weight: 600;
             }
 
@@ -3333,14 +3165,14 @@
             align-items: center;        /* align icon and text vertically in the middle */
             gap: 8px;                   /* space between icon and text */
             padding: 14px 16px;
-            background: #000;
+            background:  var(--color-black);
             border-radius: 6px;
             font-weight: 500;
             font-size: 16px;
             line-height: 1;             /* consistent vertical alignment */
             width: 100%;
             box-sizing: border-box;
-            color: #fff;                /* make text visible */
+            color: var(--color-white);                /* make text visible */
             }
 
             .drawer-display .display-icon {
@@ -3468,7 +3300,7 @@
         justify-content: center;
         align-items: center;
         background-color: rgb(30, 30, 30);
-        color: white;
+        color: var(--color-white);
         border: none;
         border-radius: 8px;
         font-size: 9px;
@@ -3488,7 +3320,7 @@
 
         /* Armed state */
         .control-button button.armed {
-        background-color: black;
+        background-color: var(--color-black);
         box-shadow: none;
         animation: none;
         }
@@ -3543,7 +3375,7 @@
         /* Button label (reduced) */
         .button-label {
         margin-top: 6px;         /* was 8px */
-        color: #fff;
+        color: var(--color-white);
         text-align: center;
         font-family: Inter, sans-serif;
         font-size: 14px;
@@ -3591,9 +3423,9 @@
         flex-direction: column;
         gap: 8px; /* space between header and controls */
         padding: 10px;
-        background: #303030;
+        background:  var(--color-drawer-bg);
         border-radius: 6px;
-        color: #fff;
+        color: var(--color-white);
         font-family: Inter, sans-serif;
         }
 
@@ -3634,7 +3466,7 @@
         justify-content: center;
         gap: 4px;
         padding: 6px 6px;
-        background: #000;
+        background:  var(--color-black);
         border-radius: 6px;
         font-weight: 600;
         font-size: 16px;
@@ -3645,13 +3477,13 @@
         .status-display-value {
         font-size: 16px;
         font-weight: 500;
-        color: #fff;
+        color: var(--color-white);
         }
 
         .status-display-unit {
         font-size: 16px;
         font-weight: 500;
-        color: #757575;
+        color:  var(--text-inactive);
         }
 
 
@@ -3672,9 +3504,9 @@
             display: flex;
             flex-direction: column;
             padding: 0 10px;
-            background: #303030;
+            background:  var(--color-drawer-bg);
             border-radius: 6px;
-            color: #fff;
+            color: var(--color-white);
             font-family: Inter, sans-serif;
             }
 
@@ -3688,7 +3520,7 @@
                 position: relative;
                 height: 48px;
                 padding: 2;
-                background: #303030;    /* default = state 1 */
+                background:  var(--color-drawer-bg);    /* default = state 1 */
                 border: none;
                 border-radius: 6px;
                 display: flex;
@@ -3701,7 +3533,7 @@
                 font-size: 16px;
                 font-weight: 600;
                 letter-spacing: 0.5px;
-                color: #fff;
+                color: var(--color-white);
 
                 cursor: pointer;
                 transition: background 0.2s, transform 0.1s, color 0.2s;
@@ -3812,7 +3644,7 @@
             .battery-engine-status .divider {
             width: 1px;
             height: 24px;
-            background: #fff;
+            background: var(--color-white);
             opacity:1;
             }
 
@@ -3825,14 +3657,14 @@
             transition: filter 0.2s;
             }
             .battery-engine-status .battery-engine-label {
-            color: #fff;
+            color: var(--color-white);
             transition: color 0.2s;
             }
 
             /* Ensure label stays white in all states (can be tuned per state if needed) */
             .battery-engine-status[data-state="2"] .battery-engine-label,
             .battery-engine-status[data-state="3"] .battery-engine-label {
-            color: #fff;
+            color: var(--color-white);
             }
 
             /* --- state backgrounds --- */
@@ -3857,7 +3689,7 @@
 
             /* --- hover per state (place AFTER the rules above) --- */
             .battery-engine-status[data-state="1"]:hover { 
-            background:#707070;          /* darker gray on hover */
+            background: var(--button-active);          /* darker gray on hover */
             box-shadow: 0 0 14px rgba(255, 255, 255, 0.15);
             }
 
@@ -3882,7 +3714,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            color: #fff;             /* choose text color for green bg */
+            color: var(--color-white);             /* choose text color for green bg */
             pointer-events: none;    /* keep hover on the parent */
             }
 
@@ -3905,7 +3737,7 @@
             /* Toggle buttons */
             .drawer-button-relay {
             display: flex;
-            background: #404040;
+            background:  var(--button-inactive);
             border-radius: 6px;
             overflow: hidden;
             }
@@ -3914,8 +3746,8 @@
             flex: 1;
             padding: 14px 0;
             border: none;
-            background: #404040;
-            color: #fff;
+            background:  var(--button-inactive);
+            color: var(--color-white);
             font-size: 16px;
             line-height: 16px;
             font-weight: 500;
@@ -3929,8 +3761,8 @@
             .relay-btn.on  { border-radius: 6px; }
 
             .relay-btn.active {
-                background: #707070;
-                color: #fff;
+                background:  var(--button-active);
+                color: var(--color-white);
                 opacity: 1;   /* fully opaque */
                 font-weight: 600;
                 border-radius: 6px;
@@ -3939,7 +3771,7 @@
             /* White live-outline inside the selected button */
             .relay-btn.live {
             /* inner white stroke that doesn't change layout */
-            box-shadow: inset 0 0 0 2px #fff;
+            box-shadow: inset 0 0 0 2px var(--color-white);
             /* keep rounded corners of edge buttons */
             border-radius: inherit;
             transition: box-shadow 0.15s ease;
@@ -3965,8 +3797,8 @@
 
             /* Tokens */
             :root{
-            --wire-active:   #c8c8c8;  /* light gray */
-            --wire-inactive: #505050;  /* dark gray */
+            --wire-active: var(--color-light);  /* light gray */
+            --wire-inactive:var(--text-inactiv);  /* dark gray */
             --wire-width:    1;
             --wire-dash:     2 3;
             --wire-back:     8 8; 
@@ -4020,10 +3852,10 @@
 
         /* Container */
         .mission-card {
-        background: #404040;
+        background:  var(--button-inactive);
         border-radius: 8px;
         padding: 12px 14px;
-        color: #fff;
+        color: var(--color-white);
         font-family: Inter, sans-serif;
         }
         .mission-card + .mission-card { margin-top: 12px; } /* stack spacing */
@@ -4089,17 +3921,17 @@
             flex-direction: column;
             gap: 4px;
             padding-bottom: 12px;
-            background: #303030;
+            background:  var(--color-drawer-bg);
             border-radius: 6px;
-            color: #fff;
+            color: var(--color-white);
             font-family: Inter, sans-serif;
             }
 
             .mission-pleer {
-            background: #404040;
+            background:  var(--button-inactive);
             border-radius: 8px;
             padding: 8px 14px;
-            color: #fff;
+            color: var(--color-white);
             font-family: Inter, sans-serif;
             }
 
@@ -4116,11 +3948,11 @@
             font-variant-numeric: tabular-nums;   /* even monospaced digits */
             }
             .mission-pleer .meta-time{
-            color:#fff; opacity:.9; font-weight:600;
+            color:var(--color-white);; opacity:.9; font-weight:600;
             }
             .mission-pleer .meta-time:last-child{ text-align:right; }
             .mission-pleer .meta-title{
-            color:#fff; font-weight:600; opacity:.9;
+            color:var(--color-white); font-weight:600; opacity:.9;
             }
 
 
@@ -4129,15 +3961,15 @@
             .mission-pleer .mission-timeline{ position:relative; margin:6px 0 12px; }
             .mission-pleer .timeline-track{
             position:relative;
-            height:4px;
-            background:#6a6a6a;
+            height:3px;
+            background:var(--text-inactive);
             border-radius:999px;
             }
             /* end caps (light dots) */
             .mission-pleer .timeline-track::before,
             .mission-pleer .timeline-track::after{
             content:""; position:absolute; top:50%; width:8px; height:8px;
-            background:#bfbfbf; border-radius:50%; transform:translateY(-50%);
+            background:var(--color-light); border-radius:50%; transform:translateY(-50%);
             }
             .mission-pleer .timeline-track::before{ left:-6px; }
             .mission-pleer .timeline-track::after{ right:-6px; }
@@ -4151,7 +3983,7 @@
             width: 12px; height: 12px; border-radius: 50%;
             background: #d9d9d9;
             transform: translate(-50%, -50%);
-            box-shadow: inset 0 0 0 2px #404040;
+            box-shadow: inset 0 0 0 2px  var(--button-inactive);
 
             /* center the text and make it readable */
             display: flex;                    /* center label horizontally/vertically */
@@ -4170,7 +4002,7 @@
             left: 50%;
             transform: translateX(-50%);
             font: 500 12px/1 Inter, system-ui, sans-serif; /* compact line height */
-            color: #ffffff;
+            color: var(--color-white);
             white-space: nowrap;
             pointer-events: none;              /* label doesn't catch hover/clicks */
             z-index: 2;
@@ -4185,7 +4017,7 @@
             position:absolute; top:50%;
             width:16px; height:16px; border-radius:50%;
             transform:translate(-50%,-50%);
-            box-shadow: inset 0 0 0 2px #ffffff;
+            box-shadow: inset 0 0 0 2px var(--color-white);
             background:transparent;
             transition:left .22s ease;
             pointer-events:none;
@@ -4207,17 +4039,17 @@
             margin-left:auto;
             text-align:right;
             display:flex; flex-direction:column; gap:0px;
-            color:#bfbfbf;
+            color:var(--color-light);
             }
 
             .mission-pleer .pleer-btn{
             height:28px; min-width:28px;
             display:inline-flex; align-items:center; justify-content:center;
-            background:#2e2e2e; color:#fff; border:0px solid #5a5a5a;
+            background:var(--button-inactive); color:var(--color-white); border:0px solid var(--button-active);
             border-radius:6px; cursor:pointer;
             transition:filter .12s ease, transform .04s ease;
             }
-            .mission-pleer .pleer-btn:hover{ filter:brightness(1.08); }
+            .mission-pleer .pleer-btn:hover{ filter:brightness(1.5); }
             .mission-pleer .pleer-btn:active{ transform:translateY(1px); }
             .mission-pleer .pleer-btn[disabled]{ opacity:.4; cursor:default; }
 
@@ -4228,18 +4060,14 @@
 
             .mission-name{
             /* small caps look */
-            font: var(--type-h5);
-            color: var(--c-h); /* <- apply the pink you defined */
+            font: var(--type-caption-regular);
+            color: var(--color-light); /* <- apply the pink you defined */
             text-align: center;     /* center the text itself */
             }
             .mission-value {
-            font-family: Inter, system-ui, sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: #ffffff;  /* brighter than unit */
+            font: var(--type-caption-mono-regular);
+            color: var(--color-white);
             }
-
-
             .pleer-data-item {
             display: inline-flex;     /* single row */
             align-items: center;      /* vertical centering */
@@ -4247,32 +4075,19 @@
             height: 20px;             /* = icon box height */
             white-space: nowrap;      /* prevent wrapping that causes jumps */
             }
-
             .pleer-data-name {
-            /* small caps look */
-            font-family: Inter, system-ui, sans-serif;
-            font-weight: 500;
-            font-size: 12px;
-            letter-spacing: 0.6px;   /* tech look */
-            color: #858585;        /* muted gray */
+            font: var(--type-caption-mono-regular);
+            color: var(--color-light); 
             }
-
-            /* Value text (e.g., "Locked") */
             .pleer-data-value {
-            font-family: Inter, system-ui, sans-serif;
-            font-weight: 600;
-            font-size: 12px;
-            color: #ffffff;  /* brighter than unit */
+            font: var(--type-caption-mono-bold);
+            color: var(--color-white); 
+            }
+            .pleer-data-unit {
+            font: var(--type-caption-mono-regular);
+            color: var(--color-light); 
             }
 
-            .pleer-data-unit {
-            /* small caps look */
-            font-family: Inter, system-ui, sans-serif;
-            font-weight: 500;
-            font-size: 12px;
-            letter-spacing: 0.6px;   /* tech look */
-            color: #858585;        /* muted gray */
-            }
 
 
 
@@ -4288,7 +4103,7 @@
         align-items: center;
         gap: 4px;
         padding: 14px 16px;
-        background: #000;
+        background:  var(--color-black);
         border-radius: 6px;
         font-weight: 500;
         font-size: 16px;
@@ -4302,9 +4117,9 @@
         flex-direction: column;
         gap: 8px; /* space between header and controls */
         padding: 10px;
-        background: #303030;
+        background:  var(--color-drawer-bg);
         border-radius: 6px;
-        color: #fff;
+        color: var(--color-white);
         font-family: Inter, sans-serif;
         }
 
@@ -4313,7 +4128,7 @@
         height: 48px;               /* fixed button height */
         padding: 0;              /* remove extra padding */
 
-        background: #707070;
+        background:  var(--button-inactive);
         border: none;
         border-radius: 6px;
 
@@ -4327,7 +4142,7 @@
         font-size: 16px;
         font-weight: 600;
         letter-spacing: 0.5px;     /* technical look */
-        color: #fff;
+        color: var(--color-white);
 
         cursor: pointer;
         transition: background 0.2s, transform 0.1s, color 0.2s;
@@ -4344,7 +4159,7 @@
         }
 
         .big-drawer-button .button-drawer-label {
-        color: #fff;
+        color: var(--color-white);
         transition: color 0.2s;
         display: inline-block;    /* behaves well with flex parent */
         }
@@ -4353,11 +4168,11 @@
 
         /* Hover */
         .big-drawer-button.active:hover {
-        background: #555555;
+        filter: brightness(1.15); transition: filter .15s ease;
         }
 
         .big-drawer-button:hover {
-        background: #808080;
+        filter: brightness(1.15); transition: filter .15s ease;
         }
 
         /* Pressed */
@@ -4367,11 +4182,11 @@
 
         /* Active state */
         .big-drawer-button.active {
-        background: #505050;
+        background: var(--button-active);
         }
 
         .big-drawer-button.active .button-drawer-label {
-        color: #757575; /* gray text */
+        color:  var(--text-active); /* gray text */
         }
 
         .big-drawer-button.active .button-icon {
@@ -4402,8 +4217,8 @@
         }
         /* Single asset card */
         .asset-card{
-            background: #404040;
-            border: 1px solid #404040;
+            background:  var(--button-inactive);
+            border: 1px solid  var(--button-inactive);
             border-radius: 4px;
             padding: 10px;
             display: flex;
@@ -4467,29 +4282,29 @@
         }
         .metric{
             display: inline-flex; align-items: center; gap: 6px;
-            color: #fff;
+            color: var(--color-white);
             font: 600 16px/16px Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
             white-space: nowrap;
         }
         .metric .m-icon{
             width: 24px; height: 24px;
-            color: #fff;
+            color: var(--color-white);
 
         }
         .metric .unit{
             font: 500 16px/16px Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            color: #fff;
+            color: var(--color-white);
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         /* --- ASSETS: ensure cards remain visible --- */
         .pane-card {
             /* Card surface + spacing */
-            background: #404040;            /* visible against #303030 panel */
-            border: 1px solid #404040;      /* make border visible (was #404040 on #404040) */
+            background:  var(--button-inactive);            
+            border: 1px solid  var(--button-inactive);      /* make border visible (was  var(--button-inactive) on  var(--button-inactive)) */
             border-radius: 6px;
             padding: 6px 10px 6px 10px ;
             margin-bottom: 2px;             /* stack multiple cards */
-            color: #fff;                    /* readable text */
+            color: var(--color-white);                    /* readable text */
         }
 
         /* Parent layout: two columns (left info / right metrics) */
@@ -4535,7 +4350,7 @@
         .pane-card .asset-sub {
             grid-row: 2;
             font: 500 12px/16px Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            color: #757575;
+            color:  var(--text-inactive);
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
@@ -4555,7 +4370,7 @@
             align-items: center;
             gap: 6px;
             font: 600 16px/18px Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            color: #fff;
+            color: var(--color-white);
         }
 
         .pane-card .metric .m-icon {
@@ -4563,7 +4378,7 @@
         }
 
         .pane-card .metric .unit {
-            color: #757575; font-weight: 500;
+            color:  var(--text-inactive); font-weight: 500;
         }
 
         
@@ -4576,9 +4391,9 @@
         flex-direction: column;
         gap: 8px; /* space between header and controls */
         padding: 10px;
-        background: #303030;
+        background:  var(--color-drawer-bg);
         border-radius: 6px;
-        color: #fff;
+        color: var(--color-white);
         font-family: Inter, sans-serif;
         }
 
@@ -4611,7 +4426,7 @@
         /* Toggle buttons */
         .drawer-button-toggle {
         display: flex;
-        background: #404040;
+        background:  var(--button-inactive);
         border-radius: 6px;
         overflow: hidden;
         }
@@ -4620,8 +4435,8 @@
         flex: 1;
         padding: 14px 0;
         border: none;
-        background: #404040;
-        color: #fff;
+        background:  var(--button-inactive);
+        color: var(--color-white);
         font-size: 16px;
         line-height: 16px;
         font-weight: 500;
@@ -4635,8 +4450,8 @@
         .toggle-btn.on  { border-radius: 6px; }
 
         .toggle-btn.active {
-            background: #707070;
-            color: #fff;
+            background:  var(--button-active);
+            color: var(--color-white);
             opacity: 1;   /* fully opaque */
             font-weight: 600;
         }
@@ -4648,7 +4463,8 @@
         justify-content: center;
         gap: 4px;
         padding: 14px 14px;
-        background: #000;
+        background:  var(--color-black);
+        border: 1px solid var(--button-inactive);
         border-radius: 6px;
         font-weight: 600;
         font-size: 16px;
@@ -4660,13 +4476,13 @@
         .display-value {
         font-size: 16px;
         font-weight: 500;
-        color: #fff;
+        color: var(--color-white);
         }
 
         .display-unit {
         font-size: 16px;
         font-weight: 500;
-        color: #757575;
+        color:  var(--text-inactive);
         }
 
 
@@ -4681,7 +4497,7 @@
         justify-content: center;
         gap: 4px;
         padding: 14px 16px;
-        background: #000;
+        background:  var(--color-black);
         border-radius: 6px;
         font-size: 16px;
         line-height: 20px;
@@ -4690,7 +4506,7 @@
         .helm-display-value {
         font-size: 16px;
         font-weight: 500;
-        color: #757575;
+        color:  var(--text-inactive);
         }
     
 
@@ -4705,7 +4521,7 @@
         position: fixed;
         top: 50%; left: 50%;
         transform: translate(-50%, -50%);
-        background: #353535;
+        background: var(--color-drawer-bg);
         border-radius: 6px;
         padding: 20px;
         z-index: 1000;
@@ -4721,7 +4537,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        color: white;
+        color: var(--color-light);
         font-size: 16px;
         font-weight: 600;
         }
@@ -4732,7 +4548,7 @@
         height: 48px;     /* fixed button height */
         padding: 0;       /* remove extra padding */
 
-        background: #404040;
+        background:  var(--button-inactive);
         border: none;
         border-radius: 6px;
 
@@ -4746,7 +4562,7 @@
         font-size: 16px;
         font-weight: 500;
         letter-spacing: 0.5px;     /* technical look */
-        color: #757575;
+        color:  var(--text-inactive);
 
         cursor: pointer;
         transition: background 0.2s, transform 0.1s, color 0.2s;
@@ -4754,14 +4570,12 @@
         }
 
         .ap-mode-btn:hover {
-        background: #505050;
-        color: #fff;
+        font: var(--type-display-mono-bold);
+        background:var(--button-active); 
         }
         .ap-mode-btn.active {
-        font-weight: 600;
-        color: #fff;
-        background: #454545;
-
+        font: var(--type-display-mono-bold);
+        background:var(--color-black); 
         }
 
 
@@ -4790,13 +4604,89 @@
             pointer-events: none;
         }
 
-     /* MAGENTA / ERROR / BORDER */
+/* === INFO MODAL === */
+
+.modal-backdrop {
+  /* Fullscreen overlay */
+  position: fixed; inset: 0;
+  background: var(--color-black);
+  opacity: 0.8;
+  z-index: 9998;
+  pointer-events: auto; /* ensure backdrop catches clicks */
+}
+
+.info-modal-window{
+  /* Fixed and centered */
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px; 
+  max-width: 90vw;
+  background: var(--color-bg);
+  color: var(--color-light);
+  padding: 50px;
+  border-radius: 12px;
+  z-index: 9999; /* Above backdrop */
+}
+
+.modal-text{
+  color: var(--color-light);
+  font: var(--type-caption-regular);
+}
+
+/* Hidden utility */
+[hidden]{ display: none !important; }
 
 
-    * {
-    outline: 1px dashed rgba(181, 90, 169, 0.01);
+.info-modal-close{
+  position: absolute;
+  top: 16px; right: 16px;
+  font-size: 18px;
+  background: var(--color-bg);
+  color: var(--text-inactive);
+  cursor: pointer;
+  border: none;              /* make it look like an icon */
+  line-height: 1;
+  transition: color .2s ease;
+}
+.info-modal-close:hover{ color: var(--color-white); }
+
+.modal-illustration {
+  display: block;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 1 / 1;      /* reserve stable space */
+  object-fit: contain;
+  height: auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Static logo positioned on top of the GIF */
+.logo-overlay {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;               /* hidden by default */
+  transition: opacity 1s ease;  /* fade duration */
+  pointer-events: none;     /* clicks pass through */
+  z-index: 2;
+}
+
+/* Wrapper ensures relative positioning for overlay */
+.modal-content {
+  display: grid; 
+  gap: 18px;
+  justify-items: center;
+  position: relative; /* allows absolute positioning of overlay */
+}
+
+
+
     
-    }
+
+
 
         /* Gamepad Indicator Styles */
         #joystick-indicator {
@@ -4848,5 +4738,15 @@
 
         /* Battery Gauge Low Voltage State */
         .gauge-block.is-low .mini-gauge-fill {
-            background-color: #e12d39; /* A standard red color */
+            background-color: var(--gauge-red);
         }
+
+
+
+        
+
+
+        /* MAGENTA / ERROR / BORDER / TECH TEST COLOR*/
+    * {
+    outline: 1px dashed rgba(181, 90, 169, 0);
+    }
