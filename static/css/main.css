@@ -4597,7 +4597,7 @@
 
 /* === INFO MODAL === */
 
-.modal-backdrop{
+.modal-backdrop {
   /* Fullscreen overlay */
   position: fixed; inset: 0;
   background: var(--color-black);

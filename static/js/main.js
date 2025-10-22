@@ -555,81 +555,81 @@
 
 
 // ===== ANIMATION INFO MODAL =====
-// Transparent 1x1 pixel placeholder (keeps layout without showing anything)
+// ===== CROSSFADE TIMINGS (tweak these) =====
+// Delay after modal opens before starting GIF
+const START_DELAY_MS       = 500;   // start delay
+// Fallback GIF duration if data-gif-duration is missing
+const GIF_DURATION_FALLBACK= 4800;  // full GIF length in ms
+// How much earlier SVG starts fading in before GIF ends
+const CROSSFADE_OVERLAP_MS = 600;   // overlap window (bigger = earlier SVG)
+// Fade duration for both layers (keep in sync with CSS if set there)
+const FADE_MS              = 600;   // crossfade duration
+// Small safety lead to start fade slightly before theoretical end
+const EXTRA_TAIL_MS        = 120;   // compensates decode/refresh jitter
+
+// ===== ANIMATION (GIF + SVG layered crossfade) =====
 const INFO_PLACEHOLDER_SRC =
   "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
-// Play GIF once when modal opens, then smoothly fade to poster (SVG)
-function playGifOnce(){
-  const img = document.getElementById('info-gif');
-  if (!img) return;
-
-  const gifUrl   = img.dataset.gif;
-  const poster   = img.dataset.poster;
-  const duration = img.dataset.gifDuration ? parseInt(img.dataset.gifDuration, 10) : null;
-
-  // Clean previous timers/listeners
-  clearTimeout(img._stopTimer);
-  if (img._onLoadOnce) {
-    img.removeEventListener('load', img._onLoadOnce);
-    img._onLoadOnce = null;
-  }
-
-  // Ensure we have a transition; you can also put this in CSS
-  // (Avoid visibility to keep layout stable; rely on aspect-ratio in CSS)
-  img.style.transition = img.style.transition || 'opacity .35s ease';
-
-  // Start hidden but reserving space (opacity doesn't affect layout)
-  img.style.opacity = '0';
-
-  // Restart GIF with cache-busting
-  const busted = `${gifUrl}?t=${Date.now()}`;
-  img._onLoadOnce = function onLoadOnce(){
-    // Decode before showing to avoid first-frame flash
-    img.decode?.().catch(()=>{}).finally(() => {
-      // Fade GIF in
-      requestAnimationFrame(() => { img.style.opacity = '1'; });
-
-      // If we know the duration, schedule smooth cross-fade to poster
-      if (duration && poster) {
-        clearTimeout(img._stopTimer);
-        img._stopTimer = setTimeout(() => {
-          // Fade GIF out
-          img.style.opacity = '0';
-
-          // After fade-out completes, swap to poster and fade back in
-          const FADE_MS = 350; // must match CSS/inline transition duration
-          setTimeout(() => {
-            // Swap src to poster
-            img.src = poster;
-
-            // Wait for poster to load, then fade in
-            const onPosterLoad = () => {
-              img.decode?.().catch(()=>{}).finally(() => {
-                requestAnimationFrame(() => { img.style.opacity = '1'; });
-              });
-              img.removeEventListener('load', onPosterLoad);
-            };
-            img.addEventListener('load', onPosterLoad, { once:true });
-          }, FADE_MS);
-        }, duration);
-      }
-    });
-
-    img.removeEventListener('load', onLoadOnce);
-    img._onLoadOnce = null;
-  };
-  img.addEventListener('load', img._onLoadOnce, { once:true });
-
-  // Kick off loading
-  img.src = busted;
+function ensureFadeTransitions(gifEl, logoEl){
+  const t = `opacity ${FADE_MS}ms ease`;
+  // Set inline transitions only if none defined in CSS
+  if (gifEl && !gifEl.style.transition)  gifEl.style.transition  = t;
+  if (logoEl && !logoEl.style.transition) logoEl.style.transition = t;
 }
 
+function playGifWithCrossfade(){
+  const gifEl  = document.getElementById('info-gif');
+  const logoEl = document.getElementById('info-logo');
+  if (!gifEl || !logoEl) return;
+
+  // Read duration from data-attribute, fallback if absent
+  const dataDur = gifEl.dataset.gifDuration ? parseInt(gifEl.dataset.gifDuration, 10) : null;
+  const GIF_MS  = Number.isFinite(dataDur) ? dataDur : GIF_DURATION_FALLBACK;
+
+  // Cleanup any previous timers/listeners
+  clearTimeout(gifEl._xfadeTimer);
+  clearTimeout(gifEl._startTimer);
+  gifEl.onload = null;
+
+  // Initial visual states
+  gifEl.style.opacity  = '0'; // hidden (space reserved by CSS aspect-ratio)
+  logoEl.style.opacity = '0'; // svg hidden, will fade in later
+
+  // Make sure both layers have the same fade timing
+  ensureFadeTransitions(gifEl, logoEl);
+
+  // Bust cache to truly restart GIF
+  const busted = `${gifEl.dataset.gif}?t=${Date.now()}`;
+  gifEl.onload = () => {
+    // Wait for decode to avoid flash of first frame
+    gifEl.decode?.().catch(()=>{}).finally(() => {
+      // Fade GIF in
+      requestAnimationFrame(() => { gifEl.style.opacity = '1'; });
+
+      // Schedule crossfade: start SVG before GIF “ends”
+      const startAt = Math.max(0, GIF_MS - CROSSFADE_OVERLAP_MS - EXTRA_TAIL_MS);
+      gifEl._xfadeTimer = setTimeout(() => {
+        // Overlap: SVG fades in while GIF fades out
+        requestAnimationFrame(() => {
+          logoEl.style.opacity = '1'; // fade in svg (top layer)
+          gifEl.style.opacity  = '0'; // fade out gif (bottom layer)
+        });
+      }, startAt);
+    });
+  };
+
+  // Kick off GIF loading
+  gifEl.src = busted;
+}
+
+
 // ===== INFO MODAL =====
+// ===== INFO MODAL (hooks) =====
 (() => {
-  const trigger  = document.getElementById('info-trigger');    // Info icon
-  const modal    = document.getElementById('info-modal');      // Modal window
-  const backdrop = document.getElementById('info-backdrop');   // Backdrop
+  const trigger  = document.getElementById('info-trigger');
+  const modal    = document.getElementById('info-modal');
+  const backdrop = document.getElementById('info-backdrop');
   const closeBtn = modal ? modal.querySelector('.info-modal-close') : null;
 
   if (!trigger || !modal || !backdrop || !closeBtn) {
@@ -637,49 +637,49 @@ function playGifOnce(){
     return;
   }
 
-  // Timer for delayed GIF start
-  let infoGifDelayTimer = null;
+  let startDelayTimer = null;
 
   function openModal(){
     modal.hidden = false;
     backdrop.hidden = false;
     closeBtn.focus({ preventScroll:true });
 
-    // Prepare image: placeholder + hidden (opacity=0)
-    const img = document.getElementById('info-gif');
-    if (img) {
-      clearTimeout(img._stopTimer);
-      if (img._onLoadOnce) {
-        img.removeEventListener('load', img._onLoadOnce);
-        img._onLoadOnce = null;
-      }
-      img.src = INFO_PLACEHOLDER_SRC; // clean start
-      img.style.opacity = '0';        // keep space, no flicker
+    const gifEl  = document.getElementById('info-gif');
+    const logoEl = document.getElementById('info-logo');
+
+    // Reset to a clean state each open
+    if (gifEl){
+      clearTimeout(gifEl._xfadeTimer);
+      clearTimeout(gifEl._startTimer);
+      gifEl.src = INFO_PLACEHOLDER_SRC; // placeholder keeps layout
+      gifEl.style.opacity = '0';
+    }
+    if (logoEl){
+      logoEl.style.opacity = '0';
     }
 
-    // Delayed GIF start (500ms after opening)
-    clearTimeout(infoGifDelayTimer);
-    infoGifDelayTimer = setTimeout(() => {
-      playGifOnce();
-    }, 500);
+    clearTimeout(startDelayTimer);
+    startDelayTimer = setTimeout(() => {
+      playGifWithCrossfade();
+    }, START_DELAY_MS);
   }
 
   function closeModal(){
     modal.hidden = true;
     backdrop.hidden = true;
 
-    clearTimeout(infoGifDelayTimer);
+    clearTimeout(startDelayTimer);
 
-    // Reset image to placeholder and hidden
-    const img = document.getElementById('info-gif');
-    if (img) {
-      clearTimeout(img._stopTimer);
-      if (img._onLoadOnce) {
-        img.removeEventListener('load', img._onLoadOnce);
-        img._onLoadOnce = null;
-      }
-      img.src = INFO_PLACEHOLDER_SRC;
-      img.style.opacity = '0';
+    const gifEl  = document.getElementById('info-gif');
+    const logoEl = document.getElementById('info-logo');
+    if (gifEl){
+      clearTimeout(gifEl._xfadeTimer);
+      clearTimeout(gifEl._startTimer);
+      gifEl.src = INFO_PLACEHOLDER_SRC;
+      gifEl.style.opacity = '0';
+    }
+    if (logoEl){
+      logoEl.style.opacity = '0';
     }
 
     trigger?.focus({ preventScroll:true });
@@ -692,3 +692,4 @@ function playGifOnce(){
     if (!modal.hidden && e.key === 'Escape') closeModal();
   });
 })();
+
