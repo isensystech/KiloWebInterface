@@ -554,8 +554,8 @@
 
 
 
-// ===== ANIMATION INFO MODAL =====
-// ===== CROSSFADE TIMINGS (tweak these) =====
+// ===== ANIMATION INFO MODAL ===== //
+
 // Delay after modal opens before starting GIF
 const START_DELAY_MS       = 500;   // start delay
 // Fallback GIF duration if data-gif-duration is missing
@@ -625,7 +625,6 @@ function playGifWithCrossfade(){
 
 
 // ===== INFO MODAL =====
-// ===== INFO MODAL (hooks) =====
 (() => {
   const trigger  = document.getElementById('info-trigger');
   const modal    = document.getElementById('info-modal');
@@ -693,3 +692,141 @@ function playGifWithCrossfade(){
   });
 })();
 
+
+
+
+
+
+// ===== HELP MODAL ===== //
+
+
+// === DATA-DRIVEN TOUR ===
+// Each step points to an existing UI element by CSS selector
+const TOUR_STEPS = [
+  {
+    selector: '#info-trigger',
+    text: 'Open the Info modal to see vessel details.',
+    placement: 'right',         // top|right|bottom|left
+    allowInteract: true         // allow click on the target (e.g., open modal)
+  },
+  {
+    selector: '#help-trigger',
+    text: 'This toggles Help mode with tips across screens.',
+    placement: 'bottom',
+    allowInteract: false
+  },
+  {
+    selector: '#helm-toggle',   // пример существующей кнопки
+    text: 'Helm panel: manual/autopilot switching.',
+    placement: 'top',
+    allowInteract: true
+  }
+];
+
+// === RUNTIME ===
+(() => {
+  const trigger = document.getElementById('help-trigger');
+  const overlay = document.getElementById('coach-overlay');
+  const mask    = overlay.querySelector('.coach-mask');
+  const tip     = overlay.querySelector('.coach-tooltip');
+  const tipText = overlay.querySelector('.coach-text');
+  const btnPrev = overlay.querySelector('.coach-prev');
+  const btnNext = overlay.querySelector('.coach-next');
+  const btnClose= overlay.querySelector('.coach-close');
+
+  if (!trigger || !overlay) return;
+
+  let idx = 0;
+
+  // Open the tour
+  function openTour(startIndex=0){
+    idx = startIndex;
+    overlay.hidden = false;
+    renderStep();
+    document.addEventListener('keydown', onKey);
+    window.addEventListener('resize', renderStep);
+  }
+
+  // Close the tour
+  function closeTour(){
+    overlay.hidden = true;
+    document.removeEventListener('keydown', onKey);
+    window.removeEventListener('resize', renderStep);
+  }
+
+  // Keyboard navigation
+  function onKey(e){
+    if (e.key === 'Escape') return closeTour();
+    if (e.key.toLowerCase() === 'n' || e.key === 'ArrowRight') next();
+    if (e.key.toLowerCase() === 'p' || e.key === 'ArrowLeft')  prev();
+  }
+
+  function next(){ if (idx < TOUR_STEPS.length - 1){ idx++; renderStep(); } else { closeTour(); } }
+  function prev(){ if (idx > 0){ idx--; renderStep(); } }
+
+  // Core: position spotlight + tooltip near the target
+  function renderStep(){
+    const step = TOUR_STEPS[idx];
+    const target = document.querySelector(step.selector);
+    if (!target){
+      // If missing, skip to next
+      console.warn('[Tour] Target not found:', step.selector);
+      return next();
+    }
+
+    const r = target.getBoundingClientRect();
+
+    // Spotlight center + radius
+    const cx = r.left + r.width/2;
+    const cy = r.top  + r.height/2;
+    const rad = Math.sqrt((r.width*r.width + r.height*r.height))/2 + 16; // padding
+
+    // Set CSS vars for the mask
+    mask.style.setProperty('--x', `${cx}px`);
+    mask.style.setProperty('--y', `${cy}px`);
+    mask.style.setProperty('--r', `${rad}px`);
+
+    // Allow/deny clicking through the hole
+    mask.classList.toggle('hole-clickthrough', !!step.allowInteract);
+
+    // Tooltip text
+    tipText.textContent = step.text;
+
+    // Place tooltip around the target
+    const gap = 12; // distance from target
+    const tw = tip.offsetWidth || 300;  // rough width before first paint
+    const th = tip.offsetHeight || 80;  // rough height
+    let tx = cx, ty = cy;
+
+    // Simple placement logic
+    switch(step.placement){
+      case 'top':    tx = cx - tw/2; ty = r.top - th - gap;      break;
+      case 'right':  tx = r.right + gap; ty = cy - th/2;         break;
+      case 'bottom': tx = cx - tw/2; ty = r.bottom + gap;        break;
+      case 'left':   tx = r.left - tw - gap; ty = cy - th/2;     break;
+      default:       tx = cx - tw/2; ty = r.bottom + gap;
+    }
+
+    // Keep inside viewport (basic clamping)
+    const vw = window.innerWidth, vh = window.innerHeight;
+    tx = Math.max(12, Math.min(vw - tw - 12, tx));
+    ty = Math.max(12, Math.min(vh - th - 12, ty));
+
+    tip.style.transform = `translate(${Math.round(tx)}px, ${Math.round(ty)}px)`;
+
+    // Controls state
+    btnPrev.disabled = idx === 0;
+    btnNext.textContent = (idx === TOUR_STEPS.length - 1) ? 'Finish' : 'Next';
+  }
+
+  // Wire up
+  trigger.addEventListener('click', () => openTour(0));
+  btnNext.addEventListener('click', next);
+  btnPrev.addEventListener('click', prev);
+  btnClose.addEventListener('click', closeTour);
+
+  // Optional: close when clicking dark area (not the hole/tooltip)
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeTour();
+  });
+})();
