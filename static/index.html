@@ -249,53 +249,54 @@
 
             
 	<!-- MODAL THROTTLE -->
-            <div class="throttle-wrapper">
+        <div class="throttle-wrapper">
+            <!-- Throttle Up Button -->
+            <button class="throttle-button throttle-up">
+                <span class="throttle-icon">▲</span>
+            </button>
 
-                <!-- Throttle Up Button -->
-                <button class="throttle-button throttle-up">
-                    <span class="throttle-icon">▲</span>
-                </button>
-
-                    <div class="mini-gear-toggle">
-                        <div class="gear-track">
-
-                
-
-                            <!-- Forward label -->
-                            <div class="forward-button">
-                                <span class="text-f">F</span>
-                                <span class="text-forward">FORWARD</span>
-                            </div>
-
-                            <!-- Fill and thumb -->
-                            <div class="gear-fill" id="gear-fill"></div>
-                            <div class="gear-thumb">
-                                <span class="gear-thumb-text">
-                                    <span class="text-n">N</span>
-                                    <span class="text-neutral">NEUTRAL</span>
-                                </span>
-                            </div>
-
-
-                            <!-- Neutral label -->
-                            <div class="neutral-button">
-                                <span class="text-n">N</span>
-                                <span class="text-neutral">NEUTRAL</span>
-                            </div>
-
-                            <!-- Reverse label -->
-                            <div class="reverse-button">
-                                <span class="text-r">R</span>
-                                <span class="text-reverse">REVERSE</span>
-                            </div>
-                        </div>
+            <div class="mini-gear-toggle">
+                <div class="gear-track">
+                    <!-- Forward label -->
+                    <div class="forward-button">
+                        <span class="text-f">F</span>
+                        <span class="text-forward">FORWARD</span>
                     </div>
 
-                <!-- Throttle Down Button -->
-                <button class="throttle-button throttle-down">
-                    <span class="throttle-icon">▼</span>
-                </button>
+                    <!-- Commanded throttle fill (silver/gray) -->
+                    <div class="gear-fill" id="gear-fill"></div>
+                    
+                    <!-- Actual throttle feedback fill (yellow) - ADD THIS IF MISSING -->
+                    <div class="throttle-feedback-fill" id="throttle-feedback-fill"></div>
+                    
+                    <!-- Thumb with gear letter -->
+                    <div class="gear-thumb">
+                        <span class="gear-thumb-text">
+                            <span class="text-n" id="gear-letter-display">N</span>
+                            <span class="text-neutral">NEUTRAL</span>
+                        </span>
+                    </div>
+
+                    <!-- Neutral label -->
+                    <div class="neutral-button">
+                        <span class="text-n">N</span>
+                        <span class="text-neutral">NEUTRAL</span>
+                    </div>
+
+                    <!-- Reverse label -->
+                    <div class="reverse-button">
+                        <span class="text-r">R</span>
+                        <span class="text-reverse">REVERSE</span>
+                    </div>
+                </div>
             </div>
+
+            <!-- Throttle Down Button -->
+            <button class="throttle-button throttle-down">
+                <span class="throttle-icon">▼</span>
+            </button>
+        </div>
+
 
 
 
