@@ -388,8 +388,9 @@ function updateEngineTrimUI(trim) {
     
     const trimPointer = document.querySelector(".trim-pointer-img");
     if (trimPointer) {
-        // Reverse rotation: 0 = flat, 100 = tilted up
-        const rotation = -((trim / 100) * 30); // Negative for correct direction
+        const BASE = -15;   // deg: where value=0 should point (start of scale)
+        const SPAN = 30;    // deg: total sweep from 0 to 100
+        const rotation = (BASE + SPAN) - (trim / 100) * SPAN;
         trimPointer.style.transform = `rotate(${rotation}deg)`;
     }
 }

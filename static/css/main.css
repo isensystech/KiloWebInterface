@@ -22,7 +22,12 @@
     --type-caption-regular:  400 12px/1.3  var(--font-sans);
     --type-caption-bold:  700 12px/1.3  var(--font-sans);
 
+
+
+    /* TECH MONO Fonts */
+
     /* Display Fonts */
+    --big-display: 400 26px/1.35 var(--font-mono);
     --type-display-mono-regular: 400 16px/1.35 var(--font-mono);
     --type-display-mono-bold:    700 16px/1.35 var(--font-mono);
     
@@ -1179,7 +1184,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%; /* fixed screen coverage */
+            width: 100%; 
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
             display: flex;
@@ -1200,8 +1205,8 @@
             padding-bottom: 26px;
         }
         .editor-modal-title {
-             font: var(--typo-h2);
-          color: var(--c-h2); /* <- apply the pink you defined */
+            font: var(--type-h3);
+            color: var(--color-light);
             margin-bottom: 24px;
             margin: 0 0 12px 0;
             text-align: center;
@@ -1824,7 +1829,7 @@
             top: 12px;
             right: 12px;
             font-size: 18px;
-            color: var(--color-tech);
+            color: var(--button-active);
             cursor: pointer;
             transition: color 0.2s ease;
         }
@@ -1927,8 +1932,8 @@
         top: 0;
         width: 30px;
         height: 90%;
-        color:  var(--color-tech);
-        font: var(--type-display-mono-regular);
+        color:  var(--color-white);
+        font: var(--type-caption-mono-regular);
         color:  var(--text-inactive);
         line-height: 15px;
         text-align: center;
@@ -1992,8 +1997,8 @@
         width: 60px;
         height: 40px;
         background-color:  var(--color-black);
-        color:  var(--color-tech);
-        font: var(--type-display-mono-regular);
+        color:  var(--color-white);
+        font: var(--big-display);
         text-align: center;
         line-height: 40px;
         border-radius: 4px;
