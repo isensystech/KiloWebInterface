@@ -387,7 +387,8 @@ function updateEngineTrimUI(trim) {
     const trimThumb = document.getElementById("trim-thumb");
     if (trimThumb) {
         const position = 100 - trim;
-        trimThumb.style.top = `${position}%`;
+        trimThumb.style.top = `${(trimThumb.parentElement.offsetHeight - trimThumb.offsetHeight) * (position/100) + trimThumb.offsetHeight/2}px`; // keep thumb travel within half-thumb insets
+
     }
     
     const trimReadout = document.getElementById("trim-readout");
@@ -397,7 +398,9 @@ function updateEngineTrimUI(trim) {
     
     const trimPointer = document.querySelector(".trim-pointer-img");
     if (trimPointer) {
-        const rotation = -((trim / 100) * 30);
+        const BASE = -15;   // deg: where value=0 should point (start of scale)
+        const SPAN = 30;    // deg: total sweep from 0 to 100
+        const rotation = (BASE + SPAN) - (trim / 100) * SPAN;
         trimPointer.style.transform = `rotate(${rotation}deg)`;
     }
 }
