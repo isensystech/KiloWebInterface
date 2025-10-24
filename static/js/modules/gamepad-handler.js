@@ -423,7 +423,7 @@ function showTrimModal() {
             backdrop.style.display = "none";
             container.style.display = "none";
         }
-    }, 500);
+    }, 1500);
 }
 
 let listingModalTimeout = null;

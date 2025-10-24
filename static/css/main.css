@@ -2896,183 +2896,168 @@
 
     
 
+        /* DRAWER & BUTTON STYLES */
+
+        /* Buttons container */
+        .drawer-button-block {
+        display: flex;
+        flex-direction: column;
+        gap: 6px; /* space between header and controls */
+        padding: 6px 10px;
+        }
+
+        /* Buttons Title styles */
+        .drawer-button-header {
+        font: var(--type-h4);
+        color: var(--color-light); 
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        }
+        .drawer-button-icon {
+        font-size: 24px;
+        }
+        .drawer-button-title {
+        font: var(--type-h4);
+        color: var(--color-light); 
+        }
+
+        /* Buttons styles */
+        .drawer-button-toggle {
+        display:flex;
+        background-color: var(--button-inactive);
+        border-radius:6px;
+        overflow:hidden;
+        }
+        .toggle-btn {
+        flex:1;
+        padding:14px 0;
+        border:none;
+        border-radius: 6px;
+        background-color: var(--button-inactive);
+        color: var(--color-white);
+        font: var(--type-button-regular);
+        cursor:pointer;
+        text-align:center;
+        opacity:.5;
+        transition: opacity .2s, background-color .2s, color .2s;
+        }
+        .toggle-btn.active{
+        background-color: var(--button-active);
+        font: var(--type-button-bold); /* 700 14px/1.35 var(--font-sans) */
+        opacity:1;
+        }
+
+        /* White live-outline inside the selected button */
+        .toggle-btn.live {
+        box-shadow: inset 0 0 0 2px var(--color-white);
+        border-radius: inherit;
+        transition: box-shadow 0.15s ease;
+        }
+
+        /* Hover on the buttons */
+        .toggle-btn:hover { 
+        opacity: 0.8; 
+        }
+
+
+        /* Display block */
+        .drawer-display {
+        display:flex; 
+        justify-content:center; 
+        align-items:center; 
+        gap:8px;
+        padding:14px 16px; 
+        width:100%; 
+        box-sizing:border-box;
+        background:var(--color-black); 
+        color:var(--color-white); /* use palette tokens */
+        border-radius:6px;
+        font: var(--type-display-mono-regular); /* mono regular: weight size/line-height family */
+        line-height:1; /* keep tight vertical alignment if needed */
+        }
+
+        .drawer-display .display-icon {
+        width: 24px;
+        height: 24px;
+        display: block;      /* prevent inline misalignment */
+        }
 
 
 
-/* MAIN STYLE START !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+        /* Button styles */
 
+        .drawer-button {
+        width: 100%;
+        height: 48px;     /* fixed button height */
+        padding: 0;
 
-         /* DRAWER & BUTTON STYLES */
+        background-color: var(--button-inactive);
+        border: none;
+        border-radius: 6px;
 
-            /* Buttons container */
-            .drawer-button-block {
-            display: flex;
-            flex-direction: column;
-            gap: 6px; /* space between header and controls */
-            padding: 6px 10px;
-            }
+        /* Flexbox for icon + text */
+        display: flex;
+        align-items: center;       /* vertical centering relative to the button height */
+        justify-content: center;   /* horizontal centering */
+        gap: 8px;
 
-            /* Buttons Title styles */
-            .drawer-button-header {
-            font: var(--type-h4);
-            color: var(--color-light); 
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            }
-            .drawer-button-icon {
-            font-size: 24px;
-            }
-            .drawer-button-title {
-            font: var(--type-h4);
-            color: var(--color-light); 
-            }
+        color: var(--color-white);
+        font: var(--type-button-regular);
 
-            /* Buttons styles */
-            .drawer-button-toggle {
-            display:flex;
-            background-color: var(--button-inactive);
-            border-radius:6px;
-            overflow:hidden;
-            }
-            .toggle-btn {
-            flex:1;
-            padding:14px 0;
-            border:none;
-            border-radius: 6px;
-            background-color: var(--button-inactive);
-            color: var(--color-white);
-            font: var(--type-button-regular);
-            cursor:pointer;
-            text-align:center;
-            opacity:.5;
-            transition: opacity .2s, background-color .2s, color .2s;
-            }
-            .toggle-btn.active{
-            background-color: var(--button-active);
-            font: var(--type-button-bold); /* 700 14px/1.35 var(--font-sans) */
-            opacity:1;
-            }
+        cursor: pointer;
+        transition: opacity .2s, background-color .2s, color .2s;
+        box-sizing: border-box;
+        }
 
-            /* White live-outline inside the selected button */
-            .toggle-btn.live {
-            box-shadow: inset 0 0 0 2px var(--color-white);
-            border-radius: inherit;
-            transition: box-shadow 0.15s ease;
-            }
+        .drawer-button.active {
+        background-color: var(--button-active);
+        font: var(--type-button-bold); /* 700 14px/1.35 var(--font-sans) */
+        opacity:1;
+        }
 
-            /* Hover on the buttons */
-            .toggle-btn:hover { 
-            opacity: 0.8; 
-            }
+        /* Container for two blocks */
+        .button-button-row {
+        display: grid;          /* Arrange children horizontally */
+        flex: 1; 
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;              /* Space between blocks */
+        padding: 10px;
+        }
 
+        /* Container for two blocks and one display*/
+        .button-display-row {
+        display: grid;
+        grid-template-columns: 3fr 2fr; /* two equal columns */
+        gap: 10px;
+        }
 
-            /* Display block */
-            .drawer-display {
-            display:flex; 
-            justify-content:center; 
-            align-items:center; 
-            gap:8px;
-            padding:14px 16px; 
-            width:100%; 
-            box-sizing:border-box;
-            background:var(--color-black); 
-            color:var(--color-white); /* use palette tokens */
-            border-radius:6px;
-            font: var(--type-display-mono-regular); /* mono regular: weight size/line-height family */
-            line-height:1; /* keep tight vertical alignment if needed */
-            }
+        /* Container for two half-width buttons stacked vertically */
+        .button-half-block {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 0px;
+        }
 
-            .drawer-display .display-icon {
-            width: 24px;
-            height: 24px;
-            display: block;      /* prevent inline misalignment */
-            }
-
-
-
-            /* Button styles */
-
-            .drawer-button {
-            width: 100%;
-            height: 48px;     /* fixed button height */
-            padding: 0;
-
-            background-color: var(--button-inactive);
-            border: none;
-            border-radius: 6px;
-
-            /* Flexbox for icon + text */
-            display: flex;
-            align-items: center;       /* vertical centering relative to the button height */
-            justify-content: center;   /* horizontal centering */
-            gap: 8px;
-
-            color: var(--color-white);
-            font: var(--type-button-regular);
-
-            cursor: pointer;
-            transition: opacity .2s, background-color .2s, color .2s;
-            box-sizing: border-box;
-            }
-
-            .drawer-button.active {
-            background-color: var(--button-active);
-            font: var(--type-button-bold); /* 700 14px/1.35 var(--font-sans) */
-            opacity:1;
-            }
-
-            /* Container for two blocks */
-            .button-button-row {
-            display: grid;          /* Arrange children horizontally */
-            flex: 1; 
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;              /* Space between blocks */
-            padding: 10px;
-            }
-
-            /* Container for two blocks and one display*/
-            .button-display-row {
-            display: grid;
-            grid-template-columns: 3fr 2fr; /* two equal columns */
-            gap: 10px;
-            }
-
-            /* Container for two half-width buttons stacked vertically */
-            .button-half-block {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            padding: 0px;
-            }
-
-            /* Pump block container */
-            .half-relay {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background-color: var(--button-inactive);
-            border-radius: 6px;
-            overflow: hidden;
-            }       
-
-
-/* MAIN STYLE END !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+        /* Pump block container */
+        .half-relay {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background-color: var(--button-inactive);
+        border-radius: 6px;
+        overflow: hidden;
+        }       
 
 
 
 
 
+        /* TAB 1: Boat Control */
 
-
-
-
-
-         /* TAB 1: Boat Control */
-
-            
          
-         /* TAB 1: Engine Status Ignition, Off | Start, Engine Kill */
+         /* Engine Status Ignition, Off | Start, Engine Kill */
 
             /* Base button */
             .battery-engine-status {
