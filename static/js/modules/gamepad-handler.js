@@ -378,7 +378,8 @@ function updateEngineTrimUI(trim) {
     const trimThumb = document.getElementById("trim-thumb");
     if (trimThumb) {
         const position = 100 - trim;
-        trimThumb.style.top = `${position}%`;
+        trimThumb.style.top = `${(trimThumb.parentElement.offsetHeight - trimThumb.offsetHeight) * (position/100) + trimThumb.offsetHeight/2}px`; // keep thumb travel within half-thumb insets
+
     }
     
     const trimReadout = document.getElementById("trim-readout");
