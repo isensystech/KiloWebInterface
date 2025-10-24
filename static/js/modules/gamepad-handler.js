@@ -11,8 +11,8 @@ export const gamepadControlState = {
 };
 
 let gamepadIndex = null;
-let lastGearCrossing = null;
 let gearCrossingLockout = false;
+let enteredNeutralFrom = null; // Track which gear we entered neutral from ('F' or 'R')
 let lastThrottleAxis = 0;
 let lastSteeringAxis = 0;
 
@@ -198,48 +198,60 @@ function pollGamepad() {
     lastGamepadActivity = Date.now();
         
     // ========================================================================
-    // THROTTLE - ACCUMULATIVE (Left Stick Vertical - Axis 1)
+    // THROTTLE - ACCUMULATIVE WITH GEAR CROSSING PROTECTION
     // ========================================================================
-    const leftStickY = applyDeadzone(gamepad.axes[1]); // Keep raw: UP = negative
+    const leftStickY = applyDeadzone(gamepad.axes[1]); // UP = negative
 
-    if (leftStickY !== 0) {
-    const currentGear = getCurrentGear(gamepadControlState.throttle); // Define currentGear
-    
-    // Calculate new throttle value - double negative makes UP = positive
-    const delta = -leftStickY * THROTTLE_SENSITIVITY; // Negate: UP becomes positive
-    let newThrottle = gamepadControlState.throttle + delta;
-    newThrottle = Math.max(-100, Math.min(100, newThrottle));
-    
-    const newGear = getCurrentGear(newThrottle);
-    
-    
-        // Check for gear crossing
-        if (currentGear !== newGear && currentGear !== 'N' && newGear !== 'N') {
-            if (!gearCrossingLockout) {
+    const currentGear = getCurrentGear(gamepadControlState.throttle);
+
+    // CRITICAL: Check lockout release FIRST - stick must return to center
+    if (gearCrossingLockout && Math.abs(leftStickY) < 0.05) {
+        gearCrossingLockout = false;
+        enteredNeutralFrom = null;
+        console.log(`✅ Gear lockout RELEASED - stick returned to center`);
+    }
+
+    if (leftStickY !== 0 && !gearCrossingLockout) {
+        // Calculate proposed new throttle
+        const delta = -leftStickY * THROTTLE_SENSITIVITY;
+        let newThrottle = gamepadControlState.throttle + delta;
+        newThrottle = Math.max(-100, Math.min(100, newThrottle));
+        
+        const newGear = getCurrentGear(newThrottle);
+        
+        // Track which gear we entered neutral from
+        if (currentGear !== 'N' && newGear === 'N') {
+            enteredNeutralFrom = currentGear;
+            console.log(`ℹ️ Entered NEUTRAL from ${currentGear}`);
+        }
+        
+        // Check for illegal gear crossing: trying to exit neutral into opposite gear
+        if (currentGear === 'N' && newGear !== 'N' && enteredNeutralFrom !== null) {
+            if (enteredNeutralFrom !== newGear) {
+                // BLOCK: Trying to go from F→N→R or R→N→F without releasing stick
                 gearCrossingLockout = true;
-                lastGearCrossing = Date.now();
                 vibrateGamepad();
-                console.log(`⚠️ Gear crossing detected! Release stick to ${newGear === 'F' ? 'forward' : 'reverse'}.`);
+                console.log(`⚠️ GEAR CROSSING BLOCKED! Entered neutral from ${enteredNeutralFrom}, attempting ${newGear}. Release stick to center to shift.`);
+                
+                requestAnimationFrame(pollGamepad);
+                return; // Skip this frame entirely
             }
         }
         
-        // Check if lockout should be released
-        if (gearCrossingLockout && Math.abs(leftStickY) < 0.1) {
-            gearCrossingLockout = false;
-            console.log(`✅ Gear lockout released`);
+        // Safe to update throttle
+        gamepadControlState.throttle = Math.round(newThrottle);
+        
+        // Show gear popup if gear changed
+        if (currentGear !== newGear) {
+            showGearPopup(newGear);
         }
         
-        // Update throttle only if not in lockout
-        if (!gearCrossingLockout) {
-            gamepadControlState.throttle = Math.round(newThrottle);
-            
-            // Show gear popup if gear changed
-            if (currentGear !== newGear) {
-                showGearPopup(newGear);
-            }
-            
-            updateThrottleUI(gamepadControlState.throttle);
+        // Clear enteredNeutralFrom if we exit neutral in the same direction
+        if (currentGear === 'N' && newGear !== 'N' && enteredNeutralFrom === newGear) {
+            enteredNeutralFrom = null;
         }
+        
+        updateThrottleUI(gamepadControlState.throttle);
     }
 
     lastThrottleAxis = leftStickY;
@@ -303,22 +315,20 @@ function startGamepadPolling() {
 }
 
 // ============================================================================
-// UI UPDATE FUNCTIONS - AS PER YOUR SPECIFICATION
+// UI UPDATE FUNCTIONS
 // ============================================================================
 
-    function updateThrottleUI(throttle) {
-        const gearFill = document.getElementById("gear-fill");
-        const gearThumb = document.querySelector(".gear-thumb");
-        const gearThumbText = document.querySelector(".gear-thumb-text");
-        const gearLetterDisplay = document.getElementById("gear-letter-display");
-        
-        
+function updateThrottleUI(throttle) {
+    const gearFill = document.getElementById("gear-fill");
+    const gearThumb = document.querySelector(".gear-thumb");
+    const gearThumbText = document.querySelector(".gear-thumb-text");
+    const gearLetterDisplay = document.getElementById("gear-letter-display");
+    
     if (gearThumb) {
-        // Update only the silver pill position based on commanded throttle
         const visualPercent = throttle / 100;
         const VISUAL_HALF = 47.5;
         const visualOffset = visualPercent * VISUAL_HALF;
-        const thumbPos = 50 + visualOffset; // Changed from "50 - visualOffset"
+        const thumbPos = 50 + visualOffset;
         gearThumb.style.bottom = `${thumbPos}%`;
     }
         
@@ -327,7 +337,6 @@ function startGamepadPolling() {
         gearLetterDisplay.textContent = gearLetter;
     }
     
-    // Expand throttle wrapper on use (auto-collapses after 1 second)
     expandThrottleWrapper();
 }
 
@@ -388,14 +397,12 @@ function updateEngineTrimUI(trim) {
     
     const trimPointer = document.querySelector(".trim-pointer-img");
     if (trimPointer) {
-        // Reverse rotation: 0 = flat, 100 = tilted up
-        const rotation = -((trim / 100) * 30); // Negative for correct direction
+        const rotation = -((trim / 100) * 30);
         trimPointer.style.transform = `rotate(${rotation}deg)`;
     }
 }
 
 function updateListingUI() {
-    // This would update listing modal if it exists
     console.log(`Listing: Port=${gamepadControlState.port_trim}, Stbd=${gamepadControlState.starboard_trim}`);
 }
 
