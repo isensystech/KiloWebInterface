@@ -2560,7 +2560,8 @@
             .rpm-gauge .gauge-icon,
             .engine-temperature-gauge .gauge-icon,
             .battery-voltage-gauge .gauge-icon,
-            .fuel-gauge .gauge-icon {
+            .fuel-gauge .gauge-icon,
+            .drawer-tab .tab-icon  {
             width: 24px;
             height: 24px;
             }
@@ -2736,10 +2737,6 @@
         gap: 4px;  /* optional: spacing between title and button */
         }
 
-        /* "Safety" title */
-        .safety-block .drawer-button-title {
-        font: var(--type-h4);
-        }
 
         .kill-all-btn {
         width: 128px;
@@ -2828,18 +2825,6 @@
             border-radius: 4px 4px 0 0; /* only top corners rounded */
         }
 
-        /* Icon */
-        .drawer-tab .tab-icon {
-            width: 24px;
-            height: 24px;
-            
-        }
-
-        .drawer-tab .tab-icon svg {
-            width: 100%;
-            height: 100%;
-        }
-
         /* Show only the active pane; hide others */
         .drawer-content .tab-pane { 
             display: none; /* hidden by default */
@@ -2870,14 +2855,11 @@
             width: auto;                      /* let left/right define width */
             max-width: calc(100vw - var(--drawer-side-clear));
             position: fixed;                  /* if they are fixed already—this line is harmless */
-            /* If they are not fixed in your code, remove this line. */
         }
         }
 
 
 
-        
-        
 
          /* Content */
         
@@ -2899,22 +2881,184 @@
         }
         
 
-        /* Scroll */
+        /* SCROLL */
 
         /* Chrome/Safari/Edge */
         .drawer-content::-webkit-scrollbar { width: 8px; }
         .drawer-content::-webkit-scrollbar-track { background: var(--color-tech); }
         .drawer-content::-webkit-scrollbar-thumb { background: var(--gauge-red); border-radius: 4px; }
         .drawer-content::-webkit-scrollbar-thumb:hover { background: var(--gauge-green); }
-
         /* Firefox */
         .drawer-content { 
         scrollbar-color:  var(--button-inactive)  var(--color-drawer-bg); /* thumb track */
         scrollbar-width: thin;
         }
 
-        
-        /* BUTTONS DRAWER BUTTONS */
+    
+
+
+
+
+/* MAIN STYLE START !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+
+         /* DRAWER & BUTTON STYLES */
+
+            /* Buttons container */
+            .drawer-button-block {
+            display: flex;
+            flex-direction: column;
+            gap: 6px; /* space between header and controls */
+            padding: 6px 10px;
+            }
+
+            /* Buttons Title styles */
+            .drawer-button-header {
+            font: var(--type-h4);
+            color: var(--color-light); 
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            }
+            .drawer-button-icon {
+            font-size: 24px;
+            }
+            .drawer-button-title {
+            font: var(--type-h4);
+            color: var(--color-light); 
+            }
+
+            /* Buttons styles */
+            .drawer-button-toggle {
+            display:flex;
+            background-color: var(--button-inactive);
+            border-radius:6px;
+            overflow:hidden;
+            }
+            .toggle-btn {
+            flex:1;
+            padding:14px 0;
+            border:none;
+            border-radius: 6px;
+            background-color: var(--button-inactive);
+            color: var(--color-white);
+            font: var(--type-button-regular);
+            cursor:pointer;
+            text-align:center;
+            opacity:.5;
+            transition: opacity .2s, background-color .2s, color .2s;
+            }
+            .toggle-btn.active{
+            background-color: var(--button-active);
+            font: var(--type-button-bold); /* 700 14px/1.35 var(--font-sans) */
+            opacity:1;
+            }
+
+            /* White live-outline inside the selected button */
+            .toggle-btn.live {
+            box-shadow: inset 0 0 0 2px var(--color-white);
+            border-radius: inherit;
+            transition: box-shadow 0.15s ease;
+            }
+
+            /* Hover on the buttons */
+            .toggle-btn:hover { 
+            opacity: 0.8; 
+            }
+
+
+            /* Display block */
+            .drawer-display {
+            display:flex; 
+            justify-content:center; 
+            align-items:center; 
+            gap:8px;
+            padding:14px 16px; 
+            width:100%; 
+            box-sizing:border-box;
+            background:var(--color-black); 
+            color:var(--color-white); /* use palette tokens */
+            border-radius:6px;
+            font: var(--type-display-mono-regular); /* mono regular: weight size/line-height family */
+            line-height:1; /* keep tight vertical alignment if needed */
+            }
+
+            .drawer-display .display-icon {
+            width: 24px;
+            height: 24px;
+            display: block;      /* prevent inline misalignment */
+            }
+
+
+
+            /* Button styles */
+
+            .drawer-button {
+            width: 100%;
+            height: 48px;     /* fixed button height */
+            padding: 0;
+
+            background-color: var(--button-inactive);
+            border: none;
+            border-radius: 6px;
+
+            /* Flexbox for icon + text */
+            display: flex;
+            align-items: center;       /* vertical centering relative to the button height */
+            justify-content: center;   /* horizontal centering */
+            gap: 8px;
+
+            color: var(--color-white);
+            font: var(--type-button-regular);
+
+            cursor: pointer;
+            transition: opacity .2s, background-color .2s, color .2s;
+            box-sizing: border-box;
+            }
+
+            .drawer-button.active {
+            background-color: var(--button-active);
+            font: var(--type-button-bold); /* 700 14px/1.35 var(--font-sans) */
+            opacity:1;
+            }
+
+            /* Container for two blocks */
+            .button-button-row {
+            display: grid;          /* Arrange children horizontally */
+            flex: 1; 
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;              /* Space between blocks */
+            padding: 10px;
+            }
+
+            /* Container for two blocks and one display*/
+            .button-display-row {
+            display: grid;
+            grid-template-columns: 3fr 2fr; /* two equal columns */
+            gap: 10px;
+            }
+
+            /* Container for two half-width buttons stacked vertically */
+            .button-half-block {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0px;
+            }
+
+            /* Pump block container */
+            .half-relay {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background-color: var(--button-inactive);
+            border-radius: 6px;
+            overflow: hidden;
+            }       
+
+
+/* MAIN STYLE END !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
 
 
 
@@ -2925,6 +3069,219 @@
 
 
          /* TAB 1: Boat Control */
+
+            
+         
+         /* TAB 1: Engine Status Ignition, Off | Start, Engine Kill */
+
+            /* Base button */
+            .battery-engine-status {
+                position: relative;
+                height: 48px;
+                padding: 2;
+                background:  var(--color-drawer-bg);    /* default = state 1 */
+                border: none;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;    /* center icon+text vertically */
+                justify-content: center;/* center content horizontally */
+                gap: 8px;
+
+
+                font-family: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
+                font-size: 16px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                color: var(--color-white);
+
+                cursor: pointer;
+                transition: background 0.2s, transform 0.1s, color 0.2s;
+                box-sizing: border-box;
+            }
+
+            /* Hover/pressed */
+            /* Blue glow on hover */
+            .battery-engine-status:hover {
+                background: #808080;
+            }
+
+            .battery-engine-status:active { transform: scale(0.98); }
+
+
+            /* Hide all states by default */
+            .battery-engine-status .state-one,
+            .battery-engine-status .state-two,
+            .battery-engine-status .state-three {
+                display: none;
+                width: 100%;
+                height: 100%;
+            }
+
+            /* Show only the state that matches data-state */
+            .battery-engine-status[data-state="1"] .state-one   { 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                gap: 8px; }
+
+            .battery-engine-status[data-state="2"] .state-two   { 
+                display: flex; 
+                align-items: center; 
+                border-radius: 6px;
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.253);
+                justify-content: space-between; }
+
+            .battery-engine-status[data-state="3"] .state-three { 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                gap: 8px; }
+
+            /* Split layout (state 2) */
+            .battery-engine-status .half {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                height: 100%;
+                transition: background 0.2s, transform 0.1s;
+                cursor: pointer; /* make it clickable */
+            }
+
+            /* Hover effect on halves */
+            .battery-engine-status .half:hover {
+                background: rgba(255,255,255,0.1);
+            }
+
+            /* Hover effect on halves */
+            .battery-engine-status .half-off:hover {
+                border-radius: 6px 0 0 6px;
+            }
+
+
+
+
+
+
+            /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+            /* On hover of the left half, remove the parent's glow */
+            /* Requires :has() support */
+            .battery-engine-status[data-state="2"] .state-two {
+            transition: box-shadow .2s ease; /* smoother toggle */
+            }
+            .battery-engine-status[data-state="2"] .state-two:has(.half-off:hover) {
+            box-shadow: none; /* hide glow while hovering .half-off */
+            }
+
+            /* Your existing hover on the half */
+            .battery-engine-status .half-off:hover {
+            border-radius: 6px 0 0 6px; /* keep your corner change */
+            }
+
+
+
+
+
+
+
+
+
+
+            /* Hover effect on halves */
+            .battery-engine-status .half-start:hover {
+            border-radius: 0 6px 6px 0;
+            }
+
+            /* Pressed effect */
+            .battery-engine-status .half:active {
+            transform: scale(0.97);
+            }
+
+
+            .battery-engine-status .divider {
+            width: 1px;
+            height: 24px;
+            background: var(--color-white);
+            opacity:1;
+            }
+
+            /* Icon + label */
+            .battery-engine-status .button-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            filter: brightness(0) invert(1);   /* white */
+            transition: filter 0.2s;
+            }
+            .battery-engine-status .battery-engine-label {
+            color: var(--color-white);
+            transition: color 0.2s;
+            }
+
+            /* Ensure label stays white in all states (can be tuned per state if needed) */
+            .battery-engine-status[data-state="2"] .battery-engine-label,
+            .battery-engine-status[data-state="3"] .battery-engine-label {
+            color: var(--color-white);
+            }
+
+            /* --- state backgrounds --- */
+            .battery-engine-status[data-state="1"] { background:#606060; } /* single (gray) */
+            .battery-engine-status[data-state="2"] { background:#909090; } /* split */
+            .battery-engine-status[data-state="3"] { background:#bbbbbb;   
+                animation: blue-pulse 2.2s ease-in-out infinite; /* smooth, even pulse */
+            } 
+
+  
+            /* Keyframes: keep color, change blur/intensity slightly */
+            @keyframes blue-pulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.35); } /* base */
+            50%      { box-shadow: 0 0 14px rgba(255, 255, 255, 0.75); } /* brighter */
+            }
+
+            /* Respect reduced motion */
+            @media (prefers-reduced-motion: reduce) {
+            .battery-engine-status:hover { animation: none; box-shadow: 0 0 10px rgba(255, 255, 255, 0.55); }
+            }
+
+
+            /* --- hover per state (place AFTER the rules above) --- */
+            .battery-engine-status[data-state="1"]:hover { 
+            background: var(--button-active);          /* darker gray on hover */
+            box-shadow: 0 0 14px rgba(255, 255, 255, 0.15);
+            }
+
+            .battery-engine-status[data-state="3"]:hover { 
+            background:#909090;          /* slightly darker green on hover */
+            }
+
+            /* Ensure label can host an overlay */
+            .battery-engine-status .battery-engine-label{
+            position: relative;      /* create containing block for ::after */
+            display: inline-block;   /* stable overlay box */
+            }
+
+            /* On hover: hide original text and show replacement */
+            .battery-engine-status[data-state="3"]:hover .battery-engine-label{
+            color: transparent;      /* hide original string */
+            }
+            .battery-engine-status[data-state="3"]:hover .battery-engine-label::after{
+            content: "Stop Engine";  /* replacement text */
+            position: absolute;
+            inset: 0;                /* fill the label box */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-white);             /* choose text color for green bg */
+            pointer-events: none;    /* keep hover on the parent */
+            }
+
+
+            /* pressed is fine to keep generic */
+            .battery-engine-status:active { transform: scale(0.98); }
+
+
         
 
 
@@ -3087,15 +3444,6 @@
 
             /* === Pump === */
 
-            /* Horizontal container for two blocks */
-            .button-button-row {
-            display: grid;          /* Arrange children horizontally */
-            flex: 1; 
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;              /* Space between blocks */
-            padding: 10px;
-            }
-
 
             /* Pump block container */
             .button-button-block {
@@ -3107,15 +3455,6 @@
             border-radius: 6px;
             color: var(--color-white);
             font-family: Inter, sans-serif;
-            }
-
-            .half-relay {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background:  var(--button-inactive);
-            border-radius: 6px;
-            overflow: hidden;
             }
 
 
@@ -3516,216 +3855,6 @@
             }
 
 
-
-
-            /* TAB 4: Engine Status Ignition, Off | Start, Engine Kill */
-
-            /* Base button */
-            .battery-engine-status {
-                position: relative;
-                height: 48px;
-                padding: 2;
-                background:  var(--color-drawer-bg);    /* default = state 1 */
-                border: none;
-                border-radius: 6px;
-                display: flex;
-                align-items: center;    /* center icon+text vertically */
-                justify-content: center;/* center content horizontally */
-                gap: 8px;
-
-
-                font-family: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
-                font-size: 16px;
-                font-weight: 600;
-                letter-spacing: 0.5px;
-                color: var(--color-white);
-
-                cursor: pointer;
-                transition: background 0.2s, transform 0.1s, color 0.2s;
-                box-sizing: border-box;
-            }
-
-            /* Hover/pressed */
-            /* Blue glow on hover */
-            .battery-engine-status:hover {
-                background: #808080;
-            }
-
-            .battery-engine-status:active { transform: scale(0.98); }
-
-
-            /* Hide all states by default */
-            .battery-engine-status .state-one,
-            .battery-engine-status .state-two,
-            .battery-engine-status .state-three {
-                display: none;
-                width: 100%;
-                height: 100%;
-            }
-
-            /* Show only the state that matches data-state */
-            .battery-engine-status[data-state="1"] .state-one   { 
-                display: flex; 
-                align-items: center; 
-                justify-content: center; 
-                gap: 8px; }
-
-            .battery-engine-status[data-state="2"] .state-two   { 
-                display: flex; 
-                align-items: center; 
-                border-radius: 6px;
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.253);
-                justify-content: space-between; }
-
-            .battery-engine-status[data-state="3"] .state-three { 
-                display: flex; 
-                align-items: center; 
-                justify-content: center; 
-                gap: 8px; }
-
-            /* Split layout (state 2) */
-            .battery-engine-status .half {
-                flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-                height: 100%;
-                transition: background 0.2s, transform 0.1s;
-                cursor: pointer; /* make it clickable */
-            }
-
-            /* Hover effect on halves */
-            .battery-engine-status .half:hover {
-                background: rgba(255,255,255,0.1);
-            }
-
-            /* Hover effect on halves */
-            .battery-engine-status .half-off:hover {
-                border-radius: 6px 0 0 6px;
-            }
-
-
-
-
-
-
-            /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-
-            /* On hover of the left half, remove the parent's glow */
-            /* Requires :has() support */
-            .battery-engine-status[data-state="2"] .state-two {
-            transition: box-shadow .2s ease; /* smoother toggle */
-            }
-            .battery-engine-status[data-state="2"] .state-two:has(.half-off:hover) {
-            box-shadow: none; /* hide glow while hovering .half-off */
-            }
-
-            /* Your existing hover on the half */
-            .battery-engine-status .half-off:hover {
-            border-radius: 6px 0 0 6px; /* keep your corner change */
-            }
-
-
-
-
-
-
-
-
-
-
-            /* Hover effect on halves */
-            .battery-engine-status .half-start:hover {
-            border-radius: 0 6px 6px 0;
-            }
-
-            /* Pressed effect */
-            .battery-engine-status .half:active {
-            transform: scale(0.97);
-            }
-
-
-            .battery-engine-status .divider {
-            width: 1px;
-            height: 24px;
-            background: var(--color-white);
-            opacity:1;
-            }
-
-            /* Icon + label */
-            .battery-engine-status .button-icon {
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
-            filter: brightness(0) invert(1);   /* white */
-            transition: filter 0.2s;
-            }
-            .battery-engine-status .battery-engine-label {
-            color: var(--color-white);
-            transition: color 0.2s;
-            }
-
-            /* Ensure label stays white in all states (can be tuned per state if needed) */
-            .battery-engine-status[data-state="2"] .battery-engine-label,
-            .battery-engine-status[data-state="3"] .battery-engine-label {
-            color: var(--color-white);
-            }
-
-            /* --- state backgrounds --- */
-            .battery-engine-status[data-state="1"] { background:#606060; } /* single (gray) */
-            .battery-engine-status[data-state="2"] { background:#909090; } /* split */
-            .battery-engine-status[data-state="3"] { background:#bbbbbb;   
-                animation: blue-pulse 2.2s ease-in-out infinite; /* smooth, even pulse */
-            } 
-
-  
-            /* Keyframes: keep color, change blur/intensity slightly */
-            @keyframes blue-pulse {
-            0%, 100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.35); } /* base */
-            50%      { box-shadow: 0 0 14px rgba(255, 255, 255, 0.75); } /* brighter */
-            }
-
-            /* Respect reduced motion */
-            @media (prefers-reduced-motion: reduce) {
-            .battery-engine-status:hover { animation: none; box-shadow: 0 0 10px rgba(255, 255, 255, 0.55); }
-            }
-
-
-            /* --- hover per state (place AFTER the rules above) --- */
-            .battery-engine-status[data-state="1"]:hover { 
-            background: var(--button-active);          /* darker gray on hover */
-            box-shadow: 0 0 14px rgba(255, 255, 255, 0.15);
-            }
-
-            .battery-engine-status[data-state="3"]:hover { 
-            background:#909090;          /* slightly darker green on hover */
-            }
-
-            /* Ensure label can host an overlay */
-            .battery-engine-status .battery-engine-label{
-            position: relative;      /* create containing block for ::after */
-            display: inline-block;   /* stable overlay box */
-            }
-
-            /* On hover: hide original text and show replacement */
-            .battery-engine-status[data-state="3"]:hover .battery-engine-label{
-            color: transparent;      /* hide original string */
-            }
-            .battery-engine-status[data-state="3"]:hover .battery-engine-label::after{
-            content: "Stop Engine";  /* replacement text */
-            position: absolute;
-            inset: 0;                /* fill the label box */
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-white);             /* choose text color for green bg */
-            pointer-events: none;    /* keep hover on the parent */
-            }
-
-
-            /* pressed is fine to keep generic */
-            .battery-engine-status:active { transform: scale(0.98); }
 
 
 
@@ -4389,37 +4518,8 @@
         
 
          /* TAB 8: Sensors */
-        
-        /* Sensor block container */
-        .drawer-button-block {
-        display: flex;
-        flex-direction: column;
-        gap: 8px; /* space between header and controls */
-        padding: 10px;
-        background:  var(--color-drawer-bg);
-        border-radius: 6px;
-        color: var(--color-white);
-        font-family: Inter, sans-serif;
-        }
+    
 
-        /* Header */
-        .drawer-button-header {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 14px;
-        font-weight: 500;
-        opacity: 0.9;
-        }
-
-        .drawer-button-title {
-        font: var(--type-h4);
-          color: var(--c-h); /* <- apply the pink you defined */
-        }
-
-        .drawer-button-icon {
-        font-size: 24px;
-        }
 
         /* Controls row */
         .sensor-controls {
@@ -4428,28 +4528,6 @@
         gap: 10px;
         }
 
-        /* Toggle buttons */
-        .drawer-button-toggle {
-        display: flex;
-        background:  var(--button-inactive);
-        border-radius: 6px;
-        overflow: hidden;
-        }
-
-        .toggle-btn {
-        flex: 1;
-        padding: 14px 0;
-        border: none;
-        background:  var(--button-inactive);
-        color: var(--color-white);
-        font-size: 16px;
-        line-height: 16px;
-        font-weight: 500;
-        cursor: pointer;
-        text-align: center;
-        opacity: 0.5;
-        transition: opacity 0.2s, background 0.2s;
-        }
 
         .toggle-btn.off { border-radius: 6px; }
         .toggle-btn.on  { border-radius: 6px; }
@@ -4801,6 +4879,14 @@
         .gauge-block.is-low .mini-gauge-fill {
             background-color: var(--gauge-red);
         }
+
+
+
+
+
+
+
+
 
 
 
