@@ -47,8 +47,8 @@
     --text-inactive: #757575;
 
     --button-active:  #707070;
+    --button-selected: #505050;
     --button-inactive: #404040;
-
 
     /* Drawer active background, Drawer inactive icons */
     --color-drawer-bg: #303030;
@@ -129,7 +129,8 @@
     .info-unit, 
     .info-bar,
     .display-unit-small,
-    .kill-all-btn { 
+    .kill-all-btn,
+    .battery-engine-status { 
     letter-spacing: 0.6px; /* mono tracking tech look */
     } 
 
@@ -3072,11 +3073,7 @@
                 justify-content: center;/* center content horizontally */
                 gap: 8px;
 
-
-                font-family: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
-                font-size: 16px;
-                font-weight: 600;
-                letter-spacing: 0.5px;
+                font: var(--type-button-bold);
                 color: var(--color-white);
 
                 cursor: pointer;
@@ -3363,8 +3360,8 @@
             padding:14px 0;
             border:none;
             background: var(--button-inactive);
-            color:var(--color-white);
-            font:500 16px/16px Inter, sans-serif;
+            font: var(--type-button-bold);
+            color: var(--color-white);
             text-align:center;
             cursor:pointer;
             opacity:.5;
@@ -4791,14 +4788,20 @@
 }
 .coach-close{ background:transparent; color:var(--color-light,#dadada); }
 
+/* Subtle highlight for hovered/matched targets in Help mode */
+.coach-highlight {
+  outline: 2px dashed var(--active-yellow);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
 
-
-
-
-
-
-
-
+.coach-glow{
+outline-offset: 4px;        
+border-radius: 6px;       
+background: var(--button-selected);
+filter: drop-shadow(0 0 4px var(--color-white));
+transition: width 0.3s ease;
+}
 
 
 
@@ -4873,6 +4876,10 @@
 
 
 
+.status-modal {
+  backdrop-filter: none !important;
+  filter: none !important;
+}
 
 
         

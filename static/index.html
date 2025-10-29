@@ -1926,107 +1926,162 @@
 
         
         <!-- MODAL ACTIVE HELM PANEL -->
-        <div id="helm-modal" class="status-modal">
-            <div class="status-modal-content">
-                <div class="status-modal-header">
-                    <img src="/static/images/helm-icon.svg" alt="Helm icon" class="helm-icon">
-                    <span>AP status</span>
-                </div>
+        <div id="helm-modal" class="status-modal" hidden>
+                    <div class="status-modal-content">
+                        <div class="status-modal-header">
+                            <img src="/static/images/helm-icon.svg" alt="Helm icon" class="helm-icon">
+                            <span>AP status</span>
+                        </div>
 
-                <div class="helm-display">
-                    <span class="helm-display-value">Main</span>
-                </div>
-                <div class="helm-display">
-                    <span class="helm-display-value">AUX</span>
-                </div>
-                <div class="helm-display">
-                    <span class="helm-display-value">Robot</span>
-                </div>
+                        <div class="helm-display">
+                            <span class="helm-display-value">Main</span>
+                        </div>
+                        <div class="helm-display">
+                            <span class="helm-display-value">AUX</span>
+                        </div>
+                        <div class="helm-display">
+                            <span class="helm-display-value">Robot</span>
+                        </div>
 
-                <button id="ap-mode-btn" class="ap-mode-btn" data-mode="Manual">Take Control</button>
-            </div>
-        </div>
-
-
-        <!-- MODAL AUTO PILOT PANEL -->
-        <div id="auto-pilot-modal" class="status-modal">
-            <div class="status-modal-content">
-                
-                <!-- Modal Header -->
-                <div class="status-modal-header">
-                    <img src="/static/images/autopilot-icon.svg" alt="AP icon" class="ap-icon">
-                    <span>AP status</span>
-                </div>
-
-                <!-- Mode Buttons -->
-                <button class="ap-mode-btn" data-mode="Manual">Manual</button>
-                <button class="ap-mode-btn" data-mode="Hold">Hold</button>
-                <button class="ap-mode-btn" data-mode="Auto">Auto</button>
-                <button class="ap-mode-btn" data-mode="Loiter">Loiter</button>
-                <button class="ap-mode-btn" data-mode="Acro">Acro</button>
-                <button class="ap-mode-btn" data-mode="RTL">RTL</button>
-
-            </div>
-        </div>
-
-
-
-    </div>
-        </div>
-
-
-            <!-- === INFO MODAL === -->
-
-                <img id="info-trigger" alt="Info" class="options-icon" src="/static/images/info.svg"/>
-
-                <div id="info-backdrop" class="modal-backdrop" hidden></div>
-
-                <div id="info-modal" class="info-modal-window" role="dialog" aria-modal="true" aria-labelledby="info-title" hidden>
-                <button type="button" class="info-modal-close" aria-label="Close">✕</button>
-                    <div class="modal-content">
-                    <!-- Animated logo -->
-                    <img id="info-gif"
-                        class="modal-illustration"
-                        src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-                        alt="KILO animated logo"
-                        data-gif="/static/images/kilo-logo-animate.gif"
-                        data-gif-duration="4800"
-                        style="cursor:pointer;" />
-
-                    <!-- Static logo (poster) -->
-                    <img id="info-logo"
-                        class="modal-illustration logo-overlay"
-                        src="/static/images/kilo-logo.svg"
-                        alt="KILO static logo" />
-                    
-                    <h3 id="info-title">Info</h3>
-                    <p class="modal-text">This is a simple info modal. Replace image and text later.
-                        This is a simple info modal. Replace image and text later. This is a simple info modal. Replace image and text later.
-                        This is a simple info modal. Replace image and text later.
-                    </p>
+                        <button id="ap-mode-btn" class="ap-mode-btn" data-mode="Manual">Take Control</button>
                     </div>
+                </div>
 
+
+                <!-- MODAL AUTO PILOT PANEL -->
+        <div id="auto-pilot-modal" class="status-modal" hidden>
+                    <div class="status-modal-content">
+                        
+                        <!-- Modal Header -->
+                        <div class="status-modal-header">
+                            <img src="/static/images/autopilot-icon.svg" alt="AP icon" class="ap-icon">
+                            <span>AP status</span>
+                        </div>
+
+                        <!-- Mode Buttons -->
+                        <button class="ap-mode-btn" data-mode="Manual">Manual</button>
+                        <button class="ap-mode-btn" data-mode="Hold">Hold</button>
+                        <button class="ap-mode-btn" data-mode="Auto">Auto</button>
+                        <button class="ap-mode-btn" data-mode="Loiter">Loiter</button>
+                        <button class="ap-mode-btn" data-mode="Acro">Acro</button>
+                        <button class="ap-mode-btn" data-mode="RTL">RTL</button>
+
+                    </div>
                 </div>
 
 
 
-<!-- === HELP MODAL === -->
-
-<!-- Help trigger -->
-<img id="help-trigger" alt="Help" class="options-icon" src="/static/images/help.svg"/>
-
-<!-- Coach overlay (insert once near the end of body) -->
-<div id="coach-overlay" hidden>
-  <div class="coach-mask"></div>
-  <div class="coach-tooltip" role="dialog" aria-live="polite">
-    <div class="coach-text"></div>
-    <div class="coach-controls">
-      <button type="button" class="coach-prev">Back</button>
-      <button type="button" class="coach-next">Next</button>
-      <button type="button" class="coach-close" aria-label="Close">✕</button>
     </div>
-  </div>
-</div>
+        </div>
+
+
+        <!-- === INFO MODAL === -->
+
+        <img id="info-trigger" alt="Info" class="options-icon" src="/static/images/info.svg"/>
+
+        <div id="info-backdrop" class="modal-backdrop" hidden></div>
+
+        <div id="info-modal" class="info-modal-window" role="dialog" aria-modal="true" aria-labelledby="info-title" hidden>
+        <button type="button" class="info-modal-close" aria-label="Close">✕</button>
+            <div class="modal-content">
+            <!-- Animated logo -->
+            <img id="info-gif"
+                class="modal-illustration"
+                src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                alt="KILO animated logo"
+                data-gif="/static/images/kilo-logo-animate.gif"
+                data-gif-duration="4800"
+                style="cursor:pointer;" />
+
+            <!-- Static logo (poster) -->
+            <img id="info-logo"
+                class="modal-illustration logo-overlay"
+                src="/static/images/kilo-logo.svg"
+                alt="KILO static logo" />
+            
+            <h3 id="info-title">Info</h3>
+            <p class="modal-text">This is a simple info modal. Replace image and text later.
+                This is a simple info modal. Replace image and text later. This is a simple info modal. Replace image and text later.
+                This is a simple info modal. Replace image and text later.
+            </p>
+
+<!-- Content names + links -->
+<!-- Lorem Ipsum start
+
+            <section class="info-credits" aria-labelledby="info-credits-title">
+            
+                <div class="status-modal-header" id="info-credits-title">
+                    <img src="/static/images/crew.svg" alt="Team icon" class="helm-icon">
+                    <span>Team</span>
+                </div>
+
+                <ul class="team-list">
+
+                    <li class="team-item">
+                    <img class="team-avatar" src="/static/images/avatars/kilo-alex.png" alt="Alex Bean avatar">
+                        <div class="team-meta">
+                            <strong class="team-name">John Dow</strong>
+                            <span class="team-role">Product Lead</span>
+                            <span class="team-contact">
+                            <a href="mailto:john@example.com">john@example.com</a> · 
+                            <a href="https://www.linkedin.com/in/john" target="_blank" rel="noopener">LinkedIn</a>
+                            </span>
+                        </div>
+                    </li>
+
+                    <li class="team-item">
+                    <img class="team-avatar" src="/static/images/avatars/kilo-scott.png" alt="Scott McLeslie avatar">
+                        <div class="team-meta">
+                            <strong class="team-name">Scott McLeslie</strong>
+                            <span class="team-role">Systems Engineering</span>
+                            <span class="team-contact">
+                            <a href="mailto:scott@example.com">scott@example.com</a>
+                            </span>
+                        </div>
+                    </li>
+
+                    <li class="team-item">
+                    <img class="team-avatar" src="/static/images/avatars/kilo-katrin.png" alt="Katrin Barshe avatar">
+                        <div class="team-meta">
+                            <strong class="team-name">Katrin Barshe</strong>
+                            <span class="team-role">Lead Designer</span>
+                            <span class="team-contact">
+                            <a href="mailto:kb@example.com">kb@example.com</a> · 
+                            <a href="https://katrinbarshe.com" target="_blank" rel="noopener">Website</a>
+                            </span>
+                        </div>
+                    </li>
+
+                </ul>
+            </section>
+
+Lorem Ipsum end -->
+
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- === HELP MODAL === -->
+
+        <!-- Help trigger -->
+        <img id="help-trigger" alt="Help" class="options-icon" src="/static/images/help.svg"/>
+
+        <!-- Coach overlay (insert once near the end of body) -->
+        <div id="coach-overlay" hidden>
+            <div class="coach-mask"></div>
+            <div class="coach-tooltip" role="dialog" aria-live="polite">
+                <div class="coach-text"></div>
+                <div class="coach-controls">
+                <button type="button" class="coach-prev">Back</button>
+                <button type="button" class="coach-next">Next</button>
+                <button type="button" class="coach-close" aria-label="Close">✕</button>
+                </div>
+            </div>
+        </div>
 
 
 
