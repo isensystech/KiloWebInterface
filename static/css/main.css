@@ -4806,6 +4806,15 @@ transition: width 0.3s ease;
 
 
 
+/* TOOLTIPS */
+
+/* Optional: different arrows/colors per placement */
+[data-coach-placement="top"] .coach-tooltip { transform-origin: bottom center; }
+[data-coach-placement="right"] .coach-tooltip { transform-origin: left center; }
+
+
+
+
 
 
 

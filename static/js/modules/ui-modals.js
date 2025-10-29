@@ -337,26 +337,14 @@ function playGifWithCrossfade(){
 
 // = DATA-DRIVEN TOUR =
 // Each step points to an existing UI element by CSS selector
-const TOUR_STEPS = [
-  {
-    selector: '#info-trigger',
-    text: 'Open the Info modal to see vessel details.',
-    placement: 'right',         // top|right|bottom|left
-    allowInteract: true         // allow click on the target (e.g., open modal)
-  },
-  {
-    selector: '#help-trigger',
-    text: 'This toggles Help mode with tips across screens.',
-    placement: 'top',
-    allowInteract: false
-  },
-  {
-    selector: '#helm-toggle',  
-    text: 'Helm panel: manual/autopilot switching.',
-    placement: 'bottom',
-    allowInteract: true
-  }
-];
+// Automatically collect all elements with data-coach-text
+const TOUR_STEPS = Array.from(document.querySelectorAll('[data-coach-text]')).map(el => ({
+  selector: `#${el.id}`,
+  text: el.dataset.coachText,
+  placement: el.dataset.coachPlacement || 'bottom',
+  allowInteract: el.dataset.coachInteract === 'true'
+}));
+
 
 // === RUNTIME ===
 (() => {
