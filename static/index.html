@@ -367,135 +367,134 @@
         </div>
 
 
+        
         <!-- MODAL GAUGES PANEL -->
         <div class="gauges-button-panel">
   
             <div class="gauges-panel">
 
                 <!-- Active Helm Gauge -->
-                <div class="active-helm-gauge gauge-block">
-                    <div class="active-helm-gauge gauge-block">
-                        <img src="/static/images/helm-icon.svg" alt="Rudder Icon" class="gauge-icon">
-                        <div class="gauge-label">Active Helm</div>
-                        <div class="gauge-value">Main</div>
-                    </div>
+                <div class="active-helm-gauge gauge-block" id="active-helm-gauge">
+                    <img src="/static/images/helm-icon.svg" alt="Rudder Icon" class="gauge-icon">
+                    <div class="gauge-label" id="helm-gauge-label">Active Helm</div>
+                    <div class="gauge-value" id="helm-gauge-value">Main</div>
                 </div>
 
                 <!-- AP Status Gauge -->
-                <div class="ap-status-gauge gauge-block">
-                    <div class="ap-status-gauge gauge-block">
+                <div class="ap-status-gauge gauge-block" id="ap-status-gauge">
                     <img src="/static/images/autopilot-icon.svg" alt="AP Status Icon" class="gauge-icon">
-                    <div class="gauge-label">AP status</div>
-                    <div id="ap_mode" class="gauge-value">Mission</div>
-                    </div>
+                    <div class="gauge-label" id="ap-gauge-label">AP status</div>
+                    <div class="gauge-value" id="ap_mode">Mission</div>
                 </div>
 
                 <!-- Speed / Avg Gauge -->
-                <div class="speed-avg-gauge gauge-block">
+                <div class="speed-avg-gauge gauge-block" id="speed-avg-gauge">
                     <div class="speed-avg-gauge gauge-block" style="--pct: 39%;">
                         <!-- icon -->
                         <img src="/static/images/speed.svg" alt="Speed Icon" class="gauge-icon">
 
-                        <!-- value line -->
-                        <div class="gauge-line">
-                            <span id="groundspeed_ms" class="value value-lg">38.6</span>
-                            <span class="unit unit-lg"> km/h</span>
+                        <!-- Speed -->
+                        <div class="gauge-line" id="speed-gauge-line">
+                            <span class="value value-lg" id="groundspeed_ms">38.6</span>
+                            <span class="unit unit-lg" id="speed-gauge-unit">km/h</span>
                         </div>
 
-                        <!-- mini gauge bar -->
-                        <div class="mini-gauge" role="img" aria-label="Speed level">
-                            <div class="mini-gauge-fill"></div>
+                        <!-- gauge bar -->
+                        <div class="mini-gauge" id="gauge-speed">
+                            <div class="mini-gauge-fill" id="gauge-fill-speed"></div>
                         </div>
 
-                        <!-- avg line -->
-                        <div class="gauge-line gauge-line--small">
-                            <span class="label">AVG&nbsp;</span>
-                            <span class="value value-sm">38.6</span>
-                            <span class="unit unit-sm"> km/h</span>
+                        <!-- AVG -->
+                        <div class="gauge-line gauge-line--small" id="avg-gauge-line">
+                            <span class="label" id="avg-gauge-label">AVG&nbsp;</span>
+                            <span class="value value-sm" id="avg-gauge-value">38.6</span>
+                            <span class="unit unit-sm" id="avg-gauge-unit"> km/h</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- RPM Gauge block -->
-                <div class="rpm-gauge gauge-block">
+                <div class="rpm-gauge gauge-block" id="rpm-gauge">
                     <div class="rpm-gauge gauge-block" style="--pct: 64%;">
                         <!-- icon -->
                         <img src="/static/images/rpm-icon.svg" alt="RPM Icon" class="gauge-icon">
 
                         <!-- value line -->
                         <div class="gauge-line">
-                            <span class="value value-lg">3.200</span>
-                            <span class="unit unit-lg"> RPM</span>
+                            <span class="value value-lg" id="rpm-gauge-value">3.200</span>
+                            <span class="unit unit-lg" id="rpm-gauge-unit"> RPM</span>
                         </div>
 
-                        <!-- mini gauge bar -->
-                        <div class="mini-gauge" role="img" aria-label="RPM level">
-                            <div class="mini-gauge-fill"></div>
+                        <!-- gauge bar -->
+                        <div class="mini-gauge" id="mini-gauge-rpm" role="img" aria-label="RPM level">
+                            <div class="mini-gauge-fill" id="rpm-gauge-fill"></div>
                         </div>
                     </div>
 
                 </div>
 
                 <!-- Engine Temperature Gauge -->
-                <div class="engine-temperature-gauge gauge-block">
+                <div class="engine-temperature-gauge gauge-block" id="engine-temperature-gauge">
                     <div class="engine-temperature-gauge gauge-block hot" style="--pct: 72%;">
                         <!-- icon -->
                         <img src="/static/images/engine.svg" alt="Engine Temperature Icon" class="gauge-icon">
 
-                        <!-- value line -->
-                        <div class="gauge-line">
-                            <span class="value value-lg">134</span>
-                            <span class="unit unit-lg">ºC</span>
+                        <!-- Temperature -->
+                        <div class="gauge-line" id="engine-temperature-gauge">
+                            <span class="value value-lg" id="engine-temperature-gauge-value">134</span>
+                            <span class="unit unit-lg" id="engine-temperature-gauge-unit">ºC</span>
                         </div>
 
-                        <!-- mini gauge bar -->
-                        <div class="mini-gauge" role="img" aria-label="Engine temperature level">
-                            <div class="mini-gauge-fill"></div>
+                        <!-- gauge bar -->
+                        <div class="mini-gauge" id="engine-temperature-mini-gauge" role="img" aria-label="Engine temperature level">
+                            <div class="mini-gauge-fill" id="engine-temperature-mini-gauge-fill"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Battery Voltage Gauge block -->
-                <div id="battery-gauge-10-6" class="battery-voltage-gauge gauge-block" style="--pct: 0%;">
+                <div class="battery-voltage-gauge gauge-block" id="battery-gauge-10-6" style="--pct: 0%;">
                     <img src="/static/images/battery.svg" alt="Battery Icon" class="gauge-icon">
-                    
-                    <div class="gauge-line">
-                        <span class="label-muted">Start&nbsp;</span>
-                        <span class="value-strong js-voltage">--</span>
-                        <span class="unit-muted">V</span>
+
+                    <!-- Voltage -->
+                    <div class="gauge-line" id="battery-voltage-gauge">
+                        <span class="label-muted" id="voltage-gauge-label">Start&nbsp;</span>
+                        <span class="value-strong js-voltage" id="voltage-gauge-value">--</span>
+                        <span class="unit-muted" id="voltage-gauge-unit">V</span>
                     </div>
                     
-                    <div class="mini-gauge" role="img" aria-label="Battery level">
-                        <div class="mini-gauge-fill"></div>
+                    <div class="mini-gauge" id="voltage-mini-gauge" role="img" aria-label="Battery level">
+                        <div class="mini-gauge-fill" id="voltage-mini-gauge-fill"></div>
                     </div>
                 </div>
 
                 <!-- Fuel Gauge block -->
-                <div class="fuel-gauge gauge-block">
+                <div class="fuel-gauge gauge-block" id="fuel-gauge">
                     <!-- Fuel Gauge (like Speed) -->
                     <div class="fuel-gauge gauge-block" style="--pct: 37%;">
                         <!-- icon -->
                         <img src="/static/images/fuel.svg" alt="Fuel Icon" class="gauge-icon">
 
                         <!-- main value (gallons) -->
-                        <div class="gauge-line">
-                            <span class="value value-lg">12.23</span>
-                            <span class="unit unit-lg">gal</span>
+                        <div class="gauge-line" id="fuel-gauge-line">
+                            <span class="value value-lg" id="fuel-gauge-value">12.23</span>
+                            <span class="unit unit-lg" id="fuel-gauge-unit">gal</span>
                         </div>
 
-                        <!-- mini gauge bar: level 0..100% -->
-                        <div class="mini-gauge" role="img" aria-label="Fuel level">
-                            <div class="mini-gauge-fill"></div>
+                        <!-- gauge bar -->
+                        <div class="mini-gauge" id="fuel-mini-gauge" role="img" aria-label="Fuel level">
+                            <div class="mini-gauge-fill" id="fuel-mini-gauge-fill"></div>
                         </div>
 
                         <!-- burn rate -->
-                        <div class="gauge-line gauge-line--rate">
-                            <span class="value-rate">3.5</span>
-                            <span class="unit-rate">G/Hr</span>
+                        <div class="gauge-line gauge-line--rate" id="fuel-burn-rate-gauge">
+                            <span class="value-rate" id="fuel-burn-gauge-value">3.5</span>
+                            <span class="unit-rate" id="fuel-burn-gauge-unit">G/Hr</span>
                         </div>
                     </div>
                 </div>
             </div>
+
 
 
             <!-- KILL ALL BUTTON -->
