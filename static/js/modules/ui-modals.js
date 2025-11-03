@@ -1,53 +1,7 @@
-
-// ============================================================================
-// ======== Import required functions from ui-buttons
-// ======== import { initializeSafetyCaps, initializeButtons } from './ui-buttons.js';
-
-// ======= console.log('DOM loaded, initializing application');
-
-// ======= document.addEventListener('DOMContentLoaded', () => {
-    
-// ======= console.log('Initializing safety caps and buttons');
-// =======   initializeSafetyCaps();
-// =======  initializeButtons();
-    
-    // Initialize AP toggle modal
-// =======   initializeAPToggle();
-    
-    // Initialize Helm toggle modal
-// =======   initializeHelmToggle();
-// ======= }); 
-
-
-
-
-
-
-
-
-console.log('DOM loaded, initializing application');
-
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('Initializing modals');
-
-  initializeAPToggle();
-  initializeHelmToggle();
-});
-
-
-
-
-
-
-
-
-
-
-
 // ============================================================================
 // AP (AUTOPILOT) TOGGLE MODAL
 // ============================================================================
-function initializeAPToggle() {
+export function initializeAPToggle() {
     const apToggleBtn = document.getElementById('ap-toggle');
     const apModal = document.getElementById('auto-pilot-modal');
     const apModeButtons = apModal?.querySelectorAll('.ap-mode-btn');
@@ -103,7 +57,7 @@ function initializeAPToggle() {
 // ============================================================================
 // HELM TOGGLE MODAL
 // ============================================================================
-function initializeHelmToggle() {
+export function initializeHelmToggle() {
     const helmToggleBtn = document.getElementById('helm-toggle');
     const helmModal = document.getElementById('helm-modal');
     const helmDisplays = helmModal?.querySelectorAll('.helm-display');
@@ -155,7 +109,7 @@ function initializeHelmToggle() {
 // ============================================================================
 // TRIM MODAL (Manual open/close - gamepad controls content)
 // ============================================================================
-window.openTrimModal = function() {
+export function openTrimModal() {
     const backdrop = document.getElementById("trim-modal-backdrop");
     const container = document.getElementById("trim-modal-container");
     
@@ -164,8 +118,10 @@ window.openTrimModal = function() {
         container.style.display = "block";
     }
 };
+// Still attaching to window for legacy onclick="" in index.html
+window.openTrimModal = openTrimModal;
 
-window.applyTrimSettings = function() {
+export function applyTrimSettings() {
     const backdrop = document.getElementById("trim-modal-backdrop");
     const container = document.getElementById("trim-modal-container");
     
@@ -174,10 +130,8 @@ window.applyTrimSettings = function() {
         container.style.display = "none";
     }
 };
-
-
-
-
+// Still attaching to window for legacy onclick="" in index.html
+window.applyTrimSettings = applyTrimSettings;
 
 
 // ============================================================================
@@ -490,6 +444,36 @@ function onOverlayMouseMove(e){
     placeTooltip(activeEl, activeStep.placement, activeStep.text);
     // spotlight remains where renderStep
   });
+}
+
+// Helper function to place tooltip (extracted from renderStep)
+function placeTooltip(element, placement, text) {
+  if (!element) return;
+  const tip = document.getElementById('coach-tooltip');
+  const tipText = tip.querySelector('.coach-text');
+  
+  tipText.textContent = text;
+  
+  const r = element.getBoundingClientRect();
+  const gap = 32;
+  const tw = tip.offsetWidth || 300;
+  const th = tip.offsetHeight || 80;
+  const cx = r.left + r.width / 2;
+  const cy = r.top  + r.height / 2;
+  
+  let tx, ty;
+  switch(placement){
+    case 'top':    tx = cx - tw/2; ty = r.top - th - gap;  break;
+    case 'right':  tx = r.right + gap; ty = cy - th/2;     break;
+    case 'bottom': tx = cx - tw/2; ty = r.bottom + gap;    break;
+    case 'left':   tx = r.left - tw - gap; ty = cy - th/2; break;
+    default:       tx = cx - tw/2; ty = r.bottom + gap;
+  }
+  
+  const vw = innerWidth, vh = innerHeight;
+  tx = Math.max(12, Math.min(vw - tw - 12, tx));
+  ty = Math.max(12, Math.min(vh - th - 12, ty));
+  tip.style.transform = `translate(${Math.round(tx)}px, ${Math.round(ty)}px)`;
 }
 
 

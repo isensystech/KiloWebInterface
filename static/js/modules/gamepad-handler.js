@@ -34,45 +34,67 @@ let lastGamepadActivity = Date.now();
 const WATCHDOG_TIMEOUT = 3000; // 3 seconds
 
 // ============================================================================
-// GAMEPAD CONNECTION HANDLERS
+// EXPORTED INITIALIZATION FUNCTION
 // ============================================================================
-window.addEventListener("gamepadconnected", (event) => {
-    if (gamepadIndex === null) {
-        gamepadIndex = event.gamepad.index;
-        console.log("✅ Gamepad connected at index", gamepadIndex);
-        lastGamepadActivity = Date.now();
-        
-        const indicator = document.getElementById('joystick-indicator');
-        if (indicator) {
-            indicator.style.display = 'inline-block';
-            indicator.classList.remove('disconnected');
-            indicator.classList.add('connected');
+
+/**
+ * Attaches all gamepad event listeners and checks for existing gamepads.
+ */
+export function initializeGamepadHandler() {
+    window.addEventListener("gamepadconnected", (event) => {
+        if (gamepadIndex === null) {
+            gamepadIndex = event.gamepad.index;
+            console.log("✅ Gamepad connected at index", gamepadIndex);
+            lastGamepadActivity = Date.now();
             
-            setTimeout(() => {
-                indicator.style.display = 'none';
-            }, 3000);
+            const indicator = document.getElementById('joystick-indicator');
+            if (indicator) {
+                indicator.style.display = 'inline-block';
+                indicator.classList.remove('disconnected');
+                indicator.classList.add('connected');
+                
+                setTimeout(() => {
+                    indicator.style.display = 'none';
+                }, 3000);
+            }
+            
+            startGamepadPolling();
         }
-        
-        startGamepadPolling();
-    }
-});
+    });
+    
+    window.addEventListener("gamepaddisconnected", (event) => {
+        if (event.gamepad.index === gamepadIndex) {
+            gamepadIndex = null;
+            console.log("❌ Gamepad disconnected");
+            
+            const indicator = document.getElementById('joystick-indicator');
+            if (indicator) {
+                indicator.style.display = 'inline-block';
+                indicator.classList.remove('connected');
+                indicator.classList.add('disconnected');
+            }
+        }
+    });
 
-window.addEventListener("gamepaddisconnected", (event) => {
-    if (event.gamepad.index === gamepadIndex) {
-        gamepadIndex = null;
-        console.log("❌ Gamepad disconnected");
-        
-        const indicator = document.getElementById('joystick-indicator');
-        if (indicator) {
-            indicator.style.display = 'inline-block';
-            indicator.classList.remove('connected');
-            indicator.classList.add('disconnected');
+    // ============================================================================
+    // AUTO-START
+    // ============================================================================
+    if (navigator.getGamepads) {
+        const gamepads = navigator.getGamepads();
+        for (let i = 0; i < gamepads.length; i++) {
+            if (gamepads[i]) {
+                gamepadIndex = i;
+                console.log("✅ Gamepad already connected at index", i);
+                startGamepadPolling();
+                break;
+            }
         }
     }
-});
+}
+
 
 // ============================================================================
-// HELPER FUNCTIONS
+// HELPER FUNCTIONS (MODULE-PRIVATE)
 // ============================================================================
 
 function applyDeadzone(value) {
@@ -294,7 +316,7 @@ function pollGamepad() {
         // Left - tilt to port
         gamepadControlState.port_trim = Math.min(100, gamepadControlState.port_trim + LISTING_RATE);
         gamepadControlState.starboard_trim = Math.max(0, gamepadControlState.starboard_trim - LISTING_RATE);
-        updateListingUI();
+        updateListingUI(gamepadControlState.port_trim, gamepadControlState.starboard_trim);
         showListingModal();
     }
     
@@ -302,7 +324,7 @@ function pollGamepad() {
         // Right - tilt to starboard
         gamepadControlState.starboard_trim = Math.min(100, gamepadControlState.starboard_trim + LISTING_RATE);
         gamepadControlState.port_trim = Math.max(0, gamepadControlState.port_trim - LISTING_RATE);
-        updateListingUI();
+        updateListingUI(gamepadControlState.port_trim, gamepadControlState.starboard_trim);
         showListingModal();
     }
     
@@ -315,49 +337,84 @@ function startGamepadPolling() {
 }
 
 // ============================================================================
-// UI UPDATE FUNCTIONS
+// UI UPDATE FUNCTIONS (NOW EXPORTED)
 // ============================================================================
 
-function updateThrottleUI(throttle) {
-    const gearFill = document.getElementById("gear-fill");
-    const gearThumb = document.querySelector(".gear-thumb");
-    const gearThumbText = document.querySelector(".gear-thumb-text");
-    const gearLetterDisplay = document.getElementById("gear-letter-display");
+export function updateThrottleUI(throttle) {
+    // This function now ONLY updates the COMMAND bar and THUMB POSITION.
     
+    // Update the "commanded" fill (silver)
+    const gearFill = document.getElementById("gear-fill");
+    if (gearFill) {
+        const visualPercent = throttle / 100;
+        const VISUAL_HALF = 47.5; // 95% total range / 2
+        const visualOffset = visualPercent * VISUAL_HALF;
+
+        gearFill.style.height = `${Math.abs(visualOffset)}%`;
+        
+        // This is the correct logic
+        if (visualOffset > 0) { // Forward
+            gearFill.style.bottom = '50%';
+            gearFill.style.top = 'auto';
+        } else { // Reverse
+            gearFill.style.top = '50%';
+            gearFill.style.bottom = 'auto';
+        }
+    }
+
+    // Update the thumb position
+    const gearThumb = document.querySelector(".gear-thumb");
     if (gearThumb) {
         const visualPercent = throttle / 100;
         const VISUAL_HALF = 47.5;
         const visualOffset = visualPercent * VISUAL_HALF;
-        const thumbPos = 50 + visualOffset;
+        const thumbPos = 50 + visualOffset; // 50% is center
         gearThumb.style.bottom = `${thumbPos}%`;
     }
-        
-    if (gearLetterDisplay) {
+    
+    // **** THIS IS THE FIX ****
+    // We update the text content, not replace the innerHTML
+    const gearThumbText = gearThumb?.querySelector(".gear-thumb-text");
+    const textN = gearThumbText?.querySelector('.text-n'); // Collapsed text
+    const textNeutral = gearThumbText?.querySelector('.text-neutral'); // Expanded text
+
+    if (textN && textNeutral) {
         const gearLetter = getCurrentGear(throttle);
-        gearLetterDisplay.textContent = gearLetter;
+        const percentValue = Math.round(Math.abs(throttle));
+
+        if (gearLetter === 'N') {
+            textN.textContent = 'N';
+            textNeutral.textContent = 'NEUTRAL';
+        } else {
+            textN.textContent = gearLetter; // F or R
+            textNeutral.textContent = `${percentValue}%`; // Commanded %
+        }
     }
     
     expandThrottleWrapper();
 }
 
-function updateSteeringUI(steering) {
+export function updateSteeringUI(steering) {
+    // This function now handles feedback from both gamepad and WebSocket
+    const degrees = (steering / 100) * 35;
+
+    // Update the main SVG pointer
     const rudderPointer = document.getElementById("rudder-pointer");
     if (rudderPointer) {
-        const degrees = (steering / 100) * 35;
         const visualAngle = -degrees;
         rudderPointer.setAttribute("transform", `rotate(${visualAngle}, 144, 0)`);
     }
     
+    // Update the number input box
     const rudderInput = document.getElementById("rudder-input");
     if (rudderInput) {
-        const degrees = Math.round((steering / 100) * 35);
-        rudderInput.value = degrees;
+        rudderInput.value = Math.round(degrees);
     }
     
+    // Update the text readout under the boat
     const steeringValue = document.getElementById("rudder-angle-value");
     if (steeringValue) {
-        const degrees = Math.round((steering / 100) * 35);
-        steeringValue.textContent = degrees;
+        steeringValue.textContent = Math.round(degrees);
         
         const boatStat = document.getElementById("boat-rudder-stat");
         if (boatStat) {
@@ -367,10 +424,14 @@ function updateSteeringUI(steering) {
     }
 }
 
-function updateEngineTrimUI(trim) {
-    const trimValue = document.getElementById("trim-value");
-    if (trimValue) {
-        trimValue.textContent = trim;
+export function updateEngineTrimUI(trim) {
+    // This function now handles feedback from both gamepad and WebSocket
+    const trimValue = Math.round(Math.max(0, Math.min(100, trim)));
+
+    // Update text readout under the boat
+    const trimValueEl = document.getElementById("trim-value");
+    if (trimValueEl) {
+        trimValueEl.textContent = trimValue;
         
         const boatStat = document.getElementById("boat-trim-stat");
         if (boatStat) {
@@ -379,34 +440,49 @@ function updateEngineTrimUI(trim) {
         }
     }
     
+    // Update trim modal fill bar
     const trimFill = document.getElementById("trim-fill");
     if (trimFill) {
-        trimFill.style.height = `${trim}%`;
+        trimFill.style.height = `${trimValue}%`;
     }
     
+    // Update trim modal thumb position
     const trimThumb = document.getElementById("trim-thumb");
-    if (trimThumb) {
-        const position = 100 - trim;
-        trimThumb.style.top = `${(trimThumb.parentElement.offsetHeight - trimThumb.offsetHeight) * (position/100) + trimThumb.offsetHeight/2}px`; // keep thumb travel within half-thumb insets
-
+    if (trimThumb && trimThumb.parentElement) {
+        const parentHeight = trimThumb.parentElement.offsetHeight;
+        const thumbHeight = trimThumb.offsetHeight;
+        
+        // Ensure we have valid numbers before calculating
+        if (parentHeight > 0 && thumbHeight > 0) {
+            const travelRange = parentHeight - thumbHeight; // The full range the thumb can move
+            const positionPercent = 1 - (trimValue / 100); // 0 trim = bottom (100%), 100 trim = top (0%)
+            const thumbTop = (travelRange * positionPercent) + (thumbHeight / 2);
+            trimThumb.style.top = `${thumbTop}px`;
+        }
     }
     
+    // Update trim modal text readout
     const trimReadout = document.getElementById("trim-readout");
     if (trimReadout) {
-        trimReadout.textContent = trim;
+        trimReadout.textContent = trimValue;
     }
     
+    // Update trim modal pointer graphic
     const trimPointer = document.querySelector(".trim-pointer-img");
     if (trimPointer) {
         const BASE = -15;   // deg: where value=0 should point (start of scale)
         const SPAN = 30;    // deg: total sweep from 0 to 100
-        const rotation = (BASE + SPAN) - (trim / 100) * SPAN;
+        const rotation = (BASE + SPAN) - (trimValue / 100) * SPAN;
         trimPointer.style.transform = `rotate(${rotation}deg)`;
     }
 }
 
-function updateListingUI() {
-    console.log(`Listing: Port=${gamepadControlState.port_trim}, Stbd=${gamepadControlState.starboard_trim}`);
+export function updateListingUI(portTrim, starboardTrim) {
+    // This function can now be called by WebSocket feedback
+    gamepadControlState.port_trim = portTrim;
+    gamepadControlState.starboard_trim = starboardTrim;
+    console.log(`Listing Updated: Port=${portTrim}, Stbd=${starboardTrim}`);
+    // TODO: Add UI update logic here if/when listing modal is implemented
 }
 
 // ============================================================================
@@ -437,6 +513,8 @@ function showTrimModal() {
 let listingModalTimeout = null;
 
 function showListingModal() {
+    // Note: index.html does not have "listing-modal-backdrop" or "listing-modal-container"
+    // This function will not do anything until those elements are added.
     const backdrop = document.getElementById("listing-modal-backdrop");
     const container = document.getElementById("listing-modal-container");
     
@@ -453,19 +531,4 @@ function showListingModal() {
             container.style.display = "none";
         }
     }, 500);
-}
-
-// ============================================================================
-// AUTO-START
-// ============================================================================
-if (navigator.getGamepads) {
-    const gamepads = navigator.getGamepads();
-    for (let i = 0; i < gamepads.length; i++) {
-        if (gamepads[i]) {
-            gamepadIndex = i;
-            console.log("✅ Gamepad already connected at index", i);
-            startGamepadPolling();
-            break;
-        }
-    }
 }

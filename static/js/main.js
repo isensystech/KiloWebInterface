@@ -1,13 +1,90 @@
-import { gamepadControlState } from './modules/gamepad-handler.js';
+// ============================================================================
+// MODULE IMPORTS
+// ============================================================================
+import { gamepadControlState, initializeGamepadHandler } from './modules/gamepad-handler.js';
+import { initializeAPToggle, initializeHelmToggle } from './modules/ui-modals.js';
+import {
+    initializeGaugePanelLogic,
+    initializeDrawerTabs,
+    initializeCommToggles,
+    initializeSoloToggles,
+    initializeSolo3Toggles,
+    initializePumpLogic,
+    initializeIgnitionButton,
+    initializeHouseRelay,
+    initializeStartLoaderButton,
+    initializeMissionPlayer,
+    initializePlayerToggle,
+    initializeSafetyButtons,
+    initializeSensorToggles
+} from './modules/ui-telemetry.js';
+import { 
+    initializeSafetyCaps, 
+    initializeButtons 
+} from './modules/ui-buttons.js';
+import { initializeNavigation } from './modules/ui-navigation.js';
+import { 
+    initializeThrottleSlider, 
+    initializeRudderTrimBridge, 
+    initializeRudderIndicator 
+} from './modules/ui-panels.js';
+
 
 // ============================================================================
-// WEBSOCKET SENDER - ONLY PLACE GAMEPAD DATA IS SENT
+// APPLICATION INITIALIZATION (MAIN ENTRY POINT)
 // ============================================================================
-
-// TUNABLE PARAMETERS
-const GAMEPAD_MESSAGE_INTERVAL = 1000; // milliseconds (1000ms = 1 second)
-
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("🚀 Kilo UI Application Starting...");
+    
+    // Initialize all UI modules
+    try {
+        // Initialize Modals
+        initializeAPToggle();
+        initializeHelmToggle();
+
+        // Initialize Telemetry/Drawer/Panel logic
+        initializeGaugePanelLogic();
+        initializeDrawerTabs();
+        initializeCommToggles();
+        initializeSoloToggles();
+        initializeSolo3Toggles();
+        initializePumpLogic();
+        initializeIgnitionButton();
+        initializeHouseRelay();
+        initializeStartLoaderButton(); // Must be called AFTER initializeIgnitionButton
+        initializeMissionPlayer();
+        initializePlayerToggle();
+        initializeSafetyButtons();
+        initializeSensorToggles();
+        
+        // Initialize Payload Buttons
+        initializeSafetyCaps();
+        initializeButtons();
+
+        // Initialize Navigation
+        initializeNavigation();
+
+        // Initialize Panels (Throttle, Rudder, etc.)
+        initializeThrottleSlider();
+        initializeRudderTrimBridge();
+        initializeRudderIndicator();
+
+        // Initialize Gamepad
+        initializeGamepadHandler();
+
+
+        console.log("✅ UI modules initialized.");
+    } catch (error) {
+        console.error("🔥 Failed to initialize UI modules:", error);
+    }
+
+    // ============================================================================
+    // WEBSOCKET SENDER - ONLY PLACE GAMEPAD DATA IS SENT
+    // ============================================================================
+    
+    // TUNABLE PARAMETERS
+    const GAMEPAD_MESSAGE_INTERVAL = 1000; // milliseconds (1000ms = 1 second)
+
     console.log("🚀 Starting gamepad WebSocket sender");
     
     setInterval(() => {
@@ -21,10 +98,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 starboard_trim: gamepadControlState.starboard_trim
             };
             
+            // **** THIS IS THE FIX: Added console.log ****
+            console.log('Sending gamepad state:', message);
             window.ws.send(JSON.stringify(message));
         }
     }, GAMEPAD_MESSAGE_INTERVAL);
 });
+
 
 // ============================================================================
 // DRAWER PANEL SCROLLING WITH GAMEPAD (OPTIONAL)
@@ -119,7 +199,7 @@ function setupDocking(modalSelector, opts = {}){
     }
 
     const mo = new MutationObserver(() => { if (modal.classList.contains('is-open')) redraw(); });
-    mo.observe(modal, { attributes: true, attributeFilter: ['class', 'style'] });
+    mo.observe(modal, { attributes: true, attributeFilter: ['class','style'] });
 
     redraw();
 }
@@ -127,9 +207,7 @@ function setupDocking(modalSelector, opts = {}){
 setupDocking('#helm-modal', { gap: 4 });
 setupDocking('#auto-pilot-modal', { gap: 4 });
 
-window.requestStatus = () => {}; // no-op placeholder
-
-
-
-
-
+// This is a no-op placeholder. The real requestStatus is inside ui-buttons.js
+// and is called automatically after a fetch button press.
+// This global is here for legacy compatibility.
+window.requestStatus = () => {};
