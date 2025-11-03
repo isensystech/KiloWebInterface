@@ -329,24 +329,106 @@ function playGifWithCrossfade(){
 
 
 
-
 // ============================================================================
-// HELP MODAL
+// HELP MODAL (stable build)
 // ============================================================================
 
+/* Config: external tooltip document */
+const COACH_DATA_URL = 'tooltips.html';
 
-// = DATA-DRIVEN TOUR =
-// Each step points to an existing UI element by CSS selector
-// Automatically collect all elements with data-coach-text
-const TOUR_STEPS = Array.from(document.querySelectorAll('[data-coach-text]')).map(el => ({
-  selector: `#${el.id}`,
-  text: el.dataset.coachText,
-  placement: el.dataset.coachPlacement || 'bottom',
-  allowInteract: el.dataset.coachInteract === 'true'
-}));
+/* State */
+let TOUR_STEPS = [];          // populated from tooltips.html
+let coachDataReady = null;    // single-flight guard
+
+// Load + parse tooltips.html into TOUR_STEPS
+async function loadCoachSteps() {
+  if (coachDataReady) return coachDataReady;
+  coachDataReady = (async () => {
+    const res = await fetch(COACH_DATA_URL, { credentials: 'same-origin' });
+    if (!res.ok) throw new Error(`Failed to load ${COACH_DATA_URL}: ${res.status}`);
+    const html = await res.text();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const entries = Array.from(doc.querySelectorAll('#coach-data [data-coach-for]'));
+
+    const steps = entries.map(el => {
+      // title (prefer .coach-title, fallback h1–h6)
+      const titleEl = el.querySelector('.coach-title') || el.querySelector('h1,h2,h3,h4,h5,h6');
+      const title   = (titleEl?.textContent || '').trim();
+
+      // BODY (HTML): take all .coach-text blocks as is
+      const bodyHtmlParts = Array.from(el.querySelectorAll('.coach-text'))
+        .map(n => n.outerHTML.trim())
+        .filter(Boolean);
+      const bodyHtml = bodyHtmlParts.join('\n');
+
+      // TEXT fallback (for screen readers, etc.)
+      const bodyTextParts = Array.from(el.querySelectorAll('.coach-text'))
+        .map(n => n.textContent.trim())
+        .filter(Boolean);
+      const bodyText = bodyTextParts.join('\n\n');
+
+      const text = title && bodyText ? `${title}\n\n${bodyText}` : (title || bodyText);
+
+      // FINAL HTML that will be injected into tooltip
+      const htmlContent = [
+        titleEl ? `<div class="coach-title">${titleEl.textContent.trim()}</div>` : '',
+        bodyHtml
+      ].filter(Boolean).join('\n');
+
+      return {
+        selector: el.getAttribute('data-coach-for') || '',
+        text,                 // plain text (fallback)
+        html: htmlContent,    // rich HTML (preferred)
+        placement: el.getAttribute('data-coach-placement') || 'bottom',
+        allowInteract: (el.getAttribute('data-coach-interact') || 'false') === 'true',
+        order: Number(el.getAttribute('data-coach-order') || '0'),
+      };
+    });
+
+    steps.sort((a, b) => (a.order - b.order) || a.selector.localeCompare(b.selector));
+    TOUR_STEPS = steps;
+  })();
+  return coachDataReady;
+}
 
 
-// === RUNTIME ===
+
+/* Allow-list (click-through) */
+const COACH_GLOBAL_ALLOW_SELECTORS = [
+  '.status-bar',
+  '.drawer-tab',
+  '.boat-image',
+];
+
+/* Check if element (or ancestor) is allowed to receive clicks */
+function isCoachAllowedTarget(el) {
+  if (!el || !el.closest) return false;
+
+  const viaAttr = el.closest('[data-coach-allow]');
+  if (viaAttr) {
+    const mode = (viaAttr.getAttribute('data-coach-allow') || 'click').toLowerCase();
+    return mode === 'click' || mode === 'all';
+  }
+  for (const sel of COACH_GLOBAL_ALLOW_SELECTORS) {
+    if (el.closest(sel)) return true;
+  }
+  return false;
+}
+
+/* Synthesize a full click sequence */
+function synthesizeClickSequence(target, originEvent) {
+  const base = { bubbles: true, cancelable: true, view: window };
+  const opts = originEvent
+    ? { ...base, clientX: originEvent.clientX, clientY: originEvent.clientY }
+    : base;
+  target.dispatchEvent(new MouseEvent('mousedown', opts));
+  target.dispatchEvent(new MouseEvent('mouseup',   opts));
+  target.dispatchEvent(new MouseEvent('click',     opts));
+}
+
+/* === Runtime === */
 (() => {
   const trigger = document.getElementById('help-trigger');
   const overlay = document.getElementById('coach-overlay');
@@ -360,22 +442,16 @@ const TOUR_STEPS = Array.from(document.querySelectorAll('[data-coach-text]')).ma
   if (!trigger || !overlay || !mask || !tip || !tipText || !btnPrev || !btnNext || !btnClose) return;
 
   let idx = 0;
+  let activeEl = null;      // active step target
+  let hoverEl  = null;      // hovered step target
+  let rafHoverId = 0;       // rAF throttle
+  let combinedSelectors = '';
 
-  // Track elements separately for active step vs. hover preview
-  let activeEl = null;
-  let hoverEl  = null;
-
-  // Spotlight geometry
-  let holeCx = 0, holeCy = 0, holeR = 0;
-
-  const combinedSelectors = TOUR_STEPS.map(s => s.selector).join(',');
-
-  // --- spotlight helpers ---
+  /* Spotlight helpers (CSS variables drive the mask hole) */
   function setSpotlightByRect(r){
     const cx = r.left + r.width / 2;
     const cy = r.top  + r.height / 2;
     const rad = Math.sqrt(r.width*r.width + r.height*r.height) / 2 + 16;
-    holeCx = cx; holeCy = cy; holeR = rad;
     mask.style.setProperty('--x', `${cx}px`);
     mask.style.setProperty('--y', `${cy}px`);
     mask.style.setProperty('--r', `${rad}px`);
@@ -385,17 +461,20 @@ const TOUR_STEPS = Array.from(document.querySelectorAll('[data-coach-text]')).ma
     setSpotlightByRect(el.getBoundingClientRect());
   }
 
-  // --- safe hit-test under overlay+mask ---
+  /* Hit-test under overlay; ignore tooltip box if present */
   function elementUnderPoint(x, y){
     const prevOverlay = overlay.style.pointerEvents;
-    const prevMask    = mask.style.pointerEvents;
+    const prevMask    = mask?.style.pointerEvents;
+    const prevTip     = tip ? tip.style.pointerEvents : null;
     try{
       overlay.style.pointerEvents = 'none';
-      mask.style.pointerEvents    = 'none';
+      if (mask) mask.style.pointerEvents = 'none';
+      if (tip)  tip.style.pointerEvents  = 'none';
       return document.elementFromPoint(x, y);
     } finally {
       overlay.style.pointerEvents = prevOverlay;
-      mask.style.pointerEvents    = prevMask;
+      if (mask) mask.style.pointerEvents = prevMask || '';
+      if (tip && prevTip !== null) tip.style.pointerEvents = prevTip;
     }
   }
 
@@ -407,28 +486,87 @@ const TOUR_STEPS = Array.from(document.querySelectorAll('[data-coach-text]')).ma
     return -1;
   }
 
-  // --- render active step (tooltip + spotlight on active only) ---
-  function renderStep(){
-    const step = TOUR_STEPS[idx];
-    const target = document.querySelector(step.selector);
-    if (!target){
-      idx = (idx + 1) % TOUR_STEPS.length;
-      return renderStep();
+
+
+
+  // --- Add near your runtime vars (reuse existing 'overlay' and 'tip') ---
+let coachPeWasDisabled = false;
+
+// --- NEW: pointerdown-capture handler that opens a "gate" through the tooltip ---
+function onOverlayPointerDownCapture(e) {
+  // 1) Allow tooltip controls to work normally
+  if (e.target.closest('.coach-controls, .coach-close')) return;
+
+  // 2) If pointer is inside the tooltip box (not on controls) — open pass-through gate
+  if (tip) {
+    const r = tip.getBoundingClientRect();
+    const insideTip = (e.clientX >= r.left && e.clientX <= r.right &&
+                       e.clientY >= r.top  && e.clientY <= r.bottom);
+    if (insideTip) {
+      // Temporarily disable overlay pointer-events until pointerup/click
+      if (!coachPeWasDisabled) {
+        coachPeWasDisabled = true;
+        overlay.style.pointerEvents = 'none'; // let native events go through
+        // Restore on the first pointerup or click (whichever happens)
+        const restore = () => {
+          overlay.style.pointerEvents = '';
+          coachPeWasDisabled = false;
+          window.removeEventListener('pointerup', restore, true);
+          window.removeEventListener('click', restore, true);
+        };
+        window.addEventListener('pointerup', restore, true);
+        window.addEventListener('click', restore, true);
+      }
+      return;
     }
+  }
+}
 
-    // Update active glow (keep hover glow separate)
-    if (activeEl && activeEl !== hoverEl) activeEl.classList.remove('coach-glow');
-    activeEl = target;
-    activeEl.classList.add('coach-glow');
 
-    // Spotlight locks to ACTIVE step here
-    setSpotlightForElement(activeEl);
-    mask.classList.remove('hole-clickthrough'); // no click-through in Help
 
-    // Tooltip stays anchored to ACTIVE step
-    tipText.textContent = step.text;
 
-    const r = activeEl.getBoundingClientRect();
+// Cursor = pointer only over the actual highlighted target underneath the tooltip
+overlay.addEventListener('mousemove', function coachPassThroughCursor(e) {
+  // 0) Tooltip controls keep their normal cursor
+  if (e.target.closest('.coach-controls, .coach-close')) {
+    overlay.style.cursor = '';
+    return;
+  }
+
+  if (!tip) { overlay.style.cursor = ''; return; }
+
+  // 1) Only act when the pointer is inside the tooltip box (body area)
+  const r = tip.getBoundingClientRect();
+  const insideTip = (e.clientX >= r.left && e.clientX <= r.right &&
+                     e.clientY >= r.top  && e.clientY <= r.bottom);
+  if (!insideTip) { 
+    // Outside tooltip: let your existing logic handle cursor
+    overlay.style.cursor = '';
+    return; 
+  }
+
+  // 2) Hit-test what's REALLY under the tooltip at this point
+  const under = elementUnderPoint(e.clientX, e.clientY);
+
+  // 3) Pointer only if the underlying element is a tour target (highlighted)
+  //    or belongs to the allow-list (click-through zone)
+  const isHoverTarget =
+    !!under && (isCoachAllowedTarget(under) || matchStepIndexByElement(under) >= 0);
+
+  overlay.style.cursor = isHoverTarget ? 'pointer' : '';
+}, true); // capture, and add this listener LAST
+
+
+
+
+
+
+  /* Place tooltip near the given element */
+  function placeTooltip(anchorEl, placement, text){
+    if (!anchorEl) return;
+    tipText.innerHTML  = text;
+
+    const r = anchorEl.getBoundingClientRect();
     const gap = 32;
     const tw = tip.offsetWidth || 300;
     const th = tip.offsetHeight || 80;
@@ -436,102 +574,135 @@ const TOUR_STEPS = Array.from(document.querySelectorAll('[data-coach-text]')).ma
     const cy = r.top  + r.height / 2;
 
     let tx, ty;
-    switch(step.placement){
+    switch(placement){
       case 'top':    tx = cx - tw/2; ty = r.top - th - gap;  break;
       case 'right':  tx = r.right + gap; ty = cy - th/2;     break;
       case 'bottom': tx = cx - tw/2; ty = r.bottom + gap;    break;
       case 'left':   tx = r.left - tw - gap; ty = cy - th/2; break;
       default:       tx = cx - tw/2; ty = r.bottom + gap;
     }
-
     const vw = innerWidth, vh = innerHeight;
     tx = Math.max(12, Math.min(vw - tw - 12, tx));
     ty = Math.max(12, Math.min(vh - th - 12, ty));
     tip.style.transform = `translate(${Math.round(tx)}px, ${Math.round(ty)}px)`;
-
-    btnPrev.disabled = (TOUR_STEPS.length <= 1);
-    btnNext.textContent = 'Next'; // always loops
   }
 
-  // --- navigation (loop) ---
+  /* Render active step (tooltip + spotlight on active only) */
+  function renderStep(){
+    if (!TOUR_STEPS.length) return;
+    const step = TOUR_STEPS[idx];
+    const target = document.querySelector(step.selector);
+    if (!target){
+      idx = (idx + 1) % TOUR_STEPS.length;
+      return renderStep();
+    }
+
+    if (activeEl && activeEl !== hoverEl) activeEl.classList.remove('coach-glow');
+    activeEl = target;
+    activeEl.classList.add('coach-glow');
+
+    setSpotlightForElement(activeEl);
+    mask.classList.remove('hole-clickthrough'); // no click-through in Help
+
+    placeTooltip(activeEl, step.placement, step.html);
+
+    btnPrev.disabled = (TOUR_STEPS.length <= 1);
+    btnNext.textContent = 'Next';
+  }
+
   function next(){ idx = (idx + 1) % TOUR_STEPS.length; renderStep(); }
   function prev(){ idx = (idx - 1 + TOUR_STEPS.length) % TOUR_STEPS.length; renderStep(); }
 
- // --- hover: move ONLY tooltip to hovered candidate; spotlight stays on active ---
-let rafHover = 0;
-function onOverlayMouseMove(e){
-  if (rafHover) return;
-  rafHover = requestAnimationFrame(() => {
-    rafHover = 0;
+  /* Hover: pointer on allow-list OR tour targets; tooltip stays on active */
+  function onOverlayMouseMove(e){
+    if (rafHoverId) return;
+    rafHoverId = requestAnimationFrame(() => {
+      rafHoverId = 0;
+      if (overlay.hidden) return;
 
-    const under      = elementUnderPoint(e.clientX, e.clientY);
-    const candidate  = under?.closest?.(combinedSelectors) || null;
-    const activeStep = TOUR_STEPS[idx];
-    const activeEl   = document.querySelector(activeStep.selector);
+      const under = elementUnderPoint(e.clientX, e.clientY);
+      const candidate = combinedSelectors ? under?.closest?.(combinedSelectors) : null;
 
-    if (candidate){
-      const candIdx = matchStepIndexByElement(candidate);
-      const step    = candIdx >= 0 ? TOUR_STEPS[candIdx] : null;
+      const allowed = isCoachAllowedTarget(under) || !!candidate;
+      if (mask) mask.style.cursor = allowed ? 'pointer' : '';
 
-      // optional: soft glow on hover 
-      if (hoverEl && hoverEl !== candidate) hoverEl.classList.remove('coach-glow');
-      if (candidate !== activeEl) { candidate.classList.add('coach-glow'); hoverEl = candidate; }
-      else { if (hoverEl && hoverEl !== activeEl) hoverEl.classList.remove('coach-glow'); hoverEl = null; }
+      if (!TOUR_STEPS.length || !combinedSelectors) return;
 
-      // move ONLY tooltip to hovered element; keep current step text or show hovered text
-      const text = step ? step.text : tipText.textContent;
-      placeTooltip(candidate, step ? step.placement : activeStep.placement, text);
-      return;
-    }
+      const activeStep = TOUR_STEPS[idx];
+      const currentActive = document.querySelector(activeStep.selector);
+      if (!currentActive) return;
 
-    // no candidate under cursor: restore tooltip to ACTIVE element
-    if (hoverEl && hoverEl !== activeEl) hoverEl.classList.remove('coach-glow');
-    hoverEl = null;
-    placeTooltip(activeEl, activeStep.placement, activeStep.text);
-    // spotlight remains where renderStep
-  });
-}
+      if (candidate){
+        if (hoverEl && hoverEl !== candidate) hoverEl.classList.remove('coach-glow');
+        if (candidate !== currentActive) {
+          candidate.classList.add('coach-glow');
+          hoverEl = candidate;
+        } else {
+          if (hoverEl && hoverEl !== currentActive) hoverEl.classList.remove('coach-glow');
+          hoverEl = null;
+        }
+        placeTooltip(currentActive, activeStep.placement, activeStep.html);
+        return;
+      }
 
-
-  // --- click: activate hovered candidate (do NOT forward click) ---
-  function onOverlayClick(e){
-    if (e.target.closest('.coach-tooltip')) return; // ignore UI
-
-    const under  = elementUnderPoint(e.clientX, e.clientY);
-    const newIdx = matchStepIndexByElement(under);
-    if (newIdx >= 0){
-      // clear transient hover glow (active will re-add its own)
-      if (hoverEl && hoverEl !== activeEl) hoverEl.classList.remove('coach-glow');
+      if (hoverEl && hoverEl !== currentActive) hoverEl.classList.remove('coach-glow');
       hoverEl = null;
+      placeTooltip(currentActive, activeStep.placement, activeStep.html);
+    });
+  }
 
-      idx = newIdx;
-      renderStep(); // tooltip + spotlight jump to the selected step
+
+  
+  /* Click: pass-through for allow-list; otherwise step selection */
+  function onOverlayClick(e){
+    if (e.target.closest('.coach-tooltip')) return;
+
+    const under = elementUnderPoint(e.clientX, e.clientY);
+
+    if (isCoachAllowedTarget(under)) {
+      synthesizeClickSequence(under, e);
       e.preventDefault();
       e.stopPropagation();
       return;
     }
 
-    // empty area: block underlying
+    const newIdx = matchStepIndexByElement(under);
+    if (newIdx >= 0){
+      if (hoverEl && hoverEl !== activeEl) hoverEl.classList.remove('coach-glow');
+      hoverEl = null;
+      idx = newIdx;
+      renderStep();
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+
     e.preventDefault();
     e.stopPropagation();
   }
 
-  // --- keyboard ---
+  /* Keyboard */
   function onKey(e){
     if (e.key === 'Escape') return closeTour();
     if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'n') return next();
     if (e.key === 'ArrowLeft'  || e.key.toLowerCase() === 'p') return prev();
   }
 
-  // --- open/close ---
-  function openTour(startIndex=0){
+  /* Open/Close */
+  async function openTour(startIndex=0){
+    await loadCoachSteps();
+    combinedSelectors = TOUR_STEPS.map(s => s.selector).join(',');
+
     idx = (startIndex >= 0 && startIndex < TOUR_STEPS.length) ? startIndex : 0;
     overlay.hidden = false;
     renderStep();
+
     document.addEventListener('keydown', onKey);
     window.addEventListener('resize', renderStep);
     overlay.addEventListener('mousemove', onOverlayMouseMove);
     overlay.addEventListener('click', onOverlayClick);
+    overlay.addEventListener('pointerdown', onOverlayPointerDownCapture, true); // capture phase
+
   }
 
   function closeTour(){
@@ -540,13 +711,23 @@ function onOverlayMouseMove(e){
     window.removeEventListener('resize', renderStep);
     overlay.removeEventListener('mousemove', onOverlayMouseMove);
     overlay.removeEventListener('click', onOverlayClick);
+
+    if (rafHoverId) { cancelAnimationFrame(rafHoverId); rafHoverId = 0; }
+
     if (hoverEl && hoverEl !== activeEl) hoverEl.classList.remove('coach-glow');
     if (activeEl) activeEl.classList.remove('coach-glow');
     hoverEl = null; activeEl = null;
   }
 
+  /* Warm cache after DOM ready (optional) */
+  document.addEventListener('DOMContentLoaded', () => {
+    loadCoachSteps().catch(() => {});
+  });
+
   trigger.addEventListener('click', () => openTour(0));
   btnNext.addEventListener('click', next);
   btnPrev.addEventListener('click', prev);
   btnClose.addEventListener('click', closeTour);
+
+  
 })();

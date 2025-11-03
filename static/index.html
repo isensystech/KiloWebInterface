@@ -18,16 +18,16 @@
 
 <body>
     <div class="control-screen">
-        <!-- INFO BAR -->
+        <!-- ui-process -->
         <div class="info-bar">
 
-            <div class="info-item">
+            <div class="info-item" id="time-utc">
                 <span class="info-icon" aria-hidden="true"><img src="/static/images/time-icon.svg" alt=""></span>
                 <span id="utc-time" class="info-value">--:--:--</span>
                 <span class="info-unit">UTC</span>
             </div>
 
-            <div class="info-item info-item--center">
+            <div class="info-item info-item--center" id="attention-indicators">
                 &nbsp; &nbsp; &nbsp; <!-- SPASE -->
 
                 <span id="engine-indicator" class="alarm-icon" aria-hidden="true"><img src="/static/images/engine.svg" alt=""></span>
@@ -51,22 +51,24 @@
             </div>
 
 
-            <div class="info-item">
+            <div class="info-item" >
 
-                <div class="info-item">
+                <div class="info-item" id="satellite-numbers">
                     <span class="info-icon" aria-hidden="true"><img src="/static/images/satellite.svg" alt=""></span>
                     <span id="gps_satellites" class="info-value">--</span>
                 </div>
 
-                &nbsp; &nbsp; &nbsp;         <!-- SPASE -->
+                        &nbsp; &nbsp; &nbsp;         <!-- SPASE -->
 
-                <span class="info-icon" aria-hidden="true"><img src="/static/images/coordinates-icon.svg" alt=""></span>
+                <div class="info-item" id="coordinate-values">
+                    <span class="info-icon " aria-hidden="true"><img src="/static/images/coordinates-icon.svg" alt=""></span>
+                    <span class="info-unit">LAT</span>
+                    <span id="gps_lat_deg" class="info-value">0.000000</span>
+                        &nbsp;         <!-- SPASE -->
+                    <span class="info-unit">LNG</span>
+                    <span id="gps_lng_deg" class="info-value">0.000000</span>
+                </div>
 
-                <span class="info-unit">LAT</span>
-                <span id="gps_lat_deg" class="info-value">0.000000</span>
-                &nbsp;         <!-- SPASE -->
-                <span class="info-unit">LNG</span>
-                <span id="gps_lng_deg" class="info-value">0.000000</span>
             </div>
 
         </div>
@@ -76,11 +78,11 @@
         <header id="header">
             <div class="header-inner">
                 <button class="nav-arrow left" id="prev-screen">◀</button>
-                <div class="carousel-titles">
-                    <div class="carousel-title active" data-screen="1">Kilo #06</div>
-                    <div class="carousel-title" data-screen="2">Kilo #14</div>
-                    <div class="carousel-title" data-screen="3">Kilo #22</div>
-                </div>
+                        <div class="carousel-titles">
+                            <div class="carousel-title active"  data-screen="1">Kilo #06</div>
+                            <div class="carousel-title" data-screen="2">Kilo #14</div>
+                            <div class="carousel-title" data-screen="3">Kilo #22</div>
+                        </div>
                 <button class="nav-arrow right" id="next-screen">▶</button>
             </div>
         </header>
@@ -374,39 +376,14 @@
             <div class="gauges-panel">
 
                 <!-- Active Helm Gauge -->
-                <div class="active-helm-gauge gauge-block" id="active-helm-gauge"
-
-                    data-coach-text="Active Helm gauge: shows which helm is in control. 
-                    Active Helm gauge: shows which helm is in control.
-                    Active Helm gauge: shows which helm is in control.
-                    Active Helm gauge: shows which helm is in control.
-                    ch helm is in control.Active Helm gauge: shows which helm is in control.
-                    Active Helm gauge: shows which helm is in control.
-                    Active Helm gauge: shows which helm is in control.
-                    Active Helm gauge: shows which helm is in control.
-                    Active Helm gauge: shows which helm is in control.
-                    Active Helm gauge: shows which helm is in control."
-                    data-coach-placement="right"   
-                    data-coach-order="30"          
-                    data-coach-interact="false"    
-                >
-
+                <div class="active-helm-gauge gauge-block" id="active-helm-gauge">
                     <img src="/static/images/helm-icon.svg" alt="Rudder Icon" class="gauge-icon">
                     <div class="gauge-label" id="helm-gauge-label">Active Helm</div>
                     <div class="gauge-value" id="helm-gauge-value">Main</div>
-
-
                 </div>
 
                 <!-- AP Status Gauge -->
-                <div class="ap-status-gauge gauge-block" id="ap-status-gauge"
-
-                    data-coach-text="Active Helm gauge: shows which helm is in control."
-                    data-coach-placement="right"   
-                    data-coach-order="31"          
-                    data-coach-interact="false"   
-                    >
-
+                <div class="ap-status-gauge gauge-block" id="ap-status-gauge">
                     <img src="/static/images/autopilot-icon.svg" alt="AP Status Icon" class="gauge-icon">
                     <div class="gauge-label" id="ap-gauge-label">AP status</div>
                     <div class="gauge-value" id="ap_mode">Mission</div>
@@ -529,7 +506,7 @@
                     <span class="drawer-button-title">Safety</span>
                 </div>
 
-                <button class="kill-all-btn" type="button" data-action="kill_all">KILL ALL</button>
+                <button class="kill-all-btn" id="kill-all-button" type="button" data-action="kill_all">KILL ALL</button>
             </div>
 
         </div>
@@ -1053,7 +1030,7 @@
                         
                         <!-- Kill Engine button -->
                         <div class="drawer-button-block">
-                            <button class="big-drawer-button">
+                            <button class="big-drawer-button" id="kill-engine-button">
                                 <img class="button-icon" src="/static/images/engine.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill Engine</span>
                             </button>
@@ -2098,11 +2075,11 @@ Lorem Ipsum end -->
         <div id="coach-overlay" hidden>
             <div class="coach-mask"></div>
             <div class="coach-tooltip" role="dialog" aria-live="polite">
+                <button type="button" class="coach-close">✕</button>
                 <div class="coach-text"></div>
                 <div class="coach-controls">
-                <button type="button" class="coach-prev">Back</button>
-                <button type="button" class="coach-next">Next</button>
-                <button type="button" class="coach-close" aria-label="Close">✕</button>
+                    <button type="button" class="coach-prev">Back</button>
+                    <button type="button" class="coach-next">Next</button>
                 </div>
             </div>
         </div>

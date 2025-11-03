@@ -4,7 +4,7 @@
     /* Sans stack with robust fallbacks */
     --font-sans: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
     --font-mono: "Roboto Mono", "Consolas", "SFMono-Regular", "Menlo", "ui-monospace", "monospace";
-    
+    --font-hand: "Segoe Print", "Comic Sans MS", "Bradley Hand", "Apple Chancery", cursive;
 
     /* === Weight size/line-height family === */
 
@@ -34,6 +34,10 @@
     /* INFO BAR Fonts */
     --type-caption-mono-regular:   400 14px/1.30 var(--font-mono);
     --type-caption-mono-bold:      700 14px/1.30 var(--font-mono);
+
+    /* HELP MODAL Font */
+    --handwritten: 400 14px/1.70 var(--font-hand);
+
 
 
 
@@ -349,19 +353,22 @@
         position: relative;
         display: flex;
         justify-content: center;
+        margin-top: 36px;
         align-items: center;
-        height: 100px;
+        height: 60px;
         z-index: 100;
+   
         }
 
         .carousel-titles {
         position: absolute;
-        top: 5vh;
+        top: 4vh;
         left: 50%;
         transform: translateX(-50%);
         z-index: 999;
         pointer-events: none;
         }
+
 
         .carousel-title {
         font: var(--type-h2);
@@ -381,7 +388,7 @@
 
         .nav-arrow {
         position: absolute;
-        top: 5vh;
+        top: 4vh;
         background: none;        /* no background */
         border: none;            /* no border */
         color: var(--text-inactive);            
@@ -401,8 +408,8 @@
         filter: drop-shadow(0 0 8px var(--color-light));
         color: var(--color-light);
         }
-        .nav-arrow.left{ left: 40vh; }
-        .nav-arrow.right{ right: 40vh; }
+        .nav-arrow.left{ left: 50vh; }
+        .nav-arrow.right{ right: 50vh; }
 
         
     /* Screen indicator dots */
@@ -4743,78 +4750,123 @@
         }
 
 
+
+
+
 /* === HELP MODAL === */
 
-/* === COACH OVERLAY (minimal) === */
 #coach-overlay{
   /* fullscreen overlay */
-  position: fixed; inset: 0; z-index: 10080;
+  position: fixed; 
+  inset: 0; 
+  z-index: 10080;
 }
 
 /* Spotlight mask: dark veil with a hole over the target */
 .coach-mask{
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,.6);
+  position: absolute; 
+  inset: 0;
+  background: var(--color-black-hover);
+  opacity: 0.7;   
   /* The hole is made via CSS variables set from JS */
-  -webkit-mask:
+    -webkit-mask:
     radial-gradient( circle var(--r, 8px) at var(--x, -1000px) var(--y, -1000px),
                      transparent 98%, black 100% );
-          mask:
+    mask:
     radial-gradient( circle var(--r, 8px) at var(--x, -1000px) var(--y, -1000px),
                      transparent 98%, black 100% );
   pointer-events: auto;       /* block clicks by default */
 }
 
 /* Make the hole click-through */
-.coach-mask.hole-clickthrough{
+.coach-mask.hole-clickthrough {
   pointer-events: none;       /* allow interaction with target if step allows */
 }
 
-.coach-tooltip{
-  position: absolute; max-width: 300px;
-  background: var(--color-drawer-bg, #303030);
-  color: var(--color-white, #fff);
-  border-radius: 10px; padding: 12px 12px 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.35);
-  font: var(--type-caption-regular, 400 14px/1.35 var(--font-sans));
+.coach-tooltip {
+  position: absolute; 
+  max-width: 450px;
+  color: var(--color-white);
+  border-radius: 10px; 
+  padding: 42px 12px 10px;
 }
 
-.coach-controls{
-  display:flex; gap:8px; justify-content:flex-end; margin-top:8px;
+/* Apply project token to tooltip titles */
+.coach-title {
+  font: var(--type-h2); 
+  color: var(--color-white);
 }
-.coach-controls button{
-  background:#444; color:#fff; border:0; border-radius:8px;
-  padding:6px 10px; cursor:pointer;
+.coach-text {
+  font: var(--type-button-regular); 
+  color: var(--color-light);
 }
-.coach-close{ background:transparent; color:var(--color-light,#dadada); }
+
+.coach-tooltip .coach-content,
+.coach-tooltip .coach-text {
+  white-space: pre-line; /* respects \n and wraps long lines */
+}
+
+.coach-controls {
+  display:flex; 
+  gap:16px; 
+  justify-content:flex-start; 
+  margin-top:28px;
+}
+.coach-controls button {
+background: var(--color-black-hover); 
+color: var(--text-inactive);
+border:1px solid var(--text-inactive); 
+border-radius:6px;
+padding:6px 10px; 
+cursor:pointer;
+}
+
+.coach-controls button:hover {
+color: var(--color-white); 
+border:1px solid var(--color-white);
+}
+
+.coach-close { 
+background:transparent; 
+position: absolute;
+top: 8px; 
+left: 12px;
+font: var(--type-h3); 
+color: var(--text-inactive);
+border: none;  
+cursor: pointer;
+line-height: 1;
+transition: color .2s ease;
+}
+
+.coach-close:hover { 
+color: var(--color-white); 
+}
 
 /* Subtle highlight for hovered/matched targets in Help mode */
 .coach-highlight {
-  outline: 2px dashed var(--active-yellow);
-  outline-offset: 4px;
+  border-radius: 6px; /* match corners with glow */
+}
+
+.coach-glow {
   border-radius: 6px;
+  background: var(--color-bg);
+  box-shadow: 0 0 0 10px var(--color-bg);
+  filter: drop-shadow(0 0 4px var(--color-white));
+  transition: width 0.3s ease;
 }
-
-.coach-glow{
-outline-offset: 4px;        
-border-radius: 6px;       
-background: var(--button-selected);
-filter: drop-shadow(0 0 4px var(--color-white));
-transition: width 0.3s ease;
-}
-
-
-
-
 /* TOOLTIPS */
-
 /* Optional: different arrows/colors per placement */
 [data-coach-placement="top"] .coach-tooltip { transform-origin: bottom center; }
 [data-coach-placement="right"] .coach-tooltip { transform-origin: left center; }
 
+.coach-mask { cursor: inherit; } /* comment: make mask follow overlay cursor */
 
 
-
+/* Make tooltip transparent to pointer events except its controls */
+#coach-overlay .coach-tooltip { pointer-events: none; }          /* clicks pass through */
+#coach-overlay .coach-tooltip .coach-controls,
+#coach-overlay .coach-tooltip .coach-close { pointer-events: auto; }  /* buttons still work */
 
 
 
