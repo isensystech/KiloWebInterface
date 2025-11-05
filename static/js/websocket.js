@@ -4,12 +4,12 @@
 // MODULE IMPORTS
 // ============================================================================
 
-import { setDeviceStates } from './modules/ui-buttons.js';
-import { 
+import {
+    gamepadControlState,
     // updateThrottleUI, // We DO NOT call this from WS
-    updateSteeringUI, 
-    updateEngineTrimUI, 
-    updateListingUI 
+    updateSteeringUI,
+    updateEngineTrimUI,
+    updateListingUI
 } from './modules/gamepad-handler.js';
 import { 
     handleStatusIndicator, 
@@ -22,6 +22,41 @@ import {
 // ============================================================================
 // WEBSOCKET INITIALIZATION
 // ============================================================================
+let gamepadHeartbeatTimer = null;
+const GAMEPAD_HEARTBEAT_INTERVAL = 1000; // milliseconds
+
+function startGamepadHeartbeat() {
+    if (gamepadHeartbeatTimer !== null) {
+      clearInterval(gamepadHeartbeatTimer);
+    }
+
+    gamepadHeartbeatTimer = setInterval(() => {
+      if (!window.ws || window.ws.readyState !== WebSocket.OPEN) {
+        return;
+      }
+
+      const message = {
+        type: 'gamepad.set',
+        throttle: gamepadControlState.throttle,
+        steering: gamepadControlState.steering,
+        engine_trim: gamepadControlState.engine_trim,
+        port_trim: gamepadControlState.port_trim,
+        starboard_trim: gamepadControlState.starboard_trim
+      };
+
+      console.log('Sending gamepad heartbeat:', message);
+      window.ws.send(JSON.stringify(message));
+    }, GAMEPAD_HEARTBEAT_INTERVAL);
+}
+
+function stopGamepadHeartbeat() {
+    if (gamepadHeartbeatTimer !== null) {
+      clearInterval(gamepadHeartbeatTimer);
+      gamepadHeartbeatTimer = null;
+    }
+}
+
+
 function initializeWebSocket() {
     const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${wsProtocol}//${location.host}/ws`;
@@ -34,10 +69,14 @@ function initializeWebSocket() {
 
     ws.onopen = () => {
       console.log('✅ WebSocket connection established.');
+      startGamepadHeartbeat();
+
     };
 
     ws.onclose = () => {
       console.log('❌ WebSocket connection closed.');
+      stopGamepadHeartbeat();
+
     };
 
     ws.onerror = (error) => {

@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("🔥 Failed to initialize UI modules:", error);
     }
 
+    /*
     // ============================================================================
     // WEBSOCKET SENDER - ONLY PLACE GAMEPAD DATA IS SENT
     // ============================================================================
@@ -102,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Sending gamepad state:', message);
             window.ws.send(JSON.stringify(message));
         }
-    }, GAMEPAD_MESSAGE_INTERVAL);
+    }, GAMEPAD_MESSAGE_INTERVAL); */
 });
 
 
