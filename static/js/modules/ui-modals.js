@@ -525,39 +525,6 @@ function onOverlayPointerDownCapture(e) {
 
 
 
-// Cursor = pointer only over the actual highlighted target underneath the tooltip
-overlay.addEventListener('mousemove', function coachPassThroughCursor(e) {
-  // 0) Tooltip controls keep their normal cursor
-  if (e.target.closest('.coach-controls, .coach-close')) {
-    overlay.style.cursor = '';
-    return;
-  }
-
-  if (!tip) { overlay.style.cursor = ''; return; }
-
-  // 1) Only act when the pointer is inside the tooltip box (body area)
-  const r = tip.getBoundingClientRect();
-  const insideTip = (e.clientX >= r.left && e.clientX <= r.right &&
-                     e.clientY >= r.top  && e.clientY <= r.bottom);
-  if (!insideTip) { 
-    // Outside tooltip: let your existing logic handle cursor
-    overlay.style.cursor = '';
-    return; 
-  }
-
-  // 2) Hit-test what's REALLY under the tooltip at this point
-  const under = elementUnderPoint(e.clientX, e.clientY);
-
-  // 3) Pointer only if the underlying element is a tour target (highlighted)
-  //    or belongs to the allow-list (click-through zone)
-  const isHoverTarget =
-    !!under && (isCoachAllowedTarget(under) || matchStepIndexByElement(under) >= 0);
-
-  overlay.style.cursor = isHoverTarget ? 'pointer' : '';
-}, true); // capture, and add this listener LAST
-
-
-
 
 
 
@@ -586,6 +553,41 @@ overlay.addEventListener('mousemove', function coachPassThroughCursor(e) {
     ty = Math.max(12, Math.min(vh - th - 12, ty));
     tip.style.transform = `translate(${Math.round(tx)}px, ${Math.round(ty)}px)`;
   }
+
+
+
+async function renderStep(){
+  if (!TOUR_STEPS.length) return;
+  const step = TOUR_STEPS[idx];
+  const target = document.querySelector(step.selector);
+  if (!target){
+    idx = (idx + 1) % TOUR_STEPS.length;
+    return renderStep();
+  }
+
+  // --- NEW: make sure any parent modal for this target is visible
+  await ensureParentModalVisible(target);
+
+  // Give the browser a frame to compute correct rects after modal opens
+  await new Promise(r => requestAnimationFrame(r));
+
+  if (activeEl && activeEl !== hoverEl) activeEl.classList.remove('coach-glow');
+  activeEl = target;
+  activeEl.classList.add('coach-glow');
+
+  setSpotlightForElement(activeEl);
+  mask.classList.remove('hole-clickthrough'); // keep Help non-interactive by default
+
+  placeTooltip(activeEl, step.placement, step.html);
+
+  btnPrev.disabled = (TOUR_STEPS.length <= 1);
+  btnNext.textContent = 'Next';
+}
+
+
+
+
+
 
   /* Render active step (tooltip + spotlight on active only) */
   function renderStep(){
@@ -705,19 +707,29 @@ overlay.addEventListener('mousemove', function coachPassThroughCursor(e) {
 
   }
 
-  function closeTour(){
-    overlay.hidden = true;
-    document.removeEventListener('keydown', onKey);
-    window.removeEventListener('resize', renderStep);
-    overlay.removeEventListener('mousemove', onOverlayMouseMove);
-    overlay.removeEventListener('click', onOverlayClick);
+function closeTour(){
+  overlay.hidden = true;
+  document.removeEventListener('keydown', onKey);
+  window.removeEventListener('resize', renderStep);
+  overlay.removeEventListener('mousemove', onOverlayMouseMove);
+  overlay.removeEventListener('click', onOverlayClick);
 
-    if (rafHoverId) { cancelAnimationFrame(rafHoverId); rafHoverId = 0; }
+  if (rafHoverId) { cancelAnimationFrame(rafHoverId); rafHoverId = 0; }
 
-    if (hoverEl && hoverEl !== activeEl) hoverEl.classList.remove('coach-glow');
-    if (activeEl) activeEl.classList.remove('coach-glow');
-    hoverEl = null; activeEl = null;
+  if (hoverEl && hoverEl !== activeEl) hoverEl.classList.remove('coach-glow');
+  if (activeEl) activeEl.classList.remove('coach-glow');
+  hoverEl = null; activeEl = null;
+
+  // --- NEW: restore any modals we force-opened
+  if (coachForcedOpenModals.has('#trim-modal-container')) {
+    const container = document.getElementById('trim-modal-container');
+    const backdrop  = document.getElementById('trim-modal-backdrop');
+    if (container) container.style.display = 'none';
+    if (backdrop)  backdrop.style.display  = 'none';
+    coachForcedOpenModals.delete('#trim-modal-container');
   }
+}
+
 
   /* Warm cache after DOM ready (optional) */
   document.addEventListener('DOMContentLoaded', () => {
@@ -730,4 +742,6 @@ overlay.addEventListener('mousemove', function coachPassThroughCursor(e) {
   btnClose.addEventListener('click', closeTour);
 
   
+ 
+
 })();
