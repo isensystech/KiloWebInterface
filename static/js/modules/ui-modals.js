@@ -38,15 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+// ============================================================================
+// MODAL ACTIVE HELM PANEL //
+// ============================================================================
 
-
-
-
-
-
-
-    // MODAL ACTIVE HELM PANEL //
-    
         document.addEventListener("DOMContentLoaded", () => {
             const toggleBtn = document.getElementById("helm-toggle");                 // The main button that opens the modal
             const modal = document.getElementById("helm-modal");                     // The modal element
@@ -119,39 +114,68 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
 
+// ============================================================================
+// MODAL AUTO PILOT PANEL (id-only logic)
+// ============================================================================
+document.addEventListener('DOMContentLoaded', () => {
+  const toggleBtn = document.getElementById('ap-toggle');          // main AP toggle button
+  const modal     = document.getElementById('auto-pilot-modal');    // AP modal window
+  if (!toggleBtn || !modal) return; // guard
 
-   // MODAL AUTO PILOT PANEL //
-        // Auto-Pilot modal wiring (fixed for #auto-pilot-modal)
-        document.addEventListener('DOMContentLoaded', () => {
-        const toggleBtn = document.getElementById('ap-toggle');          // main button
-        const modal = document.getElementById('auto-pilot-modal');       // modal window
+  // Collect buttons by explicit ids; classes are only for styling
+  const modes = [
+    { id: 'ap-mode-manual', el: null, mode: 'Manual' },
+    { id: 'ap-mode-hold',   el: null, mode: 'Hold'   },
+    { id: 'ap-mode-auto',   el: null, mode: 'Auto'   },
+    { id: 'ap-mode-loiter', el: null, mode: 'Loiter' },
+    { id: 'ap-mode-acro',   el: null, mode: 'Acro'   },
+    { id: 'ap-mode-rtl',    el: null, mode: 'RTL'    },
+  ];
 
-        if (!toggleBtn || !modal) return; // guard if markup not present
+  // Resolve elements by id
+  modes.forEach(m => { m.el = document.getElementById(m.id); });
 
-        const modeButtons = modal.querySelectorAll('.ap-mode-btn');
+  // Helper: mark active by class for visuals (logic still uses ids)
+  function setActiveMode(modeName) {
+    modes.forEach(m => m.el && m.el.classList.toggle('active', m.mode === modeName));
+  }
 
-        function openModal(){
-            modal.style.display = 'block';
-            const currentMode = toggleBtn.dataset.currentMode;
-            modeButtons.forEach(b => b.classList.toggle('active', b.dataset.mode === currentMode));
-        }
-        function closeModal(){ modal.style.display = 'none'; }
+  // Open/close modal (keep your working display logic)
+  function openModal() {
+    modal.style.display = 'block';
+    const current = toggleBtn.dataset.currentMode || toggleBtn.textContent.trim();
+    setActiveMode(current);
+  }
+  function closeModal() {
+    modal.style.display = 'none';
+  }
 
-        toggleBtn.addEventListener('click', openModal);
+  // Open modal from main button
+  toggleBtn.addEventListener('click', openModal);
 
-        modeButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-            const selectedMode = btn.dataset.mode;
-            toggleBtn.textContent = selectedMode;
-            toggleBtn.dataset.currentMode = selectedMode;
-            closeModal();
-            });
-        });
+  // Bind clicks to each mode button via its id
+  modes.forEach(m => {
+    if (!m.el) return;
+    m.el.addEventListener('click', () => {
+      const selected = m.mode;
 
-        // Optional niceties: click backdrop or ESC to close (safe to keep)
-        modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-        });
+      // Update main button text + data
+      toggleBtn.textContent = selected;
+      toggleBtn.dataset.currentMode = selected;
+
+      // Visual state
+      setActiveMode(selected);
+
+      // Close modal
+      closeModal();
+    });
+  });
+
+  // Backdrop & ESC close
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+});
+
 
 
 

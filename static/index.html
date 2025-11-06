@@ -1924,50 +1924,49 @@
 
 
 
-
         <!-- MODAL ACTIVE HELM PANEL -->
         <div id="helm-modal" class="status-modal">
-            <div class="status-modal-content">
-                <div class="status-modal-header">
-                    <img src="images/helm-icon.svg" alt="Helm icon" class="helm-icon">
-                    <span>AP status</span>
-                </div>
-
-                <div class="helm-display">
-                    <span class="helm-display-value">Main</span>
-                </div>
-                <div class="helm-display">
-                    <span class="helm-display-value">AUX</span>
-                </div>
-                <div class="helm-display">
-                    <span class="helm-display-value">Robot</span>
-                </div>
-
-                <button id="ap-mode-btn" class="ap-mode-btn" data-mode="Manual">Take Control</button>
+        <div class="status-modal-content">
+            <div class="status-modal-header">
+            <img src="images/helm-icon.svg" alt="Helm icon" class="helm-icon">
+            <span>Active Helm</span>
             </div>
+
+            <div id="helm-option-main"  class="helm-display">
+            <span class="helm-display-value">Main</span>
+            </div>
+            <div id="helm-option-aux"   class="helm-display">
+            <span class="helm-display-value">AUX</span>
+            </div>
+            <div id="helm-option-robot" class="helm-display">
+            <span class="helm-display-value">Robot</span>
+            </div>
+
+            <!-- rename id as requested -->
+            <button id="take-control-btn" class="ap-mode-btn" data-mode="Manual">Take Control</button>
         </div>
+        </div>
+
 
 
         <!-- MODAL AUTO PILOT PANEL -->
         <div id="auto-pilot-modal" class="status-modal">
-            <div class="status-modal-content">
-                
-                <!-- Modal Header -->
-                <div class="status-modal-header">
-                    <img src="images/autopilot-icon.svg" alt="AP icon" class="ap-icon">
-                    <span>AP status</span>
-                </div>
-
-                <!-- Mode Buttons -->
-                <button class="ap-mode-btn" data-mode="Manual">Manual</button>
-                <button class="ap-mode-btn" data-mode="Hold">Hold</button>
-                <button class="ap-mode-btn" data-mode="Auto">Auto</button>
-                <button class="ap-mode-btn" data-mode="Loiter">Loiter</button>
-                <button class="ap-mode-btn" data-mode="Acro">Acro</button>
-                <button class="ap-mode-btn" data-mode="RTL">RTL</button>
-
+        <div class="status-modal-content">
+            <div class="status-modal-header">
+            <img src="images/autopilot-icon.svg" alt="AP icon" class="ap-icon">
+            <span>AP status</span>
             </div>
+
+            <!-- give each button a unique id; classes kept only for CSS -->
+            <button id="ap-mode-manual" class="ap-mode-btn" data-mode="Manual">Manual</button>
+            <button id="ap-mode-hold"   class="ap-mode-btn" data-mode="Hold">Hold</button>
+            <button id="ap-mode-auto"   class="ap-mode-btn" data-mode="Auto">Auto</button>
+            <button id="ap-mode-loiter" class="ap-mode-btn" data-mode="Loiter">Loiter</button>
+            <button id="ap-mode-acro"   class="ap-mode-btn" data-mode="Acro">Acro</button>
+            <button id="ap-mode-rtl"    class="ap-mode-btn" data-mode="RTL">RTL</button>
         </div>
+        </div>
+
 
 
 
