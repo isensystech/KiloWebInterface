@@ -4823,7 +4823,7 @@
 
         /* Background track */
         .anchor-track-bg{
-        position:absolute; top:10; left:40px; width:30px; height:100%;
+        position:absolute; top:10px; left:40px; width:30px; height:100%;
         background:black; border-radius:10px;
         }
 
@@ -4861,7 +4861,6 @@
         }
 
 
-
         /* Place throttle buttons above/below the slider *inside* the overlay */
         /* Track center: left = 40px + 15px = 55px */
         #anchor-throttle-up,
@@ -4877,8 +4876,13 @@
         #anchor-throttle-down { bottom: 0; }  /* at the bottom edge */
 
 
-
-
+        /* Put modal containers above the page backdrop */
+        #trimtab-modal-container,
+        #anchor-modal-container{
+        position: fixed;   /* detach from parent stacking contexts */
+        inset: 0;          /* full-viewport click area */
+        z-index: 10001;    /* higher than any .modal-backdrop */
+        }
 
 
 
