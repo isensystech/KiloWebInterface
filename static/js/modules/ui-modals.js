@@ -44,113 +44,119 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// ============================================================================
-// AP (AUTOPILOT) TOGGLE MODAL
-// ============================================================================
-function initializeAPToggle() {
-    const apToggleBtn = document.getElementById('ap-toggle');
-    const apModal = document.getElementById('auto-pilot-modal');
-    const apModeButtons = apModal?.querySelectorAll('.ap-mode-btn');
-    
-    if (!apToggleBtn || !apModal) {
-        console.warn('AP toggle elements not found');
-        return;
-    }
-    
-    // Show modal on button click
-    apToggleBtn.addEventListener('click', () => {
-        apModal.style.display = 'block';
-        apModal.classList.add('is-open');
-    });
-    
-    // Handle mode selection
-    apModeButtons?.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const selectedMode = btn.dataset.mode;
-            
-            // Update button text
-            apToggleBtn.textContent = selectedMode;
-            
-            // Send command via WebSocket
-            if (window.ws && window.ws.readyState === WebSocket.OPEN) {
-                const message = {
-                    type: "ap.set_mode",
-                    mode: selectedMode
-                };
-                window.ws.send(JSON.stringify(message));
-                console.log('Sent AP mode:', selectedMode);
-            }
-            
-            // Update button states
-            apModeButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            // Close modal
-            apModal.style.display = 'none';
-            apModal.classList.remove('is-open');
-        });
-    });
-    
-    // Close modal when clicking outside
-    apModal.addEventListener('click', (e) => {
-        if (e.target === apModal) {
-            apModal.style.display = 'none';
-            apModal.classList.remove('is-open');
-        }
-    });
-}
 
-// ============================================================================
-// HELM TOGGLE MODAL
-// ============================================================================
-function initializeHelmToggle() {
-    const helmToggleBtn = document.getElementById('helm-toggle');
-    const helmModal = document.getElementById('helm-modal');
-    const helmDisplays = helmModal?.querySelectorAll('.helm-display');
+    // MODAL ACTIVE HELM PANEL //
     
-    if (!helmToggleBtn || !helmModal) {
-        console.warn('Helm toggle elements not found');
-        return;
-    }
-    
-    // Show modal on button click
-    helmToggleBtn.addEventListener('click', () => {
-        helmModal.style.display = 'block';
-        helmModal.classList.add('is-open');
-    });
-    
-    // Handle helm selection
-    helmDisplays?.forEach(display => {
-        display.addEventListener('click', () => {
-            const selectedHelm = display.querySelector('.helm-display-value').textContent;
-            
-            // Update button text
-            helmToggleBtn.textContent = selectedHelm;
-            
-            // Send command via WebSocket
-            if (window.ws && window.ws.readyState === WebSocket.OPEN) {
-                const message = {
-                    type: "helm.set",
-                    helm: selectedHelm
-                };
-                window.ws.send(JSON.stringify(message));
-                console.log('Sent Helm selection:', selectedHelm);
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleBtn = document.getElementById("helm-toggle");                 // The main button that opens the modal
+            const modal = document.getElementById("helm-modal");                     // The modal element
+            const modeButtons = modal.querySelectorAll(".ap-mode-btn");             // All mode buttons inside the modal
+            const helmValues = modal.querySelectorAll(".helm-display-value");       // All display value elements in the modal
+
+            // When the main button is clicked → open the modal
+            toggleBtn.addEventListener("click", () => {
+                modal.style.display = "block";                                       // Show the modal
+
+                const currentMode = toggleBtn.dataset.currentMode;                   // Get the current mode (stored in dataset)
+
+                // Highlight the active mode button
+                modeButtons.forEach(btn => {
+                    if (btn.dataset.mode === currentMode) {
+                        btn.classList.add("active");
+                    } else {
+                        btn.classList.remove("active");
+                    }
+                });
+            });
+
+
+            // Default to "Robot" on first load if no mode set yet
+            if (!toggleBtn.dataset.currentMode) {
+            toggleBtn.dataset.currentMode = 'Auto';   // "Auto" is treated as "Robot"
+            toggleBtn.textContent = 'Robot';          // reflect on the toggle button
+
+            // highlight "Robot" row in the modal
+            helmValues.forEach(el => {
+                const isRobot = el.textContent.trim() === 'Robot';
+                el.style.color = isRobot ? '#ffffff' : '#757575';
+                el.style.fontWeight = isRobot ? '600' : '500';
+            });
             }
-            
-            // Close modal
-            helmModal.style.display = 'none';
-            helmModal.classList.remove('is-open');
+
+
+
+            // When a mode button is clicked inside the modal
+            modeButtons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const selectedMode = btn.dataset.mode;
+                    const isRobot = selectedMode === "Auto";                         // Treat "Auto" as "Robot"
+
+                    // Update the main button text based on selected mode
+                    toggleBtn.textContent = isRobot ? "Robot" : selectedMode;
+                    toggleBtn.dataset.currentMode = selectedMode;                    // Store selected mode in the main button
+
+                    // Update display block appearance: highlight "Robot" only
+                    helmValues.forEach(el => {
+                        if (isRobot && el.textContent.trim() === "Robot") {
+                            el.style.color = "#ffffff";
+                            el.style.fontWeight = "600";
+                        } else {
+                            el.style.color = "#757575";
+                            el.style.fontWeight = "500";
+                        }
+                    });
+
+                    // Update the active button style
+                    modeButtons.forEach(button => {
+                        button.classList.remove("active");                           // Remove previous active state
+                    });
+                    btn.classList.add("active");                                     // Set active class to clicked button
+
+                    // Close the modal
+                    modal.style.display = "none";
+                });
+            });
         });
-    });
-    
-    // Close modal when clicking outside
-    helmModal.addEventListener('click', (e) => {
-        if (e.target === helmModal) {
-            helmModal.style.display = 'none';
-            helmModal.classList.remove('is-open');
+
+
+
+   // MODAL AUTO PILOT PANEL //
+        // Auto-Pilot modal wiring (fixed for #auto-pilot-modal)
+        document.addEventListener('DOMContentLoaded', () => {
+        const toggleBtn = document.getElementById('ap-toggle');          // main button
+        const modal = document.getElementById('auto-pilot-modal');       // modal window
+
+        if (!toggleBtn || !modal) return; // guard if markup not present
+
+        const modeButtons = modal.querySelectorAll('.ap-mode-btn');
+
+        function openModal(){
+            modal.style.display = 'block';
+            const currentMode = toggleBtn.dataset.currentMode;
+            modeButtons.forEach(b => b.classList.toggle('active', b.dataset.mode === currentMode));
         }
-    });
-}
+        function closeModal(){ modal.style.display = 'none'; }
+
+        toggleBtn.addEventListener('click', openModal);
+
+        modeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+            const selectedMode = btn.dataset.mode;
+            toggleBtn.textContent = selectedMode;
+            toggleBtn.dataset.currentMode = selectedMode;
+            closeModal();
+            });
+        });
+
+        // Optional niceties: click backdrop or ESC to close (safe to keep)
+        modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+        });
+
+
+
+
+
 
 // ============================================================================
 // TRIM MODAL (Manual open/close - gamepad controls content)

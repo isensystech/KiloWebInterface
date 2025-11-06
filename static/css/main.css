@@ -4560,16 +4560,15 @@
 
         
 
+    /* MODAL ACTIVE HELM PANEL */
 
-     /* MODAL ACTIVE HELM PANEL */
-    
-        .helm-display {
+    .helm-display {
         display: flex;
         align-items: baseline;
         justify-content: center;
         gap: 4px;
         padding: 14px 16px;
-        background:  var(--color-black);
+        background: #000;
         border-radius: 6px;
         font-size: 16px;
         line-height: 20px;
@@ -4578,14 +4577,12 @@
         .helm-display-value {
         font-size: 16px;
         font-weight: 500;
-        color:  var(--text-inactive);
+        color: #757575;
         }
     
 
-    
 
-     /* MODAL AUTO PILOT PANEL */
-    
+    /* MODAL AUTO PILOT PANEL */
 
         .status-modal {
         width: 170px;
@@ -4593,7 +4590,7 @@
         position: fixed;
         top: 50%; left: 50%;
         transform: translate(-50%, -50%);
-        background: var(--color-drawer-bg);
+        background: #353535;
         border-radius: 6px;
         padding: 20px;
         z-index: 1000;
@@ -4609,8 +4606,9 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        color: var(--color-light);
-        font: var(--type-h3);
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
         }
 
 
@@ -4619,7 +4617,7 @@
         height: 48px;     /* fixed button height */
         padding: 0;       /* remove extra padding */
 
-        background:  var(--button-inactive);
+        background: #404040;
         border: none;
         border-radius: 6px;
 
@@ -4633,7 +4631,7 @@
         font-size: 16px;
         font-weight: 500;
         letter-spacing: 0.5px;     /* technical look */
-        color:  var(--text-inactive);
+        color: #757575;
 
         cursor: pointer;
         transition: background 0.2s, transform 0.1s, color 0.2s;
@@ -4641,12 +4639,14 @@
         }
 
         .ap-mode-btn:hover {
-        font: var(--type-display-mono-bold);
-        background:var(--button-active); 
+        background: #505050;
+        color: #fff;
         }
         .ap-mode-btn.active {
-        font: var(--type-display-mono-bold);
-        background:var(--color-black); 
+        font-weight: 600;
+        color: #fff;
+        background: #454545;
+
         }
 
 
@@ -4663,17 +4663,10 @@
         }
 
 
-        .throttle-feedback-fill {
-            position: absolute;
-            bottom: 50%;
-            left: 0;
-            width: 100%;
-            background-color: rgba(255, 200, 0, 0.5); /* Semi-transparent yellow */
-            border: 0;
-            height: 0%;
-            z-index: 0; /* Behind the commanded fill */
-            pointer-events: none;
-        }
+
+
+
+
 
         /* === INFO MODAL === */
 
