@@ -4668,6 +4668,226 @@
 
 
 
+
+/* ======= TRIM TAB CONTROL MODAL ======= */
+
+/* Split wrapper into two vertical halves */
+/* top: boat image, bottom: two mini sliders */
+.trim-image-wrapper{
+  /* grid gives two equal rows */
+  display: grid;                           /* two-row layout */
+  grid-template-rows: 1fr 1fr;             /* 50% / 50% */
+  align-items: center;                     /* vertical centering inside rows */
+  justify-items: center;                   /* horizontal centering */
+  gap: 12px;                               /* small spacing between halves */
+  position: relative;                      /* keep existing absolute children safe */
+  min-height: 340px;                       /* ≈ 2 × 170px slider height */
+}
+
+/* Bottom half: the two mini sliders */
+.trimtab-panel{
+  grid-row: 2;                              /* place in the lower half */
+  display: flex;                            /* your existing layout for two sliders */
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+}
+
+.trimtab-block{ width:80px; }
+
+/* slider box (half height of anchor: 170px) */
+.trimtab-slider-overlay{ position:relative; width:80px; height:170px; }
+
+/* track / fill / thumb */
+.trimtab-track-bg{
+  position:absolute; left:40px; top:0; width:30px; height:100%;
+  background:#000; border-radius:10px;
+}
+.trimtab-track-fill{
+  position:absolute; left:42px; top:0; width:29%;
+  height:50%; background:#FFBD0A; border-radius:9px;
+}
+.trimtab-thumb{
+  position:absolute; left:36px; width:38px; height:26px;
+  transform:translateY(-50%); border-radius:10%;
+  background:radial-gradient(ellipse 50% 50% at 50% 50%, #939393 0%, #737373 100%);
+  cursor:grab; z-index:2;
+}
+
+/* place your existing arrow buttons above/below the track, scoped to slider */
+.trimtab-slider-overlay .throttle-up,
+.trimtab-slider-overlay .throttle-down{
+  position:absolute; left:55px; transform:translateX(-50%); z-index:3;
+}
+.trimtab-slider-overlay .throttle-up{ top:0; }
+.trimtab-slider-overlay .throttle-down{ bottom:0; }
+
+/* small captions (optional) */
+.trimtab-caption{ margin-top:6px; text-align:center; color:#dadada; font: var(--type-caption-regular); }
+
+
+
+/* GYROSCOPE top-half image */
+/* Gyro block: stack vertically and center */
+.gyro-feedback{
+  /* vertical stack */
+  display: flex;                 /* center both children vertically */
+  flex-direction: column;        /* image above, controls below */
+  align-items: center;           /* horizontal centering */
+  justify-content: center;       /* vertical centering inside the area */
+  gap: 8px;                      /* space between image and controls */
+    position:relative;              /* anchor for absolute water */
+
+}
+
+/* Boat image (≈ +30% from previous 50% → 65%) */
+#gyro-boat{
+  /* size */
+  width: 35%;                    /* 50% * 1.3 = 65% */
+  max-width:none;
+  height:auto;
+  transform-origin:50% 50%;
+  transition:transform 180ms ease;
+  display:block;
+  position:relative;              /* allow z-index */
+  z-index:1;                      /* above water by default */
+}
+
+
+/* Controls under the image, centered */
+.gyro-controls{
+  display: flex;
+  align-items: center;
+  justify-content: center;       /* center buttons + angle */
+  gap: 8px;
+  margin: 8px 0 0;               /* small space from image */
+}
+
+/* Angle label */
+.gyro-angle{
+  color: var(--color-light);
+  font: var(--type-caption-mono-regular);
+}
+
+/* wavy water line */
+.gyro-water{
+  position:absolute; left:50%; top:56%; transform:translateX(-50%);
+  width:90%; height:4px; pointer-events:none; z-index:2;
+
+  /* wave color here */
+  background-color: var(--color-white);
+
+  /* wave shape as mask */
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'%3E%3Cpath d='M0 5 Q 5 0 10 5 T 20 5 T 30 5 T 40 5 T 50 5 T 60 5 T 70 5 T 80 5 T 90 5 T 100 5 T 110 5 T 120 5' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  -webkit-mask-repeat:repeat-x;
+  -webkit-mask-position:center;
+  -webkit-mask-size:90px 100%;
+          mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'%3E%3Cpath d='M0 5 Q 5 0 10 5 T 20 5 T 30 5 T 40 5 T 50 5 T 60 5 T 70 5 T 80 5 T 90 5 T 100 5 T 110 5 T 120 5' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+          mask-repeat:repeat-x;
+          mask-position:center;
+          mask-size:90px 100%;
+}
+
+.gyro-water.over{ z-index: 5; } /* draw above the boat if needed */
+
+
+
+
+
+/* ======= ANCHOR MODAL ======= */
+
+        .anchor-boat-image {
+        position: absolute;
+        top: 20%;
+        left: 40%;
+        transform: translate(-50%, -50%);
+        width: 60%;
+        height: auto;
+        }
+
+        /* Slider overlay container */
+        .anchor-slider-overlay{
+        position:absolute; top:0; right:0; height:100%;
+        display:flex; align-items:center; padding-right:10px;
+        z-index:4;
+        }
+
+        /* Scale labels */
+        .anchor-labels{
+        position:absolute; left:8px; top:0; width:30px; height:90%;
+        font-size:10px; font-family:'Roboto', sans-serif; font-weight:700;
+        color:#757575; line-height:15px; text-align:center;
+        pointer-events:none;
+        }
+
+        /* Background track */
+        .anchor-track-bg{
+        position:absolute; top:10; left:40px; width:30px; height:100%;
+        background:black; border-radius:10px;
+        }
+
+        /* Fill (yellow) */
+        .anchor-track-fill{
+        position:absolute; left:42px; width:29%;
+        background-color:#FFBD0A; border-radius:9px;
+        z-index:1; height:100%; bottom:2px;
+        }
+
+        /* Thumb handle */
+        .anchor-thumb{
+        position:absolute; left:36px; width:38px; height:26px;
+        background:radial-gradient(ellipse 50% 50% at 50% 50%, #939393 0%, #737373 100%);
+        border-radius:10%; transform:translateY(-50%); cursor:grab; z-index:10;
+        }
+        .anchor-thumb:hover{
+        filter:drop-shadow(0 0 8px rgb(100,100,100));
+        background:radial-gradient(ellipse 50% 50% at 50% 50%, #a8a8a8 0%, #848484 100%);
+        }
+
+        /* Readout badge */
+        .anchor-readout{
+        position:absolute; left:-230px; bottom:0; width:60px; height:40px;
+        background-color:#000; color:#fff; font-family:Roboto, sans-serif;
+        font-weight:normal; font-size:28px; text-align:center; line-height:40px;
+        border-radius:4px; z-index:6;
+        }
+
+        /* Empty wrapper (kept, used in HTML) */
+        .anchor-slider-wrapper{
+        position:relative; width:80px; height:340px;
+        margin-left:auto; margin-right:0; margin-top:0; margin-bottom:0;
+        z-index:2; overflow:visible;
+        }
+
+
+
+        /* Place throttle buttons above/below the slider *inside* the overlay */
+        /* Track center: left = 40px + 15px = 55px */
+        #anchor-throttle-up,
+        #anchor-throttle-down{
+        position: absolute;          /* take out of the flex flow */
+        left: 55px;                  /* center horizontally over 30px track */
+        transform: translateX(-50%); /* horizontal centering only */
+        z-index: 6;                  /* above track */
+        }
+        .anchor-track-fill{ top:0; bottom:auto; } /* anchor fill to TOP */
+
+        #anchor-throttle-up   { top: 0; }     /* at the top edge (no negative offset) */
+        #anchor-throttle-down { bottom: 0; }  /* at the bottom edge */
+
+
+
+
+
+
+
+
+
+
+
+
+
         /* === INFO MODAL === */
 
         .modal-backdrop {
