@@ -1,5 +1,13 @@
 /* SCRIPT // FOOTER and NAVIGATION   */
 
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
+const NAVIGATION_CONFIG = Object.freeze({
+    // Number of carousel screens (used to wrap arrow navigation)
+    screenCount: 3
+});
+
 /**
  * Initializes all screen navigation (arrows, dots) and the debug panel toggle.
  */
@@ -45,14 +53,14 @@ export function initializeNavigation() {
     // Arrows
     if (prevArrow) {
         prevArrow.addEventListener('click', () => {
-            const prev = currentScreen === 1 ? 3 : currentScreen - 1;
+            const prev = currentScreen === 1 ? NAVIGATION_CONFIG.screenCount : currentScreen - 1;
             switchScreen(prev);
         });
     }
 
     if (nextArrow) {
         nextArrow.addEventListener('click', () => {
-            const next = currentScreen === 3 ? 1 : currentScreen + 1;
+            const next = currentScreen === NAVIGATION_CONFIG.screenCount ? 1 : currentScreen + 1;
             switchScreen(next);
         });
     }

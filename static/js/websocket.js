@@ -20,10 +20,21 @@ import {
 } from './modules/ui-telemetry.js';
 
 // ============================================================================
+// CONFIGURATION
+// ============================================================================
+const WEBSOCKET_CONFIG = Object.freeze({
+  // Interval for sending joystick heartbeat packets to the server
+  gamepadHeartbeatIntervalMs: 1000,
+  // Bank/switch mapping for the three-way nav-light helper
+  navLightsBank: 1,
+  navLightsAnchorSwitch: 3,
+  navLightsNavSwitch: 5
+});
+
+// ============================================================================
 // WEBSOCKET INITIALIZATION
 // ============================================================================
 let gamepadHeartbeatTimer = null;
-const GAMEPAD_HEARTBEAT_INTERVAL = 1000; // milliseconds
 
 function startGamepadHeartbeat() {
     if (gamepadHeartbeatTimer !== null) {
@@ -46,7 +57,7 @@ function startGamepadHeartbeat() {
 
       console.log('Sending gamepad heartbeat:', message);
       window.ws.send(JSON.stringify(message));
-    }, GAMEPAD_HEARTBEAT_INTERVAL);
+    }, WEBSOCKET_CONFIG.gamepadHeartbeatIntervalMs);
 }
 
 function stopGamepadHeartbeat() {
@@ -147,8 +158,8 @@ function initializeWebSocket() {
           // Handle M20 Nav Lights (which are also M20)
           const navGroup = document.querySelector('[data-nav-lights]');
           if (navGroup) {
-            const anchorState = msg.switch_3; // switch_3 is Anchor
-            const navState = msg.switch_5;    // switch_5 is Nav
+            const anchorState = msg[`switch_${WEBSOCKET_CONFIG.navLightsAnchorSwitch}`];
+            const navState = msg[`switch_${WEBSOCKET_CONFIG.navLightsNavSwitch}`];
             let activeMode = 'off';
 
             if (anchorState === 1 && navState === 1) {
@@ -234,8 +245,8 @@ function initializeClickHandlers() {
       const navButton = e.target.closest('[data-nav-lights] > button[data-nav-mode]');
       if (navButton) {
         const mode = navButton.dataset.navMode;
-        const anchorSwitch = 3;
-        const navSwitch = 5;
+        const anchorSwitch = WEBSOCKET_CONFIG.navLightsAnchorSwitch;
+        const navSwitch = WEBSOCKET_CONFIG.navLightsNavSwitch;
         let anchorState = 0;
         let navState = 0;
 
@@ -246,8 +257,8 @@ function initializeClickHandlers() {
           navState = 1;
         }
 
-        const payload1 = { type: 'm20relay.set', bank: 1, switch: anchorSwitch, state: anchorState };
-        const payload2 = { type: 'm20relay.set', bank: 1, switch: navSwitch, state: navState };
+        const payload1 = { type: 'm20relay.set', bank: WEBSOCKET_CONFIG.navLightsBank, switch: anchorSwitch, state: anchorState };
+        const payload2 = { type: 'm20relay.set', bank: WEBSOCKET_CONFIG.navLightsBank, switch: navSwitch, state: navState };
         
         window.ws.send(JSON.stringify(payload1));
         console.log('Sent:', payload1);

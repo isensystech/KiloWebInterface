@@ -1,6 +1,19 @@
 /* SCRIPT // BUTTONS   */
 
 // ============================================================================
+// CONFIGURATION
+// ============================================================================
+const BUTTONS_CONFIG = Object.freeze({
+    // Legacy fetch endpoints used by the CAN relay
+    buttonClickEndpoint: '/button-click',
+    statusEndpoint: '/status',
+    // Copy to show when no downstream devices report in
+    heartbeatPlaceholderText: 'No device heartbeats received',
+    // CAN IDs we always expect so UI renders with safe defaults
+    defaultDeviceIds: ['0x550', '0x551', '0x552']
+});
+
+// ============================================================================
 // MODULE SCOPED VARIABLES
 // ============================================================================
 
@@ -11,11 +24,10 @@ const connectionIndicator = document.getElementById('connection-indicator');
 
 // Module-scoped state
 // Initialize with a default structure to prevent errors on first load
-let deviceStates = {
-    '0x550': [0, 0, 0, 0],
-    '0x551': [0, 0, 0, 0],
-    '0x552': [0, 0, 0, 0]
-};
+let deviceStates = BUTTONS_CONFIG.defaultDeviceIds.reduce((acc, id) => {
+    acc[id] = [0, 0, 0, 0];
+    return acc;
+}, {});
 
 // ============================================================================
 // EXPORTED INITIALIZATION FUNCTIONS
@@ -152,7 +164,7 @@ export function updateHeartbeatDisplay() {
     controllerHeartbeat.textContent = controllerText || 'No controller heartbeats';
     
     // Device heartbeat display (placeholder)
-    deviceHeartbeats.textContent = 'No device heartbeats received'; // This seems to be a placeholder
+    deviceHeartbeats.textContent = BUTTONS_CONFIG.heartbeatPlaceholderText; // This seems to be a placeholder
 }
 
 // ============================================================================
@@ -241,7 +253,7 @@ function CANbutton(id, loc) {
     let msg = 'STARTMSG' + id + ',' + loc + "ENDMSG";
     
     // Use relative URL instead of hardcoded IP
-    fetch("/button-click", {
+    fetch(BUTTONS_CONFIG.buttonClickEndpoint, {
         method: "POST",
         headers: {"Content-Type": "text/plain"},
         body: msg
@@ -270,7 +282,7 @@ function CANbutton(id, loc) {
  * Request status from Teensy (via old FETCH method).
  */
 function requestStatus() {
-    fetch("/status")
+    fetch(BUTTONS_CONFIG.statusEndpoint)
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');

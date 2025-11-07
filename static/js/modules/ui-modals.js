@@ -1,4 +1,26 @@
 // ============================================================================
+// CONFIGURATION
+// ============================================================================
+const MODAL_CONFIG = Object.freeze({
+    // Delay between opening the info modal and replaying the GIF
+    infoStartDelayMs: 500,
+    // Fallback GIF length when no duration metadata exists
+    infoGifDurationFallbackMs: 4800,
+    // How early the SVG overlay begins fading in before GIF end
+    infoCrossfadeOverlapMs: 600,
+    // Crossfade transition duration for GIF/SVG layers
+    infoFadeMs: 600,
+    // Safety pad so the fade starts just before the theoretical GIF end
+    infoExtraTailMs: 120,
+    // Transparent data URI used so layout does not jump while GIF reloads
+    infoPlaceholderDataUri: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
+    // Geometry for the coach overlay tooltip + spotlight
+    coachTooltipGapPx: 32,
+    coachTooltipMarginPx: 12,
+    coachSpotlightPaddingPx: 16
+});
+
+// ============================================================================
 // AP (AUTOPILOT) TOGGLE MODAL
 // ============================================================================
 export function initializeAPToggle() {
@@ -139,25 +161,8 @@ window.applyTrimSettings = applyTrimSettings;
 // ============================================================================
 
 
-// = ANIMATION INFO = //
-
-// Delay after modal opens before starting GIF
-const START_DELAY_MS       = 500;   // start delay
-// Fallback GIF duration if data-gif-duration is missing
-const GIF_DURATION_FALLBACK= 4800;  // full GIF length in ms
-// How much earlier SVG starts fading in before GIF ends
-const CROSSFADE_OVERLAP_MS = 600;   // overlap window (bigger = earlier SVG)
-// Fade duration for both layers (keep in sync with CSS if set there)
-const FADE_MS              = 600;   // crossfade duration
-// Small safety lead to start fade slightly before theoretical end
-const EXTRA_TAIL_MS        = 120;   // compensates decode/refresh jitter
-
-// = ANIMATION (GIF + SVG layered crossfade) =
-const INFO_PLACEHOLDER_SRC =
-  "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
-
 function ensureFadeTransitions(gifEl, logoEl){
-  const t = `opacity ${FADE_MS}ms ease`;
+  const t = `opacity ${MODAL_CONFIG.infoFadeMs}ms ease`;
   // Set inline transitions only if none defined in CSS
   if (gifEl && !gifEl.style.transition)  gifEl.style.transition  = t;
   if (logoEl && !logoEl.style.transition) logoEl.style.transition = t;
@@ -170,7 +175,7 @@ function playGifWithCrossfade(){
 
   // Read duration from data-attribute, fallback if absent
   const dataDur = gifEl.dataset.gifDuration ? parseInt(gifEl.dataset.gifDuration, 10) : null;
-  const GIF_MS  = Number.isFinite(dataDur) ? dataDur : GIF_DURATION_FALLBACK;
+  const GIF_MS  = Number.isFinite(dataDur) ? dataDur : MODAL_CONFIG.infoGifDurationFallbackMs;
 
   // Cleanup any previous timers/listeners
   clearTimeout(gifEl._xfadeTimer);
@@ -193,7 +198,7 @@ function playGifWithCrossfade(){
       requestAnimationFrame(() => { gifEl.style.opacity = '1'; });
 
       // Schedule crossfade: start SVG before GIF "ends"
-      const startAt = Math.max(0, GIF_MS - CROSSFADE_OVERLAP_MS - EXTRA_TAIL_MS);
+      const startAt = Math.max(0, GIF_MS - MODAL_CONFIG.infoCrossfadeOverlapMs - MODAL_CONFIG.infoExtraTailMs);
       gifEl._xfadeTimer = setTimeout(() => {
         // Overlap: SVG fades in while GIF fades out
         requestAnimationFrame(() => {
@@ -235,7 +240,7 @@ function playGifWithCrossfade(){
     if (gifEl){
       clearTimeout(gifEl._xfadeTimer);
       clearTimeout(gifEl._startTimer);
-      gifEl.src = INFO_PLACEHOLDER_SRC; // placeholder keeps layout
+      gifEl.src = MODAL_CONFIG.infoPlaceholderDataUri; // placeholder keeps layout
       gifEl.style.opacity = '0';
     }
     if (logoEl){
@@ -245,7 +250,7 @@ function playGifWithCrossfade(){
     clearTimeout(startDelayTimer);
     startDelayTimer = setTimeout(() => {
       playGifWithCrossfade();
-    }, START_DELAY_MS);
+    }, MODAL_CONFIG.infoStartDelayMs);
   }
 
   function closeModal(){
@@ -259,7 +264,7 @@ function playGifWithCrossfade(){
     if (gifEl){
       clearTimeout(gifEl._xfadeTimer);
       clearTimeout(gifEl._startTimer);
-      gifEl.src = INFO_PLACEHOLDER_SRC;
+      gifEl.src = MODAL_CONFIG.infoPlaceholderDataUri;
       gifEl.style.opacity = '0';
     }
     if (logoEl){
@@ -328,7 +333,7 @@ const TOUR_STEPS = Array.from(document.querySelectorAll('[data-coach-text]')).ma
   function setSpotlightByRect(r){
     const cx = r.left + r.width / 2;
     const cy = r.top  + r.height / 2;
-    const rad = Math.sqrt(r.width*r.width + r.height*r.height) / 2 + 16;
+    const rad = Math.sqrt(r.width*r.width + r.height*r.height) / 2 + MODAL_CONFIG.coachSpotlightPaddingPx;
     holeCx = cx; holeCy = cy; holeR = rad;
     mask.style.setProperty('--x', `${cx}px`);
     mask.style.setProperty('--y', `${cy}px`);
@@ -383,7 +388,7 @@ const TOUR_STEPS = Array.from(document.querySelectorAll('[data-coach-text]')).ma
     tipText.textContent = step.text;
 
     const r = activeEl.getBoundingClientRect();
-    const gap = 32;
+    const gap = MODAL_CONFIG.coachTooltipGapPx;
     const tw = tip.offsetWidth || 300;
     const th = tip.offsetHeight || 80;
     const cx = r.left + r.width / 2;
@@ -399,8 +404,9 @@ const TOUR_STEPS = Array.from(document.querySelectorAll('[data-coach-text]')).ma
     }
 
     const vw = innerWidth, vh = innerHeight;
-    tx = Math.max(12, Math.min(vw - tw - 12, tx));
-    ty = Math.max(12, Math.min(vh - th - 12, ty));
+    const margin = MODAL_CONFIG.coachTooltipMarginPx;
+    tx = Math.max(margin, Math.min(vw - tw - margin, tx));
+    ty = Math.max(margin, Math.min(vh - th - margin, ty));
     tip.style.transform = `translate(${Math.round(tx)}px, ${Math.round(ty)}px)`;
 
     btnPrev.disabled = (TOUR_STEPS.length <= 1);
@@ -455,7 +461,7 @@ function placeTooltip(element, placement, text) {
   tipText.textContent = text;
   
   const r = element.getBoundingClientRect();
-  const gap = 32;
+  const gap = MODAL_CONFIG.coachTooltipGapPx;
   const tw = tip.offsetWidth || 300;
   const th = tip.offsetHeight || 80;
   const cx = r.left + r.width / 2;
@@ -471,8 +477,9 @@ function placeTooltip(element, placement, text) {
   }
   
   const vw = innerWidth, vh = innerHeight;
-  tx = Math.max(12, Math.min(vw - tw - 12, tx));
-  ty = Math.max(12, Math.min(vh - th - 12, ty));
+  const margin = MODAL_CONFIG.coachTooltipMarginPx;
+  tx = Math.max(margin, Math.min(vw - tw - margin, tx));
+  ty = Math.max(margin, Math.min(vh - th - margin, ty));
   tip.style.transform = `translate(${Math.round(tx)}px, ${Math.round(ty)}px)`;
 }
 

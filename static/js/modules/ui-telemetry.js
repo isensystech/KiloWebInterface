@@ -1,5 +1,32 @@
 /* MODAL GAUGES PANEL   */
 
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
+const TELEMETRY_CONFIG = Object.freeze({
+  // Horizontal offset applied when safety block shifts beside the gauges
+  gaugeSafetySideOffsetPx: 12,
+  startLoader: {
+    // Duration of the circular fill animation
+    fillMs: 2000,
+    // Time allotted for the follow-up line animation
+    lineMs: 1000,
+    // Extra buffer before hiding the loader after animations finish
+    hideBufferMs: 150,
+    // Minimum time the overlay remains visible once triggered
+    overlayTimeoutMs: 1200
+  },
+  // How long status indicators stay visible after a healthy update
+  statusIndicatorHideTimeoutMs: 5000,
+  batteryGauge: {
+    // Voltage range mapped onto the gauge arc
+    minVoltage: 11.0,
+    maxVoltage: 14.5,
+    // Threshold at which the gauge flips into the warning style
+    lowVoltageThreshold: 12.0
+  }
+});
+
 // === Safety block smart placement ===
 export function initializeGaugePanelLogic() {
   const parent = document.querySelector('.gauges-button-panel');
@@ -25,7 +52,7 @@ export function initializeGaugePanelLogic() {
 
   const placeSide = () => {
     parent.classList.add('side-safety');
-    const leftPx = panel.offsetWidth + 12;
+    const leftPx = panel.offsetWidth + TELEMETRY_CONFIG.gaugeSafetySideOffsetPx;
     const topPx = (panel.offsetTop + panel.offsetHeight) - safety.offsetHeight;
     safety.style.position = 'absolute';
     safety.style.left = `${leftPx}px`;
@@ -268,7 +295,7 @@ export function hideStartLoader() {
   el.classList.remove('show');
   el.style.pointerEvents = 'none';
 }
-function _showStartLoader(durationMs = 1200) {
+function _showStartLoader(durationMs = TELEMETRY_CONFIG.startLoader.overlayTimeoutMs) {
   const el = getStartLoaderEl();
   if (!el) return;
   el.style.pointerEvents = 'auto';
@@ -279,8 +306,8 @@ function _showStartLoader(durationMs = 1200) {
 function mountStartPower(opts = {}) {
   const slot = document.querySelector('#start-loader .loader-slot');
   if (!slot) return;
-  const fillMs = Number(opts.fillMs ?? 2000);
-  const lineMs = Number(opts.lineMs ?? 1000);
+  const fillMs = Number(opts.fillMs ?? TELEMETRY_CONFIG.startLoader.fillMs);
+  const lineMs = Number(opts.lineMs ?? TELEMETRY_CONFIG.startLoader.lineMs);
   slot.setAttribute('role', 'img');
   slot.setAttribute('aria-label', 'Starting…');
   slot.innerHTML = `
@@ -313,8 +340,9 @@ function mountStartPower(opts = {}) {
   }
 }
 export function showStartLoader() {
-  mountStartPower({ fillMs: 2000, lineMs: 1000 });
-  _showStartLoader(2000 + 1000 + 150);
+  const { fillMs, lineMs, hideBufferMs } = TELEMETRY_CONFIG.startLoader;
+  mountStartPower({ fillMs, lineMs });
+  _showStartLoader(fillMs + lineMs + hideBufferMs);
 }
 export function initializeStartLoaderButton() {
   const btn = document.getElementById('ignitionBtn');
@@ -434,7 +462,13 @@ export function initializeSensorToggles() {
 
 const indicatorStates = {};
 // **** THIS IS THE FIX: Added 'export' back. ****
-export const handleStatusIndicator = (elementId, newStatus, okClass = 'connected', badClass = 'disconnected', timeout = 5000) => {
+export const handleStatusIndicator = (
+  elementId,
+  newStatus,
+  okClass = 'connected',
+  badClass = 'disconnected',
+  timeout = TELEMETRY_CONFIG.statusIndicatorHideTimeoutMs
+) => {
   const indicator = document.getElementById(elementId);
   if (!indicator) return;
   const previousStatus = indicatorStates[elementId];
@@ -505,9 +539,7 @@ export function updateRelayVoltage(msg) {
     const gaugeEl = document.getElementById('battery-gauge-10-6');
     if (!gaugeEl) return;
 
-    const minVoltage = 11.0;
-    const maxVoltage = 14.5;
-    const lowVoltageThreshold = 12.0;
+    const { minVoltage, maxVoltage, lowVoltageThreshold } = TELEMETRY_CONFIG.batteryGauge;
 
     // This is the text value *inside* the gauge
     const gaugeValueEl = gaugeEl.querySelector('.js-voltage');

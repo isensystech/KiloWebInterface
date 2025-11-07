@@ -31,6 +31,17 @@ import {
 
 
 // ============================================================================
+// CONFIGURATION
+// ============================================================================
+const MAIN_CONFIG = Object.freeze({
+    // Pixel distance to scroll telemetry drawer per bumper press
+    drawerScrollStepPx: 200,
+    // CSS scroll behavior for drawer movement
+    drawerScrollBehavior: 'smooth'
+});
+
+
+// ============================================================================
 // APPLICATION INITIALIZATION (MAIN ENTRY POINT)
 // ============================================================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -136,14 +147,20 @@ function pollDrawerScroll() {
             const drawerPanel = document.querySelector('.drawer-panel');
             if (drawerPanel) {
                 if (backPressed && !backButtonPressed) {
-                    drawerPanel.scrollBy({ left: -200, behavior: 'smooth' });
+                    drawerPanel.scrollBy({ 
+                        left: -MAIN_CONFIG.drawerScrollStepPx, 
+                        behavior: MAIN_CONFIG.drawerScrollBehavior 
+                    });
                     backButtonPressed = true;
                 } else if (!backPressed) {
                     backButtonPressed = false;
                 }
                 
                 if (forwardPressed && !forwardButtonPressed) {
-                    drawerPanel.scrollBy({ left: 200, behavior: 'smooth' });
+                    drawerPanel.scrollBy({ 
+                        left: MAIN_CONFIG.drawerScrollStepPx, 
+                        behavior: MAIN_CONFIG.drawerScrollBehavior 
+                    });
                     forwardButtonPressed = true;
                 } else if (!forwardPressed) {
                     forwardButtonPressed = false;

@@ -1,5 +1,21 @@
 /* SCRIPT // MODAL THROTTLE   */
 
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
+const PANELS_CONFIG = Object.freeze({
+    // Maximum percent (both directions) that the visual slider represents
+    throttleVisualMaxPercent: 95,
+    // Pixel padding at the top/bottom of the throttle track to avoid clipping
+    throttleEdgePaddingPx: 12,
+    // Percent delta applied when using the nudge buttons
+    throttleStepPercent: 0.5,
+    // Duration of the subtle “data updated” animation blip
+    blipDurationMs: 120,
+    // Absolute steering angle allowed from the manual input field
+    rudderClampDeg: 35
+});
+
 export function initializeThrottleSlider() {
     const gearTrack = document.querySelector(".gear-track");
     const gearThumb = document.querySelector(".gear-thumb");
@@ -8,10 +24,10 @@ export function initializeThrottleSlider() {
 
     if (!gearTrack || !gearThumb || !gearFill) return;
 
-    const VISUAL_MAX = 95;       // maximum visual range (%)
+    const VISUAL_MAX = PANELS_CONFIG.throttleVisualMaxPercent;       // maximum visual range (%)
     const VISUAL_HALF = VISUAL_MAX / 2;
-    const EDGE_PADDING = 12;
-    const STEP = 0.5;
+    const EDGE_PADDING = PANELS_CONFIG.throttleEdgePaddingPx;
+    const STEP = PANELS_CONFIG.throttleStepPercent;
 
     let logicalPercent = 0;      // value from -1 to +1
     let isDragging = false;
@@ -213,7 +229,7 @@ function fmtInt(n) {
 /** Brief visual tick to indicate fresh data */
 function blip(el) {
     el && el.classList.add('updating');
-    setTimeout(() => el && el.classList.remove('updating'), 120);
+    setTimeout(() => el && el.classList.remove('updating'), PANELS_CONFIG.blipDurationMs);
 }
 
 
@@ -246,7 +262,7 @@ export function updateRudderFromInput() {
 
     // Validate and clamp value
     if (isNaN(angle)) angle = 0;
-    angle = Math.max(-35, Math.min(35, angle));
+    angle = Math.max(-PANELS_CONFIG.rudderClampDeg, Math.min(PANELS_CONFIG.rudderClampDeg, angle));
     
     // Update the input field value in case it was clamped
     input.value = angle;

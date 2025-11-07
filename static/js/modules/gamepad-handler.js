@@ -2,6 +2,43 @@
 // GAMEPAD HANDLER MODULE - ACCUMULATIVE THROTTLE & STEERING
 // ============================================================================
 
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
+const GAMEPAD_CONFIG = Object.freeze({
+    // Range at which throttle counts as neutral (prevents flickering)
+    gearNeutralBand: { min: -10, max: 10 },
+    // Stick magnitude required to clear a gear-crossing lockout
+    gearReleaseDeadzone: 0.05,
+    // Generic stick deadzone before any movement is registered
+    deadzone: 0.15,
+    // Rate (units/frame) to accumulate throttle changes
+    throttleSensitivity: 2.5,
+    // Rate (units/frame) to accumulate steering changes
+    steeringSensitivity: 3.0,
+    // Rate (units/frame) for engine trim adjustments
+    trimRate: 1,
+    // Rate (units/frame) for hull listing adjustments
+    listingRate: 1,
+    // Milliseconds before watchdog declares the gamepad stale
+    watchdogTimeoutMs: 3000,
+    // Duration to keep the joystick indicator visible after connect
+    joystickIndicatorHideMs: 3000,
+    // How long the gear popup stays on screen
+    gearPopupDurationMs: 500,
+    vibration: {
+        // Haptic effect duration and intensity
+        durationMs: 200,
+        weakMagnitude: 0.5,
+        strongMagnitude: 0.5
+    },
+    // Delay before the throttle column collapses back down
+    throttleCollapseDelayMs: 1000,
+    // Auto-hide delays for the trim and listing overlays
+    trimModalTimeoutMs: 1500,
+    listingModalTimeoutMs: 500
+});
+
 export const gamepadControlState = {
     throttle: 0,      // -100 to +100 (accumulative)
     steering: 0,      // -100 to +100 (accumulative)
@@ -16,22 +53,8 @@ let enteredNeutralFrom = null; // Track which gear we entered neutral from ('F' 
 let lastThrottleAxis = 0;
 let lastSteeringAxis = 0;
 
-// Gear thresholds
-const GEAR_NEUTRAL_MIN = -10;
-const GEAR_NEUTRAL_MAX = 10;
-
-// Deadzone and sensitivity
-const DEADZONE = 0.15;
-const THROTTLE_SENSITIVITY = 2.5; // units per frame when stick is pushed
-const STEERING_SENSITIVITY = 3.0; // units per frame when stick is pushed
-
-// Trim control rates
-const TRIM_RATE = 1; // units per frame
-const LISTING_RATE = 1; // units per frame
-
 // Gamepad watchdog
 let lastGamepadActivity = Date.now();
-const WATCHDOG_TIMEOUT = 3000; // 3 seconds
 
 // ============================================================================
 // EXPORTED INITIALIZATION FUNCTION
@@ -55,7 +78,7 @@ export function initializeGamepadHandler() {
                 
                 setTimeout(() => {
                     indicator.style.display = 'none';
-                }, 3000);
+                }, GAMEPAD_CONFIG.joystickIndicatorHideMs);
             }
             
             startGamepadPolling();
@@ -98,19 +121,20 @@ export function initializeGamepadHandler() {
 // ============================================================================
 
 function applyDeadzone(value) {
-    if (Math.abs(value) < DEADZONE) {
+    if (Math.abs(value) < GAMEPAD_CONFIG.deadzone) {
         return 0;
     }
     // Scale the value to account for deadzone
     const sign = Math.sign(value);
-    const magnitude = (Math.abs(value) - DEADZONE) / (1 - DEADZONE);
+    const magnitude = (Math.abs(value) - GAMEPAD_CONFIG.deadzone) / (1 - GAMEPAD_CONFIG.deadzone);
     return sign * magnitude;
 }
 
 function getCurrentGear(throttle) {
-    if (throttle >= GEAR_NEUTRAL_MIN && throttle <= GEAR_NEUTRAL_MAX) {
+    const { min, max } = GAMEPAD_CONFIG.gearNeutralBand;
+    if (throttle >= min && throttle <= max) {
         return 'N';
-    } else if (throttle > GEAR_NEUTRAL_MAX) {
+    } else if (throttle > max) {
         return 'F';
     } else {
         return 'R';
@@ -127,7 +151,7 @@ function showGearPopup(gear) {
         
         setTimeout(() => {
             indicator.classList.remove('show');
-        }, 500);
+        }, GAMEPAD_CONFIG.gearPopupDurationMs);
     }
 }
 
@@ -138,9 +162,9 @@ function vibrateGamepad() {
     if (gamepad && gamepad.vibrationActuator) {
         gamepad.vibrationActuator.playEffect("dual-rumble", {
             startDelay: 0,
-            duration: 200,
-            weakMagnitude: 0.5,
-            strongMagnitude: 0.5
+            duration: GAMEPAD_CONFIG.vibration.durationMs,
+            weakMagnitude: GAMEPAD_CONFIG.vibration.weakMagnitude,
+            strongMagnitude: GAMEPAD_CONFIG.vibration.strongMagnitude
         });
     }
 }
@@ -151,7 +175,7 @@ function vibrateGamepad() {
 function checkGamepadWatchdog() {
     if (gamepadIndex !== null) {
         const now = Date.now();
-        if (now - lastGamepadActivity > WATCHDOG_TIMEOUT) {
+        if (now - lastGamepadActivity > GAMEPAD_CONFIG.watchdogTimeoutMs) {
             console.warn("⚠️ Gamepad watchdog timeout - attempting reconnect");
             
             // Try to find gamepad again
@@ -192,10 +216,10 @@ function expandThrottleWrapper() {
             clearTimeout(throttleCollapseTimeout);
         }
         
-        // Set new timeout to collapse after 1 second
+        // Set new timeout to collapse after configured delay
         throttleCollapseTimeout = setTimeout(() => {
             throttleWrapper.classList.remove('expanded');
-        }, 1000);
+        }, GAMEPAD_CONFIG.throttleCollapseDelayMs);
     }
 }
 
@@ -227,7 +251,7 @@ function pollGamepad() {
     const currentGear = getCurrentGear(gamepadControlState.throttle);
 
     // CRITICAL: Check lockout release FIRST - stick must return to center
-    if (gearCrossingLockout && Math.abs(leftStickY) < 0.05) {
+    if (gearCrossingLockout && Math.abs(leftStickY) < GAMEPAD_CONFIG.gearReleaseDeadzone) {
         gearCrossingLockout = false;
         enteredNeutralFrom = null;
         console.log(`✅ Gear lockout RELEASED - stick returned to center`);
@@ -235,7 +259,7 @@ function pollGamepad() {
 
     if (leftStickY !== 0 && !gearCrossingLockout) {
         // Calculate proposed new throttle
-        const delta = -leftStickY * THROTTLE_SENSITIVITY;
+        const delta = -leftStickY * GAMEPAD_CONFIG.throttleSensitivity;
         let newThrottle = gamepadControlState.throttle + delta;
         newThrottle = Math.max(-100, Math.min(100, newThrottle));
         
@@ -284,7 +308,7 @@ function pollGamepad() {
     const rightStickX = applyDeadzone(gamepad.axes[2]);
     
     if (rightStickX !== 0) {
-        const delta = rightStickX * STEERING_SENSITIVITY;
+        const delta = rightStickX * GAMEPAD_CONFIG.steeringSensitivity;
         let newSteering = gamepadControlState.steering + delta;
         newSteering = Math.max(-100, Math.min(100, newSteering));
         
@@ -298,13 +322,13 @@ function pollGamepad() {
     // ENGINE TRIM (D-Pad Up/Down - Buttons 12/13)
     // ========================================================================
     if (gamepad.buttons[12].pressed) {
-        gamepadControlState.engine_trim = Math.min(100, gamepadControlState.engine_trim + TRIM_RATE);
+        gamepadControlState.engine_trim = Math.min(100, gamepadControlState.engine_trim + GAMEPAD_CONFIG.trimRate);
         updateEngineTrimUI(gamepadControlState.engine_trim);
         showTrimModal();
     }
     
     if (gamepad.buttons[13].pressed) {
-        gamepadControlState.engine_trim = Math.max(0, gamepadControlState.engine_trim - TRIM_RATE);
+        gamepadControlState.engine_trim = Math.max(0, gamepadControlState.engine_trim - GAMEPAD_CONFIG.trimRate);
         updateEngineTrimUI(gamepadControlState.engine_trim);
         showTrimModal();
     }
@@ -314,16 +338,16 @@ function pollGamepad() {
     // ========================================================================
     if (gamepad.buttons[14].pressed) {
         // Left - tilt to port
-        gamepadControlState.port_trim = Math.min(100, gamepadControlState.port_trim + LISTING_RATE);
-        gamepadControlState.starboard_trim = Math.max(0, gamepadControlState.starboard_trim - LISTING_RATE);
+        gamepadControlState.port_trim = Math.min(100, gamepadControlState.port_trim + GAMEPAD_CONFIG.listingRate);
+        gamepadControlState.starboard_trim = Math.max(0, gamepadControlState.starboard_trim - GAMEPAD_CONFIG.listingRate);
         updateListingUI(gamepadControlState.port_trim, gamepadControlState.starboard_trim);
         showListingModal();
     }
     
     if (gamepad.buttons[15].pressed) {
         // Right - tilt to starboard
-        gamepadControlState.starboard_trim = Math.min(100, gamepadControlState.starboard_trim + LISTING_RATE);
-        gamepadControlState.port_trim = Math.max(0, gamepadControlState.port_trim - LISTING_RATE);
+        gamepadControlState.starboard_trim = Math.min(100, gamepadControlState.starboard_trim + GAMEPAD_CONFIG.listingRate);
+        gamepadControlState.port_trim = Math.max(0, gamepadControlState.port_trim - GAMEPAD_CONFIG.listingRate);
         updateListingUI(gamepadControlState.port_trim, gamepadControlState.starboard_trim);
         showListingModal();
     }
@@ -507,7 +531,7 @@ function showTrimModal() {
             backdrop.style.display = "none";
             container.style.display = "none";
         }
-    }, 1500);
+    }, GAMEPAD_CONFIG.trimModalTimeoutMs);
 }
 
 let listingModalTimeout = null;
@@ -530,5 +554,5 @@ function showListingModal() {
             backdrop.style.display = "none";
             container.style.display = "none";
         }
-    }, 500);
+    }, GAMEPAD_CONFIG.listingModalTimeoutMs);
 }
