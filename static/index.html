@@ -2119,10 +2119,128 @@ Lorem Ipsum end -->
 
 
 
-<script type="module" src="/static/js/websocket.js"></script>
+<!-- === SPLASH / KEYPAD / LEGAL LAYERS === -->
+<div id="screensaver-layer">
+  <!-- ===================== SCREENSAVER MODAL ===================== -->
+  <div class="screensaver-modal" id="screensaverModal" aria-hidden="false">
+    <div class="screensaver-backdrop" data-ss-close></div>
+    <div class="screensaver-dialog" role="dialog" aria-modal="true" aria-labelledby="ss-title">
+      <header class="screensaver-header">
+        <h2 id="ss-title" class="ss-title">System Status</h2>
+        <button class="ss-close" type="button" aria-label="Close" data-ss-close>&times;</button>
+      </header>
 
-<script type="module" src="/static/js/modules/screensaver-modal.js"></script>
-<script type="module" src="/static/js/modules/login-modal.js"></script>
+      <div class="screensaver-body">
+        <!-- Battery Voltage Gauge block -->
+        <div class="battery-voltage-gauge gauge-block" id="battery-gauge-10-6" style="--pct: 0%;">
+          <img src="/static/images/battery.svg" alt="Battery Icon" class="gauge-icon">
+
+          <!-- Voltage -->
+          <div class="gauge-line" id="battery-voltage-gauge">
+            <span class="label-muted" id="voltage-gauge-label">Start&nbsp;</span>
+            <span class="value-strong js-voltage" id="voltage-gauge-value">--</span>
+            <span class="unit-muted" id="voltage-gauge-unit">V</span>
+          </div>
+
+          <div class="mini-gauge" id="voltage-mini-gauge" role="img" aria-label="Battery level">
+            <div class="mini-gauge-fill" id="voltage-mini-gauge-fill"></div>
+          </div>
+        </div>
+
+        <!-- Fuel Gauge block -->
+        <div class="fuel-gauge gauge-block" id="fuel-gauge">
+          <div class="fuel-gauge gauge-block" style="--pct: 37%;">
+            <img src="/static/images/fuel.svg" alt="Fuel Icon" class="gauge-icon">
+
+            <!-- main value (gallons) -->
+            <div class="gauge-line" id="fuel-gauge-line">
+              <span class="value value-lg" id="fuel-gauge-value">12.23</span>
+              <span class="unit unit-lg" id="fuel-gauge-unit">gal</span>
+            </div>
+
+            <!-- gauge bar -->
+            <div class="mini-gauge" id="fuel-mini-gauge" role="img" aria-label="Fuel level">
+              <div class="mini-gauge-fill" id="fuel-mini-gauge-fill"></div>
+            </div>
+
+            <!-- burn rate -->
+            <div class="gauge-line gauge-line--rate" id="fuel-burn-rate-gauge">
+              <span class="value-rate" id="fuel-burn-gauge-value">3.5</span>
+              <span class="unit-rate" id="fuel-burn-gauge-unit">G/Hr</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hint: tap/click anywhere to continue -->
+        <div class="ss-hint" aria-hidden="true">Tap to continue</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="login-layer">
+  <!-- ===================== PASSCODE MODAL ===================== -->
+  <div class="passcode-modal" id="passcodeModal" aria-hidden="true">
+    <div class="passcode-backdrop" data-pc-close></div>
+
+    <div class="passcode-dialog" role="dialog" aria-modal="true" aria-labelledby="pc-title">
+      <header class="passcode-header">
+        <div class="pc-title-row">
+          <svg class="pc-lock" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm-3 8V6a3 3 0 116 0v3H9z"/>
+          </svg>
+          <h2 id="pc-title" class="pc-title">Enter Passcode</h2>
+        </div>
+        <button class="pc-close" type="button" aria-label="Close" data-pc-close>&times;</button>
+      </header>
+
+      <div class="passcode-body">
+        <!-- Visual PIN field: 6 dots -->
+        <div class="pc-pin" aria-live="polite" aria-label="Passcode input">
+          <span class="pc-dot" data-idx="0"></span>
+          <span class="pc-dot" data-idx="1"></span>
+          <span class="pc-dot" data-idx="2"></span>
+          <span class="pc-dot" data-idx="3"></span>
+          <span class="pc-dot" data-idx="4"></span>
+          <span class="pc-dot" data-idx="5"></span>
+        </div>
+
+        <!-- Keypad -->
+        <div class="pc-keypad" role="group" aria-label="Keypad">
+          <!-- 1..9 -->
+          <button class="pc-key" data-key="1">1</button>
+          <button class="pc-key" data-key="2">2</button>
+          <button class="pc-key" data-key="3">3</button>
+          <button class="pc-key" data-key="4">4</button>
+          <button class="pc-key" data-key="5">5</button>
+          <button class="pc-key" data-key="6">6</button>
+          <button class="pc-key" data-key="7">7</button>
+          <button class="pc-key" data-key="8">8</button>
+          <button class="pc-key" data-key="9">9</button>
+
+          <!-- bottom row: Clear, 0, Enter -->
+          <button class="pc-key pc-secondary" data-action="clear">CLR</button>
+          <button class="pc-key" data-key="0">0</button>
+          <button class="pc-key pc-primary" data-action="enter">OK</button>
+        </div>
+
+        <!-- Helper line / errors -->
+        <div class="pc-helper" id="pc-helper" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+  <!-- =================== END PASSCODE MODAL =================== -->
+</div>
+
+<div id="legal-backdrop" class="modal-backdrop" hidden></div>
+<div id="legal-modal" class="info-modal-window" role="dialog" aria-modal="true" aria-labelledby="legal-title" hidden>
+  <div class="modal-content">
+    <h3 id="legal-title">Legal Notice</h3>
+    <p class="modal-text">Use of this console is limited to authorized operators. You must comply with all posted safety rules, local regulations, and mission directives before exercising control.</p>
+    <p class="modal-text" id="legal-helper"></p>
+    <button id="legal-accept" class="coach-next" type="button">Accept</button>
+  </div>
+</div>
 
 <script type="module" src="/static/js/modules/ui-navigation.js"></script>
 <script type="module" src="/static/js/modules/ui-buttons.js"></script>

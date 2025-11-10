@@ -1,51 +1,404 @@
-# /opt/webapp/app.py
+import asyncio
+import base64
+import hashlib
+import hmac
+import json
+import logging
 import os
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
-from fastapi.responses import FileResponse, PlainTextResponse
+import random
+import threading
+import time
+from typing import Any, Dict, Optional
+
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, status
+from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 
-app = FastAPI()
 
-# Serve the /opt/webapp/static directory at /static (useful if you hit uvicorn directly)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+LOGGER = logging.getLogger("kilo.app")
 
-# === Root (/) should serve your real SPA entry ===
-@app.get("/", response_class=FileResponse)
-def spa():
-    return FileResponse(os.path.join("static", "index.html"))
+# -----------------------------------------------------------------------------
+# Session / authentication settings
+# -----------------------------------------------------------------------------
+SESSION_COOKIE_NAME = "kilo_session"
+SESSION_SECRET = os.environ.get("KILO_SESSION_SECRET", "dev-secret-key")
+SESSION_COOKIE_SECURE = os.environ.get("KILO_SESSION_SECURE", "0").lower() in {"1", "true", "yes"}
+SESSION_COOKIE_SAMESITE = os.environ.get("KILO_SESSION_SAMESITE", "lax")
+SESSION_TIMEOUT_SECONDS = int(os.environ.get("KILO_SESSION_TIMEOUT", 60 * 60))
+LOGIN_PIN = os.environ.get("KILO_LOGIN_PIN", "428428")
 
-# --- Simple WebSocket broadcast (as you had) ---
-class Manager:
-    def __init__(self):
-        self.active = set()
-    async def connect(self, ws: WebSocket):
+# -----------------------------------------------------------------------------
+# Screensaver / ROS settings
+# -----------------------------------------------------------------------------
+SCREENSAVER_TOPIC = os.environ.get("KILO_SCREENSAVER_TOPIC", "/kilo/screensaver")
+ENABLE_FAKE_SCREENSAVER = os.environ.get("KILO_FAKE_SCREENSAVER", "0").lower() in {"1", "true", "yes"}
+
+# -----------------------------------------------------------------------------
+# Utility helpers
+# -----------------------------------------------------------------------------
+
+
+def _b64encode(data: bytes) -> str:
+    return base64.urlsafe_b64encode(data).decode("ascii").rstrip("=")
+
+
+def _b64decode(value: str) -> bytes:
+    padding = "=" * (-len(value) % 4)
+    return base64.urlsafe_b64decode(value + padding)
+
+
+def _sign(value: str) -> str:
+    digest = hmac.new(SESSION_SECRET.encode("utf-8"), value.encode("utf-8"), hashlib.sha256).digest()
+    return _b64encode(digest)
+
+
+def encode_session_cookie(data: Dict[str, Any]) -> str:
+    payload = json.dumps(data, separators=(",", ":"), sort_keys=True).encode("utf-8")
+    body = _b64encode(payload)
+    signature = _sign(body)
+    return f"{body}.{signature}"
+
+
+def decode_session_cookie(raw: Optional[str]) -> Dict[str, Any]:
+    if not raw:
+        return {}
+    try:
+        body, signature = raw.split(".", 1)
+    except ValueError:
+        return {}
+    if not hmac.compare_digest(_sign(body), signature):
+        return {}
+    try:
+        data = json.loads(_b64decode(body))
+        if isinstance(data, dict):
+            return data
+    except Exception:
+        LOGGER.warning("Failed to decode session cookie payload")
+    return {}
+
+
+def now_ts() -> int:
+    return int(time.time())
+
+
+def session_is_expired(data: Dict[str, Any]) -> bool:
+    if not data.get("authenticated"):
+        return False
+    login_at = data.get("login_at")
+    if not login_at:
+        return False
+    try:
+        return now_ts() - int(login_at) > SESSION_TIMEOUT_SECONDS
+    except (TypeError, ValueError):
+        return True
+
+
+def session_status(data: Dict[str, Any]) -> Dict[str, bool]:
+    return {
+        "authenticated": bool(data.get("authenticated")),
+        "legal_ack": bool(data.get("legal_ack")),
+    }
+
+
+def is_fully_authorized(data: Dict[str, Any]) -> bool:
+    return bool(data.get("authenticated") and data.get("legal_ack") and not session_is_expired(data))
+
+
+class SessionContext:
+    """Session helper for HTTP routes so we can set/delete cookies."""
+
+    def __init__(self, raw_cookie: Optional[str]):
+        self._data = decode_session_cookie(raw_cookie)
+        self._dirty = False
+
+    @property
+    def data(self) -> Dict[str, Any]:
+        return self._data
+
+    def ensure_fresh(self) -> None:
+        if session_is_expired(self._data):
+            self.clear()
+
+    def get(self, key: str, default: Any = None) -> Any:
+        return self._data.get(key, default)
+
+    def set(self, key: str, value: Any) -> None:
+        self._data[key] = value
+        self._dirty = True
+
+    def update(self, **kwargs: Any) -> None:
+        if kwargs:
+            self._data.update(kwargs)
+            self._dirty = True
+
+    def clear(self) -> None:
+        if self._data:
+            self._data = {}
+        self._dirty = True
+
+    def write_to_response(self, response: Response) -> Response:
+        if not self._dirty:
+            return response
+        if self._data:
+            response.set_cookie(
+                SESSION_COOKIE_NAME,
+                encode_session_cookie(self._data),
+                max_age=SESSION_TIMEOUT_SECONDS,
+                httponly=True,
+                secure=SESSION_COOKIE_SECURE,
+                samesite=SESSION_COOKIE_SAMESITE,
+                path="/",
+            )
+        else:
+            response.delete_cookie(SESSION_COOKIE_NAME, path="/")
+        return response
+
+
+def get_session_ctx(request: Request) -> SessionContext:
+    ctx = getattr(request.state, "_session_ctx", None)
+    if ctx is None:
+        ctx = SessionContext(request.cookies.get(SESSION_COOKIE_NAME))
+        setattr(request.state, "_session_ctx", ctx)
+    return ctx
+
+
+def unauthorized_response(ctx: SessionContext, detail: str, code: int = status.HTTP_401_UNAUTHORIZED) -> Response:
+    response = JSONResponse({"detail": detail}, status_code=code)
+    return ctx.write_to_response(response)
+
+
+def session_from_websocket(ws: WebSocket) -> Dict[str, Any]:
+    data = decode_session_cookie(ws.cookies.get(SESSION_COOKIE_NAME))
+    if session_is_expired(data):
+        return {}
+    return data
+
+
+# -----------------------------------------------------------------------------
+# WebSocket managers
+# -----------------------------------------------------------------------------
+
+
+class ControlManager:
+    def __init__(self) -> None:
+        self.active: set[WebSocket] = set()
+
+    async def connect(self, ws: WebSocket) -> None:
         await ws.accept()
         self.active.add(ws)
-    def disconnect(self, ws: WebSocket):
+
+    def disconnect(self, ws: WebSocket) -> None:
         self.active.discard(ws)
-    async def broadcast(self, text: str):
+
+    async def broadcast(self, text: str) -> None:
         for ws in list(self.active):
             try:
                 await ws.send_text(text)
             except Exception:
                 self.disconnect(ws)
 
-manager = Manager()
+
+class ScreensaverManager:
+    def __init__(self) -> None:
+        self.active: set[WebSocket] = set()
+
+    async def connect(self, ws: WebSocket) -> None:
+        await ws.accept()
+        self.active.add(ws)
+
+    def disconnect(self, ws: WebSocket) -> None:
+        self.active.discard(ws)
+
+    async def broadcast(self, payload: Dict[str, Any]) -> None:
+        message = json.dumps(payload)
+        for ws in list(self.active):
+            try:
+                await ws.send_text(message)
+            except Exception:
+                self.disconnect(ws)
+
+
+manager = ControlManager()
+screensaver_manager = ScreensaverManager()
+screensaver_queue: asyncio.Queue[Dict[str, Any]] = asyncio.Queue()
+EVENT_LOOP: Optional[asyncio.AbstractEventLoop] = None
+
+
+async def screensaver_broadcast_worker() -> None:
+    while True:
+        payload = await screensaver_queue.get()
+        await screensaver_manager.broadcast(payload)
+
+
+def queue_screensaver_payload(payload: Dict[str, Any]) -> None:
+    if not EVENT_LOOP:
+        return
+    asyncio.run_coroutine_threadsafe(screensaver_queue.put(payload), EVENT_LOOP)
+
+
+async def fake_screensaver_loop() -> None:
+    LOGGER.info("Starting fake screensaver metrics publisher")
+    while True:
+        payload = {
+            "type": "screensaver",
+            "engine_battery": round(random.uniform(11.8, 14.2), 1),
+            "fuel_level": round(random.uniform(0, 100), 1),
+        }
+        await screensaver_queue.put(payload)
+        await asyncio.sleep(5)
+
+
+def start_ros_screensaver_listener() -> None:
+    try:
+        import rospy  # type: ignore
+        from std_msgs.msg import String  # type: ignore
+    except ImportError:
+        LOGGER.info("ROS not available; skipping screensaver subscriber")
+        return
+
+    def _thread_target() -> None:
+        try:
+            rospy.init_node("kilo_screensaver_bridge", anonymous=True, disable_signals=True)
+        except rospy.exceptions.ROSException:
+            # Already initialized in this process.
+            pass
+
+        def _callback(msg: String) -> None:  # type: ignore
+            try:
+                data = json.loads(msg.data)
+            except Exception:
+                LOGGER.warning("Failed to deserialize screensaver ROS payload")
+                return
+            if not isinstance(data, dict):
+                return
+            if data.get("type") != "screensaver":
+                return
+            queue_screensaver_payload(data)
+
+        rospy.Subscriber(SCREENSAVER_TOPIC, String, _callback)  # type: ignore
+        LOGGER.info("Subscribed to ROS screensaver topic %s", SCREENSAVER_TOPIC)
+        rospy.spin()
+
+    threading.Thread(target=_thread_target, daemon=True).start()
+
+
+# -----------------------------------------------------------------------------
+# FastAPI app setup
+# -----------------------------------------------------------------------------
+
+app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+@app.on_event("startup")
+async def handle_startup() -> None:
+    global EVENT_LOOP
+    EVENT_LOOP = asyncio.get_running_loop()
+    asyncio.create_task(screensaver_broadcast_worker())
+    if ENABLE_FAKE_SCREENSAVER:
+        asyncio.create_task(fake_screensaver_loop())
+    start_ros_screensaver_listener()
+
+
+@app.get("/", response_class=FileResponse)
+def spa() -> FileResponse:
+    return FileResponse(os.path.join("static", "index.html"))
+
+
+# -----------------------------------------------------------------------------
+# API routes
+# -----------------------------------------------------------------------------
+
+
+@app.get("/api/session")
+async def api_session(request: Request) -> Response:
+    session_ctx = get_session_ctx(request)
+    session_ctx.ensure_fresh()
+    response = JSONResponse(session_status(session_ctx.data))
+    return session_ctx.write_to_response(response)
+
+
+@app.post("/api/login")
+async def api_login(request: Request) -> Response:
+    session_ctx = get_session_ctx(request)
+    session_ctx.ensure_fresh()
+    payload = await request.json()
+    pin = str(payload.get("pin", "")).strip()
+    if not pin:
+        return unauthorized_response(session_ctx, "PIN is required")
+    if pin != LOGIN_PIN:
+        LOGGER.warning("Invalid PIN attempt from client")
+        session_ctx.clear()
+        return unauthorized_response(session_ctx, "Invalid PIN")
+
+    session_ctx.update(authenticated=True, legal_ack=False, login_at=now_ts())
+    response = JSONResponse(session_status(session_ctx.data))
+    return session_ctx.write_to_response(response)
+
+
+@app.post("/api/legal-ack")
+async def api_legal_ack(request: Request) -> Response:
+    session_ctx = get_session_ctx(request)
+    session_ctx.ensure_fresh()
+    if not session_ctx.get("authenticated"):
+        session_ctx.clear()
+        return unauthorized_response(session_ctx, "Authentication required")
+
+    session_ctx.set("legal_ack", True)
+    response = JSONResponse(session_status(session_ctx.data))
+    return session_ctx.write_to_response(response)
+
+
+@app.post("/button-click")
+async def button_click(request: Request) -> Response:
+    session_ctx = get_session_ctx(request)
+    session_ctx.ensure_fresh()
+    if not is_fully_authorized(session_ctx.data):
+        session_ctx.clear()
+        return unauthorized_response(session_ctx, "Legal acknowledgement required", code=status.HTTP_403_FORBIDDEN)
+
+    await request.body()  # Placeholder for future parsing
+    response = PlainTextResponse("OK")
+    return session_ctx.write_to_response(response)
+
+
+# -----------------------------------------------------------------------------
+# WebSocket endpoints
+# -----------------------------------------------------------------------------
+
 
 @app.websocket("/ws")
-async def websocket_endpoint(ws: WebSocket):
+async def websocket_endpoint(ws: WebSocket) -> None:
+    session_data = session_from_websocket(ws)
+    if not is_fully_authorized(session_data):
+        await ws.close(code=1008, reason="Authentication required")
+        return
+
     await manager.connect(ws)
     try:
         while True:
             text = await ws.receive_text()
+            if session_is_expired(session_data):
+                await ws.close(code=1011, reason="Session expired")
+                break
             await manager.broadcast(text)
     except WebSocketDisconnect:
         manager.disconnect(ws)
+    except Exception:
+        manager.disconnect(ws)
+        raise
 
-# --- Minimal handler to satisfy index.html's POST /button-click ---
-# (Your HTML uses a relative fetch to "/button-click"; we return 200 OK for now.)
-@app.post("/button-click", response_class=PlainTextResponse)
-async def button_click(request: Request):
-    raw = await request.body()
-    # TODO: parse and talk to your CAN/Teensy from here
-    return "OK"
+
+@app.websocket("/ws/screensaver")
+async def websocket_screensaver(ws: WebSocket) -> None:
+    await screensaver_manager.connect(ws)
+    try:
+        while True:
+            try:
+                await ws.receive_text()
+                await ws.close(code=1003, reason="Screensaver feed is broadcast-only")
+                break
+            except WebSocketDisconnect:
+                break
+    finally:
+        screensaver_manager.disconnect(ws)

@@ -31,10 +31,13 @@ const WEBSOCKET_CONFIG = Object.freeze({
   navLightsNavSwitch: 5
 });
 
-// ============================================================================
-// WEBSOCKET INITIALIZATION
-// ============================================================================
+const RECONNECT_DELAY_MS = 3000;
+
 let gamepadHeartbeatTimer = null;
+let controlSocket = null;
+let reconnectTimer = null;
+let shouldMaintainConnection = false;
+let clickHandlersReady = false;
 
 function startGamepadHeartbeat() {
     if (gamepadHeartbeatTimer !== null) {
@@ -68,130 +71,141 @@ function stopGamepadHeartbeat() {
 }
 
 
-function initializeWebSocket() {
-    const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${wsProtocol}//${location.host}/ws`;
+function scheduleReconnect() {
+  if (reconnectTimer || !shouldMaintainConnection) return;
+  reconnectTimer = window.setTimeout(() => {
+    reconnectTimer = null;
+    if (shouldMaintainConnection) {
+      openControlWebSocket();
+    }
+  }, RECONNECT_DELAY_MS);
+}
 
-    console.log(`Attempting to connect to WebSocket at: ${wsUrl}`);
-    const ws = new WebSocket(wsUrl);
+function clearReconnectTimer() {
+  if (reconnectTimer) {
+    clearTimeout(reconnectTimer);
+    reconnectTimer = null;
+  }
+}
 
-    // Make the connection globally accessible
-    window.ws = ws;
+function handleIncomingMessage(evt) {
+  let msg;
+  try { 
+    msg = JSON.parse(evt.data); 
+    console.log('Received:', msg);
+  } catch { 
+    console.warn('Received non-JSON message:', evt.data);
+    return; 
+  }
 
-    ws.onopen = () => {
-      console.log('✅ WebSocket connection established.');
-      startGamepadHeartbeat();
-
-    };
-
-    ws.onclose = () => {
-      console.log('❌ WebSocket connection closed.');
-      stopGamepadHeartbeat();
-
-    };
-
-    ws.onerror = (error) => {
-      console.error('WebSocket Error:', error);
-    };
-
-    // ============================================================================
-    // INCOMING MESSAGES (MESSAGE HANDLER)
-    // ============================================================================
-
-    ws.onmessage = (evt) => {
-      let msg;
-      try { 
-        msg = JSON.parse(evt.data); 
-        console.log('Received:', msg);
-      } catch { 
-        console.warn('Received non-JSON message:', evt.data);
-        return; 
+  switch (msg.type) {
+    case 'control.state':
+      handleControlStateFeedback(msg);
+      break;
+    case 'mavlink.state':
+      window.__kiloOnMavlinkState?.(msg);
+      break;
+    case 'relay.voltage':
+      updateRelayVoltage(msg);
+      break;
+    case 'relay.state':
+      const czone_block = document.querySelector(`.battery-button-block[data-bank="${msg.bank}"][data-switch="${msg.switch}"]`);
+      if (czone_block) {
+        const group = czone_block.querySelector('.drawer-button-toggle, .drawer-button-relay');
+        if (group) {
+          group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+          const btn = group.querySelector(`button[data-state="${msg.state}"]`);
+          if (btn) btn.classList.add('active');
+        }
+      }
+      break;
+    case 'm20relay.state':
+      const m20_bank = msg.bank;
+      for (let i = 0; i < 20; i++) {
+        const key = `switch_${i}`;
+        if (msg[key] !== undefined) {
+          const state = msg[key];
+          const group = document.querySelector(`[data-m20-bank="${m20_bank}"][data-m20-switch="${i}"]`);
+          if (group) {
+            group.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = group.querySelector(`button[data-state="${state}"]`);
+            if (activeBtn) {
+              activeBtn.classList.add('active');
+            }
+          }
+        }
       }
 
-      // Route messages to the correct handler
-      switch (msg.type) {
-        case 'control.state':
-          handleControlStateFeedback(msg);
-          break;
+      const navGroup = document.querySelector('[data-nav-lights]');
+      if (navGroup) {
+        const anchorState = msg[`switch_${WEBSOCKET_CONFIG.navLightsAnchorSwitch}`];
+        const navState = msg[`switch_${WEBSOCKET_CONFIG.navLightsNavSwitch}`];
+        let activeMode = 'off';
 
-        case 'mavlink.state':
-          window.__kiloOnMavlinkState?.(msg);
-          break;
-        
-        case 'relay.voltage':
-          // This handles the CZone voltages in Tab 4 AND the main left gauge
-          updateRelayVoltage(msg);
-          break;
+        if (anchorState === 1 && navState === 1) {
+          activeMode = 'nav';
+        } else if (anchorState === 1) {
+          activeMode = 'anchor';
+        }
 
-        case 'relay.state':
-          // This is the feedback for Tab 4 CZone buttons
-          const czone_block = document.querySelector(`.battery-button-block[data-bank="${msg.bank}"][data-switch="${msg.switch}"]`);
-          if (czone_block) {
-            const group = czone_block.querySelector('.drawer-button-toggle, .drawer-button-relay');
-            if (group) {
-              group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-              const btn = group.querySelector(`button[data-state="${msg.state}"]`);
-              if (btn) btn.classList.add('active');
-            }
-          }
-          break;
-          
-        case 'm20relay.state':
-          // This is the feedback for Tab 8 (M20) buttons
-          const m20_bank = msg.bank;
-          for (let i = 0; i < 20; i++) {
-            const key = `switch_${i}`;
-            if (msg[key] !== undefined) {
-              const state = msg[key];
-              // Find the M20 button group in Tab 8
-              const group = document.querySelector(`[data-m20-bank="${m20_bank}"][data-m20-switch="${i}"]`);
-              if (group) {
-                group.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
-                const activeBtn = group.querySelector(`button[data-state="${state}"]`);
-                if (activeBtn) {
-                  activeBtn.classList.add('active');
-                }
-              }
-            }
-          }
-
-          // Handle M20 Nav Lights (which are also M20)
-          const navGroup = document.querySelector('[data-nav-lights]');
-          if (navGroup) {
-            const anchorState = msg[`switch_${WEBSOCKET_CONFIG.navLightsAnchorSwitch}`];
-            const navState = msg[`switch_${WEBSOCKET_CONFIG.navLightsNavSwitch}`];
-            let activeMode = 'off';
-
-            if (anchorState === 1 && navState === 1) {
-              activeMode = 'nav';
-            } else if (anchorState === 1) {
-              activeMode = 'anchor';
-            }
-
-            navGroup.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
-            const activeNavBtn = navGroup.querySelector(`button[data-nav-mode="${activeMode}"]`);
-            if (activeNavBtn) {
-              activeNavBtn.classList.add('active');
-            }
-          }
-          break;
-
-        case 'm20relay.current':
-            // This updates the display fields in Tab 8
-            updateM20RelayCurrent(msg);
-            break;
-
-        default:
-          // console.warn(`Unhandled message type: ${msg.type}`);
+        navGroup.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+        const activeNavBtn = navGroup.querySelector(`button[data-nav-mode="${activeMode}"]`);
+        if (activeNavBtn) {
+          activeNavBtn.classList.add('active');
+        }
       }
-    };
+      break;
+    case 'm20relay.current':
+      updateM20RelayCurrent(msg);
+      break;
+    default:
+      // ignore unknown types
+  }
+}
+
+function openControlWebSocket() {
+  if (!shouldMaintainConnection) {
+    return null;
+  }
+  if (controlSocket && (controlSocket.readyState === WebSocket.OPEN || controlSocket.readyState === WebSocket.CONNECTING)) {
+    return controlSocket;
+  }
+
+  const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const wsUrl = `${wsProtocol}//${location.host}/ws`;
+  console.log(`Attempting to connect to WebSocket at: ${wsUrl}`);
+  const ws = new WebSocket(wsUrl);
+  controlSocket = ws;
+  window.ws = ws;
+
+  ws.onopen = () => {
+    console.log('✅ WebSocket connection established.');
+    startGamepadHeartbeat();
+  };
+
+  ws.onclose = () => {
+    console.log('❌ WebSocket connection closed.');
+    stopGamepadHeartbeat();
+    if (controlSocket === ws) {
+      controlSocket = null;
+      window.ws = null;
+    }
+    scheduleReconnect();
+  };
+
+  ws.onerror = (error) => {
+    console.error('WebSocket Error:', error);
+  };
+
+  ws.onmessage = handleIncomingMessage;
+  return ws;
 }
 
 // ============================================================================
 // OUTGOING MESSAGES (CLICK HANDLERS)
 // ============================================================================
 
-function initializeClickHandlers() {
+function bindClickHandlers() {
     /* == 1) Click handling for CZone battery/relay controls (Tab 4) == */
     const root = document.querySelector('.battery-block');
     root?.addEventListener('click', (e) => {
@@ -437,11 +451,32 @@ function handleThrottleFeedback(throttle, gear, rpm_percent) {
 }
 
 // ============================================================================
-// SCRIPT EXECUTION
+// PUBLIC API
 // ============================================================================
 
-// Wrap all execution in DOMContentLoaded to prevent race conditions
-document.addEventListener('DOMContentLoaded', () => {
-    initializeWebSocket();
-    initializeClickHandlers();
-});
+export function initializeControlClickHandlers() {
+  if (clickHandlersReady) return;
+  clickHandlersReady = true;
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindClickHandlers, { once: true });
+  } else {
+    bindClickHandlers();
+  }
+}
+
+export function connectControlWebSocket() {
+  shouldMaintainConnection = true;
+  clearReconnectTimer();
+  return openControlWebSocket();
+}
+
+export function disconnectControlWebSocket() {
+  shouldMaintainConnection = false;
+  clearReconnectTimer();
+  stopGamepadHeartbeat();
+  if (controlSocket) {
+    try { controlSocket.close(1000, 'Auth revoked'); } catch (_) {}
+  }
+  controlSocket = null;
+  window.ws = null;
+}

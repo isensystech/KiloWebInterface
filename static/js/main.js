@@ -28,6 +28,11 @@ import {
     initializeRudderTrimBridge, 
     initializeRudderIndicator 
 } from './modules/ui-panels.js';
+import { 
+    connectControlWebSocket,
+    disconnectControlWebSocket,
+    initializeControlClickHandlers
+} from './websocket.js';
 
 
 // ============================================================================
@@ -82,6 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialize Gamepad
         initializeGamepadHandler();
+
+        // Control WebSocket + auth overlays
+        initializeControlClickHandlers();
+        initializeAppSessionFlow();
 
 
         console.log("✅ UI modules initialized.");
@@ -229,3 +238,448 @@ setupDocking('#auto-pilot-modal', { gap: 4 });
 // and is called automatically after a fetch button press.
 // This global is here for legacy compatibility.
 window.requestStatus = () => {};
+
+// ============================================================================
+// AUTH / STATE MACHINE / SPLASH & LEGAL FLOW
+// ============================================================================
+
+const APP_STATES = Object.freeze({
+    SPLASH: 'SPLASH',
+    KEYPAD: 'KEYPAD',
+    MAIN: 'MAIN'
+});
+
+const IDLE_TIMEOUT_MS = 5 * 60 * 1000;
+
+const sessionState = { authenticated: false, legalAck: false };
+let currentAppState = APP_STATES.SPLASH;
+let splashTransitionPending = false;
+let idleTimerId = null;
+let keypadController = null;
+let legalModalController = null;
+let screensaverSocket = null;
+
+function initializeAppSessionFlow() {
+    if (window.__kiloSessionFlowInit) return;
+    window.__kiloSessionFlowInit = true;
+
+    keypadController = createKeypadController(handleLoginSubmit, () => setAppState(APP_STATES.SPLASH));
+    legalModalController = createLegalModalController();
+
+    bindSplashInteraction();
+    initializeIdleTracking();
+    initializeScreensaverSocket();
+    updateOverlayVisibility();
+    refreshSessionState();
+}
+
+function bindSplashInteraction() {
+    const layer = document.getElementById('screensaver-layer');
+    if (!layer) return;
+
+    layer.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        handleSplashInteraction();
+    });
+
+    const modal = document.getElementById('screensaverModal');
+    modal?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSplashInteraction();
+        }
+    });
+}
+
+async function handleSplashInteraction() {
+    if (splashTransitionPending) return;
+    splashTransitionPending = true;
+    try {
+        const status = await refreshSessionState();
+        if (status.authenticated && status.legal_ack) {
+            setAppState(APP_STATES.MAIN);
+        } else {
+            setAppState(APP_STATES.KEYPAD);
+        }
+    } finally {
+        splashTransitionPending = false;
+    }
+}
+
+function setAppState(nextState) {
+    if (!Object.values(APP_STATES).includes(nextState)) return;
+    const previous = currentAppState;
+    currentAppState = nextState;
+
+    updateOverlayVisibility();
+
+    if (nextState === APP_STATES.MAIN) {
+        resetIdleTimer();
+    } else {
+        clearIdleTimer();
+    }
+
+    if (nextState === APP_STATES.KEYPAD) {
+        keypadController?.open();
+    } else if (previous === APP_STATES.KEYPAD) {
+        keypadController?.close();
+    }
+
+    updateControlChannel();
+    maybeOpenLegalModal();
+}
+
+function updateOverlayVisibility() {
+    const splashModal = document.getElementById('screensaverModal');
+    if (splashModal) {
+        splashModal.setAttribute('aria-hidden', currentAppState === APP_STATES.SPLASH ? 'false' : 'true');
+    }
+    const passcodeModal = document.getElementById('passcodeModal');
+    if (passcodeModal) {
+        passcodeModal.setAttribute('aria-hidden', currentAppState === APP_STATES.KEYPAD ? 'false' : 'true');
+    }
+}
+
+function updateControlChannel() {
+    if (currentAppState === APP_STATES.MAIN && sessionState.authenticated && sessionState.legalAck) {
+        connectControlWebSocket();
+    } else {
+        disconnectControlWebSocket();
+    }
+}
+
+function initializeIdleTracking() {
+    const events = ['pointerdown', 'keydown', 'touchstart'];
+    events.forEach((evt) => document.addEventListener(evt, recordUserActivity, { passive: true }));
+}
+
+function recordUserActivity() {
+    if (currentAppState !== APP_STATES.MAIN) return;
+    resetIdleTimer();
+}
+
+function resetIdleTimer() {
+    clearIdleTimer();
+    idleTimerId = window.setTimeout(handleIdleTimeout, IDLE_TIMEOUT_MS);
+}
+
+function clearIdleTimer() {
+    if (idleTimerId) {
+        clearTimeout(idleTimerId);
+        idleTimerId = null;
+    }
+}
+
+function handleIdleTimeout() {
+    setAppState(APP_STATES.SPLASH);
+}
+
+function applySessionStatus(status = {}) {
+    sessionState.authenticated = Boolean(status.authenticated);
+    sessionState.legalAck = Boolean(status.legal_ack);
+    updateControlChannel();
+    maybeOpenLegalModal();
+    return status;
+}
+
+function clearSessionState() {
+    sessionState.authenticated = false;
+    sessionState.legalAck = false;
+    updateControlChannel();
+    maybeOpenLegalModal();
+}
+
+async function refreshSessionState() {
+    try {
+        const response = await fetch('/api/session', { credentials: 'same-origin' });
+        if (!response.ok) throw new Error('Session lookup failed');
+        const data = await response.json();
+        return applySessionStatus(data);
+    } catch (err) {
+        clearSessionState();
+        setAppState(APP_STATES.SPLASH);
+        return { authenticated: false, legal_ack: false };
+    }
+}
+
+async function handleLoginSubmit(pin) {
+    const body = { pin };
+    let response;
+    try {
+        response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify(body)
+        });
+    } catch {
+        throw new Error('Unable to reach server');
+    }
+
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        throw new Error(payload.detail || 'Invalid PIN');
+    }
+
+    applySessionStatus(payload);
+    setAppState(APP_STATES.MAIN);
+}
+
+function createKeypadController(onSubmit, onCancel) {
+    const modal = document.getElementById('passcodeModal');
+    if (!modal) return { open() {}, close() {} };
+
+    const dialog = modal.querySelector('.passcode-dialog');
+    const helper = modal.querySelector('#pc-helper');
+    const PASSCODE_LENGTH = 6;
+    let code = '';
+    let active = false;
+    let submitting = false;
+    let lastFocused = null;
+
+    function renderDots() {
+        modal.querySelectorAll('.pc-dot').forEach((dot, idx) => {
+            dot.classList.toggle('filled', idx < code.length);
+        });
+    }
+
+    function setHelper(text) {
+        if (helper) helper.textContent = text || '';
+    }
+
+    async function submitCode() {
+        if (code.length < PASSCODE_LENGTH || submitting) {
+            if (code.length < PASSCODE_LENGTH) setHelper(`Enter ${PASSCODE_LENGTH}-digit code`);
+            return;
+        }
+        submitting = true;
+        setHelper('Verifying...');
+        try {
+            await onSubmit(code);
+        } catch (err) {
+            setHelper(err?.message || 'Invalid PIN');
+        } finally {
+            submitting = false;
+            code = '';
+            renderDots();
+        }
+    }
+
+    function handleClick(event) {
+        const target = event.target;
+        if (target?.hasAttribute?.('data-pc-close')) {
+            onCancel();
+            return;
+        }
+
+        const key = target.closest?.('.pc-key');
+        if (!key || submitting) return;
+
+        const action = key.getAttribute('data-action');
+        const digit = key.getAttribute('data-key');
+
+        if (action === 'clear') {
+            code = '';
+            renderDots();
+            setHelper('');
+            return;
+        }
+
+        if (action === 'enter') {
+            submitCode();
+            return;
+        }
+
+        if (digit != null) {
+            if (code.length >= PASSCODE_LENGTH) return;
+            code += digit;
+            renderDots();
+            setHelper('');
+        }
+    }
+
+    function handleKeydown(event) {
+        if (!active) return;
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            onCancel();
+            return;
+        }
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            submitCode();
+            return;
+        }
+        if (/^\d$/.test(event.key)) {
+            event.preventDefault();
+            if (code.length < PASSCODE_LENGTH) {
+                code += event.key;
+                renderDots();
+                setHelper('');
+            }
+            return;
+        }
+        if (event.key === 'Backspace') {
+            event.preventDefault();
+            code = code.slice(0, -1);
+            renderDots();
+        }
+    }
+
+    function trapFocus(event) {
+        if (!active || !dialog) return;
+        if (!dialog.contains(event.target)) {
+            event.stopPropagation();
+            dialog.focus({ preventScroll: true });
+        }
+    }
+
+    return {
+        open() {
+            if (active) return;
+            active = true;
+            code = '';
+            renderDots();
+            setHelper('');
+            lastFocused = document.activeElement;
+            modal.setAttribute('aria-hidden', 'false');
+            dialog?.setAttribute('tabindex', '-1');
+            dialog?.focus({ preventScroll: true });
+            modal.addEventListener('click', handleClick);
+            document.addEventListener('keydown', handleKeydown);
+            document.addEventListener('focus', trapFocus, true);
+        },
+        close() {
+            if (!active) return;
+            active = false;
+            modal.setAttribute('aria-hidden', 'true');
+            modal.removeEventListener('click', handleClick);
+            document.removeEventListener('keydown', handleKeydown);
+            document.removeEventListener('focus', trapFocus, true);
+            if (lastFocused && document.contains(lastFocused)) {
+                try { lastFocused.focus({ preventScroll: true }); } catch (_) {}
+            }
+        }
+    };
+}
+
+function createLegalModalController() {
+    const modal = document.getElementById('legal-modal');
+    const backdrop = document.getElementById('legal-backdrop');
+    const acceptBtn = document.getElementById('legal-accept');
+    const helper = document.getElementById('legal-helper');
+    let pending = false;
+
+    function setError(message) {
+        if (helper) helper.textContent = message || '';
+    }
+
+    function open() {
+        if (!modal || !backdrop) return;
+        backdrop.hidden = false;
+        modal.hidden = false;
+        setError('');
+    }
+
+    function close() {
+        if (!modal || !backdrop) return;
+        modal.hidden = true;
+        backdrop.hidden = true;
+        setError('');
+    }
+
+    const controller = { open, close, setError };
+
+    async function handleAccept() {
+        if (pending) return;
+        pending = true;
+        setError('');
+        if (acceptBtn) acceptBtn.disabled = true;
+        try {
+            const response = await fetch('/api/legal-ack', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin'
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(payload.detail || 'Unable to accept terms');
+            applySessionStatus(payload);
+            controller.close();
+        } catch (err) {
+            setError(err?.message || 'Unable to accept terms');
+        } finally {
+            pending = false;
+            if (acceptBtn) acceptBtn.disabled = false;
+        }
+    }
+
+    acceptBtn?.addEventListener('click', (event) => {
+        event.preventDefault();
+        handleAccept();
+    });
+
+    return controller;
+}
+
+function maybeOpenLegalModal() {
+    if (!legalModalController) return;
+    if (currentAppState === APP_STATES.MAIN && sessionState.authenticated && !sessionState.legalAck) {
+        legalModalController.open();
+    } else {
+        legalModalController.close();
+    }
+}
+
+function initializeScreensaverSocket() {
+    if (screensaverSocket) {
+        try { screensaverSocket.close(); } catch (_) {}
+    }
+    const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const url = `${protocol}//${location.host}/ws/screensaver`;
+
+    function connect() {
+        screensaverSocket = new WebSocket(url);
+        screensaverSocket.onmessage = (evt) => {
+            try {
+                const payload = JSON.parse(evt.data);
+                if (payload.type === 'screensaver') {
+                    updateScreensaverGauges(payload);
+                }
+            } catch {
+                // ignore malformed data
+            }
+        };
+        screensaverSocket.onclose = () => {
+            setTimeout(connect, 2000);
+        };
+        screensaverSocket.onerror = () => {
+            try { screensaverSocket.close(); } catch (_) {}
+        };
+    }
+
+    connect();
+}
+
+function updateScreensaverGauges(data) {
+    if (typeof data.engine_battery === 'number') {
+        const voltageValue = document.getElementById('voltage-gauge-value');
+        if (voltageValue) voltageValue.textContent = data.engine_battery.toFixed(1);
+        const batteryGauge = document.getElementById('battery-gauge-10-6');
+        if (batteryGauge) {
+            const percent = Math.max(0, Math.min(100, ((data.engine_battery - 10) / 6) * 100));
+            batteryGauge.style.setProperty('--pct', `${percent.toFixed(0)}%`);
+        }
+    }
+
+    if (typeof data.fuel_level === 'number') {
+        const clamped = Math.max(0, Math.min(100, data.fuel_level));
+        const fuelValue = document.getElementById('fuel-gauge-value');
+        if (fuelValue) fuelValue.textContent = clamped.toFixed(0);
+        const fuelUnit = document.getElementById('fuel-gauge-unit');
+        if (fuelUnit) fuelUnit.textContent = '%';
+        document.querySelectorAll('#fuel-gauge .fuel-gauge').forEach((el) => {
+            el.style.setProperty('--pct', `${clamped.toFixed(0)}%`);
+        });
+    }
+}
