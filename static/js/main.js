@@ -432,13 +432,28 @@ function createKeypadController(onSubmit, onCancel) {
 
     const dialog = modal.querySelector('.passcode-dialog');
     const helper = modal.querySelector('#pc-helper');
-    const PASSCODE_LENGTH = 6;
+    const PASSCODE_LENGTH = 4;
     let code = '';
     let active = false;
     let submitting = false;
     let lastFocused = null;
+    const pinContainer = modal.querySelector('.pc-pin');
+
+    function ensurePinDots() {
+        if (!pinContainer) return;
+        const current = pinContainer.querySelectorAll('.pc-dot').length;
+        if (current === PASSCODE_LENGTH) return;
+        pinContainer.innerHTML = '';
+        for (let idx = 0; idx < PASSCODE_LENGTH; idx += 1) {
+            const span = document.createElement('span');
+            span.className = 'pc-dot';
+            span.dataset.idx = String(idx);
+            pinContainer.appendChild(span);
+        }
+    }
 
     function renderDots() {
+        ensurePinDots();
         modal.querySelectorAll('.pc-dot').forEach((dot, idx) => {
             dot.classList.toggle('filled', idx < code.length);
         });
@@ -540,6 +555,7 @@ function createKeypadController(onSubmit, onCancel) {
             if (active) return;
             active = true;
             code = '';
+            ensurePinDots();
             renderDots();
             setHelper('');
             lastFocused = document.activeElement;
@@ -640,6 +656,8 @@ function initializeScreensaverSocket() {
 
     function connect() {
         screensaverSocket = new WebSocket(url);
+        window.__kiloScreensaverSocket = screensaverSocket;
+        window.__kiloScreensaverDebugUpdate = updateScreensaverGauges;
         screensaverSocket.onmessage = (evt) => {
             try {
                 const payload = JSON.parse(evt.data);
