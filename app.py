@@ -24,7 +24,7 @@ SESSION_COOKIE_NAME = "kilo_session"
 SESSION_SECRET = os.environ.get("KILO_SESSION_SECRET", "dev-secret-key")
 SESSION_COOKIE_SECURE = os.environ.get("KILO_SESSION_SECURE", "0").lower() in {"1", "true", "yes"}
 SESSION_COOKIE_SAMESITE = os.environ.get("KILO_SESSION_SAMESITE", "lax")
-SESSION_TIMEOUT_SECONDS = int(os.environ.get("KILO_SESSION_TIMEOUT", 60 * 60))
+SESSION_TIMEOUT_SECONDS = int(os.environ.get("KILO_SESSION_TIMEOUT", 60 * 60 * 8))
 LOGIN_PIN = os.environ.get("KILO_LOGIN_PIN", "0000")
 
 # -----------------------------------------------------------------------------

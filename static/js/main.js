@@ -268,10 +268,18 @@ function initializeAppSessionFlow() {
     legalModalController = createLegalModalController();
 
     bindSplashInteraction();
+    bindSplashHotkeys();
+    bindExitTrigger();
     initializeIdleTracking();
     initializeScreensaverSocket();
     updateOverlayVisibility();
-    refreshSessionState();
+    refreshSessionState().then((status) => {
+        if (status.authenticated) {
+            setAppState(APP_STATES.MAIN);
+        } else {
+            setAppState(APP_STATES.SPLASH);
+        }
+    });
 }
 
 function bindSplashInteraction() {
@@ -293,12 +301,40 @@ function bindSplashInteraction() {
     });
 }
 
+function bindSplashHotkeys() {
+    document.addEventListener('keydown', (event) => {
+        if (currentAppState !== APP_STATES.SPLASH) return;
+        if (!shouldTriggerSplashShortcut(event)) return;
+        event.preventDefault();
+        handleSplashInteraction();
+    });
+}
+
+function shouldTriggerSplashShortcut(event) {
+    if (event.metaKey || event.ctrlKey || event.altKey) return false;
+    const key = event.key || '';
+    if (key === 'Tab' || key === 'Escape' || key === 'Shift') return false;
+    if (key === 'Enter' || key === ' ' || key === 'Spacebar') return true;
+    return key.length === 1;
+}
+
+function bindExitTrigger() {
+    const exitIcon = document.getElementById('exit-trigger');
+    if (!exitIcon) return;
+    exitIcon.style.cursor = 'pointer';
+    exitIcon.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setAppState(APP_STATES.SPLASH);
+    });
+}
+
 async function handleSplashInteraction() {
     if (splashTransitionPending) return;
     splashTransitionPending = true;
     try {
         const status = await refreshSessionState();
-        if (status.authenticated && status.legal_ack) {
+        if (status.authenticated) {
             setAppState(APP_STATES.MAIN);
         } else {
             setAppState(APP_STATES.KEYPAD);

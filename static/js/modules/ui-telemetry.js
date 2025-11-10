@@ -536,7 +536,8 @@ export function updateRelayVoltage(msg) {
 
   // 2. Update the main battery gauge on the left panel
   if (bank === 10 && stud === 6) {
-    const gaugeEl = document.getElementById('battery-gauge-10-6');
+    const gaugeCandidates = Array.from(document.querySelectorAll('#battery-gauge-10-6'));
+    const gaugeEl = gaugeCandidates.find(el => !el.closest('#screensaverModal'));
     if (!gaugeEl) return;
 
     const { minVoltage, maxVoltage, lowVoltageThreshold } = TELEMETRY_CONFIG.batteryGauge;
