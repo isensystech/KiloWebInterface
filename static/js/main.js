@@ -45,6 +45,7 @@ const MAIN_CONFIG = Object.freeze({
     drawerScrollBehavior: 'smooth'
 });
 
+const VEHICLE_NAME = 'Kilo #2';
 
 // ============================================================================
 // APPLICATION INITIALIZATION (MAIN ENTRY POINT)
@@ -680,10 +681,16 @@ function initializeScreensaverSocket() {
 }
 
 function updateScreensaverGauges(data) {
+    const modal = document.getElementById('screensaverModal');
+    if (!modal) return;
+
+    const titleEl = modal.querySelector('#ss-title');
+    if (titleEl) titleEl.textContent = VEHICLE_NAME;
+
     if (typeof data.engine_battery === 'number') {
-        const voltageValue = document.getElementById('voltage-gauge-value');
+        const voltageValue = modal.querySelector('#voltage-gauge-value');
         if (voltageValue) voltageValue.textContent = data.engine_battery.toFixed(1);
-        const batteryGauge = document.getElementById('battery-gauge-10-6');
+        const batteryGauge = modal.querySelector('#battery-gauge-10-6');
         if (batteryGauge) {
             const percent = Math.max(0, Math.min(100, ((data.engine_battery - 10) / 6) * 100));
             batteryGauge.style.setProperty('--pct', `${percent.toFixed(0)}%`);
@@ -692,11 +699,11 @@ function updateScreensaverGauges(data) {
 
     if (typeof data.fuel_level === 'number') {
         const clamped = Math.max(0, Math.min(100, data.fuel_level));
-        const fuelValue = document.getElementById('fuel-gauge-value');
+        const fuelValue = modal.querySelector('#fuel-gauge-value');
         if (fuelValue) fuelValue.textContent = clamped.toFixed(0);
-        const fuelUnit = document.getElementById('fuel-gauge-unit');
+        const fuelUnit = modal.querySelector('#fuel-gauge-unit');
         if (fuelUnit) fuelUnit.textContent = '%';
-        document.querySelectorAll('#fuel-gauge .fuel-gauge').forEach((el) => {
+        modal.querySelectorAll('#fuel-gauge .fuel-gauge').forEach((el) => {
             el.style.setProperty('--pct', `${clamped.toFixed(0)}%`);
         });
     }
