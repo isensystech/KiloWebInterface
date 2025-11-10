@@ -4970,120 +4970,120 @@
 
 
 
-/* === HELP MODAL === */
+        /* === HELP MODAL === */
 
-#coach-overlay{
-  /* fullscreen overlay */
-  position: fixed; 
-  inset: 0; 
-  z-index: 10080;
-}
+        #coach-overlay{
+        /* fullscreen overlay */
+        position: fixed; 
+        inset: 0; 
+        z-index: 10080;
+        }
 
-/* Spotlight mask: dark veil with a hole over the target */
-.coach-mask{
-  position: absolute; 
-  inset: 0;
-  background: var(--color-black-hover);
-  opacity: 0.7;   
-  /* The hole is made via CSS variables set from JS */
-    -webkit-mask:
-    radial-gradient( circle var(--r, 8px) at var(--x, -1000px) var(--y, -1000px),
-                     transparent 98%, black 100% );
-    mask:
-    radial-gradient( circle var(--r, 8px) at var(--x, -1000px) var(--y, -1000px),
-                     transparent 98%, black 100% );
-  pointer-events: auto;       /* block clicks by default */
-}
+        /* Spotlight mask: dark veil with a hole over the target */
+        .coach-mask{
+        position: absolute; 
+        inset: 0;
+        background: var(--color-black-hover);
+        opacity: 0.7;   
+        /* The hole is made via CSS variables set from JS */
+            -webkit-mask:
+            radial-gradient( circle var(--r, 8px) at var(--x, -1000px) var(--y, -1000px),
+                            transparent 98%, black 100% );
+            mask:
+            radial-gradient( circle var(--r, 8px) at var(--x, -1000px) var(--y, -1000px),
+                            transparent 98%, black 100% );
+        pointer-events: auto;       /* block clicks by default */
+        }
 
-/* Make the hole click-through */
-.coach-mask.hole-clickthrough {
-  pointer-events: none;       /* allow interaction with target if step allows */
-}
+        /* Make the hole click-through */
+        .coach-mask.hole-clickthrough {
+        pointer-events: none;       /* allow interaction with target if step allows */
+        }
 
-.coach-tooltip {
-  position: absolute; 
-  max-width: 450px;
-  color: var(--color-white);
-  border-radius: 10px; 
-  padding: 42px 12px 10px;
-}
+        .coach-tooltip {
+        position: absolute; 
+        max-width: 450px;
+        color: var(--color-white);
+        border-radius: 10px; 
+        padding: 42px 12px 10px;
+        }
 
-/* Apply project token to tooltip titles */
-.coach-title {
-  font: var(--type-h2); 
-  color: var(--color-white);
-}
-.coach-text {
-  font: var(--type-button-regular); 
-  color: var(--color-light);
-}
+        /* Apply project token to tooltip titles */
+        .coach-title {
+        font: var(--type-h2); 
+        color: var(--color-white);
+        }
+        .coach-text {
+        font: var(--type-button-regular); 
+        color: var(--color-light);
+        }
 
-.coach-tooltip .coach-content,
-.coach-tooltip .coach-text {
-  white-space: pre-line; /* respects \n and wraps long lines */
-}
+        .coach-tooltip .coach-content,
+        .coach-tooltip .coach-text {
+        white-space: pre-line; /* respects \n and wraps long lines */
+        }
 
-.coach-controls {
-  display:flex; 
-  gap:16px; 
-  justify-content:flex-start; 
-  margin-top:28px;
-}
-.coach-controls button {
-background: var(--color-black-hover); 
-color: var(--text-inactive);
-border:1px solid var(--text-inactive); 
-border-radius:6px;
-padding:6px 10px; 
-cursor:pointer;
-}
+        .coach-controls {
+        display:flex; 
+        gap:16px; 
+        justify-content:flex-start; 
+        margin-top:28px;
+        }
+        .coach-controls button {
+        background: var(--color-black-hover); 
+        color: var(--text-inactive);
+        border:1px solid var(--text-inactive); 
+        border-radius:6px;
+        padding:6px 10px; 
+        cursor:pointer;
+        }
 
-.coach-controls button:hover {
-color: var(--color-white); 
-border:1px solid var(--color-white);
-}
+        .coach-controls button:hover {
+        color: var(--color-white); 
+        border:1px solid var(--color-white);
+        }
 
-.coach-close { 
-background:transparent; 
-position: absolute;
-top: 8px; 
-left: 12px;
-font: var(--type-h3); 
-color: var(--text-inactive);
-border: none;  
-cursor: pointer;
-line-height: 1;
-transition: color .2s ease;
-}
+        .coach-close { 
+        background:transparent; 
+        position: absolute;
+        top: 8px; 
+        left: 12px;
+        font: var(--type-h3); 
+        color: var(--text-inactive);
+        border: none;  
+        cursor: pointer;
+        line-height: 1;
+        transition: color .2s ease;
+        }
 
-.coach-close:hover { 
-color: var(--color-white); 
-}
+        .coach-close:hover { 
+        color: var(--color-white); 
+        }
 
-/* Subtle highlight for hovered/matched targets in Help mode */
-.coach-highlight {
-  border-radius: 6px; /* match corners with glow */
-}
+        /* Subtle highlight for hovered/matched targets in Help mode */
+        .coach-highlight {
+        border-radius: 6px; /* match corners with glow */
+        }
 
-.coach-glow {
-  border-radius: 6px;
-  background: var(--color-bg);
-  box-shadow: 0 0 0 10px var(--color-bg);
-  filter: drop-shadow(0 0 4px var(--color-white));
-  transition: width 0.3s ease;
-}
-/* TOOLTIPS */
-/* Optional: different arrows/colors per placement */
-[data-coach-placement="top"] .coach-tooltip { transform-origin: bottom center; }
-[data-coach-placement="right"] .coach-tooltip { transform-origin: left center; }
+        .coach-glow {
+        border-radius: 6px;
+        background: var(--color-bg);
+        box-shadow: 0 0 0 10px var(--color-bg);
+        filter: drop-shadow(0 0 4px var(--color-white));
+        transition: width 0.3s ease;
+        }
+        /* TOOLTIPS */
+        /* Optional: different arrows/colors per placement */
+        [data-coach-placement="top"] .coach-tooltip { transform-origin: bottom center; }
+        [data-coach-placement="right"] .coach-tooltip { transform-origin: left center; }
 
-.coach-mask { cursor: inherit; } /* comment: make mask follow overlay cursor */
+        .coach-mask { cursor: inherit; } /* comment: make mask follow overlay cursor */
 
 
-/* Make tooltip transparent to pointer events except its controls */
-#coach-overlay .coach-tooltip { pointer-events: none; }          /* clicks pass through */
-#coach-overlay .coach-tooltip .coach-controls,
-#coach-overlay .coach-tooltip .coach-close { pointer-events: auto; }  /* buttons still work */
+        /* Make tooltip transparent to pointer events except its controls */
+        #coach-overlay .coach-tooltip { pointer-events: none; }          /* clicks pass through */
+        #coach-overlay .coach-tooltip .coach-controls,
+        #coach-overlay .coach-tooltip .coach-close { pointer-events: auto; }  /* buttons still work */
 
 
 
@@ -5150,17 +5150,183 @@ color: var(--color-white);
 
 
 
-
-
-
-
-.status-modal {
-  backdrop-filter: none !important;
-  filter: none !important;
-}
+        .status-modal {
+        backdrop-filter: none !important;
+        filter: none !important;
+        }
 
 
         
+
+
+        /* ================= LOGIN MODAL PASSCODE STYLES ================= */
+        /* Uses your palette tokens when available; falls back otherwise */
+
+        .passcode-modal {
+        /* Keep this element mounted; toggle via [aria-hidden] */
+        position: fixed;
+        inset: 0;
+        z-index: 9998; /* backdrop below dialog (dialog is 9999) */
+        display: grid;
+        place-items: center;
+        /* Hidden state */
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 160ms ease, visibility 0s linear 160ms;
+        }
+
+        .passcode-modal[aria-hidden="false"] {
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 160ms ease;
+        }
+
+        .passcode-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.55);
+        /* Ensure backdrop sits below dialog, above page */
+        z-index: 9998;
+        }
+
+        .passcode-dialog {
+        position: relative;
+        z-index: 9999; /* above backdrop */
+        width: min(520px, 92vw);
+        border-radius: 16px;
+        background: var(--color-drawer-bg, #2b2b2b);
+        color: var(--color-white, #fff);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+        border: 1px solid var(--button-inactive, #404040);
+        display: grid;
+        grid-template-rows: auto 1fr;
+        }
+
+        .passcode-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--color-drawer-inactive-bg, #252525);
+        }
+
+        .pc-title-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        }
+
+        .pc-lock {
+        width: 22px;
+        height: 22px;
+        fill: var(--active-yellow, #FFBD0A);
+        flex: none;
+        }
+
+        .pc-title {
+        margin: 0;
+        font: var(--type-h3, 800 18px/1.25 var(--font-sans, system-ui));
+        letter-spacing: .2px;
+        }
+
+        .pc-close {
+        /* Minimalistic close button */
+        background: transparent;
+        border: 0;
+        color: var(--color-light, #dadada);
+        font-size: 26px;
+        line-height: 1;
+        padding: 2px 6px;
+        cursor: pointer;
+        }
+
+        .passcode-body {
+        padding: 20px 16px 18px;
+        display: grid;
+        gap: 18px;
+        }
+
+        .pc-pin {
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: center;
+        gap: 12px;
+        padding: 6px 0 2px;
+        }
+
+        .pc-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 999px;
+        border: 2px solid var(--button-active, #707070);
+        background: transparent;
+        transition: background-color 120ms ease, border-color 120ms ease, transform 80ms ease;
+        }
+
+        .pc-dot.filled {
+        background: var(--color-white, #fff);
+        border-color: var(--color-white, #fff);
+        transform: scale(1.08);
+        }
+
+        .pc-keypad {
+        /* 3x4 grid layout */
+        display: grid;
+        grid-template-columns: repeat(3, minmax(80px, 1fr));
+        gap: 10px;
+        justify-items: stretch;
+        }
+
+        .pc-key {
+        /* Big touch targets */
+        padding: 14px 0;
+        font: var(--type-h2, 700 20px/1.2 var(--font-sans, system-ui));
+        border-radius: 12px;
+        border: 1px solid var(--button-inactive, #404040);
+        background: var(--color-drawer-inactive-bg, #252525);
+        color: var(--color-white, #fff);
+        cursor: pointer;
+        transition: transform 60ms ease, background-color 120ms ease, border-color 120ms ease;
+        user-select: none;
+        }
+
+        .pc-key:active {
+        transform: translateY(1px);
+        }
+
+        .pc-key:hover {
+        border-color: var(--button-active, #707070);
+        }
+
+        .pc-key.pc-primary {
+        background: var(--active-yellow, #FFBD0A);
+        color: #000;
+        border-color: var(--inactive-yellow, #9a7000);
+        }
+
+        .pc-key.pc-secondary {
+        background: var(--color-bg, #202020);
+        }
+
+        .pc-helper {
+        text-align: center;
+        min-height: 20px;
+        color: var(--text-inactive, #757575);
+        font: var(--type-caption-regular, 400 12px/1.3 var(--font-sans, system-ui));
+        }
+
+        /* Small screens */
+        @media (max-width: 380px) {
+        .pc-keypad { gap: 8px; }
+        .pc-key { padding: 12px 0; }
+        }
+
+        /* Make the exit icon clearly clickable */
+        .options-icon#exit-trigger { cursor: pointer; }
+
+
+
+
 
 
         /* MAGENTA / ERROR / BORDER / TECH TEST COLOR*/
