@@ -1,0 +1,56 @@
+<!-- ===================== SCREENSAVER MODAL ===================== -->
+<div class="screensaver-modal" id="screensaverModal" aria-hidden="true">
+  <div class="screensaver-backdrop" data-ss-close></div>
+
+  <div class="screensaver-dialog" role="dialog" aria-modal="true" aria-labelledby="ss-title">
+    <header class="screensaver-header">
+      <h2 id="ss-title" class="ss-title">System Status</h2>
+      <button class="ss-close" type="button" aria-label="Close" data-ss-close>&times;</button>
+    </header>
+
+    <div class="screensaver-body">
+      <!-- Battery Voltage Gauge block -->
+      <div class="battery-voltage-gauge gauge-block" id="battery-gauge-10-6" style="--pct: 0%;">
+        <img src="/static/images/battery.svg" alt="Battery Icon" class="gauge-icon">
+
+        <!-- Voltage -->
+        <div class="gauge-line" id="battery-voltage-gauge">
+          <span class="label-muted" id="voltage-gauge-label">Start&nbsp;</span>
+          <span class="value-strong js-voltage" id="voltage-gauge-value">--</span>
+          <span class="unit-muted" id="voltage-gauge-unit">V</span>
+        </div>
+
+        <div class="mini-gauge" id="voltage-mini-gauge" role="img" aria-label="Battery level">
+          <div class="mini-gauge-fill" id="voltage-mini-gauge-fill"></div>
+        </div>
+      </div>
+
+      <!-- Fuel Gauge block -->
+      <div class="fuel-gauge gauge-block" id="fuel-gauge">
+        <div class="fuel-gauge gauge-block" style="--pct: 37%;">
+          <img src="/static/images/fuel.svg" alt="Fuel Icon" class="gauge-icon">
+
+          <!-- main value (gallons) -->
+          <div class="gauge-line" id="fuel-gauge-line">
+            <span class="value value-lg" id="fuel-gauge-value">12.23</span>
+            <span class="unit unit-lg" id="fuel-gauge-unit">gal</span>
+          </div>
+
+          <!-- gauge bar -->
+          <div class="mini-gauge" id="fuel-mini-gauge" role="img" aria-label="Fuel level">
+            <div class="mini-gauge-fill" id="fuel-mini-gauge-fill"></div>
+          </div>
+
+          <!-- burn rate -->
+          <div class="gauge-line gauge-line--rate" id="fuel-burn-rate-gauge">
+            <span class="value-rate" id="fuel-burn-gauge-value">3.5</span>
+            <span class="unit-rate" id="fuel-burn-gauge-unit">G/Hr</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hint: tap/click anywhere to continue -->
+      <div class="ss-hint" aria-hidden="true">Tap to continue</div>
+    </div>
+  </div>
+</div>

@@ -5057,6 +5057,57 @@ transition: width 0.3s ease;
 
 
 
+
+
+
+/* ================= SCREENSAVER MODAL STYLES ================= */
+.screensaver-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: grid;
+  place-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 160ms ease, visibility 0s linear 160ms;
+}
+.screensaver-modal[aria-hidden="false"] { visibility: visible; opacity: 1; transition: opacity 160ms ease; }
+
+.screensaver-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 9998;
+}
+
+.screensaver-dialog {
+  position: relative;
+  z-index: 9999;
+  width: min(560px, 92vw);
+  max-height: 90vh;
+  overflow: auto;
+  border-radius: 16px;
+  background: var(--color-drawer-bg);
+  color: var(--color-white);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  border: 1px solid var(--button-inactive);
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.screensaver-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; border-bottom: 1px solid var(--color-drawer-inactive-bg);
+}
+.ss-title { margin: 0; font: var(--type-h3); letter-spacing: .2px; }
+.ss-close { background: transparent; border: 0; color: var(--color-light); font-size: 24px; line-height: 1; padding: 2px 6px; cursor: pointer; }
+
+.screensaver-body { padding: 16px; display: grid; gap: 16px; }
+.ss-hint { text-align: center; color: var(--text-inactive); font: var(--type-caption-regular); margin-top: 8px; }
+
+
+
+
         /* MAGENTA / ERROR / BORDER / TECH TEST COLOR*/
     * {
     outline: 1px dashed rgba(181, 90, 169, 0);
