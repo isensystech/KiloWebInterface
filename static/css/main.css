@@ -4880,18 +4880,181 @@ transition: width 0.3s ease;
 
 
 
+        .status-modal {
+        backdrop-filter: none !important;
+        filter: none !important;
+        }
 
 
 
 
+        /* ================= LOGIN MODAL STYLES ================= */
 
-.status-modal {
-  backdrop-filter: none !important;
-  filter: none !important;
+        /* ================= PASSCODE MODAL STYLES ================= */
+/* Uses your palette tokens when available; falls back otherwise */
+
+.passcode-modal {
+  /* Keep this element mounted; toggle via [aria-hidden] */
+  position: fixed;
+  inset: 0;
+  z-index: 9998; /* backdrop below dialog (dialog is 9999) */
+  display: grid;
+  place-items: center;
+  /* Hidden state */
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 160ms ease, visibility 0s linear 160ms;
+}
+
+.passcode-modal[aria-hidden="false"] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 160ms ease;
+}
+
+.passcode-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  /* Ensure backdrop sits below dialog, above page */
+  z-index: 9998;
+}
+
+.passcode-dialog {
+  position: relative;
+  z-index: 9999; /* above backdrop */
+  width: min(520px, 92vw);
+  border-radius: 16px;
+  background: var(--color-drawer-bg, #2b2b2b);
+  color: var(--color-white, #fff);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  border: 1px solid var(--button-inactive, #404040);
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.passcode-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-drawer-inactive-bg, #252525);
+}
+
+.pc-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pc-lock {
+  width: 22px;
+  height: 22px;
+  fill: var(--active-yellow, #FFBD0A);
+  flex: none;
+}
+
+.pc-title {
+  margin: 0;
+  font: var(--type-h3, 800 18px/1.25 var(--font-sans, system-ui));
+  letter-spacing: .2px;
+}
+
+.pc-close {
+  /* Minimalistic close button */
+  background: transparent;
+  border: 0;
+  color: var(--color-light, #dadada);
+  font-size: 26px;
+  line-height: 1;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+
+.passcode-body {
+  padding: 20px 16px 18px;
+  display: grid;
+  gap: 18px;
+}
+
+.pc-pin {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 6px 0 2px;
+}
+
+.pc-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid var(--button-active, #707070);
+  background: transparent;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 80ms ease;
+}
+
+.pc-dot.filled {
+  background: var(--color-white, #fff);
+  border-color: var(--color-white, #fff);
+  transform: scale(1.08);
+}
+
+.pc-keypad {
+  /* 3x4 grid layout */
+  display: grid;
+  grid-template-columns: repeat(3, minmax(80px, 1fr));
+  gap: 10px;
+  justify-items: stretch;
+}
+
+.pc-key {
+  /* Big touch targets */
+  padding: 14px 0;
+  font: var(--type-h2, 700 20px/1.2 var(--font-sans, system-ui));
+  border-radius: 12px;
+  border: 1px solid var(--button-inactive, #404040);
+  background: var(--color-drawer-inactive-bg, #252525);
+  color: var(--color-white, #fff);
+  cursor: pointer;
+  transition: transform 60ms ease, background-color 120ms ease, border-color 120ms ease;
+  user-select: none;
+}
+
+.pc-key:active {
+  transform: translateY(1px);
+}
+
+.pc-key:hover {
+  border-color: var(--button-active, #707070);
+}
+
+.pc-key.pc-primary {
+  background: var(--active-yellow, #FFBD0A);
+  color: #000;
+  border-color: var(--inactive-yellow, #9a7000);
+}
+
+.pc-key.pc-secondary {
+  background: var(--color-bg, #202020);
+}
+
+.pc-helper {
+  text-align: center;
+  min-height: 20px;
+  color: var(--text-inactive, #757575);
+  font: var(--type-caption-regular, 400 12px/1.3 var(--font-sans, system-ui));
+}
+
+/* Small screens */
+@media (max-width: 380px) {
+  .pc-keypad { gap: 8px; }
+  .pc-key { padding: 12px 0; }
 }
 
 
-        
+
+
 
 
         /* MAGENTA / ERROR / BORDER / TECH TEST COLOR*/
