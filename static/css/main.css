@@ -4885,157 +4885,6 @@ transition: width 0.3s ease;
 
 
 
-/* ================= PASSCODE MODAL STYLES ================= */
-
-.passcode-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  display: grid;
-  place-items: center;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 160ms ease, visibility 0s linear 160ms;
-}
-
-.passcode-modal[aria-hidden="false"] {
-  visibility: visible;
-  opacity: 1;
-  transition: opacity 160ms ease;
-}
-
-.passcode-backdrop {
-  position: absolute;
-  inset: 0;
-  background: var(--color-black);   
-  opacity: 0.55;                    
-  z-index: 9998;
-}
-
-.passcode-dialog {
-  position: relative;
-  z-index: 9999;
-  width: min(520px, 92vw);
-  border-radius: 16px;
-  background: var(--color-drawer-bg);
-  color: var(--color-white);
-  box-shadow: 0 12px 40px var(--color-black-hover);
-  border: 1px solid var(--button-inactive);
-  display: grid;
-  grid-template-rows: auto 1fr;
-}
-
-.passcode-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--color-drawer-inactive-bg);
-}
-
-.pc-title-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.pc-lock {
-  width: 22px;
-  height: 22px;
-  fill: var(--active-yellow);
-  flex: none;
-}
-
-.pc-title {
-  margin: 0;
-  font: var(--type-h3);
-  letter-spacing: .2px;
-}
-
-.pc-close {
-  /* Minimal close button */
-  background: transparent;
-  border: 0;
-  color: var(--color-light);
-  font: var(--type-display-mono-bold);
-  line-height: 1;
-  padding: 2px 6px;
-  cursor: pointer;
-}
-
-.passcode-body {
-  padding: 20px 16px 18px;
-  display: grid;
-  gap: 18px;
-}
-
-.pc-pin {
-  display: grid;
-  grid-auto-flow: column;
-  justify-content: center;
-  gap: 12px;
-  padding: 6px 0 2px;
-}
-
-.pc-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 999px;
-  border: 2px solid var(--button-active);
-  background: transparent;
-  transition: background-color 120ms ease, border-color 120ms ease, transform 80ms ease;
-}
-
-.pc-dot.filled {
-  background: var(--color-white);
-  border-color: var(--color-white);
-  transform: scale(1.08);
-}
-
-.pc-keypad {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(80px, 1fr));
-  gap: 10px;
-  justify-items: stretch;
-}
-
-.pc-key {
-  padding: 14px 0;
-  font: var(--type-button-bold);
-  border-radius: 12px;
-  border: 1px solid var(--button-inactive);
-  background: var(--color-drawer-inactive-bg);
-  color: var(--color-white);
-  cursor: pointer;
-  transition: transform 60ms ease, background-color 120ms ease, border-color 120ms ease;
-  user-select: none;
-}
-
-.pc-key:active { transform: translateY(1px); }
-.pc-key:hover  { border-color: var(--button-active); }
-
-.pc-key.pc-primary {
-  background: var(--active-yellow);
-  color: var(--color-black);
-  border-color: var(--inactive-yellow);
-}
-
-.pc-key.pc-secondary {
-  background: var(--color-bg);
-}
-
-.pc-helper {
-  text-align: center;
-  min-height: 20px;
-  color: var(--text-inactive);
-  font: var(--type-caption-regular);
-}
-
-@media (max-width: 380px) {
-  .pc-keypad { gap: 8px; }
-  .pc-key { padding: 12px 0; }
-}
-
 /* ================= SCREENSAVER MODAL STYLES ================= */
 
 .screensaver-modal {
@@ -5119,6 +4968,168 @@ color: var(--color-light);
   color: var(--text-inactive);
   font: var(--type-caption-regular);
   margin-top: 18px;
+}
+
+
+
+/* ================= PASSCODE MODAL STYLES ================= */
+
+.passcode-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: grid;
+  place-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 160ms ease, visibility 0s linear 160ms;
+}
+
+.passcode-modal[aria-hidden="false"] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 160ms ease;
+}
+
+.passcode-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--color-black);   
+  opacity: 0.55;                    
+  z-index: 9998;
+}
+
+#auth-overlay.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  background: rgba(0, 0, 0, 0.65);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.passcode-dialog {
+  position: relative;
+  z-index: 9999;
+
+
+  border-radius: 6px;
+  background: var(--color-drawer-bg);
+  color: var(--color-white);
+  box-shadow: 0 12px 40px var(--color-black-hover);
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.passcode-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-drawer-inactive-bg);
+}
+
+.pc-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pc-lock {
+  width: 22px;
+  height: 22px;
+  fill: var(--active-yellow);
+  flex: none;
+}
+
+.pc-title {
+  margin: 0;
+  font: var(--type-h3);
+  letter-spacing: .2px;
+}
+
+.pc-close {
+  /* Minimal close button */
+  background: transparent;
+  border: 0;
+  color: var(--color-light);
+  font: var(--type-display-mono-bold);
+  line-height: 1;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+
+.passcode-body {
+  padding: 20px 16px 18px;
+  display: grid;
+  gap: 18px;
+}
+
+.pc-pin {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 6px 0 2px;
+}
+
+.pc-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid var(--button-active);
+  background: transparent;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 80ms ease;
+}
+
+.pc-dot.filled {
+  background: var(--color-white);
+  border-color: var(--color-white);
+  transform: scale(1.08);
+}
+
+.pc-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(80px, 1fr));
+  gap: 10px;
+  justify-items: stretch;
+}
+
+.pc-key {
+  padding: 10px 0;
+  font: var(--type-button-bold);
+  border-radius: 6px;
+  border: 1px solid var(--button-inactive);
+  background: var(--color-drawer-inactive-bg);
+  color: var(--color-white);
+  cursor: pointer;
+  transition: transform 60ms ease, background-color 120ms ease, border-color 120ms ease;
+  user-select: none;
+}
+
+.pc-key:active { transform: translateY(1px); }
+.pc-key:hover  { border-color: var(--button-active); }
+
+.pc-key.pc-primary {
+  background: var(--active-yellow);
+  color: var(--color-black);
+  border-color: var(--inactive-yellow);
+}
+
+.pc-key.pc-secondary {
+  background: var(--color-bg);
+}
+
+.pc-helper {
+  text-align: center;
+  min-height: 20px;
+  color: var(--text-inactive);
+  font: var(--type-caption-regular);
+}
+
+@media (max-width: 380px) {
+  .pc-keypad { gap: 8px; }
+  .pc-key { padding: 10px 0; }
 }
 
 
