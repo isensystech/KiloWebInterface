@@ -163,6 +163,16 @@ function handleIncomingMessage(evt) {
   }
 }
 
+if (typeof window !== 'undefined' && !window.__kiloControlDebugMessage) {
+  window.__kiloControlDebugMessage = function(payload) {
+    try {
+      handleIncomingMessage({ data: JSON.stringify(payload) });
+    } catch (err) {
+      console.error('Failed to inject debug payload', err);
+    }
+  };
+}
+
 function openControlWebSocket() {
   if (!shouldMaintainConnection) {
     return null;

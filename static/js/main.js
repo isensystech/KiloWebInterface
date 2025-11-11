@@ -273,6 +273,7 @@ function initializeAppSessionFlow() {
     initializeIdleTracking();
     initializeScreensaverSocket();
     updateOverlayVisibility();
+    updateAuthorizationMask();
     refreshSessionState().then((status) => {
         if (status.authenticated) {
             setAppState(APP_STATES.MAIN);
@@ -350,6 +351,7 @@ function setAppState(nextState) {
     currentAppState = nextState;
 
     updateOverlayVisibility();
+    updateAuthorizationMask();
 
     if (nextState === APP_STATES.MAIN) {
         resetIdleTimer();
@@ -376,6 +378,13 @@ function updateOverlayVisibility() {
     if (passcodeModal) {
         passcodeModal.setAttribute('aria-hidden', currentAppState === APP_STATES.KEYPAD ? 'false' : 'true');
     }
+}
+
+function updateAuthorizationMask() {
+    const overlay = document.getElementById('auth-overlay');
+    if (!overlay) return;
+    const allowMainView = currentAppState === APP_STATES.MAIN && sessionState.authenticated && sessionState.legalAck;
+    overlay.hidden = allowMainView;
 }
 
 function updateControlChannel() {
@@ -417,6 +426,7 @@ function applySessionStatus(status = {}) {
     sessionState.legalAck = Boolean(status.legal_ack);
     updateControlChannel();
     maybeOpenLegalModal();
+    updateAuthorizationMask();
     return status;
 }
 
@@ -606,6 +616,9 @@ function createKeypadController(onSubmit, onCancel) {
         close() {
             if (!active) return;
             active = false;
+            if (modal.contains(document.activeElement)) {
+                try { document.activeElement.blur(); } catch (_) {}
+            }
             modal.setAttribute('aria-hidden', 'true');
             modal.removeEventListener('click', handleClick);
             document.removeEventListener('keydown', handleKeydown);
