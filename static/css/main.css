@@ -4929,28 +4929,28 @@ transition: width 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--color-drawer-inactive-bg);
 }
 
 .ss-title {
-  font: var(--type-h2);
-color: var(--color-light);
-  letter-spacing: .2px;
+    font: var(--type-h3);
+    color: var(--color-light);
+    letter-spacing: .2px;
 }
 
 .ss-close {
-        font: var(--big-display);
+color: var(--text-inactive);
+font: var(--type-display-mono-regular);
+background: transparent;
+cursor: pointer;
+line-height: 1;
+border: none;            
+transition: color .2s ease;
 
-       position: absolute;
-        top: 16px; right: 16px;
-        font-size: 18px;
-        background: var(--color-bg);
-        color: var(--text-inactive);
-        cursor: pointer;
-        border: none;              /* make it look like an icon */
-        line-height: 1;
-        transition: color .2s ease;
+    position: absolute;
+    top: 16px; 
+    right: 16px;
 }
 
 .ss-close:hover {
@@ -4958,7 +4958,7 @@ color: var(--color-light);
 }
 
 .screensaver-body {
-  padding: 18px;
+  padding: 20px 16px 18px;
   display: grid;
   gap: 26px;
 }
@@ -4995,7 +4995,7 @@ color: var(--color-light);
   position: absolute;
   inset: 0;
   background: var(--color-black);   
-  opacity: 0.55;                    
+  opacity: 0.70;               
   z-index: 9998;
 }
 
@@ -5004,10 +5004,10 @@ color: var(--color-light);
 .passcode-dialog {
   position: relative;
   z-index: 9999;
-
-
+  max-height: 140vh;
+  overflow: auto;
   border-radius: 6px;
-  background: var(--color-drawer-bg);
+  background: var(--color-bg);
   color: var(--color-white);
   box-shadow: 0 12px 40px var(--color-black-hover);
   display: grid;
@@ -5027,34 +5027,39 @@ color: var(--color-light);
   align-items: center;
   gap: 10px;
 }
+.pc-title {
+    font: var(--type-h3);
+    color: var(--color-light);
+    letter-spacing: .2px;
+}
 
 .pc-lock {
   width: 22px;
   height: 22px;
-  fill: var(--active-yellow);
+  fill: var(--color-light);
   flex: none;
 }
 
-.pc-title {
-  margin: 0;
-  font: var(--type-h3);
-  letter-spacing: .2px;
-}
 
 .pc-close {
-  background: transparent;
-  border: 0;
-  color: var(--color-light);
-  font: var(--type-display-mono-bold);
-  line-height: 1;
+color: var(--text-inactive);
+font: var(--type-display-mono-regular);
+background: transparent;
+cursor: pointer;
+line-height: 1;
+border: none;            
+transition: color .2s ease;
   padding: 2px 6px;
-  cursor: pointer;
+}
+
+.ps-close:hover {
+    color: var(--color-white);
 }
 
 .passcode-body {
-  padding: 20px 16px 18px;
+  padding: 20px 16px 2px;
   display: grid;
-  gap: 18px;
+  gap: 26px;
 }
 
 .pc-pin {
@@ -5088,26 +5093,35 @@ color: var(--color-light);
 }
 
 .pc-key {
-  padding: 10px 0;
+  padding: 20px 0;
   font: var(--type-button-bold);
   border-radius: 6px;
   border: 1px solid var(--button-inactive);
-  background: var(--color-drawer-inactive-bg);
-  color: var(--color-white);
+  background: var(--button-inactive);
+  color: var(--color-light);
   cursor: pointer;
   transition: transform 60ms ease, background-color 120ms ease, border-color 120ms ease;
   user-select: none;
 }
 
-.pc-key:active { transform: translateY(1px); }
-.pc-key:hover  { border-color: var(--button-active); }
+.pc-key:active { 
+    transform: translateY(1px); 
+}
+.pc-key:hover  { 
+    filter: drop-shadow(0 0 3px var(--color-white));
+    color: var(--color-white);
+}
 
 .pc-key.pc-primary {
-  background: var(--active-yellow);
+  background: var(--inactive-yellow);
   color: var(--color-black);
   border-color: var(--inactive-yellow);
 }
+.pc-key.pc-primary:hover  { 
+    filter: drop-shadow(0 0 3px var(--active-yellow));
+      background: var(--active-yellow);
 
+}
 .pc-key.pc-secondary {
   background: var(--color-bg);
 }
