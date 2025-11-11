@@ -4999,14 +4999,7 @@ color: var(--color-light);
   z-index: 9998;
 }
 
-#auth-overlay.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 9500;
-  background: rgba(0, 0, 0, 0.65);
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-}
+
 
 .passcode-dialog {
   position: relative;
@@ -5049,7 +5042,6 @@ color: var(--color-light);
 }
 
 .pc-close {
-  /* Minimal close button */
   background: transparent;
   border: 0;
   color: var(--color-light);
