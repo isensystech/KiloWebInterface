@@ -775,15 +775,4 @@ function updateScreensaverGauges(data) {
     }
 }
 
-// Kill blur right now to verify the culprit visually
-document.documentElement.style.setProperty('--__debug_no_blur', '1');
-const css = `
-  .passcode-backdrop, .screensaver-backdrop, #auth-overlay,
-  .passcode-modal, .screensaver-modal {
-    filter: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-`;
-const style = Object.assign(document.createElement('style'), { textContent: css });
-document.head.appendChild(style);
+
