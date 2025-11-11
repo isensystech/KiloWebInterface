@@ -24,7 +24,7 @@ import {
 // ============================================================================
 const WEBSOCKET_CONFIG = Object.freeze({
   // Interval for sending joystick heartbeat packets to the server
-  gamepadHeartbeatIntervalMs: 1000,
+  gamepadHeartbeatIntervalMs: 200,
   // Bank/switch mapping for the three-way nav-light helper
   navLightsBank: 1,
   navLightsAnchorSwitch: 3,
