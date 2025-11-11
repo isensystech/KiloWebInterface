@@ -4688,7 +4688,7 @@
         background: var(--color-bg);
         color: var(--color-light);
         padding: 50px;
-        border-radius: 12px;
+        border-radius: 6px;
         z-index: 9999; /* Above backdrop */
         }
         .modal-text{
@@ -5128,7 +5128,7 @@ transition: color .2s ease;
 
 .pc-helper {
   text-align: center;
-  min-height: 20px;
+  min-height: 30px;
   color: var(--text-inactive);
   font: var(--type-caption-regular);
 }
