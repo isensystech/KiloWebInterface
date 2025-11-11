@@ -32,22 +32,28 @@ export function initializeAPToggle() {
         console.warn('AP toggle elements not found');
         return;
     }
-    
-    // Show modal on button click
-    apToggleBtn.addEventListener('click', () => {
+
+    const openModal = () => {
+        apModal.removeAttribute('hidden');
         apModal.style.display = 'block';
         apModal.classList.add('is-open');
-    });
+    };
+
+    const closeModal = () => {
+        apModal.setAttribute('hidden', '');
+        apModal.style.display = 'none';
+        apModal.classList.remove('is-open');
+    };
     
-    // Handle mode selection
+    apToggleBtn.addEventListener('click', openModal);
+    
     apModeButtons?.forEach(btn => {
         btn.addEventListener('click', () => {
             const selectedMode = btn.dataset.mode;
             
-            // Update button text
             apToggleBtn.textContent = selectedMode;
+            apToggleBtn.dataset.currentMode = selectedMode;
             
-            // Send command via WebSocket
             if (window.ws && window.ws.readyState === WebSocket.OPEN) {
                 const message = {
                     type: "ap.set_mode",
@@ -57,21 +63,15 @@ export function initializeAPToggle() {
                 console.log('Sent AP mode:', selectedMode);
             }
             
-            // Update button states
             apModeButtons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
-            // Close modal
-            apModal.style.display = 'none';
-            apModal.classList.remove('is-open');
+            closeModal();
         });
     });
     
-    // Close modal when clicking outside
     apModal.addEventListener('click', (e) => {
         if (e.target === apModal) {
-            apModal.style.display = 'none';
-            apModal.classList.remove('is-open');
+            closeModal();
         }
     });
 }
@@ -88,22 +88,30 @@ export function initializeHelmToggle() {
         console.warn('Helm toggle elements not found');
         return;
     }
-    
-    // Show modal on button click
-    helmToggleBtn.addEventListener('click', () => {
+
+    const openModal = () => {
+        helmModal.removeAttribute('hidden');
         helmModal.style.display = 'block';
         helmModal.classList.add('is-open');
-    });
+    };
+
+    const closeModal = () => {
+        helmModal.setAttribute('hidden', '');
+        helmModal.style.display = 'none';
+        helmModal.classList.remove('is-open');
+    };
     
-    // Handle helm selection
+    helmToggleBtn.addEventListener('click', openModal);
+    
     helmDisplays?.forEach(display => {
         display.addEventListener('click', () => {
-            const selectedHelm = display.querySelector('.helm-display-value').textContent;
+            const label = display.querySelector('.helm-display-value');
+            if (!label) return;
+            const selectedHelm = label.textContent.trim();
             
-            // Update button text
             helmToggleBtn.textContent = selectedHelm;
+            helmToggleBtn.dataset.selectedHelm = selectedHelm;
             
-            // Send command via WebSocket
             if (window.ws && window.ws.readyState === WebSocket.OPEN) {
                 const message = {
                     type: "helm.set",
@@ -113,17 +121,13 @@ export function initializeHelmToggle() {
                 console.log('Sent Helm selection:', selectedHelm);
             }
             
-            // Close modal
-            helmModal.style.display = 'none';
-            helmModal.classList.remove('is-open');
+            closeModal();
         });
     });
     
-    // Close modal when clicking outside
     helmModal.addEventListener('click', (e) => {
         if (e.target === helmModal) {
-            helmModal.style.display = 'none';
-            helmModal.classList.remove('is-open');
+            closeModal();
         }
     });
 }

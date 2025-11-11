@@ -199,6 +199,7 @@ function dockModalToDrawer(modal, opts = {}){
     const bottom = Math.max(0, vh - dr.bottom);
     const placeToRight = dr.left <= vw / 2;
 
+    modal.__docking = true;
     modal.classList.add('is-docked');
     modal.style.bottom = `${bottom}px`;
     modal.style.maxHeight = `${dr.height}px`;
@@ -210,13 +211,24 @@ function dockModalToDrawer(modal, opts = {}){
         modal.style.right = `${Math.round(vw - dr.left + gap)}px`;
         modal.style.left = 'auto';
     }
+    modal.__docking = false;
 }
 
 function setupDocking(modalSelector, opts = {}){
     const modal = document.querySelector(modalSelector);
     if(!modal) return;
 
-    const redraw = () => dockModalToDrawer(modal, opts);
+    let isApplyingDock = false;
+    const redraw = () => {
+        if (isApplyingDock) return;
+        isApplyingDock = true;
+        try {
+            dockModalToDrawer(modal, opts);
+        } finally {
+            // allow mutation observers to settle before next run
+            setTimeout(() => { isApplyingDock = false; }, 0);
+        }
+    };
 
     window.addEventListener('resize', redraw);
 
@@ -226,7 +238,10 @@ function setupDocking(modalSelector, opts = {}){
         ro.observe(drawer);
     }
 
-    const mo = new MutationObserver(() => { if (modal.classList.contains('is-open')) redraw(); });
+    const mo = new MutationObserver(() => {
+        if (modal.__docking) return;
+        if (modal.classList.contains('is-open')) redraw();
+    });
     mo.observe(modal, { attributes: true, attributeFilter: ['class','style'] });
 
     redraw();
