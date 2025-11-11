@@ -362,6 +362,14 @@ async def button_click(request: Request) -> Response:
     return session_ctx.write_to_response(response)
 
 
+@app.post("/api/logout")
+async def api_logout(request: Request) -> Response:
+    session_ctx = get_session_ctx(request)
+    session_ctx.clear()
+    response = JSONResponse(session_status(session_ctx.data))
+    return session_ctx.write_to_response(response)
+
+
 # -----------------------------------------------------------------------------
 # WebSocket endpoints
 # -----------------------------------------------------------------------------
