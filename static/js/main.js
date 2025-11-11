@@ -250,7 +250,7 @@ const APP_STATES = Object.freeze({
     MAIN: 'MAIN'
 });
 
-const IDLE_TIMEOUT_MS = 5 * 60 * 1000;
+const IDLE_TIMEOUT_MS = 3 * 60 * 1000;
 
 const sessionState = { authenticated: false, legalAck: false };
 let currentAppState = APP_STATES.SPLASH;
@@ -326,8 +326,24 @@ function bindExitTrigger() {
     exitIcon.addEventListener('click', (event) => {
         event.preventDefault();
         event.stopPropagation();
-        setAppState(APP_STATES.SPLASH);
+        logoutUser('manual');
     });
+}
+
+async function logoutUser(reason = 'manual') {
+    try {
+        await fetch('/api/logout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ reason })
+        });
+    } catch (err) {
+        console.warn('Logout request failed:', err);
+    } finally {
+        clearSessionState();
+        setAppState(APP_STATES.SPLASH);
+    }
 }
 
 async function handleSplashInteraction() {
@@ -418,7 +434,7 @@ function clearIdleTimer() {
 }
 
 function handleIdleTimeout() {
-    setAppState(APP_STATES.SPLASH);
+    logoutUser('idle');
 }
 
 function applySessionStatus(status = {}) {
@@ -435,6 +451,7 @@ function clearSessionState() {
     sessionState.legalAck = false;
     updateControlChannel();
     maybeOpenLegalModal();
+    updateAuthorizationMask();
 }
 
 async function refreshSessionState() {
