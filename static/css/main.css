@@ -4878,8 +4878,6 @@ transition: width 0.3s ease;
         }
 
 
-
-
         .status-modal {
         backdrop-filter: none !important;
         filter: none !important;
@@ -4887,20 +4885,14 @@ transition: width 0.3s ease;
 
 
 
-
-        /* ================= LOGIN MODAL STYLES ================= */
-
-        /* ================= PASSCODE MODAL STYLES ================= */
-/* Uses your palette tokens when available; falls back otherwise */
+/* ================= PASSCODE MODAL STYLES ================= */
 
 .passcode-modal {
-  /* Keep this element mounted; toggle via [aria-hidden] */
   position: fixed;
   inset: 0;
-  z-index: 9998; /* backdrop below dialog (dialog is 9999) */
+  z-index: 9998;
   display: grid;
   place-items: center;
-  /* Hidden state */
   visibility: hidden;
   opacity: 0;
   transition: opacity 160ms ease, visibility 0s linear 160ms;
@@ -4915,20 +4907,20 @@ transition: width 0.3s ease;
 .passcode-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.55);
-  /* Ensure backdrop sits below dialog, above page */
+  background: var(--color-black);   
+  opacity: 0.55;                    
   z-index: 9998;
 }
 
 .passcode-dialog {
   position: relative;
-  z-index: 9999; /* above backdrop */
+  z-index: 9999;
   width: min(520px, 92vw);
   border-radius: 16px;
-  background: var(--color-drawer-bg, #2b2b2b);
-  color: var(--color-white, #fff);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-  border: 1px solid var(--button-inactive, #404040);
+  background: var(--color-drawer-bg);
+  color: var(--color-white);
+  box-shadow: 0 12px 40px var(--color-black-hover);
+  border: 1px solid var(--button-inactive);
   display: grid;
   grid-template-rows: auto 1fr;
 }
@@ -4938,7 +4930,7 @@ transition: width 0.3s ease;
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  border-bottom: 1px solid var(--color-drawer-inactive-bg, #252525);
+  border-bottom: 1px solid var(--color-drawer-inactive-bg);
 }
 
 .pc-title-row {
@@ -4950,22 +4942,22 @@ transition: width 0.3s ease;
 .pc-lock {
   width: 22px;
   height: 22px;
-  fill: var(--active-yellow, #FFBD0A);
+  fill: var(--active-yellow);
   flex: none;
 }
 
 .pc-title {
   margin: 0;
-  font: var(--type-h3, 800 18px/1.25 var(--font-sans, system-ui));
+  font: var(--type-h3);
   letter-spacing: .2px;
 }
 
 .pc-close {
-  /* Minimalistic close button */
+  /* Minimal close button */
   background: transparent;
   border: 0;
-  color: var(--color-light, #dadada);
-  font-size: 26px;
+  color: var(--color-light);
+  font: var(--type-display-mono-bold);
   line-height: 1;
   padding: 2px 6px;
   cursor: pointer;
@@ -4989,19 +4981,18 @@ transition: width 0.3s ease;
   width: 14px;
   height: 14px;
   border-radius: 999px;
-  border: 2px solid var(--button-active, #707070);
+  border: 2px solid var(--button-active);
   background: transparent;
   transition: background-color 120ms ease, border-color 120ms ease, transform 80ms ease;
 }
 
 .pc-dot.filled {
-  background: var(--color-white, #fff);
-  border-color: var(--color-white, #fff);
+  background: var(--color-white);
+  border-color: var(--color-white);
   transform: scale(1.08);
 }
 
 .pc-keypad {
-  /* 3x4 grid layout */
   display: grid;
   grid-template-columns: repeat(3, minmax(80px, 1fr));
   gap: 10px;
@@ -5009,58 +5000,44 @@ transition: width 0.3s ease;
 }
 
 .pc-key {
-  /* Big touch targets */
   padding: 14px 0;
-  font: var(--type-h2, 700 20px/1.2 var(--font-sans, system-ui));
+  font: var(--type-button-bold);
   border-radius: 12px;
-  border: 1px solid var(--button-inactive, #404040);
-  background: var(--color-drawer-inactive-bg, #252525);
-  color: var(--color-white, #fff);
+  border: 1px solid var(--button-inactive);
+  background: var(--color-drawer-inactive-bg);
+  color: var(--color-white);
   cursor: pointer;
   transition: transform 60ms ease, background-color 120ms ease, border-color 120ms ease;
   user-select: none;
 }
 
-.pc-key:active {
-  transform: translateY(1px);
-}
-
-.pc-key:hover {
-  border-color: var(--button-active, #707070);
-}
+.pc-key:active { transform: translateY(1px); }
+.pc-key:hover  { border-color: var(--button-active); }
 
 .pc-key.pc-primary {
-  background: var(--active-yellow, #FFBD0A);
-  color: #000;
-  border-color: var(--inactive-yellow, #9a7000);
+  background: var(--active-yellow);
+  color: var(--color-black);
+  border-color: var(--inactive-yellow);
 }
 
 .pc-key.pc-secondary {
-  background: var(--color-bg, #202020);
+  background: var(--color-bg);
 }
 
 .pc-helper {
   text-align: center;
   min-height: 20px;
-  color: var(--text-inactive, #757575);
-  font: var(--type-caption-regular, 400 12px/1.3 var(--font-sans, system-ui));
+  color: var(--text-inactive);
+  font: var(--type-caption-regular);
 }
 
-/* Small screens */
 @media (max-width: 380px) {
   .pc-keypad { gap: 8px; }
   .pc-key { padding: 12px 0; }
 }
 
-
-
-
-
-
-
-
-
 /* ================= SCREENSAVER MODAL STYLES ================= */
+
 .screensaver-modal {
   position: fixed;
   inset: 0;
@@ -5071,39 +5048,78 @@ transition: width 0.3s ease;
   opacity: 0;
   transition: opacity 160ms ease, visibility 0s linear 160ms;
 }
-.screensaver-modal[aria-hidden="false"] { visibility: visible; opacity: 1; transition: opacity 160ms ease; }
+.screensaver-modal[aria-hidden="false"] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 160ms ease;
+}
 
 .screensaver-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.55);
+  background: var(--color-black);   
+  opacity: 0.70;               
   z-index: 9998;
 }
 
 .screensaver-dialog {
   position: relative;
   z-index: 9999;
-  width: min(560px, 92vw);
-  max-height: 90vh;
+  width: min(200px, 92vw);
+  max-height: 140vh;
   overflow: auto;
-  border-radius: 16px;
-  background: var(--color-drawer-bg);
+  border-radius: 6px;
+  background: var(--color-bg);
   color: var(--color-white);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-  border: 1px solid var(--button-inactive);
+  box-shadow: 0 12px 40px var(--color-black-hover);
   display: grid;
   grid-template-rows: auto 1fr;
 }
 
 .screensaver-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 16px; border-bottom: 1px solid var(--color-drawer-inactive-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+  border-bottom: 1px solid var(--color-drawer-inactive-bg);
 }
-.ss-title { margin: 0; font: var(--type-h3); letter-spacing: .2px; }
-.ss-close { background: transparent; border: 0; color: var(--color-light); font-size: 24px; line-height: 1; padding: 2px 6px; cursor: pointer; }
 
-.screensaver-body { padding: 16px; display: grid; gap: 16px; }
-.ss-hint { text-align: center; color: var(--text-inactive); font: var(--type-caption-regular); margin-top: 8px; }
+.ss-title {
+  font: var(--type-h2);
+color: var(--color-light);
+  letter-spacing: .2px;
+}
+
+.ss-close {
+        font: var(--big-display);
+
+       position: absolute;
+        top: 16px; right: 16px;
+        font-size: 18px;
+        background: var(--color-bg);
+        color: var(--text-inactive);
+        cursor: pointer;
+        border: none;              /* make it look like an icon */
+        line-height: 1;
+        transition: color .2s ease;
+}
+
+.ss-close:hover {
+    color: var(--color-white);
+}
+
+.screensaver-body {
+  padding: 18px;
+  display: grid;
+  gap: 26px;
+}
+
+.ss-hint {
+  text-align: center;
+  color: var(--text-inactive);
+  font: var(--type-caption-regular);
+  margin-top: 18px;
+}
 
 
 
