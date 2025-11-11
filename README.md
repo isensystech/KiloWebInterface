@@ -39,6 +39,11 @@ The repository lists several functional integrations that are visible in the UI 
 ### Prerequisites
 * Python 3.10+ (recommended)
 * pip (or uv/pipx if you prefer)
+* Python dependencies:
+  ```bash
+  pip install fastapi uvicorn
+  # (rospy is optional unless you are running the ROS bridge on the same host)
+  ```
 
 Install & Run (Local)
 ```
@@ -52,9 +57,8 @@ python -m venv .venv
 # macOS/Linux:
 source .venv/bin/activate
 
-# install minimal deps if required (currently none beyond stdlib for static serving)
-# if you add Flask or similar later:
-# pip install -r requirements.txt
+# install dependencies
+pip install fastapi uvicorn
 
 # run
 python app.py
@@ -65,7 +69,11 @@ python app.py
 ### Configuration
 Right now the UI is static and runs without configuration.
 When you wire backends, consider these environment variables:
-* ``` KILO_BIND ``` – host:port to serve the UI (e.g., 0.0.0.0:5000)
+* ``` KILO_BIND ``` – host:port to serve the UI (default ``0.0.0.0:5000``)
+* ``` KILO_RELOAD ``` – set to `1`/`true` to enable uvicorn reload mode during local dev
+* ``` KILO_LOG_LEVEL ``` – override uvicorn's log level (default `info`)
+* ``` KILO_CONTROL_TOKEN ``` – optional shared secret for headless/ROS WebSocket clients (`ws://host/ws?token=...`)
+* ``` KILO_ALLOW_ANON_CONTROL_WS ``` – set to `1` to temporarily allow legacy unauthenticated WebSocket clients (not recommended for exposed deployments)
 * ``` KILO_BACKEND_URL ``` – base URL for the control API (REST or WS)
 * ``` KILO_PROFILE ``` – dev / prod to toggle logging & hot-reload
 Add a .env.example to the repo if you standardize these.
