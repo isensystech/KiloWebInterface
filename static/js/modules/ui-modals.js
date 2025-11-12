@@ -327,6 +327,7 @@ const TOUR_STEPS = Array.from(document.querySelectorAll('[data-coach-text]')).ma
   // Track elements separately for active step vs. hover preview
   let activeEl = null;
   let hoverEl  = null;
+  const coachForcedOpenModals = new Set();
 
   // Spotlight geometry
   let holeCx = 0, holeCy = 0, holeR = 0;
@@ -370,13 +371,42 @@ const TOUR_STEPS = Array.from(document.querySelectorAll('[data-coach-text]')).ma
     return -1;
   }
 
+  function isElementHidden(el){
+    if (!el) return true;
+    if (el.hidden) return true;
+    const computedDisplay = window.getComputedStyle(el).display;
+    return computedDisplay === 'none';
+  }
+
+  function ensureParentModalVisible(target){
+    let openedModal = false;
+    const trimContainer = document.getElementById('trim-modal-container');
+    if (trimContainer && trimContainer.contains(target) && isElementHidden(trimContainer)) {
+      coachForcedOpenModals.add('#trim-modal-container');
+      if (typeof openTrimModal === 'function') {
+        openTrimModal();
+      } else {
+        const trimBackdrop = document.getElementById('trim-modal-backdrop');
+        if (trimBackdrop) trimBackdrop.style.display = 'block';
+        trimContainer.style.display = 'block';
+      }
+      openedModal = true;
+    }
+    return openedModal;
+  }
+
   // --- render active step (tooltip + spotlight on active only) ---
-  function renderStep(){
+  async function renderStep(){
     const step = TOUR_STEPS[idx];
     const target = document.querySelector(step.selector);
     if (!target){
       idx = (idx + 1) % TOUR_STEPS.length;
       return renderStep();
+    }
+
+    const parentOpened = ensureParentModalVisible(target);
+    if (parentOpened) {
+      await new Promise(r => requestAnimationFrame(r));
     }
 
     // Update active glow (keep hover glow separate)
@@ -388,31 +418,7 @@ const TOUR_STEPS = Array.from(document.querySelectorAll('[data-coach-text]')).ma
     setSpotlightForElement(activeEl);
     mask.classList.remove('hole-clickthrough'); // no click-through in Help
 
-    // Tooltip stays anchored to ACTIVE step
-    tipText.textContent = step.text;
-
-    const r = activeEl.getBoundingClientRect();
-    const gap = MODAL_CONFIG.coachTooltipGapPx;
-    const tw = tip.offsetWidth || 300;
-    const th = tip.offsetHeight || 80;
-    const cx = r.left + r.width / 2;
-    const cy = r.top  + r.height / 2;
-
-    let tx, ty;
-    switch(step.placement){
-      case 'top':    tx = cx - tw/2; ty = r.top - th - gap;  break;
-      case 'right':  tx = r.right + gap; ty = cy - th/2;     break;
-      case 'bottom': tx = cx - tw/2; ty = r.bottom + gap;    break;
-      case 'left':   tx = r.left - tw - gap; ty = cy - th/2; break;
-      default:       tx = cx - tw/2; ty = r.bottom + gap;
-    }
-
-    const vw = innerWidth, vh = innerHeight;
-    const margin = MODAL_CONFIG.coachTooltipMarginPx;
-    tx = Math.max(margin, Math.min(vw - tw - margin, tx));
-    ty = Math.max(margin, Math.min(vh - th - margin, ty));
-    tip.style.transform = `translate(${Math.round(tx)}px, ${Math.round(ty)}px)`;
-
+    placeTooltip(activeEl, step.placement, step.text);
     btnPrev.disabled = (TOUR_STEPS.length <= 1);
     btnNext.textContent = 'Next'; // always loops
   }
@@ -456,12 +462,8 @@ function onOverlayMouseMove(e){
   });
 }
 
-// Helper function to place tooltip (extracted from renderStep)
 function placeTooltip(element, placement, text) {
-  if (!element) return;
-  const tip = document.getElementById('coach-tooltip');
-  const tipText = tip.querySelector('.coach-text');
-  
+  if (!element || !tip || !tipText) return;
   tipText.textContent = text;
   
   const r = element.getBoundingClientRect();
@@ -538,6 +540,11 @@ function placeTooltip(element, placement, text) {
     if (hoverEl && hoverEl !== activeEl) hoverEl.classList.remove('coach-glow');
     if (activeEl) activeEl.classList.remove('coach-glow');
     hoverEl = null; activeEl = null;
+
+    if (coachForcedOpenModals.has('#trim-modal-container')) {
+      applyTrimSettings();
+      coachForcedOpenModals.delete('#trim-modal-container');
+    }
   }
 
   trigger.addEventListener('click', () => openTour(0));

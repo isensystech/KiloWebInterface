@@ -8,7 +8,7 @@ import os
 import random
 import threading
 import time
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, status
 from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse, Response
@@ -16,16 +16,24 @@ from fastapi.staticfiles import StaticFiles
 
 
 LOGGER = logging.getLogger("kilo.app")
+DEFAULT_BIND = "0.0.0.0:5000"
+TRUTHY_VALUES = {"1", "true", "yes", "on"}
 
 # -----------------------------------------------------------------------------
 # Session / authentication settings
 # -----------------------------------------------------------------------------
 SESSION_COOKIE_NAME = "kilo_session"
 SESSION_SECRET = os.environ.get("KILO_SESSION_SECRET", "dev-secret-key")
-SESSION_COOKIE_SECURE = os.environ.get("KILO_SESSION_SECURE", "0").lower() in {"1", "true", "yes"}
+SESSION_COOKIE_SECURE = os.environ.get("KILO_SESSION_SECURE", "0").lower() in TRUTHY_VALUES
 SESSION_COOKIE_SAMESITE = os.environ.get("KILO_SESSION_SAMESITE", "lax")
 SESSION_TIMEOUT_SECONDS = int(os.environ.get("KILO_SESSION_TIMEOUT", 60 * 60 * 8))
 LOGIN_PIN = os.environ.get("KILO_LOGIN_PIN", "0000")
+
+# -----------------------------------------------------------------------------
+# Control channel compatibility settings
+# -----------------------------------------------------------------------------
+CONTROL_TOKEN = os.environ.get("KILO_CONTROL_TOKEN")
+ALLOW_ANON_CONTROL_WS = os.environ.get("KILO_ALLOW_ANON_CONTROL_WS", "0").lower() in TRUTHY_VALUES
 
 # -----------------------------------------------------------------------------
 # Screensaver / ROS settings
@@ -172,6 +180,19 @@ def session_from_websocket(ws: WebSocket) -> Dict[str, Any]:
     if session_is_expired(data):
         return {}
     return data
+
+
+def websocket_is_authorized(ws: WebSocket, session_data: Dict[str, Any]) -> bool:
+    if is_fully_authorized(session_data):
+        return True
+    if ALLOW_ANON_CONTROL_WS:
+        return True
+    if not CONTROL_TOKEN:
+        return False
+    token = ws.query_params.get("token") or ws.headers.get("X-Kilo-Control-Token")
+    if not token:
+        return False
+    return hmac.compare_digest(token, CONTROL_TOKEN)
 
 
 # -----------------------------------------------------------------------------
@@ -378,7 +399,7 @@ async def api_logout(request: Request) -> Response:
 @app.websocket("/ws")
 async def websocket_endpoint(ws: WebSocket) -> None:
     session_data = session_from_websocket(ws)
-    if not is_fully_authorized(session_data):
+    if not websocket_is_authorized(ws, session_data):
         await ws.close(code=1008, reason="Authentication required")
         return
 
@@ -410,3 +431,53 @@ async def websocket_screensaver(ws: WebSocket) -> None:
                 break
     finally:
         screensaver_manager.disconnect(ws)
+
+
+# -----------------------------------------------------------------------------
+# CLI helpers
+# -----------------------------------------------------------------------------
+
+def _parse_bind_target(raw: str) -> Tuple[str, int]:
+    target = (raw or "").strip()
+    if not target:
+        return "0.0.0.0", 5000
+    if ":" not in target:
+        return target, 5000
+    host_part, port_part = target.rsplit(":", 1)
+    host = host_part or "0.0.0.0"
+    try:
+        port = int(port_part)
+    except ValueError as exc:
+        raise SystemExit(f"Invalid port value in KILO_BIND: {port_part!r}") from exc
+    if not (0 < port < 65536):
+        raise SystemExit(f"Invalid port value in KILO_BIND: {port}")
+    return host, port
+
+
+def main() -> None:
+    try:
+        import uvicorn
+    except ImportError as exc:
+        raise SystemExit(
+            "Uvicorn is required to run the server. Install dependencies with "
+            "`pip install fastapi uvicorn`."
+        ) from exc
+
+    bind = os.environ.get("KILO_BIND", DEFAULT_BIND)
+    host, port = _parse_bind_target(bind)
+    log_level = os.environ.get("KILO_LOG_LEVEL", "info")
+    reload_enabled = os.environ.get("KILO_RELOAD", "").lower() in TRUTHY_VALUES
+    target = "app:app" if reload_enabled else app
+
+    LOGGER.info("Starting Kilo UI server at %s:%s (reload=%s)", host, port, reload_enabled)
+    uvicorn.run(
+        target,
+        host=host,
+        port=port,
+        log_level=log_level,
+        reload=reload_enabled,
+    )
+
+
+if __name__ == "__main__":
+    main()
