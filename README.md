@@ -73,10 +73,22 @@ When you wire backends, consider these environment variables:
 * ``` KILO_RELOAD ``` – set to `1`/`true` to enable uvicorn reload mode during local dev
 * ``` KILO_LOG_LEVEL ``` – override uvicorn's log level (default `info`)
 * ``` KILO_CONTROL_TOKEN ``` – optional shared secret for headless/ROS WebSocket clients (`ws://host/ws?token=...`)
+* ``` KILO_CONTROL_WHITELIST ``` – comma-separated list of IPs that may connect to `/ws` without cookies or a token (e.g., `192.168.0.130`)
 * ``` KILO_ALLOW_ANON_CONTROL_WS ``` – set to `1` to temporarily allow legacy unauthenticated WebSocket clients (not recommended for exposed deployments)
 * ``` KILO_BACKEND_URL ``` – base URL for the control API (REST or WS)
 * ``` KILO_PROFILE ``` – dev / prod to toggle logging & hot-reload
 Add a .env.example to the repo if you standardize these.
+
+#### Generating a control token
+Use Python’s secrets module to mint a URL-safe token and share it with the ROS team:
+
+```bash
+python - <<'PY'
+import secrets
+print(secrets.token_urlsafe(32))
+PY
+```
+Set `KILO_CONTROL_TOKEN` to the printed value on the server, and have the ROS client append `?token=<value>` when opening `ws://host/ws`.
 
 ### Development Workflow
 * Fast UI iteration: edit files in static/ and refresh.
