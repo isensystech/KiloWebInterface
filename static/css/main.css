@@ -4965,7 +4965,7 @@ transition: color .2s ease;
 
 .ss-hint {
   text-align: center;
-  color: var(--text-inactive);
+  color: var(--color-white);
   font: var(--type-caption-regular);
   margin-top: 18px;
 }
@@ -5129,7 +5129,7 @@ transition: color .2s ease;
 .pc-helper {
   text-align: center;
   min-height: 30px;
-  color: var(--text-inactive);
+  color: var(--color-white);
   font: var(--type-caption-regular);
 }
 
