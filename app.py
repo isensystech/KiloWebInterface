@@ -34,6 +34,11 @@ LOGIN_PIN = os.environ.get("KILO_LOGIN_PIN", "0000")
 # -----------------------------------------------------------------------------
 CONTROL_TOKEN = os.environ.get("KILO_CONTROL_TOKEN")
 ALLOW_ANON_CONTROL_WS = os.environ.get("KILO_ALLOW_ANON_CONTROL_WS", "0").lower() in TRUTHY_VALUES
+CONTROL_WHITELIST = {
+    entry.strip()
+    for entry in os.environ.get("KILO_CONTROL_WHITELIST", "").split(",")
+    if entry.strip()
+}
 
 # -----------------------------------------------------------------------------
 # Screensaver / ROS settings
@@ -185,14 +190,15 @@ def session_from_websocket(ws: WebSocket) -> Dict[str, Any]:
 def websocket_is_authorized(ws: WebSocket, session_data: Dict[str, Any]) -> bool:
     if is_fully_authorized(session_data):
         return True
-    if ALLOW_ANON_CONTROL_WS:
+    client_ip = getattr(ws.client, "host", None)
+    if client_ip and client_ip in CONTROL_WHITELIST:
         return True
     if not CONTROL_TOKEN:
-        return False
+        return ALLOW_ANON_CONTROL_WS
     token = ws.query_params.get("token") or ws.headers.get("X-Kilo-Control-Token")
-    if not token:
-        return False
-    return hmac.compare_digest(token, CONTROL_TOKEN)
+    if token and hmac.compare_digest(token, CONTROL_TOKEN):
+        return True
+    return ALLOW_ANON_CONTROL_WS
 
 
 # -----------------------------------------------------------------------------
