@@ -791,3 +791,75 @@ function updateScreensaverGauges(data) {
 }
 
 
+
+
+
+
+/* =========================== DEV_AUTH_BYPASS START ===========================
+   Drop-in dev bypass for local work:
+   - Forces MAIN state without PIN or server.
+   - Hides auth overlay.
+   - Disables control/screensaver sockets to avoid backend dependency.
+   Remove this entire block (START..END) to restore normal auth behavior.
+============================================================================= */
+(() => {
+  // Toggle: set to false or delete this block to restore normal auth.
+  const ENABLE = true;
+  if (!ENABLE) return;
+
+  // 1) Pretend user is authenticated and legal terms accepted
+  try {
+    sessionState.authenticated = true;
+    sessionState.legalAck = true;
+  } catch (_e) { /* ignore if not yet defined */ }
+
+  // 2) Patch overlay logic: allow MAIN view regardless of server flags
+  try {
+    const __updateAuthorizationMask = updateAuthorizationMask;
+    updateAuthorizationMask = function devBypassUpdateAuthorizationMask() {
+      const overlay = document.getElementById('auth-overlay');
+      if (!overlay) return;
+      const allowMainView = (currentAppState === APP_STATES.MAIN);
+      overlay.hidden = allowMainView;
+    };
+  } catch (_e) { /* noop */ }
+
+  // 3) Prevent backend socket connections during bypass
+  try {
+    const __updateControlChannel = updateControlChannel;
+    updateControlChannel = function devBypassUpdateControlChannel() {
+      if (typeof disconnectControlWebSocket === 'function') {
+        try { disconnectControlWebSocket(); } catch (_) {}
+      }
+      // Intentionally do not call connectControlWebSocket
+    };
+  } catch (_e) { /* noop */ }
+
+  try {
+    const __initializeScreensaverSocket = initializeScreensaverSocket;
+    initializeScreensaverSocket = function devBypassNoScreensaverSocket() {
+      // No-op in dev bypass
+    };
+  } catch (_e) { /* noop */ }
+
+  // 4) Skip keypad & server checks and jump to MAIN immediately
+  try {
+    const __handleSplashInteraction = handleSplashInteraction;
+    handleSplashInteraction = async function devBypassHandleSplashInteraction() {
+      setAppState(APP_STATES.MAIN);
+    };
+  } catch (_e) { /* noop */ }
+
+  // 5) Short-circuit PIN submit to succeed instantly (in case keypad is shown)
+  try {
+    const __handleLoginSubmit = handleLoginSubmit;
+    handleLoginSubmit = async function devBypassHandleLoginSubmit(_pin) {
+      applySessionStatus({ authenticated: true, legal_ack: true });
+      setAppState(APP_STATES.MAIN);
+    };
+  } catch (_e) { /* noop */ }
+
+  // 6) If app is on SPLASH/KEYPAD right now, push it to MAIN
+  try { setAppState(APP_STATES.MAIN); } catch (_e) { /* ignore */ }
+})();
+/* ============================ DEV_AUTH_BYPASS END =========================== */
