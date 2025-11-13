@@ -552,3 +552,272 @@ function placeTooltip(element, placement, text) {
   btnPrev.addEventListener('click', prev);
   btnClose.addEventListener('click', closeTour);
 })();
+
+
+
+
+
+
+
+
+// ============================================================================
+// JOYSTICK MODAL 
+// ============================================================================
+
+(function initJoystickModal() {
+  // Guard double init
+  if (window.__joystickModalInit) return;
+  window.__joystickModalInit = true;
+
+  // Grab elements
+  const trigger   = document.getElementById('joystick-trigger');
+  const modal     = document.getElementById('joystick-modal');
+  const backdrop  = document.getElementById('joystick-backdrop');
+  const closeBtn  = modal?.querySelector('.info-modal-close');
+  if (!trigger || !modal || !backdrop || !closeBtn) return;
+
+  let lastFocused = null;
+
+  // Utility: get focusable nodes inside dialog
+  function getFocusable(container) {
+    // Keep the list tight to avoid surprises
+    const sel = [
+      'a[href]',
+      'button:not([disabled])',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])'
+    ].join(',');
+    return Array.from(container.querySelectorAll(sel))
+      .filter(el => el.offsetParent !== null || el === container);
+  }
+
+  // Open modal
+  function openModal() {
+    // Save last focused element to restore later
+    lastFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+    // Show elements
+    backdrop.hidden = false;
+    modal.hidden = false;
+
+    // ARIA flags
+    modal.setAttribute('aria-hidden', 'false');
+
+    // Prevent page scroll while modal is open
+    document.documentElement.style.overflow = 'hidden';
+
+    // Focus first focusable, else dialog itself
+    const focusables = getFocusable(modal);
+    const first = focusables[0] || modal;
+    // Ensure dialog can receive focus
+    if (modal.getAttribute('tabindex') == null) modal.setAttribute('tabindex', '-1');
+    first.focus({ preventScroll: true });
+
+    // Attach listeners
+    document.addEventListener('keydown', onKeydown);
+    document.addEventListener('focus', trapFocus, true);
+  }
+
+  // Close modal
+  function closeModal() {
+    // Hide elements
+    modal.hidden = true;
+    backdrop.hidden = true;
+
+    // ARIA flags
+    modal.setAttribute('aria-hidden', 'true');
+
+    // Restore page scroll
+    document.documentElement.style.overflow = '';
+
+    // Detach listeners
+    document.removeEventListener('keydown', onKeydown);
+    document.removeEventListener('focus', trapFocus, true);
+
+    // Restore focus to trigger
+    if (lastFocused && document.contains(lastFocused)) {
+      try { lastFocused.focus({ preventScroll: true }); } catch (_) {}
+    } else {
+      try { trigger.focus({ preventScroll: true }); } catch (_) {}
+    }
+  }
+
+  // Keyboard handlers
+  function onKeydown(e) {
+    // ESC to close
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeModal();
+      return;
+    }
+    // Basic Tab focus trap
+    if (e.key === 'Tab') {
+      const focusables = getFocusable(modal);
+      if (focusables.length === 0) {
+        e.preventDefault();
+        modal.focus();
+        return;
+      }
+      const first = focusables[0];
+      const last  = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }
+
+  // Focus trap for clicks that move focus out
+  function trapFocus(e) {
+    if (modal.hidden) return;
+    if (!modal.contains(e.target)) {
+      e.stopPropagation();
+      const focusables = getFocusable(modal);
+      (focusables[0] || modal).focus({ preventScroll: true });
+    }
+  }
+
+  // Wire up triggers
+  trigger.addEventListener('click', (e) => {
+    e.preventDefault();
+    openModal();
+  });
+
+  // Close by backdrop click
+  backdrop.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeModal();
+  });
+
+  // Close button
+  closeBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeModal();
+  });
+
+  // Optional: open with Enter/Space when trigger is focused (img may not be focusable by default)
+  if (trigger.getAttribute('tabindex') == null) trigger.setAttribute('tabindex', '0');
+  trigger.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openModal();
+    }
+  });
+
+  // Expose API in case other modules want to control it
+  window.openJoystickModal = openModal;   // eslint-disable-line no-attach
+  window.closeJoystickModal = closeModal; // eslint-disable-line no-attach
+})();
+
+
+
+// ============================================================================
+// JOYSTICK BUTTON SETTINGS (solo3-style)
+// - Mirrors your solo3 buttons UI
+// - Persists to localStorage
+// - Restores on modal open
+// - Emits 'joystick:configChanged' on change
+// ============================================================================
+
+(function initJoystickButtonSettings() {
+  // Prevent double init
+  if (window.__joystickButtonSettingsInit) return;
+  window.__joystickButtonSettingsInit = true;
+
+  const STORAGE_KEY = 'joystickPrefs';
+  const ALLOWED = new Set(['springy', 'sticky', 'pilot-hold']);
+  const DEFAULTS = { throttle: 'springy', steering: 'springy' };
+
+  // --- storage helpers ---
+  function loadPrefs() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return { ...DEFAULTS };
+      const obj = JSON.parse(raw);
+      const throttle = ALLOWED.has(obj?.throttle) ? obj.throttle : DEFAULTS.throttle;
+      const steering = ALLOWED.has(obj?.steering) ? obj.steering : DEFAULTS.steering;
+      return { throttle, steering };
+    } catch {
+      return { ...DEFAULTS };
+    }
+  }
+  function savePrefs(p) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); } catch {}
+  }
+  function emitChanged(p) {
+    window.dispatchEvent(new CustomEvent('joystick:configChanged', { detail: { ...p } }));
+  }
+
+  // --- UI helpers ---
+  function setActive(groupEl, mode) {
+    if (!groupEl) return;
+    const btns = groupEl.querySelectorAll('.solo3-btn');
+    btns.forEach(b => b.classList.remove('active'));
+    const target = Array.from(btns).find(b => b.dataset.mode === mode) || btns[0];
+    if (target) target.classList.add('active');
+  }
+  function getActive(groupEl) {
+    const active = groupEl?.querySelector('.solo3-btn.active');
+    const mode = active?.dataset.mode;
+    return ALLOWED.has(mode) ? mode : null;
+  }
+
+  // --- apply prefs to UI ---
+  function applyToUI(prefs) {
+    setActive(document.getElementById('js-throttle-toggle'), prefs.throttle);
+    setActive(document.getElementById('js-steering-toggle'), prefs.steering);
+  }
+
+  // --- bind click logic (scoped to our groups) ---
+  function bindGroup(groupId, key) {
+    const group = document.getElementById(groupId);
+    if (!group) return;
+    group.addEventListener('click', (e) => {
+      const btn = e.target.closest('.solo3-btn');
+      if (!btn || !group.contains(btn)) return;
+      // Update active styles
+      group.querySelectorAll('.solo3-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // Persist & broadcast
+      const prefs = loadPrefs();
+      prefs[key] = btn.dataset.mode;
+      savePrefs(prefs);
+      emitChanged(prefs);
+    });
+  }
+
+  // --- ensure UI refresh on modal open ---
+  function hookModalOpen() {
+    const applyOnOpen = () => applyToUI(loadPrefs());
+    if (typeof window.openJoystickModal === 'function') {
+      const orig = window.openJoystickModal;
+      window.openJoystickModal = function patchedOpen() {
+        applyOnOpen();
+        return orig.apply(this, arguments);
+      };
+    } else {
+      // Fallback: watch hidden attribute
+      const modal = document.getElementById('joystick-modal');
+      if (modal) {
+        const obs = new MutationObserver(() => {
+          if (modal.hidden === false) applyOnOpen();
+        });
+        obs.observe(modal, { attributes: true, attributeFilter: ['hidden'] });
+      }
+    }
+  }
+
+  // --- init once ---
+  bindGroup('js-throttle-toggle', 'throttle');
+  bindGroup('js-steering-toggle', 'steering');
+  applyToUI(loadPrefs());
+  hookModalOpen();
+
+  // Optional: expose a getter for other modules
+  window.getJoystickPrefs = function getJoystickPrefs() { return loadPrefs(); };
+})();

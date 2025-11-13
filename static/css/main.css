@@ -5141,6 +5141,105 @@ transition: color .2s ease;
 
 
 
+
+
+
+
+
+
+/* ================= JOYSTICK MODAL ================= */
+
+/* Align the triple-button group width to regular text inside .modal-content */
+#joystick-modal .drawer-button-block {
+  /* Neutralize any outer styling the drawer-block may have in other contexts */
+  padding: 0;               /* no extra inner padding */
+  border: 0;                /* no borders that change visual width */
+  background: none;         /* transparent background */
+  margin: 0 0 16px 0;       /* standard bottom spacing like normal text blocks */
+}
+
+/* Make the controls fill the content column (same as modal-text) */
+#joystick-modal .solo3-controls {
+  width: 100%;              /* span same width as text line box */
+  margin: 0;                /* no side offsets */
+}
+
+/* Lay out three equal buttons within the text column */
+#joystick-modal .solo3-toggle {
+  display: grid;            /* robust equal thirds */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;                 /* same visual rhythm as body text spacing */
+  width: 100%;
+}
+
+/* Button sizing tuned for modal text line-height */
+#joystick-modal .solo3-btn {
+  width: 100%;
+  min-width: 0;
+  height: 44px;             /* adjust if your modal text is larger/smaller */
+  font-size: 0.95rem;
+}
+
+/* Optional: match .modal-text vertical rhythm */
+#joystick-modal .modal-text {
+  margin-top: 12px;
+}
+
+
+
+/* --- Joystick modal: make triple button rows as wide as modal text --- */
+
+/* Force the wrapper to occupy the full content width */
+#joystick-modal .drawer-button-block {
+  /* Reset any inline/fit-content sizing from global styles */
+  display: block;         /* ensure it's a block-level container */
+  width: 100%;            /* span full modal-content width */
+  max-width: none;        /* cancel any global max-width */
+  box-sizing: border-box; /* respect modal padding */
+  padding: 0;
+  border: 0;
+  background: none;
+  margin: 0 0 16px 0;
+}
+
+/* Header stays compact, but does not control the row width */
+#joystick-modal .drawer-button-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px 0;
+}
+
+/* Ensure the controls container cannot clamp width */
+#joystick-modal .solo3-controls {
+  display: block;
+  width: 100%;
+  max-width: 100%;        /* override any global clamping */
+  margin: 0;
+}
+
+/* Three equal columns that fill the available inline space */
+#joystick-modal .solo3-toggle {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* guard against min-content */
+  gap: 8px;
+  width: 100%;
+}
+
+/* Buttons fully fill their grid cells */
+#joystick-modal .solo3-btn {
+  width: 100%;
+  min-width: 0;           /* ignore any global min-width on buttons */
+  height: 44px;
+  font-size: 0.95rem;
+}
+
+
+
+
+
+
+
         /* MAGENTA / ERROR / BORDER / TECH TEST COLOR*/
     * {
     outline: 1px dashed rgba(181, 90, 169, 0);

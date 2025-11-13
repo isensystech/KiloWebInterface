@@ -149,6 +149,7 @@
                         <pre id="options-panel">No options set</pre>
                         <div class="options-icons">
                             <img alt="Settings" class="options-icon" src="/static/images/edit.svg"/>
+                            <img alt="Joystick" class="options-icon" id="joystick-trigger" src="/static/images/joystick-settings-icon.svg"/>
                             <img alt="Help" class="options-icon" id="help-trigger" src="/static/images/help.svg"/>
                             <img alt="Info" class="options-icon" id="info-trigger" src="/static/images/info.svg"/>
                             <img alt="Exit" class="options-icon" id="exit-trigger" src="/static/images/exit.svg"/>
@@ -1974,7 +1975,7 @@
                 </div>
 
 
-                <!-- MODAL AUTO PILOT PANEL -->
+        <!-- MODAL AUTO PILOT PANEL -->
         <div id="auto-pilot-modal" class="status-modal" hidden>
                     <div class="status-modal-content">
                         
@@ -2001,12 +2002,79 @@
         </div>
 
 
+
+
+
+
+
+
+        <!-- === JOYSTICK MODAL === -->
+        <!-- Joystick trigger -->
+        <img id="joystick-trigger" alt="Joystick" class="options-icon" src="/static/images/joystick.svg"/>
+        <div id="joystick-backdrop" class="modal-backdrop" hidden></div>
+        <div id="joystick-modal" class="info-modal-window" role="dialog" aria-modal="true" aria-labelledby="joystick-title" hidden>
+            <button type="button" class="info-modal-close" aria-label="Close">✕</button>
+            <div class="modal-content">
+                <h3 id="joystick-title">Joystick settings</h3>
+                <!-- Throttle Axis -->
+                <div class="drawer-button-block" id="js-throttle-block">
+                    <div class="drawer-button-header">
+                        <img class="drawer-button-icon" src="/static/images/speed.svg" alt="">
+                        <span class="drawer-button-title">Throttle Axis</span>
+                    </div>
+                    <div class="solo3-controls">
+                        <!-- Unique group id to avoid collisions -->
+                        <div class="solo3-toggle" id="js-throttle-toggle" role="group" aria-label="Throttle Axis">
+                            <button class="solo3-btn off"        type="button" data-mode="springy">Springy</button>
+                            <button class="solo3-btn silent"     type="button" data-mode="sticky">Sticky</button>
+                            <button class="solo3-btn on"         type="button" data-mode="pilot-hold">Pilot Hold</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Steering Axis -->
+                <div class="drawer-button-block" id="js-steering-block">
+                    <div class="drawer-button-header">
+                        <img class="drawer-button-icon" src="/static/images/helm-icon.svg" alt="">
+                        <span class="drawer-button-title">Steering Axis</span>
+                    </div>
+                    <div class="solo3-controls">
+                        <!-- Unique group id to avoid collisions -->
+                        <div class="solo3-toggle" id="js-steering-toggle" role="group" aria-label="Steering Axis">
+                            <button class="solo3-btn off"        type="button" data-mode="springy">Springy</button>
+                            <button class="solo3-btn silent"     type="button" data-mode="sticky">Sticky</button>
+                            <button class="solo3-btn on"         type="button" data-mode="pilot-hold">Pilot Hold</button>
+                        </div>
+                    </div>
+                </div>
+                <p class="modal-text">Choose behavior for each axis. You can change this later.</p>
+            </div>
+
+
+        </div>
+
+
+        <!-- === HELP MODAL === -->
+        <!-- Help trigger -->
+        <img id="help-trigger" alt="Help" class="options-icon" src="/static/images/help.svg"/>
+        <!-- Coach overlay (insert once near the end of body) -->
+        <div id="coach-overlay" hidden>
+            <div class="coach-mask"></div>
+            <div class="coach-tooltip" role="dialog" aria-live="polite">
+                <div class="coach-text"></div>
+                <div class="coach-controls">
+                <button type="button" class="coach-prev">Back</button>
+                <button type="button" class="coach-next">Next</button>
+                <button type="button" class="coach-close" aria-label="Close">✕</button>
+                </div>
+            </div>
+        </div>
+
+
         <!-- === INFO MODAL === -->
-
+        <!-- Info trigger -->
         <img id="info-trigger" alt="Info" class="options-icon" src="/static/images/info.svg"/>
-
         <div id="info-backdrop" class="modal-backdrop" hidden></div>
-
         <div id="info-modal" class="info-modal-window" role="dialog" aria-modal="true" aria-labelledby="info-title" hidden>
         <button type="button" class="info-modal-close" aria-label="Close">✕</button>
             <div class="modal-content">
@@ -2090,24 +2158,8 @@ Lorem Ipsum end -->
         </div>
 
 
+        
 
-        <!-- === HELP MODAL === -->
-
-        <!-- Help trigger -->
-        <img id="help-trigger" alt="Help" class="options-icon" src="/static/images/help.svg"/>
-
-        <!-- Coach overlay (insert once near the end of body) -->
-        <div id="coach-overlay" hidden>
-            <div class="coach-mask"></div>
-            <div class="coach-tooltip" role="dialog" aria-live="polite">
-                <div class="coach-text"></div>
-                <div class="coach-controls">
-                <button type="button" class="coach-prev">Back</button>
-                <button type="button" class="coach-next">Next</button>
-                <button type="button" class="coach-close" aria-label="Close">✕</button>
-                </div>
-            </div>
-        </div>
 
 
 
