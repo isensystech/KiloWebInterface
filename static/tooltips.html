@@ -1,0 +1,376 @@
+<!-- tooltips.html -->
+<section id="coach-data">
+
+
+<!-- INFO BAR -->
+
+    <!-- UTC CLOCK -->
+    <article
+        data-coach-for="#time-utc"
+        data-coach-placement="right"
+        data-coach-order="36"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">UTC Clock</div>
+        <div class="coach-text">
+            The UTC Clock shows coordinated universal time for all mission and diagnostic timestamps. UTC is used to avoid timezone and daylight-saving ambiguity when correlating logs, telemetry, and events across devices. The display follows a 24-hour format (HH:MM:SS) with a “Z” suffix where applicable, and may include date for long sessions. Time is synchronized from the navigation stack (e.g., GPS/NTP) when available; if sync is temporarily unavailable, the clock continues from the system time until the next update. Use this value when reporting incidents, annotating screenshots, or cross-checking sensor records, regardless of local time settings elsewhere in the interface.
+        </div>
+    </article>
+
+    <!-- ATTENTION INDICATORS -->
+    <article
+        data-coach-for="#attention-indicators"
+        data-coach-placement="bottom"
+        data-coach-order="37"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Attention Indicators</div>
+        <div class="coach-text">
+            The Attention Indicators group displays the current status of key onboard systems such as engine, propulsion, fuel, oil temperature, oil pressure, autopilot, and manual control input. Each icon reflects the real-time condition of its subsystem through color and activation state. White or dimmed icons indicate normal operation, yellow signals a value that requires operator attention, and red denotes a fault or critical condition that demands immediate response. Active elements use bright illumination to confirm sensor activity or fault detection. The group provides a compact situational summary, allowing the operator to assess overall vessel health at a glance without opening detailed panels.
+        </div>
+    </article>
+
+    <!-- SATELLITE NUMBERS -->
+    <article
+        data-coach-for="#satellite-numbers"
+        data-coach-placement="bottom"
+        data-coach-order="38"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Satellite Numbers</div>
+        <div class="coach-text">
+            The Satellite Numbers readout shows GNSS reception quality at a glance. Values indicate satellites in view and satellites used for the current fix, aggregated across supported constellations (e.g., GPS, GLONASS, Galileo). A stable 3D fix typically requires ≥4 satellites in use; higher counts improve positional stability and reduce drift. Color logic: white (neutral) indicates adequate reception for navigation; yellow signals degraded geometry or borderline satellite count (expect increased position noise); red denotes loss of reliable fix or insufficient satellites. Green is used only when the system confirms a “good” state, such as a high satellite count with verified 3D fix and healthy dilution-of-precision.
+        </div>
+    </article>
+
+    <!-- COORDINATE VALUES -->
+    <article
+        data-coach-for="#coordinate-values"
+        data-coach-placement="bottom"
+        data-coach-order="39"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Coordinate Values</div>
+        <div class="coach-text">
+            The Coordinate Values display the vessel’s current latitude (LAT) and longitude (LNG) in decimal degrees. These readings are updated in real time from the navigation subsystem and represent the precise position of the active GNSS antenna. Coordinates use the WGS-84 reference system and follow a fixed six-decimal format for clarity and interoperability with mapping and mission-planning tools. Values remain visible even when the vessel is stationary or awaiting a navigation fix. If satellite data becomes temporarily unavailable, the last valid coordinates are held until the next update. Use these values for position logging, reporting, and cross-checking with chart or telemetry data.
+        </div>
+    </article>
+
+
+<!-- MODAL GAUGES PANEL -->
+
+    <!-- Active Helm Gauge -->
+    <article
+        data-coach-for="#active-helm-gauge"
+        data-coach-placement="right"
+        data-coach-order="30"
+        data-coach-interact="false">
+
+        <div class="coach-title">Active Helm Gauge</div>
+        <div class="coach-text">
+            The Active Helm Gauge is the central visual element of the control interface, designed to reflect the real-time behavior of the vessel’s steering system. Its circular layout echoes the shape of a physical helm and provides immediate visual feedback for both manual and autopilot modes.
+
+            The pointer moves smoothly along a calibrated scale from –35 to +35 degrees, mirroring the current rudder angle with precise motion and minimal latency. A neutral zero-position line marks the vessel’s straight-ahead course, allowing operators to assess steering offset at a glance.
+
+            In manual mode, the gauge responds directly to helm input, updating continuously as the pilot adjusts the wheel or joystick. When the autopilot is engaged, the gauge switches to follow commanded values received from the navigation system, while still displaying live sensor data beneath. This dual-layer logic ensures full situational awareness and prevents data gaps between control modes.
+        </div>
+    </article>
+
+    <!-- AP Status Gauge -->
+    <article
+        data-coach-for="#ap-status-gauge"
+        data-coach-placement="right"
+        data-coach-order="30"
+        data-coach-interact="false">
+
+        <div class="coach-title">AP Status</div>
+        <div class="coach-text">
+            The AP Status indicator reports the current state of the autopilot subsystem and its readiness to accept helm commands. It aggregates command, mode, and health signals to give a single, unambiguous status for the operator.
+                
+            AP Status can be DISENGAGED (Manual), STANDBY, or ENGAGED. When engaged, the active control mode is shown as a short label (e.g., HDG, CTS/TRK, WPT, or HOLD). If no valid mode is available, the indicator falls back to STANDBY. The component subscribes to commanded values from the navigation stack and to feedback from the steering sensors. If the commanded mode and the feedback disagree beyond thresholds, AP Status escalates from ENGAGED to ATTENTION and can raise a FAULT if limits are exceeded or data is stale.
+                
+            Operator interactions are explicit. Toggling the Helm control from Manual to Autopilot sets STANDBY first; only a confirmed mode selection (e.g., HDG) moves the state to ENGAGED. Any manual wheel override, sensor dropout, or invalid course input drops the state back to STANDBY with a brief cause code. On startup, AP Status initializes to DISENGAGED (Manual) until both command and feedback streams are valid. On shutdown or link loss, it returns to Manual and clears all mode labels to avoid stale presentation.           
+        </div>
+    </article>
+
+    <!-- Speed / AVG Gauge -->
+    <article
+        data-coach-for="#speed-avg-gauge"
+        data-coach-placement="right"
+        data-coach-order="30"
+        data-coach-interact="false">
+
+        <div class="coach-title">Speed / AVG Gauge</div>
+        <div class="coach-text">
+            The Speed / AVG Gauge displays the vessel’s current velocity and average speed over time, offering a clear visual reference for performance tracking and navigation control. Its dual-value layout presents real-time speed data alongside a calculated average, allowing the operator to quickly assess propulsion stability and detect deviations from the expected cruising range.
+
+            The gauge integrates readings from onboard sensors or GPS input to maintain accuracy under varying environmental conditions. When the autopilot is active, the indicator continues to update live speed data, ensuring the operator remains informed of propulsion behavior.
+
+            Indicator colors convey operational status: white (neutral) signifies normal performance, yellow warns of parameters requiring attention, and red marks critical or unsafe values. Green is used only where the “good” condition can be explicitly confirmed by the system.
+        </div>
+    </article>
+
+    <!-- RPM Gauge -->
+    <article
+        data-coach-for="#rpm-gauge"
+        data-coach-placement="right"
+        data-coach-order="32"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">RPM Gauge</div>
+
+        <div class="coach-text">
+            The RPM Gauge indicates the current revolutions per minute of the vessel’s propulsion system. It provides a direct visual link between throttle input and engine response, helping the operator maintain optimal engine load and detect irregularities in propulsion behavior.
+
+            The gauge continuously receives live data from the engine controller or onboard sensors, ensuring real-time feedback even during rapid acceleration or deceleration. This allows quick detection of underperformance, overspeed, or unstable operating zones.
+
+            Indicator colors represent system condition: white (neutral) indicates nominal operation, yellow signals abnormal load or unstable RPM, and red denotes a critical overrun or mechanical risk. Green is used only when the engine is operating within an efficiency-verified range.
+        </div>
+    </article>
+
+    <!-- ENGINE TEMPERATURE GAUGE -->
+    <article
+        data-coach-for="#engine-temperature-gauge"
+        data-coach-placement="right"
+        data-coach-order="33"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Engine Temperature Gauge</div>
+        <div class="coach-text">
+            The Engine Temperature Gauge monitors the thermal state of the propulsion system and alerts the operator to overheating risks. It provides continuous feedback under both manual control and autopilot. Indicator colors convey status: white (neutral) means the temperature is within the normal operating band; yellow signals a value that requires attention (trend up or sustained high load); red denotes a critical overheat condition or immediate risk to the engine. Green is used only where the system can explicitly confirm a “good” condition (e.g., verified warm-up complete).
+        </div>
+    </article>
+
+    <!-- BATTERY GAUGE -->
+    <article
+        data-coach-for="#battery-gauge-10-6"
+        data-coach-placement="right"
+        data-coach-order="34"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Battery Gauge</div>
+        <div class="coach-text">
+            The Battery Gauge displays the electrical reserve available to onboard systems. It combines live voltage and state-of-charge (SOC) indications to help the operator manage power usage and avoid brownouts. Color logic: white (neutral) indicates normal operating reserve; yellow prompts attention to increased load or declining reserve; red marks a critically low condition that can impair system function. Green is reserved for explicitly verified “good” states (e.g., stable charge above the safe threshold under nominal load).
+        </div>
+    </article>
+
+    <!-- FUEL GAUGE -->
+    <article
+        data-coach-for="#fuel-gauge"
+        data-coach-placement="right"
+        data-coach-order="35"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Fuel Gauge</div>
+        <div class="coach-text">
+            The Fuel Gauge indicates the current fuel level and supports planning for safe range and mission execution. Readings update continuously and remain visible in both manual and autopilot modes. Indicator colors: white (neutral) means sufficient fuel for normal operation; yellow advises attention and potential replanning; red indicates a critical level requiring immediate action. Green is used only where a “good” state is explicitly confirmed (e.g., verified refill or reserve above a configured safe margin).
+        </div>
+    </article>
+
+
+<!-- CENTER -->
+
+    <!-- KILL ALL BUTTON -->
+    <article
+        data-coach-for="#kill-all-button"
+        data-coach-placement="right"
+        data-coach-order="40"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">KILL ALL Button</div>
+        <div class="coach-text">
+            The KILL ALL button immediately disables all active propulsion and mission systems in an emergency. When pressed, it sends a global stop command to every connected module, forcing engines, motors, and automated subsystems into a safe idle state. This control bypasses individual channel logic and should be used only in critical situations requiring instant shutdown. The system confirms the command through visual and audible feedback, ensuring the operator is aware of the state transition. Once engaged, manual reactivation or system restart is required before propulsion or mission control can resume.
+        </div>
+    </article>
+
+    
+    <!-- CAROUSEL TITLES
+    <article
+        data-coach-for="# "
+        data-coach-placement="bottom"
+        data-coach-order="52"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Carousel Titles</div>
+        <div class="coach-text">
+            The Carousel Titles show the label of the currently selected screen (e.g., “Kilo #06”) and help the operator keep orientation when cycling through vessels or layouts. The active title is centered and visible; inactive titles are present for quick transition and become active when you switch screens via the left/right arrows or keyboard controls. This readout changes the view only and does not alter system state or mission parameters.
+        </div>
+    </article> -->
+
+
+    <!-- MODAL THROTTLE -->
+    <article
+        data-coach-for=".throttle-wrapper"
+        data-coach-placement="left"
+        data-coach-order="41"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Throttle Control</div>
+        <div class="coach-text">
+            The Throttle Control manages propulsion output and direction. The vertical track represents the full power range with three distinct zones: FORWARD, NEUTRAL, and REVERSE. The silver fill (gear fill) indicates the commanded throttle value, while the yellow overlay (feedback fill) shows actual engine response in real time. The thumb marker displays the active gear letter (F, N, or R) and moves accordingly.  
+            
+            ▲ and ▼ buttons provide incremental control for fine adjustment. The NEUTRAL position includes a detent to prevent accidental direction change. Color and letter cues correspond to propulsion state: white (neutral) indicates inactive output, yellow signals active throttle, and red is reserved for fault or emergency cut-off states. The throttle input is locked when “Kill All” is active or when system safety interlocks are engaged.
+        </div>
+    </article>
+
+    <!-- TRIM CONTROL -->
+    <article
+        data-coach-for=".editor-modal-window"
+        data-coach-placement="right"
+        data-coach-order="43"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Trim Control</div>
+        <div class="coach-text">
+            The Trim Control adjusts the outboard motor angle to optimize vessel attitude and efficiency. The vertical slider defines trim level, ranging from 0 (fully down) to 15 (maximum up). The live numeric readout mirrors the current setting, while the on-screen pointer rotates to indicate motor position relative to the hull diagram. Use gradual adjustments to balance lift and minimize drag: lower trim improves stability and acceleration, higher trim increases speed and reduces wetted surface area. Always avoid excessive trim angles under heavy load or rough conditions.
+        </div>
+    </article>
+
+
+    <!-- RUDDER ANGLE INDICATOR -->
+    <article
+        data-coach-for=".rudder-gauge"
+        data-coach-placement="top"
+        data-coach-order="42"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Rudder Angle Indicator</div>
+        <div class="coach-text">
+            The Rudder Angle Indicator shows current helm deflection relative to the vessel’s centerline. Tick marks are calibrated from –35° (PORT) to +35° (STBD) with a neutral 0° reference at midline. The white pointer rotates in real time to reflect actual rudder feedback, enabling the operator to verify steering response at a glance. Use the neutral line to confirm straight-ahead tracking; sustained offset indicates a compensating helm input (e.g., wind or current). In manual steering, the pointer follows physical helm movement; under autopilot, it reflects commanded deflection while still displaying live sensor feedback. White scale marks indicate nominal range; use this gauge to validate that commanded turns and settling behavior match expectations after course changes.
+        </div>
+    </article>
+
+
+<!-- DRAWER CONTROL PANEL -->
+
+    <!-- 1 -->
+    <!-- 2 -->
+
+    <!-- 3 -->
+
+        <!-- KILL ENGINE BUTTON -->
+        <article
+            data-coach-for="#kill-engine-button"
+            data-coach-placement="left"
+            data-coach-order="62"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Kill Engine Button</div>
+            <div class="coach-text">
+                Instantly stops the main engine without affecting electrical or auxiliary systems. Use this button only in situations requiring immediate propulsion shutdown — for example, mechanical failure, collision risk, or maintenance safety.  
+                Once pressed, the engine must be restarted manually via the Ignition control. The Kill command is hardware-prioritized and overrides all automation or software throttling inputs.
+            </div>
+        </article>
+
+
+
+
+
+<!-- FOOTER -->
+
+    <!-- CONTROLLER HEARTBEAT -->
+    <article
+        data-coach-for="#controller-heartbeat"
+        data-coach-placement="top"
+        data-coach-order="44"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Controller Heartbeat</div>
+        <div class="coach-text">
+            The Controller Heartbeat panel displays diagnostic feedback from the main control unit. It reports the frequency and continuity of system heartbeat messages — short periodic signals confirming that communication between the controller and onboard modules is active. The live text feed updates in real time and helps detect data latency, communication drops, or controller resets. “Waiting for data…” indicates that no valid heartbeat packets have been received within the expected interval. Consistent updates confirm that the control bus and software loop are functioning normally. Use this panel during debugging or system validation to ensure reliable signal exchange before engaging propulsion or mission controls.
+        </div>
+    </article>
+
+    <!-- DEVICE HEARTBEATS -->
+    <article
+        data-coach-for="#device-heartbeats"
+        data-coach-placement="top"
+        data-coach-order="45"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Device Heartbeats</div>
+        <div class="coach-text">
+            The Device Heartbeats panel shows real-time status messages from all connected subsystems — sensors, actuators, and auxiliary modules. Each device transmits a short periodic signal (“heartbeat”) to confirm it is powered, online, and responding to control requests. The log updates continuously to reflect active communication across the network. If a device stops sending heartbeats, it will disappear from the feed, indicating a possible fault, power loss, or connection issue. “Waiting for data…” means that no heartbeats are currently being received. Use this panel during setup or troubleshooting to verify link integrity and identify unresponsive hardware before system activation.
+        </div>
+    </article>
+
+    <!-- OPTIONS PANEL -->
+    <article
+        data-coach-for="#options-panel"
+        data-coach-placement="top"
+        data-coach-order="46"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Options Panel</div>
+        <div class="coach-text">
+            The Options Panel provides quick access to auxiliary controls and information tools. It includes four icons: Settings (edit configuration parameters), Help (open the interactive guidance overlay), Info (display system or mission details), and Exit (close the current modal or return to the main view). The text field above the icons shows active options or context-related status messages, such as applied filters or debug flags. “No options set” means that no optional modes are currently active. Use this panel to manage non-critical interface features without affecting core navigation or propulsion control.
+        </div>
+    </article>
+
+    <!-- SETTINGS ICON (Edit buttons modal)-->
+    <article
+        data-coach-for='img[alt="Settings"]'
+        data-coach-placement="top"
+        data-coach-order="49"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Settings Icon</div>
+        <div class="coach-text">
+            The Settings icon opens configuration options for interface behavior or system parameters. Depending on context, it may allow the operator to adjust display layouts, enable debug features, or modify active profiles. Configuration changes made here do not affect core navigation or propulsion logic unless explicitly confirmed. Use this icon when fine-tuning visual settings, testing experimental features, or preparing environment-specific layouts during setup.
+        </div>
+    </article>
+
+    <!-- HELP ICON -->
+    <article
+        data-coach-for="#help-trigger"
+        data-coach-placement="top"
+        data-coach-order="48"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Help Icon</div>
+        <div class="coach-text">
+            The Help icon activates the interactive guidance overlay. When clicked, it highlights interface elements one by one and displays contextual tooltips describing their purpose and function. This mode is designed for operator familiarization, training, or quick reference without leaving the control screen. During Help mode, normal interface actions are temporarily suspended unless explicitly allowed. Press the ✕ button or the Escape key to exit the guide and return to standard operation.
+        </div>
+    </article>
+
+    <!-- INFO ICON -->
+    <article
+        data-coach-for="#info-trigger"
+        data-coach-placement="top"
+        data-coach-order="50"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Info Icon</div>
+        <div class="coach-text">
+            The Info icon opens an informational window about the development and authorship of this interface. It provides details about the system’s creators, design purpose, and contributing organizations or projects. This section may include version identifiers, credits, and relevant contact information for maintenance or further collaboration. The Info window is purely informational and does not affect control functions or mission parameters.
+        </div>
+    </article>
+
+    <!-- EXIT ICON -->
+    <article
+        data-coach-for='img[alt="Exit"]'
+        data-coach-placement="top"
+        data-coach-order="51"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Exit Icon</div>
+        <div class="coach-text">
+            The Exit icon logs the operator out of the interface while preserving the current system state. It is used to protect access when leaving the console unattended. Upon exit, the session view closes and requires password authentication for re-entry, but all active processes, mission parameters, and control modes remain unchanged in the background. This function ensures operational continuity while maintaining user-level security and confidentiality.
+        </div>
+    </article>
+
+    <!-- STATUS CONTENT -->
+    <article
+        data-coach-for=".status-content"
+        data-coach-placement="top"
+        data-coach-order="47"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Status Content</div>
+        <div class="coach-text">
+            The Status Content panel provides a live summary of vessel activity and communication state. The connection indicator on the left shows the current link status with the controller or remote host — blue when connected, and red when the link is lost. The status text displays mission identifiers, heading, speed, and operational messages such as “Buoy Release,” “Safety,” or “Designated.” This field updates automatically to reflect the latest telemetry and command acknowledgments. Use it to confirm active connection and monitor real-time vessel behavior without opening diagnostic windows.
+        </div>
+    </article>
+
+
+</section>
