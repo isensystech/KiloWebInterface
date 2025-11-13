@@ -821,3 +821,325 @@ function placeTooltip(element, placement, text) {
   // Optional: expose a getter for other modules
   window.getJoystickPrefs = function getJoystickPrefs() { return loadPrefs(); };
 })();
+
+
+
+
+
+// ============================================================================
+// TRIM TAB & ANCHOR MODALS
+// ============================================================================
+export function initializeTrimTabModal() {
+    const trigger = document.getElementById('trimtab-modal');
+    const backdrop = document.getElementById('trimtab-modal-backdrop');
+    const container = document.getElementById('trimtab-modal-container');
+    const modalWindow = container?.querySelector('.editor-modal-window');
+
+    if (!trigger || !backdrop || !container || !modalWindow) {
+        console.warn('Trim Tab modal elements not found');
+        return;
+    }
+
+    const open = () => {
+        backdrop.style.display = 'block';
+        container.style.display = 'block';
+    };
+    const close = () => {
+        backdrop.style.display = 'none';
+        container.style.display = 'none';
+    };
+
+    trigger.addEventListener('click', open);
+    backdrop.addEventListener('click', close);
+    container.addEventListener('click', (event) => {
+        if (!modalWindow.contains(event.target)) close();
+    });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && container.style.display === 'block') close();
+    });
+
+    window.trimTabApplySettings = function trimTabApplySettings() {
+        close();
+    };
+
+    initializeTrimtabSliders();
+    initializeTrimtabGyro();
+}
+
+export function initializeAnchorModal() {
+    const trigger = document.getElementById('anchor-modal');
+    const backdrop = document.getElementById('anchor-modal-backdrop');
+    const container = document.getElementById('anchor-modal-container');
+    const modalWindow = container?.querySelector('.editor-modal-window');
+
+    if (!trigger || !backdrop || !container || !modalWindow) {
+        console.warn('Anchor modal elements not found');
+        return;
+    }
+
+    const open = () => {
+        backdrop.style.display = 'block';
+        container.style.display = 'block';
+    };
+    const close = () => {
+        backdrop.style.display = 'none';
+        container.style.display = 'none';
+    };
+
+    trigger.addEventListener('click', open);
+    backdrop.addEventListener('click', close);
+    container.addEventListener('click', (event) => {
+        if (!modalWindow.contains(event.target)) close();
+    });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && container.style.display === 'block') close();
+    });
+
+    window.anchorApplySettings = function anchorApplySettings() {
+        close();
+    };
+
+    initializeAnchorSlider();
+}
+
+let trimtabSlidersInitialized = false;
+function initializeTrimtabSliders() {
+    if (trimtabSlidersInitialized) return;
+    const overlays = document.querySelectorAll('.trimtab-slider-overlay');
+    if (!overlays.length) return;
+    trimtabSlidersInitialized = true;
+
+    const STEP = 5;
+    overlays.forEach((root) => {
+        const track = root.querySelector('.trimtab-track-bg');
+        const fill = root.querySelector('.trimtab-track-fill');
+        const thumb = root.querySelector('.trimtab-thumb');
+        const upButton = root.querySelector('.throttle-up');
+        const downButton = root.querySelector('.throttle-down');
+        if (!track || !fill || !thumb) return;
+
+        fill.style.top = '0';
+        fill.style.bottom = 'auto';
+
+        const applyFromTopPct = (pct) => {
+            const clamped = Math.max(0, Math.min(100, pct));
+            thumb.style.top = clamped + '%';
+            fill.style.height = clamped + '%';
+        };
+
+        const getTopPct = () => {
+            const value = parseFloat(thumb.style.top);
+            return Number.isFinite(value) ? value : 50;
+        };
+
+        const moveUp = () => applyFromTopPct(getTopPct() - STEP);
+        const moveDown = () => applyFromTopPct(getTopPct() + STEP);
+
+        upButton?.addEventListener('click', (event) => {
+            event.preventDefault();
+            moveUp();
+        });
+        downButton?.addEventListener('click', (event) => {
+            event.preventDefault();
+            moveDown();
+        });
+
+        const pointToTopPct = (clientY) => {
+            const rect = track.getBoundingClientRect();
+            let rel = (clientY - rect.top) / rect.height;
+            rel = Math.max(0, Math.min(1, rel));
+            return rel * 100;
+        };
+
+        const onMoveMouse = (event) => applyFromTopPct(pointToTopPct(event.clientY));
+        const onMoveTouch = (event) => {
+            event.preventDefault();
+            applyFromTopPct(pointToTopPct(event.touches[0].clientY));
+        };
+
+        const endDrag = () => {
+            document.removeEventListener('mousemove', onMoveMouse);
+            document.removeEventListener('mouseup', endDrag);
+            document.removeEventListener('touchmove', onMoveTouch);
+            document.removeEventListener('touchend', endDrag);
+        };
+
+        const startDrag = (event) => {
+            event.preventDefault();
+            if (event.touches) {
+                onMoveTouch(event);
+            } else {
+                onMoveMouse(event);
+            }
+            document.addEventListener('mousemove', onMoveMouse);
+            document.addEventListener('mouseup', endDrag, { once: true });
+            document.addEventListener('touchmove', onMoveTouch, { passive: false });
+            document.addEventListener('touchend', endDrag, { once: true });
+        };
+
+        thumb.addEventListener('mousedown', startDrag);
+        thumb.addEventListener('touchstart', startDrag, { passive: false });
+        track.addEventListener('mousedown', startDrag);
+        track.addEventListener('touchstart', startDrag, { passive: false });
+
+        applyFromTopPct(getTopPct());
+    });
+}
+
+let trimtabGyroInitialized = false;
+function initializeTrimtabGyro() {
+    if (trimtabGyroInitialized) return;
+    const boat = document.getElementById('gyro-boat');
+    const leftButton = document.getElementById('gyro-left');
+    const rightButton = document.getElementById('gyro-right');
+    const angleLabel = document.getElementById('gyro-angle');
+    if (!boat || !leftButton || !rightButton || !angleLabel) return;
+    trimtabGyroInitialized = true;
+
+    const clamp = (value) => Math.max(-35, Math.min(35, value));
+    let angle = 0;
+    const STEP = 1;
+
+    const applyAngle = () => {
+        boat.style.transform = `rotate(${angle}deg)`;
+        angleLabel.textContent = `${angle}°`;
+    };
+
+    const startHold = (direction) => {
+        if (startHold.timer) return;
+        startHold.timer = setInterval(() => {
+            angle = clamp(angle + direction * STEP);
+            applyAngle();
+        }, 60);
+    };
+
+    const stopHold = () => {
+        clearInterval(startHold.timer);
+        startHold.timer = null;
+    };
+
+    leftButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        angle = clamp(angle - STEP);
+        applyAngle();
+    });
+    rightButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        angle = clamp(angle + STEP);
+        applyAngle();
+    });
+
+    leftButton.addEventListener('mousedown', () => startHold(-1));
+    rightButton.addEventListener('mousedown', () => startHold(1));
+    document.addEventListener('mouseup', stopHold);
+
+    leftButton.addEventListener('touchstart', (event) => {
+        event.preventDefault();
+        startHold(-1);
+    }, { passive: false });
+    rightButton.addEventListener('touchstart', (event) => {
+        event.preventDefault();
+        startHold(1);
+    }, { passive: false });
+    document.addEventListener('touchend', stopHold);
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+            angle = clamp(angle - STEP);
+            applyAngle();
+        }
+        if (event.key === 'ArrowRight') {
+            angle = clamp(angle + STEP);
+            applyAngle();
+        }
+    });
+
+    applyAngle();
+}
+
+let anchorSliderInitialized = false;
+function initializeAnchorSlider() {
+    if (anchorSliderInitialized) return;
+    const thumb = document.getElementById('anchor-thumb');
+    const fill = document.getElementById('anchor-fill');
+    const readout = document.getElementById('anchor-readout');
+    const track = document.querySelector('.anchor-track-bg');
+    const upButton = document.getElementById('anchor-throttle-up');
+    const downButton = document.getElementById('anchor-throttle-down');
+    if (!thumb || !fill || !track) return;
+    anchorSliderInitialized = true;
+
+    fill.style.bottom = 'auto';
+    fill.style.top = '0';
+
+    const applyFromTopPct = (value) => {
+        const pct = Math.max(0, Math.min(100, value));
+        thumb.style.top = `${pct}%`;
+        fill.style.height = `${pct}%`;
+
+        const percent = 1 - (pct / 100);
+        if (readout) {
+            const raw = Math.round((1 - percent) * 14) + 1;
+            readout.textContent = Math.max(1, Math.min(15, raw));
+        }
+    };
+
+    const getTopPct = () => {
+        const value = parseFloat(thumb.style.top);
+        return Number.isFinite(value) ? value : 50;
+    };
+
+    const STEP = 5;
+    const moveUp = () => applyFromTopPct(getTopPct() - STEP);
+    const moveDown = () => applyFromTopPct(getTopPct() + STEP);
+
+    upButton?.addEventListener('click', (event) => {
+        event.preventDefault();
+        moveUp();
+    });
+    downButton?.addEventListener('click', (event) => {
+        event.preventDefault();
+        moveDown();
+    });
+
+    const pointToTopPct = (clientY) => {
+        const rect = track.getBoundingClientRect();
+        let rel = (clientY - rect.top) / rect.height;
+        rel = Math.max(0, Math.min(1, rel));
+        return rel * 100;
+    };
+
+    const onMoveMouse = (event) => applyFromTopPct(pointToTopPct(event.clientY));
+    const onMoveTouch = (event) => {
+        event.preventDefault();
+        applyFromTopPct(pointToTopPct(event.touches[0].clientY));
+    };
+
+    const stopDrag = () => {
+        document.removeEventListener('mousemove', onMoveMouse);
+        document.removeEventListener('mouseup', stopDrag);
+        document.removeEventListener('touchmove', onMoveTouch);
+        document.removeEventListener('touchend', stopDrag);
+    };
+
+    const startDrag = (event) => {
+        event.preventDefault();
+        if (event.touches) {
+            onMoveTouch(event);
+        } else {
+            onMoveMouse(event);
+        }
+        document.addEventListener('mousemove', onMoveMouse);
+        document.addEventListener('mouseup', stopDrag, { once: true });
+        document.addEventListener('touchmove', onMoveTouch, { passive: false });
+        document.addEventListener('touchend', stopDrag, { once: true });
+    };
+
+    thumb.addEventListener('mousedown', startDrag);
+    thumb.addEventListener('touchstart', startDrag, { passive: false });
+    track.addEventListener('mousedown', startDrag);
+    track.addEventListener('touchstart', startDrag, { passive: false });
+
+    applyFromTopPct(getTopPct());
+}
+
