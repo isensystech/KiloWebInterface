@@ -3478,7 +3478,274 @@
             }
 
 
-            /* === Active Helm BUTTON / DISPLAY === */
+            
+            
+
+
+            /* === Trim Tab & Anchor === */
+
+            
+            /* Trim Tab modal (scoped styles) */
+            #trimtab-modal-container .trim-image-wrapper {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            align-items: center;
+            justify-items: center;
+            gap: 12px;
+            min-height: 340px;
+            position: relative;
+            }
+
+            #trimtab-modal-container .gyro-feedback {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            }
+
+            #trimtab-modal-container #gyro-boat {
+            width: 35%;
+            height: auto;
+            transform-origin: 50% 50%;
+            transition: transform 180ms ease;
+            display: block;
+            position: relative;
+            z-index: 1;
+            }
+
+            #trimtab-modal-container .gyro-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+            }
+
+            #trimtab-modal-container .gyro-angle {
+            font-weight: 600;
+            color: var(--color-white);
+            }
+
+            #trimtab-modal-container .gyro-water {
+            position: absolute;
+            left: 50%;
+            top: 56%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: 4px;
+            background-color: var(--color-white);
+            pointer-events: none;
+            z-index: 2;
+            -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'%3E%3Cpath d='M0 5 Q 5 0 10 5 T 20 5 T 30 5 T 40 5 T 50 5 T 60 5 T 70 5 T 80 5 T 90 5 T 100 5 T 110 5 T 120 5' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+            -webkit-mask-repeat:repeat-x;
+            -webkit-mask-position:center;
+            -webkit-mask-size:90px 100%;
+                    mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'%3E%3Cpath d='M0 5 Q 5 0 10 5 T 20 5 T 30 5 T 40 5 T 50 5 T 60 5 T 70 5 T 80 5 T 90 5 T 100 5 T 110 5 T 120 5' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+                    mask-repeat:repeat-x;
+                    mask-position:center;
+                    mask-size:90px 100%;
+            }
+
+            #trimtab-modal-container .trimtab-panel {
+            grid-row: 2;
+            display: flex;
+            gap: 16px;
+            align-items: flex-end;
+            justify-content: center;
+            width: 100%;
+            }
+
+            #trimtab-modal-container .trimtab-block { width: 80px; }
+
+            #trimtab-modal-container .trimtab-slider-overlay {
+            position: relative;
+            width: 80px;
+            height: 170px;
+            }
+
+            #trimtab-modal-container .trimtab-track-bg {
+            position:absolute;
+            left:40px;
+            top:0;
+            width:30px;
+            height:100%;
+            background:#000;
+            border-radius:10px;
+            }
+
+            #trimtab-modal-container .trimtab-track-fill {
+            position:absolute;
+            left:42px;
+            top:0;
+            width:29%;
+            height:50%;
+            background:#FFBD0A;
+            border-radius:9px;
+            }
+
+            #trimtab-modal-container .trimtab-thumb {
+            position:absolute;
+            left:36px;
+            width:38px;
+            height:26px;
+            transform:translateY(-50%);
+            border-radius:10%;
+            background:radial-gradient(ellipse 50% 50% at 50% 50%, #939393 0%, #737373 100%);
+            cursor:grab;
+            z-index:2;
+            }
+
+            #trimtab-modal-container .trimtab-slider-overlay .throttle-up,
+            #trimtab-modal-container .trimtab-slider-overlay .throttle-down {
+            position:absolute;
+            left:55px;
+            transform:translateX(-50%);
+            z-index:3;
+            }
+
+            #trimtab-modal-container .trimtab-slider-overlay .throttle-up { top:0; }
+            #trimtab-modal-container .trimtab-slider-overlay .throttle-down { bottom:0; }
+
+            #trimtab-modal-container .trimtab-caption {
+            margin-top:6px;
+            text-align:center;
+            color:#dadada;
+            font: var(--type-caption-regular);
+            }
+
+
+
+
+            
+            /* Anchor modal (scoped styles) */
+            #anchor-modal-container .trim-image-wrapper {
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            min-height:340px;
+            position:relative;
+            }
+
+            #anchor-modal-container .anchor-boat-image {
+            position:absolute;
+            top:20%;
+            left:40%;
+            transform:translate(-50%, -50%);
+            width:60%;
+            height:auto;
+            }
+
+            #anchor-modal-container .anchor-slider-overlay {
+            position:absolute;
+            top:0;
+            right:0;
+            height:100%;
+            display:flex;
+            align-items:center;
+            padding-right:10px;
+            z-index:4;
+            }
+
+            #anchor-modal-container .anchor-labels {
+            position:absolute;
+            left:8px;
+            top:0;
+            width:30px;
+            height:90%;
+            font-size:10px;
+            font-family:'Roboto', sans-serif;
+            font-weight:700;
+            color:#757575;
+            line-height:15px;
+            text-align:center;
+            pointer-events:none;
+            }
+
+            #anchor-modal-container .anchor-track-bg {
+            position:absolute;
+            top:10px;
+            left:40px;
+            width:30px;
+            height:100%;
+            background:black;
+            border-radius:10px;
+            }
+
+            #anchor-modal-container .anchor-track-fill {
+            position:absolute;
+            left:42px;
+            width:29%;
+            background-color:#FFBD0A;
+            border-radius:9px;
+            z-index:1;
+            height:100%;
+            top:0;
+            bottom:auto;
+            }
+
+            #anchor-modal-container .anchor-thumb {
+            position:absolute;
+            left:36px;
+            width:38px;
+            height:26px;
+            background:radial-gradient(ellipse 50% 50% at 50% 50%, #939393 0%, #737373 100%);
+            border-radius:10%;
+            transform:translateY(-50%);
+            cursor:grab;
+            z-index:10;
+            }
+
+            #anchor-modal-container .anchor-thumb:hover {
+            filter:drop-shadow(0 0 8px rgb(100,100,100));
+            background:radial-gradient(ellipse 50% 50% at 50% 50%, #a8a8a8 0%, #848484 100%);
+            }
+
+            #anchor-modal-container .anchor-readout {
+            position:absolute;
+            left:-230px;
+            bottom:0;
+            width:60px;
+            height:40px;
+            background-color:#000;
+            color:#fff;
+            font-family:Roboto, sans-serif;
+            font-size:28px;
+            text-align:center;
+            line-height:40px;
+            border-radius:4px;
+            z-index:6;
+            }
+
+            #anchor-modal-container .anchor-slider-wrapper {
+            position:relative;
+            width:80px;
+            height:340px;
+            margin-left:auto;
+            margin-right:0;
+            z-index:2;
+            overflow:visible;
+            }
+
+            #anchor-modal-container #anchor-throttle-up,
+            #anchor-modal-container #anchor-throttle-down {
+            position:absolute;
+            left:55px;
+            transform:translateX(-50%);
+            z-index:6;
+            }
+
+            #anchor-modal-container #anchor-throttle-up { top:0; }
+            #anchor-modal-container #anchor-throttle-down { bottom:0; }
+
+            #trimtab-modal-container,
+            #anchor-modal-container {
+            position: fixed;
+            inset: 0;
+            z-index: 10001;
+            }
+
 
 
         
