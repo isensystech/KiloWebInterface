@@ -2,7 +2,12 @@
 // MODULE IMPORTS
 // ============================================================================
 import { gamepadControlState, initializeGamepadHandler } from './modules/gamepad-handler.js';
-import { initializeAPToggle, initializeHelmToggle } from './modules/ui-modals.js';
+import { 
+    initializeAPToggle, 
+    initializeHelmToggle,
+    initializeTrimTabModal,
+    initializeAnchorModal
+} from './modules/ui-modals.js';
 import {
     initializeGaugePanelLogic,
     initializeDrawerTabs,
@@ -58,6 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initialize Modals
         initializeAPToggle();
         initializeHelmToggle();
+        initializeTrimTabModal();
+        initializeAnchorModal();
 
         // Initialize Telemetry/Drawer/Panel logic
         initializeGaugePanelLogic();

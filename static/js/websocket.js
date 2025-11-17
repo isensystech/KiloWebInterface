@@ -380,6 +380,11 @@ function bindClickHandlers() {
     updateTelemetryValue('gps_lng_deg', msg.gps_lng_deg, 6);
     updateTelemetryValue('ap_mode', msg.ap_mode || '--');
     
+    if (msg.imu_roll_deg !== undefined) {
+      window.__kiloLatestRoll = msg.imu_roll_deg;
+      window.__kiloSetGyroRoll?.(msg.imu_roll_deg);
+    }
+    
     handleStatusIndicator('joystick-indicator', msg.joystick_connected);
     handleStatusIndicator('ap-indicator', msg.ap_connected);
     handleStatusIndicator('companion-indicator', msg.companion_connected);

@@ -487,7 +487,7 @@
                     <!-- Voltage -->
                     <div class="gauge-line" id="battery-voltage-gauge">
                         <span class="label-muted" id="voltage-gauge-label">Start&nbsp;</span>
-                        <span class="value-strong js-voltage" id="voltage-gauge-value">--</span>
+                        <span class="value-strong js-voltage" id="voltage-gauge-value">14.3V</span>
                         <span class="unit-muted" id="voltage-gauge-unit">V</span>
                     </div>
                     
@@ -2023,7 +2023,7 @@
 
                         <div class="gyro-feedback">
                             <div class="gyro-water" aria-hidden="true"></div>
-                            <img alt="KILO" class="trimtab-boat-image" id="gyro-boat" src="/static/images/kilo-half-side.svg"/>
+                            <img alt="KILO" class="trimtab-boat-image" id="gyro-boat" src="/static/images/kilo-back.svg"/>
 
                             <div class="gyro-controls">
                                 <button id="gyro-left" class="throttle-button throttle-up" type="button" aria-label="Left">◄</button>
@@ -2035,27 +2035,27 @@
                         <div class="trimtab-panel">
 
                             <div class="trimtab-block" aria-label="Port">
-                                <div class="trimtab-slider-overlay">
-                                    <button class="throttle-button throttle-up" type="button" aria-label="Up"><span class="throttle-icon">▲</span></button>
+                                <div class="trimtab-slider-overlay" id="trimtab-port-slider" data-trimtab="port">
+                                    <button id="trimtab-port-up" class="throttle-button throttle-up" type="button" aria-label="Up"><span class="throttle-icon">▲</span></button>
 
-                                    <div class="trimtab-track-bg"></div>
-                                    <div class="trimtab-track-fill"></div>
-                                    <div class="trimtab-thumb"></div>
+                                    <div class="trimtab-track-bg" id="trimtab-port-track"></div>
+                                    <div class="trimtab-track-fill" id="trimtab-port-fill"></div>
+                                    <div class="trimtab-thumb" id="trimtab-port-thumb"></div>
 
-                                    <button class="throttle-button throttle-down" type="button" aria-label="Down"><span class="throttle-icon">▼</span></button>
+                                    <button id="trimtab-port-down" class="throttle-button throttle-down" type="button" aria-label="Down"><span class="throttle-icon">▼</span></button>
                                 </div>
                                 <div class="trimtab-caption">PORT</div>
                             </div>
 
                             <div class="trimtab-block" aria-label="Starboard">
-                                <div class="trimtab-slider-overlay">
-                                    <button class="throttle-button throttle-up" type="button" aria-label="Up"><span class="throttle-icon">▲</span></button>
+                                <div class="trimtab-slider-overlay" id="trimtab-starboard-slider" data-trimtab="starboard">
+                                    <button id="trimtab-starboard-up" class="throttle-button throttle-up" type="button" aria-label="Up"><span class="throttle-icon">▲</span></button>
 
-                                    <div class="trimtab-track-bg"></div>
-                                    <div class="trimtab-track-fill"></div>
-                                    <div class="trimtab-thumb"></div>
+                                    <div class="trimtab-track-bg" id="trimtab-starboard-track"></div>
+                                    <div class="trimtab-track-fill" id="trimtab-starboard-fill"></div>
+                                    <div class="trimtab-thumb" id="trimtab-starboard-thumb"></div>
 
-                                    <button class="throttle-button throttle-down" type="button" aria-label="Down"><span class="throttle-icon">▼</span></button>
+                                    <button id="trimtab-starboard-down" class="throttle-button throttle-down" type="button" aria-label="Down"><span class="throttle-icon">▼</span></button>
                                 </div>
                                 <div class="trimtab-caption">STBD</div>
                             </div>
@@ -2078,7 +2078,7 @@
                     <div class="editor-modal-close" onclick="anchorApplySettings()">✕</div>
 
                     <div class="trim-image-wrapper">
-                        <img alt="KILO" class="anchor-boat-image" src="/static/images/kilo-half-side.svg"/>
+                        <img alt="KILO" class="anchor-boat-image" src="/static/images/kilo-half-anchor.svg"/>
 
                         <div class="anchor-slider-overlay">
 

@@ -436,16 +436,18 @@ function pollGamepad() {
     }
 
     if (gamepad.buttons[14].pressed) {
-        gamepadControlState.port_trim = Math.min(100, gamepadControlState.port_trim + GAMEPAD_CONFIG.listingRate);
-        gamepadControlState.starboard_trim = Math.max(0, gamepadControlState.starboard_trim - GAMEPAD_CONFIG.listingRate);
-        updateListingUI(gamepadControlState.port_trim, gamepadControlState.starboard_trim);
+        updateListingUI(
+            gamepadControlState.port_trim + GAMEPAD_CONFIG.listingRate,
+            gamepadControlState.starboard_trim - GAMEPAD_CONFIG.listingRate
+        );
         showListingModal();
     }
 
     if (gamepad.buttons[15].pressed) {
-        gamepadControlState.starboard_trim = Math.min(100, gamepadControlState.starboard_trim + GAMEPAD_CONFIG.listingRate);
-        gamepadControlState.port_trim = Math.max(0, gamepadControlState.port_trim - GAMEPAD_CONFIG.listingRate);
-        updateListingUI(gamepadControlState.port_trim, gamepadControlState.starboard_trim);
+        updateListingUI(
+            gamepadControlState.port_trim - GAMEPAD_CONFIG.listingRate,
+            gamepadControlState.starboard_trim + GAMEPAD_CONFIG.listingRate
+        );
         showListingModal();
     }
 
@@ -805,9 +807,18 @@ export function updateEngineTrimUI(trim) {
 }
 
 export function updateListingUI(portTrim, starboardTrim) {
-    gamepadControlState.port_trim = portTrim;
-    gamepadControlState.starboard_trim = starboardTrim;
-    console.log(`Listing Updated: Port=${portTrim}, Stbd=${starboardTrim}`);
+    const clampTrim = (value) => Math.max(-100, Math.min(100, Math.round(value ?? 0)));
+    const nextPort = clampTrim(portTrim);
+    const nextStarboard = clampTrim(starboardTrim);
+
+    gamepadControlState.port_trim = nextPort;
+    gamepadControlState.starboard_trim = nextStarboard;
+
+    const setters = window.__kiloTrimtabSetters;
+    setters?.port?.(nextPort);
+    setters?.starboard?.(nextStarboard);
+
+    console.log(`Listing Updated: Port=${nextPort}, Stbd=${nextStarboard}`);
 }
 
 // ============================================================================

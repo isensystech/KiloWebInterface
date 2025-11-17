@@ -137,3 +137,5 @@ KiloWebInterface/
 - [ ] Fix Steering gauge to -30 to +30
 - [x] Introduce "Springy", "Pilot hold" control schema
 - [x] Inroduce Gear datapoint in WS message.
+- [ ] Fix screensave default values
+- [ ] 
