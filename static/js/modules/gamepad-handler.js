@@ -26,10 +26,16 @@ const GAMEPAD_CONFIG = Object.freeze({
     listingModalTimeoutMs: 500
 });
 
-const JOYSTICK_SCHEMA_CONFIG = Object.freeze({
-    throttle: 'pilot_hold', // 'springy' | 'sticky' | 'pilot_hold'
-    steering: 'pilot_hold'
+const JOYSTICK_PREFS_STORAGE_KEY = 'joystickPrefs';
+const JOYSTICK_SCHEMA_ALLOWED = new Set(['springy', 'sticky', 'pilot-hold']);
+const JOYSTICK_SCHEMA_DEFAULTS = Object.freeze({
+    throttle: 'pilot-hold', // 'springy' | 'sticky' | 'pilot-hold'
+    steering: 'pilot-hold'
 });
+const joystickSchemaState = {
+    throttle: JOYSTICK_SCHEMA_DEFAULTS.throttle,
+    steering: JOYSTICK_SCHEMA_DEFAULTS.steering
+};
 
 const PILOT_HOLD_BUTTONS = Object.freeze({
     throttle: 10, // Left stick press (L3)
@@ -63,6 +69,79 @@ const pilotHoldState = {
     throttle: { isHeld: false, heldValue: 0 },
     steering: { isHeld: false, heldValue: 0 }
 };
+
+function normalizeJoystickSchemaValue(value) {
+    if (typeof value !== 'string') return null;
+    const normalized = value.toLowerCase().replace(/_/g, '-');
+    return JOYSTICK_SCHEMA_ALLOWED.has(normalized) ? normalized : null;
+}
+
+function clearPilotHoldState(axis) {
+    const state = pilotHoldState[axis];
+    if (!state) return;
+    state.isHeld = false;
+    state.heldValue = 0;
+}
+
+function setJoystickSchema(axis, mode, { assumeNormalized = false } = {}) {
+    if (!Object.prototype.hasOwnProperty.call(joystickSchemaState, axis)) return false;
+    const next = assumeNormalized ? mode : normalizeJoystickSchemaValue(mode);
+    if (!next) return false;
+    if (joystickSchemaState[axis] === next) return false;
+    joystickSchemaState[axis] = next;
+    clearPilotHoldState(axis);
+    if (axis === 'steering') {
+        updatePilotHoldIndicator();
+    }
+    return true;
+}
+
+function applyJoystickSchemaPrefs(prefs = {}, { ensureDefaults = false } = {}) {
+    const hasPrefs = prefs && typeof prefs === 'object';
+    Object.keys(joystickSchemaState).forEach((axis) => {
+        const value = hasPrefs ? normalizeJoystickSchemaValue(prefs[axis]) : null;
+        if (value) {
+            setJoystickSchema(axis, value, { assumeNormalized: true });
+        } else if (ensureDefaults) {
+            setJoystickSchema(axis, JOYSTICK_SCHEMA_DEFAULTS[axis], { assumeNormalized: true });
+        }
+    });
+}
+
+function loadJoystickSchemaPrefs() {
+    try {
+        if (typeof window === 'undefined' || !window.localStorage) return null;
+    } catch {
+        return null;
+    }
+    try {
+        const raw = window.localStorage.getItem(JOYSTICK_PREFS_STORAGE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return typeof parsed === 'object' && parsed !== null ? parsed : null;
+    } catch (error) {
+        console.warn('Failed to read joystick prefs from storage:', error);
+        return null;
+    }
+}
+
+function synchronizeJoystickSchemaPrefs() {
+    const stored = loadJoystickSchemaPrefs();
+    if (stored) {
+        applyJoystickSchemaPrefs(stored, { ensureDefaults: true });
+    } else {
+        applyJoystickSchemaPrefs(JOYSTICK_SCHEMA_DEFAULTS, { ensureDefaults: true });
+    }
+
+    if (typeof window !== 'undefined') {
+        window.addEventListener('joystick:configChanged', (event) => {
+            applyJoystickSchemaPrefs(event?.detail || {});
+        });
+    }
+}
+
+// Ensure schema state matches persisted toggle selections
+synchronizeJoystickSchemaPrefs();
 
 let gamepadIndex = null;
 let gearCrossingLockout = false;
@@ -181,19 +260,19 @@ function applySpringyCommand(axis, desiredValue, deltaMs) {
 }
 
 function getConfiguredSchema(axis) {
-    return JOYSTICK_SCHEMA_CONFIG[axis] ?? 'sticky';
+    return joystickSchemaState[axis] ?? 'sticky';
 }
 
 function resolveAxisBehavior(axis) {
     const schema = getConfiguredSchema(axis);
-    if (schema === 'pilot_hold') {
+    if (schema === 'pilot-hold') {
         return PILOT_HOLD_BASE_SCHEMA[axis] ?? 'sticky';
     }
     return schema;
 }
 
 function axisSupportsPilotHold(axis) {
-    return getConfiguredSchema(axis) === 'pilot_hold';
+    return getConfiguredSchema(axis) === 'pilot-hold';
 }
 
 function isPilotHoldActive(axis) {
@@ -501,6 +580,7 @@ function processSteeringAxis(rightStickX, deltaMs) {
 function updateThrottleSticky(leftStickY, deltaMs) {
     const currentValue = gamepadControlState.throttle;
     const currentGear = getGearFromValue(currentValue);
+    const { min: neutralMin, max: neutralMax } = GAMEPAD_CONFIG.gearNeutralBand;
 
     if (gearCrossingLockout && Math.abs(leftStickY) < GAMEPAD_CONFIG.gearReleaseDeadzone) {
         gearCrossingLockout = false;
@@ -513,6 +593,23 @@ function updateThrottleSticky(leftStickY, deltaMs) {
     const deltaLimit = getAxisRampDelta('throttle', deltaMs);
     const delta = clamp(-leftStickY * GAMEPAD_CONFIG.throttleSensitivity, -deltaLimit, deltaLimit);
     let newThrottle = clamp(currentValue + delta, -100, 100);
+
+    const crossesForwardToReverse = currentGear === 'F' && newThrottle <= neutralMax;
+    const crossesReverseToForward = currentGear === 'R' && newThrottle >= neutralMin;
+    if (crossesForwardToReverse || crossesReverseToForward) {
+        const boundaryValue = crossesForwardToReverse ? neutralMax : neutralMin;
+        gearCrossingLockout = true;
+        enteredNeutralFrom = currentGear;
+        vibrateGamepad();
+        console.log(
+            `⚠️ Sticky safeguard: attempted direct ${currentGear}→${crossesForwardToReverse ? 'R' : 'F'} shift. ` +
+            'Release the stick to center before changing gears.'
+        );
+        gamepadControlState.throttle = Math.round(boundaryValue);
+        updateThrottleUI(gamepadControlState.throttle);
+        return;
+    }
+
     const newGear = getGearFromValue(newThrottle);
 
     if (currentGear !== 'N' && newGear === 'N') {

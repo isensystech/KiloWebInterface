@@ -462,6 +462,10 @@ function handleIdleTimeout() {
 function applySessionStatus(status = {}) {
     sessionState.authenticated = Boolean(status.authenticated);
     sessionState.legalAck = Boolean(status.legal_ack);
+    if (typeof window !== 'undefined') {
+        window.__joystickSessionPrefs = status?.joystick_prefs ?? null;
+        window.dispatchEvent(new CustomEvent('session:status', { detail: { ...status } }));
+    }
     updateControlChannel();
     maybeOpenLegalModal();
     updateAuthorizationMask();
@@ -471,6 +475,10 @@ function applySessionStatus(status = {}) {
 function clearSessionState() {
     sessionState.authenticated = false;
     sessionState.legalAck = false;
+    if (typeof window !== 'undefined') {
+        window.__joystickSessionPrefs = null;
+        window.dispatchEvent(new CustomEvent('session:status', { detail: {} }));
+    }
     updateControlChannel();
     maybeOpenLegalModal();
     updateAuthorizationMask();
