@@ -466,25 +466,78 @@ function playGifWithCrossfade(){
   const STORAGE_KEY = 'joystickPrefs';
   const ALLOWED = new Set(['springy', 'sticky', 'pilot-hold']);
   const DEFAULTS = { throttle: 'springy', steering: 'springy' };
+  const PREF_ENDPOINT = '/api/joystick-prefs';
 
   // --- storage helpers ---
-  function loadPrefs() {
+  function normalizeMode(value) {
+    if (typeof value !== 'string') return null;
+    const normalized = value.toLowerCase().replace(/_/g, '-');
+    return ALLOWED.has(normalized) ? normalized : null;
+  }
+
+  function readLocalPrefs() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return { ...DEFAULTS };
+      if (!raw) return null;
       const obj = JSON.parse(raw);
-      const throttle = ALLOWED.has(obj?.throttle) ? obj.throttle : DEFAULTS.throttle;
-      const steering = ALLOWED.has(obj?.steering) ? obj.steering : DEFAULTS.steering;
-      return { throttle, steering };
+      const throttle = normalizeMode(obj?.throttle);
+      const steering = normalizeMode(obj?.steering);
+      if (!throttle && !steering) return null;
+      return {
+        throttle: throttle || DEFAULTS.throttle,
+        steering: steering || DEFAULTS.steering
+      };
     } catch {
-      return { ...DEFAULTS };
+      return null;
     }
   }
+
+  function sanitizeSessionPrefs(raw) {
+    if (!raw) return null;
+    const throttle = normalizeMode(raw.throttle);
+    const steering = normalizeMode(raw.steering);
+    if (!throttle && !steering) return null;
+    return {
+      throttle: throttle || DEFAULTS.throttle,
+      steering: steering || DEFAULTS.steering
+    };
+  }
+
+  function loadPrefs() {
+    const local = readLocalPrefs();
+    if (local) return { ...local };
+    const sessionPrefs = sanitizeSessionPrefs(window.__joystickSessionPrefs);
+    if (sessionPrefs) return { ...sessionPrefs };
+    return { ...DEFAULTS };
+  }
+
   function savePrefs(p) {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); } catch {}
   }
   function emitChanged(p) {
     window.dispatchEvent(new CustomEvent('joystick:configChanged', { detail: { ...p } }));
+  }
+  function syncPrefsToServer(p) {
+    if (typeof fetch !== 'function') return;
+    try {
+      fetch(PREF_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify(p)
+      }).catch(() => {});
+    } catch {
+      // Ignore network errors
+    }
+  }
+  function persistPrefs(p, { syncServer = true } = {}) {
+    const payload = {
+      throttle: normalizeMode(p.throttle) || DEFAULTS.throttle,
+      steering: normalizeMode(p.steering) || DEFAULTS.steering
+    };
+    savePrefs(payload);
+    emitChanged(payload);
+    if (syncServer) syncPrefsToServer(payload);
   }
 
   // --- UI helpers ---
@@ -519,9 +572,10 @@ function playGifWithCrossfade(){
       btn.classList.add('active');
       // Persist & broadcast
       const prefs = loadPrefs();
-      prefs[key] = btn.dataset.mode;
-      savePrefs(prefs);
-      emitChanged(prefs);
+      const value = normalizeMode(btn.dataset.mode);
+      if (!value) return;
+      prefs[key] = value;
+      persistPrefs(prefs);
     });
   }
 
@@ -551,6 +605,14 @@ function playGifWithCrossfade(){
   bindGroup('js-steering-toggle', 'steering');
   applyToUI(loadPrefs());
   hookModalOpen();
+
+  window.addEventListener('session:status', (event) => {
+    const sessionPrefs = sanitizeSessionPrefs(event?.detail?.joystick_prefs);
+    if (!sessionPrefs) return;
+    if (readLocalPrefs()) return;
+    persistPrefs(sessionPrefs, { syncServer: false });
+    applyToUI(sessionPrefs);
+  });
 
   // Optional: expose a getter for other modules
   window.getJoystickPrefs = function getJoystickPrefs() { return loadPrefs(); };

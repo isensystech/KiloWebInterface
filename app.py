@@ -18,6 +18,7 @@ from fastapi.staticfiles import StaticFiles
 LOGGER = logging.getLogger("kilo.app")
 DEFAULT_BIND = "0.0.0.0:5000"
 TRUTHY_VALUES = {"1", "true", "yes", "on"}
+VALID_JOYSTICK_MODES = {"springy", "sticky", "pilot-hold"}
 
 # -----------------------------------------------------------------------------
 # Session / authentication settings
@@ -110,7 +111,28 @@ def session_status(data: Dict[str, Any]) -> Dict[str, bool]:
     return {
         "authenticated": bool(data.get("authenticated")),
         "legal_ack": bool(data.get("legal_ack")),
+        "joystick_prefs": sanitize_joystick_prefs(data.get("joystick_prefs")) or None,
     }
+
+
+def normalize_joystick_mode(value: Any) -> Optional[str]:
+    if not isinstance(value, str):
+        return None
+    normalized = value.strip().lower().replace("_", "-")
+    return normalized if normalized in VALID_JOYSTICK_MODES else None
+
+
+def sanitize_joystick_prefs(raw: Any) -> Dict[str, str]:
+    if not isinstance(raw, dict):
+        return {}
+    throttle = normalize_joystick_mode(raw.get("throttle"))
+    steering = normalize_joystick_mode(raw.get("steering"))
+    data: Dict[str, str] = {}
+    if throttle:
+        data["throttle"] = throttle
+    if steering:
+        data["steering"] = steering
+    return data
 
 
 def is_fully_authorized(data: Dict[str, Any]) -> bool:
@@ -373,6 +395,26 @@ async def api_legal_ack(request: Request) -> Response:
 
     session_ctx.set("legal_ack", True)
     response = JSONResponse(session_status(session_ctx.data))
+    return session_ctx.write_to_response(response)
+
+
+@app.post("/api/joystick-prefs")
+async def api_joystick_prefs(request: Request) -> Response:
+    session_ctx = get_session_ctx(request)
+    session_ctx.ensure_fresh()
+    try:
+        payload = await request.json()
+    except Exception:
+        return JSONResponse({"detail": "Invalid JSON payload"}, status_code=status.HTTP_400_BAD_REQUEST)
+
+    sanitized = sanitize_joystick_prefs(payload)
+    if not sanitized:
+        return JSONResponse({"detail": "No valid joystick preferences supplied"}, status_code=status.HTTP_400_BAD_REQUEST)
+
+    existing = sanitize_joystick_prefs(session_ctx.get("joystick_prefs"))
+    existing.update(sanitized)
+    session_ctx.set("joystick_prefs", existing)
+    response = JSONResponse({"joystick_prefs": existing})
     return session_ctx.write_to_response(response)
 
 
