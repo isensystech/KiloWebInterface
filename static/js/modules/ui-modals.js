@@ -561,6 +561,20 @@ function playGifWithCrossfade(){
 // ============================================================================
 // TRIM TAB & ANCHOR MODALS
 // ============================================================================
+function ensureModalDetachedFromDrawer(backdrop, container) {
+    if (!backdrop && !container) return;
+    const fragment = document.createDocumentFragment();
+    if (backdrop && backdrop.parentElement !== document.body) {
+        fragment.appendChild(backdrop);
+    }
+    if (container && container.parentElement !== document.body) {
+        fragment.appendChild(container);
+    }
+    if (fragment.childNodes.length) {
+        document.body.appendChild(fragment);
+    }
+}
+
 export function initializeTrimTabModal() {
     const trigger = document.getElementById('trimtab-modal');
     const backdrop = document.getElementById('trimtab-modal-backdrop');
@@ -571,6 +585,8 @@ export function initializeTrimTabModal() {
         console.warn('Trim Tab modal elements not found');
         return;
     }
+
+    ensureModalDetachedFromDrawer(backdrop, container);
 
     const open = () => {
         backdrop.style.display = 'block';
@@ -608,6 +624,8 @@ export function initializeAnchorModal() {
         console.warn('Anchor modal elements not found');
         return;
     }
+
+    ensureModalDetachedFromDrawer(backdrop, container);
 
     const open = () => {
         backdrop.style.display = 'block';
