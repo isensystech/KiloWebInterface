@@ -940,8 +940,14 @@ async function loadCoachSteps() {
       };
     });
 
-    steps.sort((a, b) => (a.order - b.order) || a.selector.localeCompare(b.selector));
+        steps.sort((a, b) => (a.order - b.order) || a.selector.localeCompare(b.selector));
     TOUR_STEPS = steps;
+
+    // --- DEBUG: expose to window for console inspection ---
+    if (typeof window !== 'undefined') {
+      window.TOUR_STEPS = TOUR_STEPS; // debug only
+    }
+
   })();
   return coachDataReady;
 }
@@ -953,6 +959,8 @@ const COACH_GLOBAL_ALLOW_SELECTORS = [
   '.status-bar',
   '.drawer-tab',
   '.boat-image',
+  '.time-utc',
+  '.satellite-numbers'
 ];
 
 /* Check if element (or ancestor) is allowed to receive clicks */

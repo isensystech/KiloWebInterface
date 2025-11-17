@@ -5010,79 +5010,139 @@
         }
 
 
-/* === HELP MODAL === */
-
-/* === COACH OVERLAY (minimal) === */
-#coach-overlay{
-  /* fullscreen overlay */
-  position: fixed; inset: 0; z-index: 10080;
-}
-
-/* Spotlight mask: dark veil with a hole over the target */
-.coach-mask{
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,.6);
-  /* The hole is made via CSS variables set from JS */
-  -webkit-mask:
-    radial-gradient( circle var(--r, 8px) at var(--x, -1000px) var(--y, -1000px),
-                     transparent 98%, black 100% );
-          mask:
-    radial-gradient( circle var(--r, 8px) at var(--x, -1000px) var(--y, -1000px),
-                     transparent 98%, black 100% );
-  pointer-events: auto;       /* block clicks by default */
-}
-
-/* Make the hole click-through */
-.coach-mask.hole-clickthrough{
-  pointer-events: none;       /* allow interaction with target if step allows */
-}
-
-.coach-tooltip{
-  position: absolute; max-width: 300px;
-  background: var(--color-drawer-bg, #303030);
-  color: var(--color-white, #fff);
-  border-radius: 10px; padding: 12px 12px 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.35);
-  font: var(--type-caption-regular, 400 14px/1.35 var(--font-sans));
-}
-
-.coach-controls{
-  display:flex; gap:8px; justify-content:flex-end; margin-top:8px;
-}
-.coach-controls button{
-  background:#444; color:#fff; border:0; border-radius:8px;
-  padding:6px 10px; cursor:pointer;
-}
-.coach-close{ background:transparent; color:var(--color-light,#dadada); }
-
-/* Subtle highlight for hovered/matched targets in Help mode */
-.coach-highlight {
-  outline: 2px dashed var(--active-yellow);
-  outline-offset: 4px;
-  border-radius: 6px;
-}
-
-.coach-glow{
-outline-offset: 4px;        
-border-radius: 6px;       
-background: var(--button-selected);
-filter: drop-shadow(0 0 4px var(--color-white));
-transition: width 0.3s ease;
-}
 
 
 
+        
+        /* === HELP MODAL === */
 
-/* TOOLTIPS */
+        /* COACH OVERLAY */
+        #coach-overlay {
+        /* fullscreen overlay */
+        position: fixed;
+        inset: 0;
+        z-index: 10080;
+        }
 
-/* Optional: different arrows/colors per placement */
-[data-coach-placement="top"] .coach-tooltip { transform-origin: bottom center; }
-[data-coach-placement="right"] .coach-tooltip { transform-origin: left center; }
+        /* Spotlight mask: dark veil with a hole over the target */
+        .coach-mask {
+        position: absolute;
+        inset: 0;
+        background: var(--color-black-hover, #000);
+        opacity: 0.7;
+        /* The hole is made via CSS variables set from JS */
+        -webkit-mask:
+            radial-gradient(circle var(--r, 8px) at var(--x, -1000px) var(--y, -1000px),
+                            transparent 98%, black 100%);
+                mask:
+            radial-gradient(circle var(--r, 8px) at var(--x, -1000px) var(--y, -1000px),
+                            transparent 98%, black 100%);
+        pointer-events: auto;         /* block clicks by default */
+        cursor: inherit;              /* make mask follow overlay cursor */
+        }
 
+        /* Make the hole click-through */
+        .coach-mask.hole-clickthrough {
+        pointer-events: none;         /* allow interaction with target if step allows */
+        }
 
+        .coach-tooltip {
+        position: absolute; 
+        max-width: 450px;
+        color: var(--color-white);
+        border-radius: 10px; 
+        padding: 42px 12px 10px;
+        }
 
+        /* Apply project token to tooltip titles */
+        .coach-title {
+        font: var(--type-h2);
+        color: var(--color-white);
+        }
 
+        .coach-text {
+        font: var(--type-button-regular);
+        color: var(--color-light);
+        }
 
+        .coach-tooltip .coach-content,
+        .coach-tooltip .coach-text {
+        white-space: pre-line;        /* respects \n and wraps long lines */
+        }
+
+        .coach-controls {
+        display: flex;
+        gap: 16px;
+        justify-content: flex-start;
+        margin-top: 28px;
+        }
+
+        .coach-controls button {
+        background: var(--color-black-hover);
+        color: var(--text-inactive);
+        border: 1px solid var(--text-inactive);
+        border-radius: 6px;
+        padding: 6px 10px;
+        cursor: pointer;
+        }
+
+        .coach-controls button:hover {
+        color: var(--color-white);
+        border: 1px solid var(--color-white);
+        }
+
+        .coach-close {
+        background: transparent;
+        position: absolute;
+        top: 8px;
+        left: 12px;
+        font: var(--type-h3);
+        color: var(--text-inactive);
+        border: none;
+        cursor: pointer;
+        line-height: 1;
+        transition: color .2s ease;
+        }
+
+        .coach-close:hover {
+        color: var(--color-white);
+        }
+
+        /* Subtle highlight for hovered/matched targets in Help mode */
+        .coach-highlight {
+        outline: 2px dashed var(--active-yellow);
+        outline-offset: 4px;
+        border-radius: 6px;           /* match corners with glow */
+        }
+
+        .coach-glow {
+        outline-offset: 4px;
+        border-radius: 6px;
+        background: var(--color-bg);
+        box-shadow: 0 0 0 10px var(--color-bg);
+        filter: drop-shadow(0 0 4px var(--color-white));
+        transition: width 0.3s ease;
+        }
+
+        /* TOOLTIPS */
+        /* Optional: different arrows/colors per placement */
+        [data-coach-placement="top"] .coach-tooltip {
+        transform-origin: bottom center;
+        }
+
+        [data-coach-placement="right"] .coach-tooltip {
+        transform-origin: left center;
+        }
+
+        /* Make tooltip transparent to pointer events except its controls */
+        #coach-overlay .coach-tooltip {
+        pointer-events: none; /* clicks pass through */
+        }
+
+        #coach-overlay .coach-tooltip .coach-controls,
+        #coach-overlay .coach-tooltip .coach-close {
+        pointer-events: auto; /* buttons still work */
+        }
 
 
 
@@ -5152,6 +5212,11 @@ transition: width 0.3s ease;
 
 
 
+
+
+
+
+        
 /* ================= SCREENSAVER MODAL STYLES ================= */
 
 .screensaver-modal {
