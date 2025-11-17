@@ -1,3 +1,5 @@
+import { gamepadControlState } from './gamepad-handler.js';
+
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
@@ -561,6 +563,20 @@ function playGifWithCrossfade(){
 // ============================================================================
 // TRIM TAB & ANCHOR MODALS
 // ============================================================================
+function ensureModalDetachedFromDrawer(backdrop, container) {
+    if (!backdrop && !container) return;
+    const fragment = document.createDocumentFragment();
+    if (backdrop && backdrop.parentElement !== document.body) {
+        fragment.appendChild(backdrop);
+    }
+    if (container && container.parentElement !== document.body) {
+        fragment.appendChild(container);
+    }
+    if (fragment.childNodes.length) {
+        document.body.appendChild(fragment);
+    }
+}
+
 export function initializeTrimTabModal() {
     const trigger = document.getElementById('trimtab-modal');
     const backdrop = document.getElementById('trimtab-modal-backdrop');
@@ -571,6 +587,8 @@ export function initializeTrimTabModal() {
         console.warn('Trim Tab modal elements not found');
         return;
     }
+
+    ensureModalDetachedFromDrawer(backdrop, container);
 
     const open = () => {
         backdrop.style.display = 'block';
@@ -609,6 +627,8 @@ export function initializeAnchorModal() {
         return;
     }
 
+    ensureModalDetachedFromDrawer(backdrop, container);
+
     const open = () => {
         backdrop.style.display = 'block';
         container.style.display = 'block';
@@ -642,27 +662,51 @@ function initializeTrimtabSliders() {
     trimtabSlidersInitialized = true;
 
     const STEP = 5;
+    const clampValue = (value) => Math.max(-100, Math.min(100, Math.round(value ?? 0)));
+    const clampPct = (pct) => Math.max(0, Math.min(100, pct));
+    const pctFromValue = (value) => clampPct(50 - clampValue(value) / 2);
+    const valueFromPct = (pct) => clampValue((50 - pct) * 2);
+    const registerSetter = (side, setter) => {
+        window.__kiloTrimtabSetters = window.__kiloTrimtabSetters || {};
+        window.__kiloTrimtabSetters[side] = setter;
+    };
+
     overlays.forEach((root) => {
         const track = root.querySelector('.trimtab-track-bg');
         const fill = root.querySelector('.trimtab-track-fill');
         const thumb = root.querySelector('.trimtab-thumb');
         const upButton = root.querySelector('.throttle-up');
         const downButton = root.querySelector('.throttle-down');
+        const trimSide = root.dataset.trimtab === 'starboard' ? 'starboard' : 'port';
+        const stateKey = trimSide === 'starboard' ? 'starboard_trim' : 'port_trim';
         if (!track || !fill || !thumb) return;
 
         fill.style.top = '0';
         fill.style.bottom = 'auto';
 
-        const applyFromTopPct = (pct) => {
-            const clamped = Math.max(0, Math.min(100, pct));
+        const applyFromTopPct = (pct, opts = {}) => {
+            const clamped = clampPct(pct);
             thumb.style.top = clamped + '%';
             fill.style.height = clamped + '%';
+            if (!opts.silent) {
+                const value = valueFromPct(clamped);
+                if (gamepadControlState[stateKey] !== value) {
+                    gamepadControlState[stateKey] = value;
+                }
+            }
         };
 
         const getTopPct = () => {
             const value = parseFloat(thumb.style.top);
-            return Number.isFinite(value) ? value : 50;
+            return Number.isFinite(value) ? value : pctFromValue(gamepadControlState[stateKey] ?? 0);
         };
+
+        const setFromValue = (value, opts = {}) => {
+            const pct = pctFromValue(value);
+            applyFromTopPct(pct, opts);
+        };
+
+        registerSetter(trimSide, (value) => setFromValue(value, { silent: true }));
 
         const moveUp = () => applyFromTopPct(getTopPct() - STEP);
         const moveDown = () => applyFromTopPct(getTopPct() + STEP);
@@ -714,7 +758,7 @@ function initializeTrimtabSliders() {
         track.addEventListener('mousedown', startDrag);
         track.addEventListener('touchstart', startDrag, { passive: false });
 
-        applyFromTopPct(getTopPct());
+        setFromValue(gamepadControlState[stateKey] ?? 0, { silent: true });
     });
 }
 
@@ -732,16 +776,34 @@ function initializeTrimtabGyro() {
     let angle = 0;
     const STEP = 1;
 
+    const formatAngleLabel = (value) => {
+        const rounded = Math.round(value);
+        const sign = rounded >= 0 ? '+' : '-';
+        const padded = String(Math.abs(rounded)).padStart(2, '0');
+        return `${sign}${padded}°`;
+    };
+
     const applyAngle = () => {
         boat.style.transform = `rotate(${angle}deg)`;
-        angleLabel.textContent = `${angle}°`;
+        angleLabel.textContent = formatAngleLabel(angle);
+    };
+
+    const setAngle = (value) => {
+        const numeric = Number(value);
+        if (!Number.isFinite(numeric)) return;
+        angle = clamp(numeric);
+        applyAngle();
+    };
+
+    const adjustAngle = (delta) => {
+        angle = clamp(angle + delta);
+        applyAngle();
     };
 
     const startHold = (direction) => {
         if (startHold.timer) return;
         startHold.timer = setInterval(() => {
-            angle = clamp(angle + direction * STEP);
-            applyAngle();
+            adjustAngle(direction * STEP);
         }, 60);
     };
 
@@ -752,13 +814,11 @@ function initializeTrimtabGyro() {
 
     leftButton.addEventListener('click', (event) => {
         event.preventDefault();
-        angle = clamp(angle - STEP);
-        applyAngle();
+        adjustAngle(-STEP);
     });
     rightButton.addEventListener('click', (event) => {
         event.preventDefault();
-        angle = clamp(angle + STEP);
-        applyAngle();
+        adjustAngle(STEP);
     });
 
     leftButton.addEventListener('mousedown', () => startHold(-1));
@@ -777,16 +837,23 @@ function initializeTrimtabGyro() {
 
     document.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft') {
-            angle = clamp(angle - STEP);
-            applyAngle();
+            adjustAngle(-STEP);
         }
         if (event.key === 'ArrowRight') {
-            angle = clamp(angle + STEP);
-            applyAngle();
+            adjustAngle(STEP);
         }
     });
 
-    applyAngle();
+    window.__kiloSetGyroRoll = (value) => {
+        if (value === undefined || value === null) return;
+        setAngle(value);
+    };
+
+    if (window.__kiloLatestRoll !== undefined) {
+        window.__kiloSetGyroRoll(window.__kiloLatestRoll);
+    } else {
+        applyAngle();
+    }
 }
 
 let anchorSliderInitialized = false;
