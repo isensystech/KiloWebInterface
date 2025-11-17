@@ -6,6 +6,7 @@
 
 import {
     gamepadControlState,
+    getThrottleGearState,
     // updateThrottleUI, // We DO NOT call this from WS
     updateSteeringUI,
     updateEngineTrimUI,
@@ -52,6 +53,7 @@ function startGamepadHeartbeat() {
       const message = {
         type: 'gamepad.set',
         throttle: gamepadControlState.throttle,
+        gear: getThrottleGearState(),
         steering: gamepadControlState.steering,
         engine_trim: gamepadControlState.engine_trim,
         port_trim: gamepadControlState.port_trim,
