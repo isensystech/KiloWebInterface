@@ -119,12 +119,21 @@ KiloWebInterface/
 
 ```
 ### Roadmap
+
 - [ ] Persist tab/screen state across reloads (```localStorage```)
 - [ ] Wire M20 control surface to backend
 - [x] Wire EGES control surface to backend
-- [ ] Add MAVLink telemetry & basic commands (arm/disarm, mode, go-to)
+- [x] Add MAVLink telemetry & basic commands (arm/disarm, mode, go-to)
 - [ ] Add Dometic drive controls & indicators
-- [ ] Add OXE engine controls & gauges
-- [ ] Introduce a mock backend and “Demo Mode” for UI-only testing
-- [ ] Basic auth/session for protected controls
+- [x] Add OXE engine controls & gauges
+- [x] Introduce a mock backend and “Demo Mode” for UI-only testing
+- [x] Basic auth/session for protected controls
 - [ ] Packaging for deployment on a Raspberry Pi or container
+
+
+```
+### To_do
+- [ ] Fix slow login screen.
+- [ ] Fix Steering gauge to -30 to +30
+- [x] Introduce "Springy", "Pilot hold" control schema
+- [x] Inroduce Gear datapoint in WS message.
