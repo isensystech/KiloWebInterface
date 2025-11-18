@@ -1,5 +1,20 @@
 import { gamepadControlState } from './gamepad-handler.js';
 
+const AP_MODE_VALUES = Object.freeze(['Manual', 'Hold', 'Auto', 'Loiter', 'Acro', 'RTH']);
+const AP_MODE_ALIASES = Object.freeze({ rtl: 'RTH' });
+
+function normalizeApMode(mode) {
+    if (typeof mode !== 'string') return null;
+    const trimmed = mode.trim();
+    if (!trimmed) return null;
+    const alias = AP_MODE_ALIASES[trimmed.toLowerCase()];
+    if (alias) return alias;
+    const matched = AP_MODE_VALUES.find(
+        (value) => value.toLowerCase() === trimmed.toLowerCase()
+    );
+    return matched || trimmed;
+}
+
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
@@ -47,26 +62,43 @@ export function initializeAPToggle() {
         apModal.classList.remove('is-open');
     };
     
+    const updateApModeDisplay = (mode) => {
+        const normalizedMode = normalizeApMode(mode) || normalizeApMode(apToggleBtn?.dataset.currentMode) || 'Manual';
+
+        if (apToggleBtn && normalizedMode) {
+            apToggleBtn.textContent = normalizedMode;
+            apToggleBtn.dataset.currentMode = normalizedMode;
+        }
+
+        apModeButtons?.forEach(btn => {
+            const btnMode = normalizeApMode(btn.dataset.mode);
+            const isActive = normalizedMode && btnMode && btnMode === normalizedMode;
+            btn.classList.toggle('active', Boolean(isActive));
+        });
+    };
+
+    window.__kiloSetApModeDisplay = updateApModeDisplay;
+
+    const initialMode = normalizeApMode(window.__kiloLatestApMode) 
+        || normalizeApMode(apToggleBtn.dataset.currentMode) 
+        || normalizeApMode(apToggleBtn.textContent);
+    updateApModeDisplay(initialMode);
+
     apToggleBtn.addEventListener('click', openModal);
     
     apModeButtons?.forEach(btn => {
         btn.addEventListener('click', () => {
             const selectedMode = btn.dataset.mode;
-            
-            apToggleBtn.textContent = selectedMode;
-            apToggleBtn.dataset.currentMode = selectedMode;
+            updateApModeDisplay(selectedMode);
             
             if (window.ws && window.ws.readyState === WebSocket.OPEN) {
                 const message = {
-                    type: "ap.set_mode",
+                    type: "mode.control",
                     mode: selectedMode
                 };
                 window.ws.send(JSON.stringify(message));
                 console.log('Sent AP mode:', selectedMode);
             }
-            
-            apModeButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
             closeModal();
         });
     });

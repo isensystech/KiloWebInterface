@@ -379,6 +379,10 @@ function bindClickHandlers() {
     updateTelemetryValue('gps_lat_deg', msg.gps_lat_deg, 6);
     updateTelemetryValue('gps_lng_deg', msg.gps_lng_deg, 6);
     updateTelemetryValue('ap_mode', msg.ap_mode || '--');
+    if (msg.ap_mode) {
+      window.__kiloLatestApMode = msg.ap_mode;
+      window.__kiloSetApModeDisplay?.(msg.ap_mode);
+    }
     
     if (msg.imu_roll_deg !== undefined) {
       window.__kiloLatestRoll = msg.imu_roll_deg;
