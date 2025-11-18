@@ -29,7 +29,7 @@
                 <span class="info-unit">UTC</span>
             </div>
 
-            <div class="info-item info-item--center">
+            <div class="info-item info-item--center" id="attention-indicators">
                 &nbsp; &nbsp; &nbsp; <!-- SPASE -->
 
                 <span id="engine-indicator" class="alarm-icon" aria-hidden="true"><img src="/static/images/engine.svg" alt=""></span>
@@ -62,13 +62,14 @@
 
                 &nbsp; &nbsp; &nbsp;         <!-- SPASE -->
 
-                <span class="info-icon" aria-hidden="true"><img src="/static/images/coordinates-icon.svg" alt=""></span>
-
-                <span class="info-unit">LAT</span>
-                <span id="gps_lat_deg" class="info-value">0.000000</span>
-                &nbsp;         <!-- SPASE -->
-                <span class="info-unit">LNG</span>
-                <span id="gps_lng_deg" class="info-value">0.000000</span>
+                <div class="info-item" id="coordinate-values">
+                    <span class="info-icon " aria-hidden="true"><img src="images/coordinates-icon.svg" alt=""></span>
+                    <span class="info-unit">LAT</span>
+                    <span id="gps_lat_deg" class="info-value">0.000000</span>
+                        &nbsp;         <!-- SPASE -->
+                    <span class="info-unit">LNG</span>
+                    <span id="gps_lng_deg" class="info-value">0.000000</span>
+                </div>
             </div>
 
         </div>
@@ -507,7 +508,7 @@
                     <span class="drawer-button-title">Safety</span>
                 </div>
 
-                <button class="kill-all-btn" type="button" data-action="kill_all">KILL ALL</button>
+                <button class="kill-all-btn" id="kill-all-button" type="button" data-action="kill_all">KILL ALL</button>
             </div>
 
         </div>

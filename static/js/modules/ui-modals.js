@@ -1208,6 +1208,33 @@ function synthesizeClickSequence(target, originEvent) {
     return -1;
   }
 
+  function hitTestCoachTarget(x, y){
+    const under = elementUnderPoint(x, y);
+    let candidate = combinedSelectors ? under?.closest?.(combinedSelectors) : null;
+    let hitIdx = matchStepIndexByElement(candidate || under);
+
+    // Fallback: geometry-based hit-test in case elementFromPoint stops at a wrapper
+    if (hitIdx < 0 && TOUR_STEPS.length){
+      for (let i = 0; i < TOUR_STEPS.length; i++){
+        const el = document.querySelector(TOUR_STEPS[i].selector);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom){
+          candidate = el;
+          hitIdx = i;
+          break;
+        }
+      }
+    }
+
+    if (hitIdx >= 0 && !candidate) {
+      const stepSel = TOUR_STEPS[hitIdx]?.selector;
+      candidate = stepSel ? under?.closest?.(stepSel) || document.querySelector(stepSel) : null;
+    }
+
+    return { under, candidate, hitIdx };
+  }
+
 
 
 
@@ -1339,10 +1366,9 @@ async function renderStep(){
       rafHoverId = 0;
       if (overlay.hidden) return;
 
-      const under = elementUnderPoint(e.clientX, e.clientY);
-      const candidate = combinedSelectors ? under?.closest?.(combinedSelectors) : null;
+      const { under, candidate, hitIdx } = hitTestCoachTarget(e.clientX, e.clientY);
 
-      const allowed = isCoachAllowedTarget(under) || !!candidate;
+      const allowed = isCoachAllowedTarget(under) || hitIdx >= 0;
       if (mask) mask.style.cursor = allowed ? 'pointer' : '';
 
       if (!TOUR_STEPS.length || !combinedSelectors) return;
@@ -1376,21 +1402,20 @@ async function renderStep(){
   function onOverlayClick(e){
     if (e.target.closest('.coach-tooltip')) return;
 
-    const under = elementUnderPoint(e.clientX, e.clientY);
+    const { under, hitIdx } = hitTestCoachTarget(e.clientX, e.clientY);
 
-    if (isCoachAllowedTarget(under)) {
-      synthesizeClickSequence(under, e);
+    if (hitIdx >= 0){
+      if (hoverEl && hoverEl !== activeEl) hoverEl.classList.remove('coach-glow');
+      hoverEl = null;
+      idx = hitIdx;
+      renderStep();
       e.preventDefault();
       e.stopPropagation();
       return;
     }
 
-    const newIdx = matchStepIndexByElement(under);
-    if (newIdx >= 0){
-      if (hoverEl && hoverEl !== activeEl) hoverEl.classList.remove('coach-glow');
-      hoverEl = null;
-      idx = newIdx;
-      renderStep();
+    if (isCoachAllowedTarget(under)) {
+      synthesizeClickSequence(under, e);
       e.preventDefault();
       e.stopPropagation();
       return;
