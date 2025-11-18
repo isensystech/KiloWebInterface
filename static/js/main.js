@@ -527,6 +527,8 @@ function createKeypadController(onSubmit, onCancel) {
     const dialog = modal.querySelector('.passcode-dialog');
     const helper = modal.querySelector('#pc-helper');
     const PASSCODE_LENGTH = 4;
+    const supportsPointer = typeof window !== 'undefined' && 'PointerEvent' in window;
+    const pointerEventName = supportsPointer ? 'pointerdown' : 'touchstart';
     let code = '';
     let active = false;
     let submitting = false;
@@ -575,15 +577,15 @@ function createKeypadController(onSubmit, onCancel) {
         }
     }
 
-    function handleClick(event) {
-        const target = event.target;
-        if (target?.hasAttribute?.('data-pc-close')) {
+    function processInteraction(target) {
+        if (!target) return false;
+        if (target.hasAttribute?.('data-pc-close')) {
             onCancel();
-            return;
+            return true;
         }
 
         const key = target.closest?.('.pc-key');
-        if (!key || submitting) return;
+        if (!key || submitting) return false;
 
         const action = key.getAttribute('data-action');
         const digit = key.getAttribute('data-key');
@@ -592,20 +594,51 @@ function createKeypadController(onSubmit, onCancel) {
             code = '';
             renderDots();
             setHelper('');
-            return;
+            return true;
         }
 
         if (action === 'enter') {
             submitCode();
-            return;
+            return true;
         }
 
         if (digit != null) {
-            if (code.length >= PASSCODE_LENGTH) return;
+            if (code.length >= PASSCODE_LENGTH) return true;
             code += digit;
             renderDots();
             setHelper('');
+            return true;
         }
+
+        return false;
+    }
+
+    function suppressNextClick(element) {
+        if (!element) return;
+        const once = (evt) => {
+            evt.preventDefault();
+            evt.stopPropagation();
+        };
+        element.addEventListener('click', once, { capture: true, once: true });
+    }
+
+    function handlePointerDown(event) {
+        if (!active) return;
+        const target = event.target;
+        const consumed = processInteraction(target);
+        if (!consumed) return;
+
+        if (event.type === 'touchstart' || event.pointerType === 'touch' || event.pointerType === 'pen') {
+            event.preventDefault();
+        }
+        const interactive = target.closest?.('[data-pc-close], .pc-key') || target;
+        suppressNextClick(interactive);
+    }
+
+    function handleClick(event) {
+        // Allow keyboard activation (detail === 0) but skip pointer-triggered clicks.
+        if (event.detail > 0) return;
+        processInteraction(event.target);
     }
 
     function handleKeydown(event) {
@@ -656,6 +689,7 @@ function createKeypadController(onSubmit, onCancel) {
             modal.setAttribute('aria-hidden', 'false');
             dialog?.setAttribute('tabindex', '-1');
             dialog?.focus({ preventScroll: true });
+            modal.addEventListener(pointerEventName, handlePointerDown, { passive: false });
             modal.addEventListener('click', handleClick);
             document.addEventListener('keydown', handleKeydown);
             document.addEventListener('focus', trapFocus, true);
@@ -667,6 +701,7 @@ function createKeypadController(onSubmit, onCancel) {
                 try { document.activeElement.blur(); } catch (_) {}
             }
             modal.setAttribute('aria-hidden', 'true');
+            modal.removeEventListener(pointerEventName, handlePointerDown);
             modal.removeEventListener('click', handleClick);
             document.removeEventListener('keydown', handleKeydown);
             document.removeEventListener('focus', trapFocus, true);
