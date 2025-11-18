@@ -243,7 +243,14 @@
         max-height: calc(100vh - 160px);
         }
 
-
+        .group-container{
+        /* Neutral container. Make wrapper layout-neutral */
+        display: block;      /* or flex, если нужно, но НЕ contents */
+        padding: 0;
+        margin: 0;
+        border: none;
+        background: none;
+        }
 
 
     /* INFO BAR */
@@ -878,13 +885,14 @@
         
         /* Rudder Angle INPUT container  */
         .rudder-input-control {
-        display: inline;                /* Align elements horizontally */
-        gap: 6px;                     /* Space between input and ° sign */
-        justify-content: center;
+        display: flex;              /* Horizontal layout */
+        align-items: center;        /* Vertical center */
+        justify-content: center;    /* Horizontal center */
+        gap: 6px;                   /* Space between input and ° sign */
         font: var(--type-caption-regular);
         color: var(--color-light);    
         z-index: 10;
-        white-space: nowrap
+        white-space: nowrap;
         }
 
         /* Input field styling (small black display) */
