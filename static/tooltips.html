@@ -130,7 +130,7 @@
 
     <!-- ENGINE TEMPERATURE GAUGE -->
     <article
-        data-coach-for="#engine-temperature-gauge"
+        data-coach-for="#engine-temp-gauge"
         data-coach-placement="right"
         data-coach-order="33"
         data-coach-interact="false"
@@ -200,7 +200,7 @@
 
     <!-- MODAL THROTTLE -->
     <article
-        data-coach-for=".throttle-wrapper"
+        data-coach-for="#throttle-modal"
         data-coach-placement="left"
         data-coach-order="41"
         data-coach-interact="false"
@@ -211,9 +211,9 @@
             
             ▲ and ▼ buttons provide incremental control for fine adjustment. The NEUTRAL position includes a detent to prevent accidental direction change. Color and letter cues correspond to propulsion state: white (neutral) indicates inactive output, yellow signals active throttle, and red is reserved for fault or emergency cut-off states. The throttle input is locked when “Kill All” is active or when system safety interlocks are engaged.
         </div>
-    </article>
+    </article> 
 
-    <!-- TRIM CONTROL -->
+    <!-- TRIM CONTROL 
     <article
         data-coach-for=".editor-modal-window"
         data-coach-placement="right"
@@ -224,7 +224,7 @@
         <div class="coach-text">
             The Trim Control adjusts the outboard motor angle to optimize vessel attitude and efficiency. The vertical slider defines trim level, ranging from 0 (fully down) to 15 (maximum up). The live numeric readout mirrors the current setting, while the on-screen pointer rotates to indicate motor position relative to the hull diagram. Use gradual adjustments to balance lift and minimize drag: lower trim improves stability and acceleration, higher trim increases speed and reduces wetted surface area. Always avoid excessive trim angles under heavy load or rough conditions.
         </div>
-    </article>
+    </article> -->
 
 
     <!-- RUDDER ANGLE INDICATOR -->
@@ -241,26 +241,6 @@
     </article>
 
 
-<!-- DRAWER CONTROL PANEL -->
-
-    <!-- 1 -->
-    <!-- 2 -->
-
-    <!-- 3 -->
-
-        <!-- KILL ENGINE BUTTON -->
-        <article
-            data-coach-for="#kill-engine-button"
-            data-coach-placement="left"
-            data-coach-order="62"
-            data-coach-interact="false"
-            >
-            <div class="coach-title">Kill Engine Button</div>
-            <div class="coach-text">
-                Instantly stops the main engine without affecting electrical or auxiliary systems. Use this button only in situations requiring immediate propulsion shutdown — for example, mechanical failure, collision risk, or maintenance safety.  
-                Once pressed, the engine must be restarted manually via the Ignition control. The Kill command is hardware-prioritized and overrides all automation or software throttling inputs.
-            </div>
-        </article>
 
 
 
@@ -371,6 +351,37 @@
             The Status Content panel provides a live summary of vessel activity and communication state. The connection indicator on the left shows the current link status with the controller or remote host — blue when connected, and red when the link is lost. The status text displays mission identifiers, heading, speed, and operational messages such as “Buoy Release,” “Safety,” or “Designated.” This field updates automatically to reflect the latest telemetry and command acknowledgments. Use it to confirm active connection and monitor real-time vessel behavior without opening diagnostic windows.
         </div>
     </article>
+
+
+
+
+
+
+
+
+    
+    
+<!-- DRAWER CONTROL PANEL -->
+
+    <!-- 1 -->
+    <!-- 2 -->
+
+    <!-- 3 -->
+
+        <!-- KILL ENGINE BUTTON -->
+        <article
+            data-coach-for="#kill-engine-button"
+            data-coach-placement="left"
+            data-coach-order="62"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Kill Engine Button</div>
+            <div class="coach-text">
+                Instantly stops the main engine without affecting electrical or auxiliary systems. Use this button only in situations requiring immediate propulsion shutdown — for example, mechanical failure, collision risk, or maintenance safety.  
+                Once pressed, the engine must be restarted manually via the Ignition control. The Kill command is hardware-prioritized and overrides all automation or software throttling inputs.
+            </div>
+        </article>
+
 
 
 </section>

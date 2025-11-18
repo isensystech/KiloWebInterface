@@ -1119,7 +1119,7 @@ async function loadCoachSteps() {
 const COACH_GLOBAL_ALLOW_SELECTORS = [
   '.status-bar',
   '.drawer-tab',
-  '.boat-image',
+  /*'.boat-image', */
   '.time-utc',
   '.satellite-numbers'
 ];
