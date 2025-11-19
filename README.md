@@ -144,7 +144,7 @@ KiloWebInterface/
 ```
 ### To-Do Frontend MVP
 - [ ] Rework id="debug-panel" 
-- [ ] Make Gear Popups with progress bar
+- [x] Make Gear Popups with progress bar
 - [x] Fix Engine button
 - [ ] Improve Trim Tab & Gyroscope feedback modal
 - [ ] Improve Anchor Control modal
