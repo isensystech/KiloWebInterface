@@ -148,7 +148,7 @@ KiloWebInterface/
 - [x] Fix Engine button
 - [x] Fix Active Helm and AP Stat logic
 - [x] Improve Trim Tab & Gyroscope feedback modal
-- [ ] Improve Anchor Control modal
+- [x] Improve Anchor Control modal
 - [x] Fix Payload contlols safety-caps opening
 - [ ] Fix Payload control buttons edit
 - [ ] Add Battery status dot path
