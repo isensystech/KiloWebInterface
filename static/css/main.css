@@ -810,7 +810,7 @@
         align-items: center;
         justify-content: center;
         }
-        .throttle-up { margin-left: -1px; }
+        /* .throttle-up { margin-left: -1px; } */
         .throttle-icon { transition: all 0.2s ease; }
         .throttle-button:hover .throttle-icon {
         transform: scale(1.2);
@@ -1878,7 +1878,7 @@
         .trim-image-wrapper {
             position: relative;
             width: 100%;
-            height: 340px; /* or any value you need */
+            height: 460px; /* or any value you need */
             overflow: hidden;
         }
         .trim-center-image {
@@ -3848,59 +3848,81 @@
             width: 100%;
             }
 
-            #trimtab-modal-container .trimtab-block { width: 80px; }
+            #trimtab-modal-container .trimtab-block { width: 90px; }
 
             #trimtab-modal-container .trimtab-slider-overlay {
             position: relative;
-            width: 80px;
-            height: 170px;
+            width: 110px;
+            height: 210px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 14px 10px;
+            }
+
+            #trimtab-modal-container .trimtab-labels {
+            position:absolute;
+            left:8px;
+            top:0;
+            width:32px;
+            height:92%;
+            font: var(--type-caption-mono-small);
+            color:#9fa3a8;
+            line-height:14px;
+            text-align:center;
+            pointer-events:none;
             }
 
             #trimtab-modal-container .trimtab-track-bg {
             position:absolute;
-            left:40px;
+            left:42px;
             top:0;
-            width:30px;
+            width:22px;
             height:100%;
-            background:#000;
-            border-radius:10px;
+            background: var(--color-black);
+            border-radius:6px;
             }
 
             #trimtab-modal-container .trimtab-track-fill {
             position:absolute;
-            left:42px;
+            left:44px;
             top:0;
-            width:29%;
+            width:18px;
             height:50%;
-            background:#FFBD0A;
-            border-radius:9px;
+            background: var(--active-yellow);
+            border-radius:6px;
             }
 
             #trimtab-modal-container .trimtab-thumb {
             position:absolute;
-            left:36px;
-            width:38px;
+            left:38px;
+            width:28px;
             height:26px;
             transform:translateY(-50%);
-            border-radius:10%;
-            background:radial-gradient(ellipse 50% 50% at 50% 50%, #939393 0%, #737373 100%);
+            border-radius:8px;
+            background:linear-gradient(0deg, var(--button-active) 0%, var(--button-inactive) 100%);
             cursor:grab;
             z-index:2;
+            }
+
+            #trimtab-modal-container .trimtab-thumb:hover {
+            filter:drop-shadow(0 0 8px rgb(100,100,100));
+            background:radial-gradient(ellipse 50% 50% at 50% 50%, #a8a8a8 0%, #848484 100%);
             }
 
             #trimtab-modal-container .trimtab-slider-overlay .throttle-up,
             #trimtab-modal-container .trimtab-slider-overlay .throttle-down {
             position:absolute;
-            left:55px;
+            left:53px;
             transform:translateX(-50%);
             z-index:3;
             }
 
-            #trimtab-modal-container .trimtab-slider-overlay .throttle-up { top:0; }
-            #trimtab-modal-container .trimtab-slider-overlay .throttle-down { bottom:0; }
+            #trimtab-modal-container .trimtab-slider-overlay .throttle-up { top:-20px; }
+            #trimtab-modal-container .trimtab-slider-overlay .throttle-down { bottom:-20px; }
 
             #trimtab-modal-container .trimtab-caption {
-            margin-top:6px;
+            margin-top:32px;
             text-align:center;
             color:#dadada;
             font: var(--type-caption-regular);
@@ -3935,7 +3957,7 @@
             height:100%;
             display:flex;
             align-items:center;
-            padding-right:10px;
+            padding:14px 10px;
             z-index:4;
             }
 
@@ -3943,33 +3965,31 @@
             position:absolute;
             left:8px;
             top:0;
-            width:30px;
-            height:90%;
-            font-size:10px;
-            font-family:'Roboto', sans-serif;
-            font-weight:700;
-            color:#757575;
-            line-height:15px;
+            width:32px;
+            height:92%;
+            font: var(--type-caption-mono-small);
+            color:#9fa3a8;
+            line-height:14px;
             text-align:center;
             pointer-events:none;
             }
 
             #anchor-modal-container .anchor-track-bg {
             position:absolute;
-            top:10px;
-            left:40px;
-            width:30px;
+            top:0;
+            left:42px;
+            width:22px;
             height:100%;
-            background:black;
-            border-radius:10px;
+            background: var(--color-black);
+            border-radius:6px;
             }
 
             #anchor-modal-container .anchor-track-fill {
             position:absolute;
-            left:42px;
-            width:29%;
-            background-color:#FFBD0A;
-            border-radius:9px;
+            left:44px;
+            width:18px;
+            background-color: var(--active-yellow);
+            border-radius:6px;
             z-index:1;
             height:100%;
             top:0;
@@ -3978,11 +3998,11 @@
 
             #anchor-modal-container .anchor-thumb {
             position:absolute;
-            left:36px;
-            width:38px;
+            left:38px;
+            width:28px;
             height:26px;
-            background:radial-gradient(ellipse 50% 50% at 50% 50%, #939393 0%, #737373 100%);
-            border-radius:10%;
+            background:linear-gradient(0deg, var(--button-active) 0%, var(--button-inactive) 100%);
+            border-radius:8px;
             transform:translateY(-50%);
             cursor:grab;
             z-index:10;
@@ -4022,13 +4042,13 @@
             #anchor-modal-container #anchor-throttle-up,
             #anchor-modal-container #anchor-throttle-down {
             position:absolute;
-            left:55px;
+            left:53px;
             transform:translateX(-50%);
             z-index:6;
             }
 
-            #anchor-modal-container #anchor-throttle-up { top:0; }
-            #anchor-modal-container #anchor-throttle-down { bottom:0; }
+            #anchor-modal-container #anchor-throttle-up { top:-20px; }
+            #anchor-modal-container #anchor-throttle-down { bottom:-20px; }
 
             #trimtab-modal-container,
             #anchor-modal-container {

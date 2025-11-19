@@ -146,8 +146,8 @@ KiloWebInterface/
 - [x] Rework id="debug-panel" 
 - [x] Make Gear Popups with progress bar
 - [x] Fix Engine button
-- [ ] Fix Active Helm and AP Stat logic
-- [ ] Improve Trim Tab & Gyroscope feedback modal
+- [x] Fix Active Helm and AP Stat logic
+- [x] Improve Trim Tab & Gyroscope feedback modal
 - [ ] Improve Anchor Control modal
 - [x] Fix Payload contlols safety-caps opening
 - [ ] Fix Payload control buttons edit
