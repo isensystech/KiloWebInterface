@@ -133,9 +133,16 @@
                     <div class="connection-indicator" id="connection-indicator"></div>
                     <div class="status-text">Kilo #2 ↗️ 48° 10m/s [00:00:00] Buoy Release Safety Designated</div>
                 </div>
+                <div class="options-icons">
+                    <img alt="Settings" class="options-icon" src="/static/images/edit.svg"/>
+                    <img alt="Joystick" class="options-icon" id="joystick-trigger" src="/static/images/joystick-settings-icon.svg"/>
+                    <img alt="Help" class="options-icon" id="help-trigger" src="/static/images/help.svg"/>
+                    <img alt="Info" class="options-icon" id="info-trigger" src="/static/images/info.svg"/>
+                    <img alt="Exit" class="options-icon" id="exit-trigger" src="/static/images/exit.svg"/>
+                </div>
             </div>
             <!-- Debug panel -->
-            <div class="debug-panel" id="debug-panel">
+         <!--   <div class="debug-panel" id="debug-panel">
                 <div class="debug-content">
                     <div class="debug-box">
                         <h3>Controller Heartbeat 00</h3>
@@ -148,16 +155,16 @@
                     <div class="debug-box">
                         <h3>Options</h3>
                         <pre id="options-panel">No options set</pre>
-                        <div class="options-icons">
+                     <div class="options-icons">
                             <img alt="Settings" class="options-icon" src="/static/images/edit.svg"/>
                             <img alt="Joystick" class="options-icon" id="joystick-trigger" src="/static/images/joystick-settings-icon.svg"/>
                             <img alt="Help" class="options-icon" id="help-trigger" src="/static/images/help.svg"/>
                             <img alt="Info" class="options-icon" id="info-trigger" src="/static/images/info.svg"/>
                             <img alt="Exit" class="options-icon" id="exit-trigger" src="/static/images/exit.svg"/>
-                        </div>
+                        </div> 
                     </div>
                 </div>
-            </div>
+            </div>-->
         </footer>
 
         <!-- BOAT & MODAL RUDDER -->
@@ -359,6 +366,12 @@
 
         <!-- HUGE SIGN -->
         <div id="throttle-indicator">
+            <div class="throttle-ring" aria-hidden="true">
+                <svg viewBox="0 0 100 100" focusable="false">
+                    <circle class="throttle-ring__track" cx="50" cy="50" r="45"/>
+                    <circle class="throttle-ring__progress" cx="50" cy="50" r="45" pathLength="1"/>
+                </svg>
+            </div>
             <span class="throttle-char"></span>
         </div>
 

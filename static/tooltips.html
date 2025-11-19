@@ -244,7 +244,7 @@
 
 <!-- FOOTER -->
 
-    <!-- CONTROLLER HEARTBEAT -->
+    <!-- CONTROLLER HEARTBEAT 
     <article
         data-coach-for="#controller-heartbeat"
         data-coach-placement="top"
@@ -255,9 +255,9 @@
         <div class="coach-text">
             The Controller Heartbeat panel displays diagnostic feedback from the main control unit. It reports the frequency and continuity of system heartbeat messages — short periodic signals confirming that communication between the controller and onboard modules is active. The live text feed updates in real time and helps detect data latency, communication drops, or controller resets. “Waiting for data…” indicates that no valid heartbeat packets have been received within the expected interval. Consistent updates confirm that the control bus and software loop are functioning normally. Use this panel during debugging or system validation to ensure reliable signal exchange before engaging propulsion or mission controls.
         </div>
-    </article>
+    </article>-->
 
-    <!-- DEVICE HEARTBEATS -->
+    <!-- DEVICE HEARTBEATS 
     <article
         data-coach-for="#device-heartbeats"
         data-coach-placement="top"
@@ -268,9 +268,9 @@
         <div class="coach-text">
             The Device Heartbeats panel shows real-time status messages from all connected subsystems — sensors, actuators, and auxiliary modules. Each device transmits a short periodic signal (“heartbeat”) to confirm it is powered, online, and responding to control requests. The log updates continuously to reflect active communication across the network. If a device stops sending heartbeats, it will disappear from the feed, indicating a possible fault, power loss, or connection issue. “Waiting for data…” means that no heartbeats are currently being received. Use this panel during setup or troubleshooting to verify link integrity and identify unresponsive hardware before system activation.
         </div>
-    </article>
+    </article>-->
 
-    <!-- OPTIONS PANEL -->
+    <!-- OPTIONS PANEL 
     <article
         data-coach-for="#options-panel"
         data-coach-placement="top"
@@ -281,7 +281,27 @@
         <div class="coach-text">
             The Options Panel provides quick access to auxiliary controls and information tools. It includes four icons: Settings (edit configuration parameters), Help (open the interactive guidance overlay), Info (display system or mission details), and Exit (close the current modal or return to the main view). The text field above the icons shows active options or context-related status messages, such as applied filters or debug flags. “No options set” means that no optional modes are currently active. Use this panel to manage non-critical interface features without affecting core navigation or propulsion control.
         </div>
+    </article>-->
+
+
+
+
+
+    <!-- STATUS CONTENT -->
+    <article
+        data-coach-for=".status-content"
+        data-coach-placement="top"
+        data-coach-order="53"
+        data-coach-interact="false"
+        >
+        <div class="coach-title">Status Content</div>
+        <div class="coach-text">
+            The Status Content panel provides a live summary of vessel activity and communication state. The connection indicator on the left shows the current link status with the controller or remote host — blue when connected, and red when the link is lost. The status text displays mission identifiers, heading, speed, and operational messages such as “Buoy Release,” “Safety,” or “Designated.” This field updates automatically to reflect the latest telemetry and command acknowledgments. Use it to confirm active connection and monitor real-time vessel behavior without opening diagnostic windows.
+        </div>
     </article>
+
+
+
 
 
 
@@ -289,7 +309,7 @@
     <article
         data-coach-for='img[alt="Settings"]'
         data-coach-placement="top"
-        data-coach-order="53"
+        data-coach-order="54"
         data-coach-interact="false"
         >
         <div class="coach-title">Settings Icon</div>
@@ -302,7 +322,7 @@
     <article
         data-coach-for="#joystick-trigger"
         data-coach-placement="top"
-        data-coach-order="54"
+        data-coach-order="55"
         data-coach-interact="false"
         >
         <div class="coach-title">Joystick Settings Icon</div>
@@ -315,7 +335,7 @@
     <article
         data-coach-for="#help-trigger"
         data-coach-placement="top"
-        data-coach-order="55"
+        data-coach-order="56"
         data-coach-interact="false"
         >
         <div class="coach-title">Help Icon</div>
@@ -328,7 +348,7 @@
     <article
         data-coach-for="#info-trigger"
         data-coach-placement="top"
-        data-coach-order="56"
+        data-coach-order="57"
         data-coach-interact="false"
         >
         <div class="coach-title">Info Icon</div>
@@ -341,7 +361,7 @@
     <article
         data-coach-for='img[alt="Exit"]'
         data-coach-placement="top"
-        data-coach-order="57"
+        data-coach-order="58"
         data-coach-interact="false"
         >
         <div class="coach-title">Exit Icon</div>
@@ -350,18 +370,7 @@
         </div>
     </article>
 
-    <!-- STATUS CONTENT -->
-    <article
-        data-coach-for=".status-content"
-        data-coach-placement="top"
-        data-coach-order="58"
-        data-coach-interact="false"
-        >
-        <div class="coach-title">Status Content</div>
-        <div class="coach-text">
-            The Status Content panel provides a live summary of vessel activity and communication state. The connection indicator on the left shows the current link status with the controller or remote host — blue when connected, and red when the link is lost. The status text displays mission identifiers, heading, speed, and operational messages such as “Buoy Release,” “Safety,” or “Designated.” This field updates automatically to reflect the latest telemetry and command acknowledgments. Use it to confirm active connection and monitor real-time vessel behavior without opening diagnostic windows.
-        </div>
-    </article>
+
 
 
     
