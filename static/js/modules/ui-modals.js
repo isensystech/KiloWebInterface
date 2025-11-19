@@ -1,6 +1,6 @@
 import { gamepadControlState } from './gamepad-handler.js';
 
-const AP_MODE_VALUES = Object.freeze(['Manual', 'Hold', 'Auto', 'Loiter', 'Acro', 'RTH']);
+const AP_MODE_VALUES = Object.freeze(['Manual', 'Crewed', 'Hold', 'Auto', 'Loiter', 'Acro', 'RTH']);
 const AP_MODE_ALIASES = Object.freeze({ rtl: 'RTH' });
 
 function normalizeApMode(mode) {
@@ -86,7 +86,7 @@ export function initializeAPToggle() {
             
             if (window.ws && window.ws.readyState === WebSocket.OPEN) {
                 const message = {
-                    type: "mode.control",
+                    type: "apstatus.set",
                     mode: selectedMode
                 };
                 window.ws.send(JSON.stringify(message));
