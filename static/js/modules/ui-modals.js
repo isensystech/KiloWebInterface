@@ -1,6 +1,6 @@
 import { gamepadControlState } from './gamepad-handler.js';
 
-const AP_MODE_VALUES = Object.freeze(['Manual', 'Hold', 'Auto', 'Loiter', 'Acro', 'RTH']);
+const AP_MODE_VALUES = Object.freeze(['Manual', 'Crewed', 'Hold', 'Auto', 'Loiter', 'Acro', 'RTH']);
 const AP_MODE_ALIASES = Object.freeze({ rtl: 'RTH' });
 
 function normalizeApMode(mode) {
@@ -19,22 +19,15 @@ function normalizeApMode(mode) {
 // CONFIGURATION
 // ============================================================================
 const MODAL_CONFIG = Object.freeze({
-    // Delay between opening the info modal and replaying the GIF
-    infoStartDelayMs: 500,
-    // Fallback GIF length when no duration metadata exists
-    infoGifDurationFallbackMs: 4800,
-    // How early the SVG overlay begins fading in before GIF end
-    infoCrossfadeOverlapMs: 600,
-    // Crossfade transition duration for GIF/SVG layers
-    infoFadeMs: 600,
-    // Safety pad so the fade starts just before the theoretical GIF end
-    infoExtraTailMs: 120,
-    // Transparent data URI used so layout does not jump while GIF reloads
-    infoPlaceholderDataUri: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
-    // Geometry for the coach overlay tooltip + spotlight
-    coachTooltipGapPx: 32,
-    coachTooltipMarginPx: 12,
-    coachSpotlightPaddingPx: 16
+    infoStartDelayMs: 500, // ms between opening the info modal and replaying the GIF
+    infoGifDurationFallbackMs: 4800, // fallback GIF length when metadata is missing (ms)
+    infoCrossfadeOverlapMs: 600, // lead time before GIF end to start SVG fade (ms)
+    infoFadeMs: 600, // duration of the crossfade transition (ms)
+    infoExtraTailMs: 120, // buffer to ensure fade starts before GIF completes (ms)
+    infoPlaceholderDataUri: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=", // transparent placeholder image
+    coachTooltipGapPx: 32, // px gap between spotlight and tooltip card
+    coachTooltipMarginPx: 12, // px margin around tooltip container
+    coachSpotlightPaddingPx: 16 // px padding inside spotlight mask
 });
 
 // ============================================================================
@@ -93,7 +86,7 @@ export function initializeAPToggle() {
             
             if (window.ws && window.ws.readyState === WebSocket.OPEN) {
                 const message = {
-                    type: "mode.control",
+                    type: "apstatus.set",
                     mode: selectedMode
                 };
                 window.ws.send(JSON.stringify(message));

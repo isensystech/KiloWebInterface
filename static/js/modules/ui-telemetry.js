@@ -4,27 +4,28 @@
 // CONFIGURATION
 // ============================================================================
 const TELEMETRY_CONFIG = Object.freeze({
-  // Horizontal offset applied when safety block shifts beside the gauges
-  gaugeSafetySideOffsetPx: 12,
+  gaugeSafetySideOffsetPx: 12, // px offset applied when safety block docks beside gauges
   startLoader: {
-    // Duration of the circular fill animation
-    fillMs: 2000,
-    // Time allotted for the follow-up line animation
-    lineMs: 1000,
-    // Extra buffer before hiding the loader after animations finish
-    hideBufferMs: 150,
-    // Minimum time the overlay remains visible once triggered
-    overlayTimeoutMs: 1200
+    fillMs: 2000, // duration of the circular fill animation (ms)
+    lineMs: 1000, // duration of the line trace animation (ms)
+    hideBufferMs: 150, // buffer before hiding after animations finish (ms)
+    overlayTimeoutMs: 1200 // minimum time the overlay remains visible (ms)
   },
-  // How long status indicators stay visible after a healthy update
-  statusIndicatorHideTimeoutMs: 5000,
+  statusIndicatorHideTimeoutMs: 5000, // ms after last healthy update before we hide an indicator
   batteryGauge: {
-    // Voltage range mapped onto the gauge arc
-    minVoltage: 11.0,
-    maxVoltage: 14.5,
-    // Threshold at which the gauge flips into the warning style
-    lowVoltageThreshold: 12.0
-  }
+    minVoltage: 11.0, // lower bound of voltage range mapped to gauge (volts)
+    maxVoltage: 14.5, // upper bound of voltage range mapped to gauge (volts)
+    lowVoltageThreshold: 12.0 // voltage threshold that triggers warning styling (volts)
+  },
+  rpmGauge: Object.freeze({
+    redlinePercent: 90, // percent of max RPM that triggers the redline style
+    redlineColor: '#D0021B', // fill color while at/above redline
+    nominalColor: '#ffffff' // fill color while below redline
+  }),
+  relayGaugePrimary: Object.freeze({
+    bank: 10, // source bank ID mirrored onto the hero voltage gauge
+    stud: 6 // source stud ID mirrored onto the hero voltage gauge
+  })
 });
 
 // === Safety block smart placement ===
@@ -510,11 +511,8 @@ export function updateRpmGauge(rpm, percent) {
   const rpmGaugeFill = document.getElementById("rpm-gauge-fill");
   if (rpmGaugeFill) {
     rpmGaugeFill.style.width = `${percent}%`;
-    if (percent >= 90) {
-        rpmGaugeFill.style.backgroundColor = '#D0021B'; // Red
-    } else {
-        rpmGaugeFill.style.backgroundColor = '#ffffff'; // White
-    }
+    const { redlinePercent, redlineColor, nominalColor } = TELEMETRY_CONFIG.rpmGauge;
+    rpmGaugeFill.style.backgroundColor = percent >= redlinePercent ? redlineColor : nominalColor;
   }
 }
 
@@ -535,7 +533,7 @@ export function updateRelayVoltage(msg) {
   }
 
   // 2. Update the main battery gauge on the left panel
-  if (bank === 10 && stud === 6) {
+  if (bank === TELEMETRY_CONFIG.relayGaugePrimary.bank && stud === TELEMETRY_CONFIG.relayGaugePrimary.stud) {
     const gaugeCandidates = Array.from(document.querySelectorAll('#battery-gauge-10-6'));
     const gaugeEl = gaugeCandidates.find(el => !el.closest('#screensaverModal'));
     if (!gaugeEl) return;

@@ -44,13 +44,24 @@ import {
 // CONFIGURATION
 // ============================================================================
 const MAIN_CONFIG = Object.freeze({
-    // Pixel distance to scroll telemetry drawer per bumper press
+    // Pixel distance to scroll telemetry drawer per bumper press (50–400px keeps it usable)
     drawerScrollStepPx: 200,
-    // CSS scroll behavior for drawer movement
-    drawerScrollBehavior: 'smooth'
+    // CSS scroll behavior token applied to drawer scroll animations ('auto' or 'smooth')
+    drawerScrollBehavior: 'smooth',
+    // Milliseconds of inactivity before forcing the app back to the splash screen (range: 1–8 hr)
+    idleTimeoutMs: 8 * 60 * 60 * 1000,
+    // Label used anywhere we render the craft/vehicle name in overlays or modals
+    vehicleName: 'Kilo #2',
+    // Settings specific to the passive screensaver overlay
+    screensaver: Object.freeze({
+        // Delay before retrying the screensaver WebSocket connection (ms, keep >500)
+        reconnectDelayMs: 2000,
+        // Voltage bounds mapped onto the circular battery gauge (in volts)
+        engineBatteryVoltageRange: Object.freeze({ min: 10, max: 16 }),
+        // Percent bounds applied to the tank gauge (0–100% typical)
+        fuelPercentRange: Object.freeze({ min: 0, max: 100 })
+    })
 });
-
-const VEHICLE_NAME = 'Kilo #2';
 
 // ============================================================================
 // APPLICATION INITIALIZATION (MAIN ENTRY POINT)
@@ -272,8 +283,6 @@ const APP_STATES = Object.freeze({
     MAIN: 'MAIN'
 });
 
-const IDLE_TIMEOUT_MS = 3 * 60 * 1000;
-
 const sessionState = { authenticated: false, legalAck: false };
 let currentAppState = APP_STATES.SPLASH;
 let splashTransitionPending = false;
@@ -445,7 +454,7 @@ function recordUserActivity() {
 
 function resetIdleTimer() {
     clearIdleTimer();
-    idleTimerId = window.setTimeout(handleIdleTimeout, IDLE_TIMEOUT_MS);
+    idleTimerId = window.setTimeout(handleIdleTimeout, MAIN_CONFIG.idleTimeoutMs);
 }
 
 function clearIdleTimer() {
@@ -801,7 +810,7 @@ function initializeScreensaverSocket() {
             }
         };
         screensaverSocket.onclose = () => {
-            setTimeout(connect, 2000);
+            setTimeout(connect, MAIN_CONFIG.screensaver.reconnectDelayMs);
         };
         screensaverSocket.onerror = () => {
             try { screensaverSocket.close(); } catch (_) {}
@@ -816,20 +825,23 @@ function updateScreensaverGauges(data) {
     if (!modal) return;
 
     const titleEl = modal.querySelector('#ss-title');
-    if (titleEl) titleEl.textContent = VEHICLE_NAME;
+    if (titleEl) titleEl.textContent = MAIN_CONFIG.vehicleName;
 
     if (typeof data.engine_battery === 'number') {
         const voltageValue = modal.querySelector('#voltage-gauge-value');
         if (voltageValue) voltageValue.textContent = data.engine_battery.toFixed(1);
         const batteryGauge = modal.querySelector('#battery-gauge-10-6');
         if (batteryGauge) {
-            const percent = Math.max(0, Math.min(100, ((data.engine_battery - 10) / 6) * 100));
+            const { min: minV, max: maxV } = MAIN_CONFIG.screensaver.engineBatteryVoltageRange;
+            const span = Math.max(0.0001, maxV - minV);
+            const percent = Math.max(0, Math.min(100, ((data.engine_battery - minV) / span) * 100));
             batteryGauge.style.setProperty('--pct', `${percent.toFixed(0)}%`);
         }
     }
 
     if (typeof data.fuel_level === 'number') {
-        const clamped = Math.max(0, Math.min(100, data.fuel_level));
+        const { min: minFuel, max: maxFuel } = MAIN_CONFIG.screensaver.fuelPercentRange;
+        const clamped = Math.max(minFuel, Math.min(maxFuel, data.fuel_level));
         const fuelValue = modal.querySelector('#fuel-gauge-value');
         if (fuelValue) fuelValue.textContent = clamped.toFixed(0);
         const fuelUnit = modal.querySelector('#fuel-gauge-unit');
