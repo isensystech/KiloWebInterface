@@ -165,96 +165,99 @@
             <!-- BOAT -->
             <img class="boat-image" onclick="openTrimModal()" src="/static/images/kilo.svg" style="cursor: pointer;"/>
 
-            <!-- Rudder Angle Indicator -->
-            <div class="rudder-gauge">
-                <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    viewBox="70 60 150 60" 
-                    preserveAspectRatio="xMidYMid meet"
-                >
-                    <g fill="none" font-family="sans-serif" font-size="6" stroke-width="1" text-anchor="middle">
-                    <line stroke="#d32828" stroke-linecap="round" x1="88.9" x2="99.2" y1="78.6" y2="63.8" />
-                    <text fill="#757575" x="84.8" y="87.5">35</text>
-                    <line stroke="#d32828" x1="96.0" x2="105.0" y1="83.2" y2="67.6" />
-                    <text fill="#757575" x="92.4" y="92.4">30</text>
-                    <line stroke="#d32828" x1="103.4" x2="111.0" y1="87.0" y2="70.7" />
-                    <text fill="#757575" x="100.4" y="96.5">25</text>
-                    <line stroke="#d32828" x1="111.1" x2="117.4" y1="90.2" y2="73.3" />
-                    <text fill="#757575" x="108.7" y="100.0">20</text>
-                    <line stroke="#d32828" x1="119.2" x2="123.8" y1="92.8" y2="75.4" />
-                    <text fill="#757575" x="117.2" y="102.7">15</text>
-                    <line stroke="#d32828" x1="127.3" x2="130.4" y1="94.6" y2="76.8" />
-                    <text fill="#757575" x="126.1" y="104.6">10</text>
-                    <line stroke="#d32828" x1="135.6" x2="137.2" y1="95.6" y2="77.8" />
-                    <text fill="#757575" x="135.0" y="105.8">5</text>
-                    <line stroke="#ffffff" x1="144.0" x2="144.0" y1="96.0" y2="78.0" />
-                    <text fill="#757575" x="144.0" y="106.2">0</text>
-                    <line stroke="#00c800" x1="152.4" x2="150.8" y1="95.6" y2="77.8" />
-                    <text fill="#757575" x="153.0" y="105.8">5</text>
-                    <line stroke="#00c800" x1="160.7" x2="157.6" y1="94.6" y2="76.8" />
-                    <text fill="#757575" x="161.9" y="104.6">10</text>
-                    <line stroke="#00c800" x1="169.0" x2="164.2" y1="92.8" y2="75.4" />
-                    <text fill="#757575" x="171.0" y="102.7">15</text>
-                    <line stroke="#00c800" x1="176.9" x2="170.6" y1="90.2" y2="73.3" />
-                    <text fill="#757575" x="179.3" y="100.0">20</text>
-                    <line stroke="#00c800" x1="184.6" x2="177.0" y1="87.0" y2="70.7" />
-                    <text fill="#757575" x="187.6" y="96.5">25</text>
-                    <line stroke="#00c800" x1="192.0" x2="183.0" y1="83.2" y2="67.6" />
-                    <text fill="#757575" x="195.6" y="92.4">30</text>
-                    <line stroke="#00c800" x1="199.1" x2="188.8" y1="78.6" y2="63.8" />
-                    <text fill="#757575" x="203.2" y="87.5">35</text>
-                    </g>
+            <div class="group-container" id="rudder-trim-gauges">
+                <!-- Rudder Angle Indicator -->
+                <div class="rudder-gauge">
+                    <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="70 60 150 60" 
+                        preserveAspectRatio="xMidYMid meet"
+                    >
+                        <g fill="none" font-family="sans-serif" font-size="6" stroke-width="1" text-anchor="middle">
+                        <line stroke="#d32828" stroke-linecap="round" x1="88.9" x2="99.2" y1="78.6" y2="63.8" />
+                        <text fill="#757575" x="84.8" y="87.5">35</text>
+                        <line stroke="#d32828" x1="96.0" x2="105.0" y1="83.2" y2="67.6" />
+                        <text fill="#757575" x="92.4" y="92.4">30</text>
+                        <line stroke="#d32828" x1="103.4" x2="111.0" y1="87.0" y2="70.7" />
+                        <text fill="#757575" x="100.4" y="96.5">25</text>
+                        <line stroke="#d32828" x1="111.1" x2="117.4" y1="90.2" y2="73.3" />
+                        <text fill="#757575" x="108.7" y="100.0">20</text>
+                        <line stroke="#d32828" x1="119.2" x2="123.8" y1="92.8" y2="75.4" />
+                        <text fill="#757575" x="117.2" y="102.7">15</text>
+                        <line stroke="#d32828" x1="127.3" x2="130.4" y1="94.6" y2="76.8" />
+                        <text fill="#757575" x="126.1" y="104.6">10</text>
+                        <line stroke="#d32828" x1="135.6" x2="137.2" y1="95.6" y2="77.8" />
+                        <text fill="#757575" x="135.0" y="105.8">5</text>
+                        <line stroke="#ffffff" x1="144.0" x2="144.0" y1="96.0" y2="78.0" />
+                        <text fill="#757575" x="144.0" y="106.2">0</text>
+                        <line stroke="#00c800" x1="152.4" x2="150.8" y1="95.6" y2="77.8" />
+                        <text fill="#757575" x="153.0" y="105.8">5</text>
+                        <line stroke="#00c800" x1="160.7" x2="157.6" y1="94.6" y2="76.8" />
+                        <text fill="#757575" x="161.9" y="104.6">10</text>
+                        <line stroke="#00c800" x1="169.0" x2="164.2" y1="92.8" y2="75.4" />
+                        <text fill="#757575" x="171.0" y="102.7">15</text>
+                        <line stroke="#00c800" x1="176.9" x2="170.6" y1="90.2" y2="73.3" />
+                        <text fill="#757575" x="179.3" y="100.0">20</text>
+                        <line stroke="#00c800" x1="184.6" x2="177.0" y1="87.0" y2="70.7" />
+                        <text fill="#757575" x="187.6" y="96.5">25</text>
+                        <line stroke="#00c800" x1="192.0" x2="183.0" y1="83.2" y2="67.6" />
+                        <text fill="#757575" x="195.6" y="92.4">30</text>
+                        <line stroke="#00c800" x1="199.1" x2="188.8" y1="78.6" y2="63.8" />
+                        <text fill="#757575" x="203.2" y="87.5">35</text>
+                        </g>
 
-                    <text fill="#757575" font-size="6.6" font-weight="bold" x="80" y="114">PORT</text>
-                    <text fill="#757575" font-size="6.6" font-weight="bold" x="190" y="114">STBD</text>
+                        <text fill="#757575" font-size="6.6" font-weight="bold" x="80" y="114">PORT</text>
+                        <text fill="#757575" font-size="6.6" font-weight="bold" x="190" y="114">STBD</text>
 
-                    <g id="rudder-pointer" transform="rotate(0, 144, 40)">
-                    <line x1="144" y1="50" x2="144" y2="95" stroke="#ffffff" stroke-linecap="round" stroke-width="2.5" />
-                    </g>
-                </svg>
-            </div>
+                        <g id="rudder-pointer" transform="rotate(0, 144, 40)">
+                        <line x1="144" y1="50" x2="144" y2="95" stroke="#ffffff" stroke-linecap="round" stroke-width="2.5" />
+                        </g>
+                    </svg>
+                </div>
 
-            <!-- Rudder Angle INPUT -->
-            <div class="rudder-input-control">
-            <label for="rudder-input">Rudder Angle:</label>
-            <input
-                type="number"
-                id="rudder-input"
-                min="-35"
-                max="35"
-                value="0"
-                onchange="updateRudderFromInput()"
-            />
-            <span>°</span>
-            </div>
-            
-            <!-- BOAT // Rudder & Trim GAUGE row -->
-            <div class="boat-stats-row">
+                <!-- Rudder Angle INPUT -->
+                <div class="rudder-input-control">
+                <label for="rudder-input">Rudder Angle:</label>
+                <input
+                    type="number"
+                    id="rudder-input"
+                    min="-35"
+                    max="35"
+                    value="0"
+                    onchange="updateRudderFromInput()"
+                />
+                <span>°</span>
+                </div>
                 
-                <!-- Left: Rudder Angle -->
-                <div class="boat-stat" id="boat-rudder-stat" aria-label="Rudder angle">
+                <!-- BOAT // Rudder & Trim GAUGE row -->
+                <div class="boat-stats-row">
+                    
+                    <!-- Left: Rudder Angle -->
+                    <div class="boat-stat" id="boat-rudder-stat" aria-label="Rudder angle">
+                        <span class="boat-stat__icon" aria-hidden="true">
+                            <img src="/static/images/rudder-icon.svg" alt="" class="boat-icon">
+                        </span>
+                        <span class="boat-stat__value">
+                            <span id="rudder-angle-value">0</span><span class="deg">°</span>
+                        </span>
+                    </div>
+
+                    <!-- Right: Trim --> 
+                    <div class="boat-stat" id="boat-trim-stat" aria-label="Trim">
                     <span class="boat-stat__icon" aria-hidden="true">
-                        <img src="/static/images/rudder-icon.svg" alt="" class="boat-icon">
+                        <img src="/static/images/trim.svg" alt="" class="boat-icon">
                     </span>
                     <span class="boat-stat__value">
-                        <span id="rudder-angle-value">0</span><span class="deg">°</span>
+                        <span id="trim-value">0</span><span class="deg">°</span>
                     </span>
-                </div>
+                    </div>
 
-                <!-- Right: Trim --> 
-                <div class="boat-stat" id="boat-trim-stat" aria-label="Trim">
-                <span class="boat-stat__icon" aria-hidden="true">
-                    <img src="/static/images/trim.svg" alt="" class="boat-icon">
-                </span>
-                <span class="boat-stat__value">
-                    <span id="trim-value">0</span><span class="deg">°</span>
-                </span>
                 </div>
-
             </div>
 
-            
-	<!-- MODAL THROTTLE -->
+        </div>
+    
+	    <!-- MODAL THROTTLE -->
         <div class="throttle-wrapper" id="throttle-modal">
             <!-- Throttle Up Button -->
             <button class="throttle-button throttle-up">
@@ -303,11 +306,6 @@
             </button>
         </div>
 
-
-
-
-
-        </div>
 
         <!-- TRIM MODAL -->
         <!-- To close an editor -->
@@ -1048,7 +1046,7 @@
                         
                         <!-- Kill Engine button -->
                         <div class="drawer-button-block">
-                            <button class="big-drawer-button">
+                            <button class="big-drawer-button" id="kill-engine-button">
                                 <img class="button-icon" src="/static/images/engine.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill Engine</span>
                             </button>
