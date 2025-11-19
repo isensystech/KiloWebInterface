@@ -148,9 +148,11 @@ KiloWebInterface/
 - [x] Fix Engine button
 - [ ] Create zero "center" markers at 50% of power trim tabs sliders
 - [ ] Debrand "Kilo"
-- [ ] Improve Trim Tab & Gyroscope feedback modal
+- [x] Fix Active Helm and AP Stat logic
+- [x] Improve Trim Tab & Gyroscope feedback modal
 - [ ] Improve Anchor Control modal
-- [ ] Fix Payload contlols safety-caps opening
+- [x] Fix Payload contlols safety-caps opening
+- [ ] Fix Payload control buttons edit
 - [ ] Add Battery status dot path
 - [ ] Fill tooltips for 1-8 tabs drawer
 - [ ] Create a new PS dash error icon

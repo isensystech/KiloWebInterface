@@ -15,6 +15,31 @@ function normalizeApMode(mode) {
     return matched || trimmed;
 }
 
+// Attach a transient outside-click handler that closes a modal until the modal deactivates
+function queueOutsideDismiss(modalEl, triggerEl, getCurrentDetach, setDetach, onDismiss) {
+    if (!modalEl || typeof onDismiss !== 'function') return;
+    if (typeof getCurrentDetach === 'function') {
+        const existing = getCurrentDetach();
+        if (typeof existing === 'function') existing();
+    }
+
+    const handler = (event) => {
+        const target = event.target;
+        // Ignore if click is inside modal or on its trigger
+        if (modalEl.contains(target) || target === triggerEl) return;
+        onDismiss();
+    };
+
+    // Capture early so we catch clicks that might stop propagation later
+    document.addEventListener('mousedown', handler, true);
+    document.addEventListener('touchstart', handler, true);
+
+    setDetach(() => {
+        document.removeEventListener('mousedown', handler, true);
+        document.removeEventListener('touchstart', handler, true);
+    });
+}
+
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
@@ -37,6 +62,7 @@ export function initializeAPToggle() {
     const apToggleBtn = document.getElementById('ap-toggle');
     const apModal = document.getElementById('auto-pilot-modal');
     const apModeButtons = apModal?.querySelectorAll('.ap-mode-btn');
+    let detachOutsideListener = null;
     
     if (!apToggleBtn || !apModal) {
         console.warn('AP toggle elements not found');
@@ -47,12 +73,17 @@ export function initializeAPToggle() {
         apModal.removeAttribute('hidden');
         apModal.style.display = 'block';
         apModal.classList.add('is-open');
+        queueOutsideDismiss(apModal, apToggleBtn, () => detachOutsideListener, (cleanup) => { detachOutsideListener = cleanup; }, closeModal);
     };
 
     const closeModal = () => {
         apModal.setAttribute('hidden', '');
         apModal.style.display = 'none';
         apModal.classList.remove('is-open');
+        if (typeof detachOutsideListener === 'function') {
+            detachOutsideListener();
+            detachOutsideListener = null;
+        }
     };
     
     const updateApModeDisplay = (mode) => {
@@ -110,6 +141,7 @@ export function initializeHelmToggle() {
     const helmToggleBtn = document.getElementById('helm-toggle');
     const helmModal = document.getElementById('helm-modal');
     const helmDisplays = helmModal?.querySelectorAll('.helm-display');
+    let detachOutsideListener = null;
     
     if (!helmToggleBtn || !helmModal) {
         console.warn('Helm toggle elements not found');
@@ -120,12 +152,17 @@ export function initializeHelmToggle() {
         helmModal.removeAttribute('hidden');
         helmModal.style.display = 'block';
         helmModal.classList.add('is-open');
+        queueOutsideDismiss(helmModal, helmToggleBtn, () => detachOutsideListener, (cleanup) => { detachOutsideListener = cleanup; }, closeModal);
     };
 
     const closeModal = () => {
         helmModal.setAttribute('hidden', '');
         helmModal.style.display = 'none';
         helmModal.classList.remove('is-open');
+        if (typeof detachOutsideListener === 'function') {
+            detachOutsideListener();
+            detachOutsideListener = null;
+        }
     };
     
     helmToggleBtn.addEventListener('click', openModal);

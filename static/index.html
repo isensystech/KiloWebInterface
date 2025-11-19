@@ -346,8 +346,8 @@
                         <div class="trim-slider-overlay">
 
                             <div class="trim-labels">
-                                                        UP<br/><br/><br/><br/><br/><br/>
-                                                        15<br/>14<br/>13<br/>12<br/>11<br/>10<br/>9<br/>8<br/>7<br/>6<br/>5<br/>4<br/>3<br/>2<br/>1<br/>0<br/>
+                                            UP<br/><br/><br/><br/><br/><br/>
+                                            15<br/>14<br/>13<br/>12<br/>11<br/>10<br/>9<br/>8<br/>7<br/>6<br/>5<br/>4<br/>3<br/>2<br/>1<br/>0<br/>
                             </div>
 
                             <div class="trim-track-bg"></div>
@@ -2004,7 +2004,7 @@
             <div class="editor-modal-backdrop">
 
                 <div class="editor-modal-window">
-                    <h2 class="pane-title">Trim Tab Control & Gyroscope feedback</h2>
+                    <h2 class="pane-title">Trim Tab Control & Gyroscope</h2>
                     <div class="editor-modal-close" onclick="trimTabApplySettings()">✕</div>
                     <div class="trim-image-wrapper">
 
@@ -2019,28 +2019,34 @@
                             </div>
                         </div>
 
-                        <div class="trimtab-panel">
+                            <div class="trimtab-panel">
 
-                            <div class="trimtab-block" aria-label="Port">
-                                <div class="trimtab-slider-overlay" id="trimtab-port-slider" data-trimtab="port">
-                                    <button id="trimtab-port-up" class="throttle-button throttle-up" type="button" aria-label="Up"><span class="throttle-icon">▲</span></button>
+                                <div class="trimtab-block" aria-label="Port">
+                                    <div class="trimtab-slider-overlay" id="trimtab-port-slider" data-trimtab="port">
+                                        <div class="trimtab-labels">
+                                           14<br/> 13<br/>12<br/>11<br/>10<br/>9<br/>8<br/>7<br/>6<br/>5<br/>4<br/>3<br/>2<br/>1<br/>0
+                                        </div>
+                                        <button id="trimtab-port-up" class="throttle-button throttle-up" type="button" aria-label="Up"><span class="throttle-icon">▲</span></button>
 
-                                    <div class="trimtab-track-bg" id="trimtab-port-track"></div>
-                                    <div class="trimtab-track-fill" id="trimtab-port-fill"></div>
-                                    <div class="trimtab-thumb" id="trimtab-port-thumb"></div>
+                                        <div class="trimtab-track-bg" id="trimtab-port-track"></div>
+                                        <div class="trimtab-track-fill" id="trimtab-port-fill"></div>
+                                        <div class="trimtab-thumb" id="trimtab-port-thumb"></div>
 
                                     <button id="trimtab-port-down" class="throttle-button throttle-down" type="button" aria-label="Down"><span class="throttle-icon">▼</span></button>
                                 </div>
                                 <div class="trimtab-caption">PORT</div>
                             </div>
 
-                            <div class="trimtab-block" aria-label="Starboard">
-                                <div class="trimtab-slider-overlay" id="trimtab-starboard-slider" data-trimtab="starboard">
-                                    <button id="trimtab-starboard-up" class="throttle-button throttle-up" type="button" aria-label="Up"><span class="throttle-icon">▲</span></button>
+                                <div class="trimtab-block" aria-label="Starboard">
+                                    <div class="trimtab-slider-overlay" id="trimtab-starboard-slider" data-trimtab="starboard">
+                                        <div class="trimtab-labels">
+                                           14<br/> 13<br/>12<br/>11<br/>10<br/>9<br/>8<br/>7<br/>6<br/>5<br/>4<br/>3<br/>2<br/>1<br/>0
+                                        </div>
+                                        <button id="trimtab-starboard-up" class="throttle-button throttle-up" type="button" aria-label="Up"><span class="throttle-icon">▲</span></button>
 
-                                    <div class="trimtab-track-bg" id="trimtab-starboard-track"></div>
-                                    <div class="trimtab-track-fill" id="trimtab-starboard-fill"></div>
-                                    <div class="trimtab-thumb" id="trimtab-starboard-thumb"></div>
+                                        <div class="trimtab-track-bg" id="trimtab-starboard-track"></div>
+                                        <div class="trimtab-track-fill" id="trimtab-starboard-fill"></div>
+                                        <div class="trimtab-thumb" id="trimtab-starboard-thumb"></div>
 
                                     <button id="trimtab-starboard-down" class="throttle-button throttle-down" type="button" aria-label="Down"><span class="throttle-icon">▼</span></button>
                                 </div>
@@ -2067,20 +2073,20 @@
                     <div class="trim-image-wrapper">
                         <img alt="KILO" class="anchor-boat-image" src="/static/images/kilo-half-anchor.svg"/>
 
-                        <div class="anchor-slider-overlay">
+                            <div class="anchor-slider-overlay">
 
-                            <button id="anchor-throttle-up" class="throttle-button throttle-up" type="button" aria-label="Anchor up">
-                                <span class="throttle-icon">▲</span>
-                            </button>
+                                <button id="anchor-throttle-up" class="throttle-button throttle-up" type="button" aria-label="Anchor up">
+                                    <span class="throttle-icon">▲</span>
+                                </button>
 
-                            <div class="anchor-labels">
-                                Up<br/><br/>
-                                0<br/>5<br/>10<br/>15<br/>20<br/>25<br/>30<br/>35<br/>40<br/>45<br/>50<br/>55<br/>60<br/>65<br/>70<br/>75<br/>80<br/>85<br/>90<br/>95<br/>100<br/><br/>
-                            </div>
+                                <div class="anchor-labels">
+                                    Up<br/><br/>
+                                    10<br/>9<br/>8<br/>7<br/>6<br/>5<br/>4<br/>3<br/>2<br/>1<br/>0
+                                </div>
 
-                            <div class="anchor-track-bg"></div>
-                            <div class="anchor-track-fill" id="anchor-fill"></div>
-                            <div class="anchor-thumb" id="anchor-thumb"></div>
+                                <div class="anchor-track-bg"></div>
+                                <div class="anchor-track-fill" id="anchor-fill"></div>
+                                <div class="anchor-thumb" id="anchor-thumb"></div>
 
                             <div class="anchor-readout" id="anchor-readout">1</div>
                             <div class="anchor-slider-wrapper"></div>
