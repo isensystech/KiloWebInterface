@@ -139,7 +139,7 @@ KiloWebInterface/
 - [x] Inroduce Gear datapoint in WS message.
 - [x] Fix screensave default values
 - [ ] Joystick dash icon should start in red
-- [ ] Add "Crewed" mode to AP Modes 
+- [x] "Crewed" mode to AP Modes 
 
 ```
 ### To-Do Frontend MVP
