@@ -1041,7 +1041,7 @@ function initializeAnchorSlider() {
 // ============================================================================
 
 /* Config: external tooltip document */
-const COACH_DATA_URL = 'tooltips.html';
+const COACH_DATA_URL = '/static/tooltips.html';
 
 /* State */
 let TOUR_STEPS = [];          // populated from tooltips.html
