@@ -380,6 +380,16 @@ export function getThrottleGearState() {
     return getDisplayedThrottleGear();
 }
 
+function triggerThrottleIndicatorRing(indicator) {
+    const ring = indicator?.querySelector('.throttle-ring');
+    if (!ring) return;
+    ring.classList.remove('animate');
+    // force reflow to restart animation
+    void ring.offsetWidth;
+    ring.classList.add('animate');
+    ring.addEventListener('animationend', () => ring.classList.remove('animate'), { once: true });
+}
+
 function showGearPopup(gear) {
     const indicator = document.getElementById('throttle-indicator');
     const indicatorText = indicator?.querySelector('.throttle-char');
@@ -389,6 +399,7 @@ function showGearPopup(gear) {
     indicatorText.textContent = gear;
     indicator.style.opacity = '';
     indicator.classList.add('show');
+    triggerThrottleIndicatorRing(indicator);
     setTimeout(() => indicator.classList.remove('show'), GAMEPAD_CONFIG.gearPopupDurationMs);
 }
 
@@ -401,6 +412,7 @@ function renderGearShiftProgress(gear, progress) {
     indicatorText.textContent = gear;
     indicator.classList.add('show');
     indicator.style.opacity = `${clamp(progress, 0, 1)}`;
+    triggerThrottleIndicatorRing(indicator);
 }
 
 function clearGearShiftProgress() {
