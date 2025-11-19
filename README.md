@@ -144,7 +144,7 @@ KiloWebInterface/
 ```
 ### To-Do Frontend
 - [ ] Make Gear Popups with progress bar
-- [ ] Fix Engine button
+- [x] Fix Engine button
 - [ ] Improve Trim Tab & Gyroscope feedback modal
 - [ ] Improve Anchor Control modal
 - [ ] Fix Payload contlols safety-caps opening
