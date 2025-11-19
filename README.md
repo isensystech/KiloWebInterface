@@ -121,7 +121,7 @@ KiloWebInterface/
 ### Roadmap
 
 - [ ] Persist tab/screen state across reloads (```localStorage```)
-- [ ] Wire M20 control surface to backend
+- [x] Wire M20 control surface to backend
 - [x] Wire EGES control surface to backend
 - [x] Add MAVLink telemetry & basic commands (arm/disarm, mode, go-to)
 - [x] Add Dometic drive controls & indicators
@@ -143,7 +143,8 @@ KiloWebInterface/
 
 ```
 ### To-Do Frontend MVP
-- [ ] Rework id="debug-panel" 
+- [ ] Rework id="debug-panel"
+- [ ] Debrand Nompanion off "Kilo" 
 - [ ] Make Gear Popups with progress bar
 - [x] Fix Engine button
 - [ ] Improve Trim Tab & Gyroscope feedback modal
