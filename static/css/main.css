@@ -3846,6 +3846,7 @@
             align-items: flex-end;
             justify-content: center;
             width: 100%;
+            transform: translateY(-18px);
             }
 
             #trimtab-modal-container .trimtab-block { width: 90px; }
@@ -3897,9 +3898,9 @@
             position:absolute;
             left:38px;
             width:28px;
-            height:26px;
+            height:16px;
             transform:translateY(-50%);
-            border-radius:8px;
+            border-radius:4px;
             background:linear-gradient(0deg, var(--button-active) 0%, var(--button-inactive) 100%);
             cursor:grab;
             z-index:2;
@@ -3922,7 +3923,7 @@
             #trimtab-modal-container .trimtab-slider-overlay .throttle-down { bottom:-20px; }
 
             #trimtab-modal-container .trimtab-caption {
-            margin-top:32px;
+            margin-bottom:28px;
             text-align:center;
             color:#dadada;
             font: var(--type-caption-regular);

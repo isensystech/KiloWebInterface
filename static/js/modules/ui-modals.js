@@ -787,9 +787,9 @@ function initializeTrimtabSliders() {
 
     const STEP = 5;
     const clampValue = (value) => Math.max(-100, Math.min(100, Math.round(value ?? 0)));
-    const clampPct = (pct) => Math.max(0, Math.min(100, pct));
-    const pctFromValue = (value) => clampPct(50 - clampValue(value) / 2);
-    const valueFromPct = (pct) => clampValue((50 - pct) * 2);
+        const clampPct = (pct) => Math.max(0, Math.min(100, pct));
+        const pctFromValue = (value) => clampPct(50 - clampValue(value) / 2);
+        const valueFromPct = (pct) => clampValue((50 - pct) * 2);
     const registerSetter = (side, setter) => {
         window.__kiloTrimtabSetters = window.__kiloTrimtabSetters || {};
         window.__kiloTrimtabSetters[side] = setter;
@@ -805,13 +805,19 @@ function initializeTrimtabSliders() {
         const stateKey = trimSide === 'starboard' ? 'starboard_trim' : 'port_trim';
         if (!track || !fill || !thumb) return;
 
-        fill.style.top = '0';
+        fill.style.top = '50%';
         fill.style.bottom = 'auto';
+        fill.style.height = '0';
 
         const applyFromTopPct = (pct, opts = {}) => {
             const clamped = clampPct(pct);
             thumb.style.top = clamped + '%';
-            fill.style.height = clamped + '%';
+            const distance = Math.abs(50 - clamped);
+            const start = Math.min(clamped, 50);
+            fill.style.top = `${start}%`;
+            fill.style.height = `${distance}%`;
+            fill.classList.toggle('fill-up', clamped < 50);
+            fill.classList.toggle('fill-down', clamped > 50);
             if (!opts.silent) {
                 const value = valueFromPct(clamped);
                 if (gamepadControlState[stateKey] !== value) {
