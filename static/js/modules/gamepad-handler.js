@@ -524,16 +524,32 @@ function pollGamepad() {
     processSteeringAxis(rightStickX, deltaMs);
     lastSteeringAxis = rightStickX;
 
-    if (gamepad.buttons[12].pressed) {
+    if (gamepad.buttons[5].pressed) {
         gamepadControlState.engine_trim = Math.min(100, gamepadControlState.engine_trim + GAMEPAD_CONFIG.trimRate);
         updateEngineTrimUI(gamepadControlState.engine_trim);
         showTrimModal();
     }
 
-    if (gamepad.buttons[13].pressed) {
+    if (gamepad.buttons[7].pressed) {
         gamepadControlState.engine_trim = Math.max(0, gamepadControlState.engine_trim - GAMEPAD_CONFIG.trimRate);
         updateEngineTrimUI(gamepadControlState.engine_trim);
         showTrimModal();
+    }
+
+    if (gamepad.buttons[12].pressed) {
+        updateListingUI(
+            gamepadControlState.port_trim + GAMEPAD_CONFIG.listingRate,
+            gamepadControlState.starboard_trim + GAMEPAD_CONFIG.listingRate
+        );
+        showListingModal();
+    }
+
+    if (gamepad.buttons[13].pressed) {
+        updateListingUI(
+            gamepadControlState.port_trim - GAMEPAD_CONFIG.listingRate,
+            gamepadControlState.starboard_trim - GAMEPAD_CONFIG.listingRate
+        );
+        showListingModal();
     }
 
     if (gamepad.buttons[14].pressed) {
@@ -963,8 +979,8 @@ function showTrimModal() {
 let listingModalTimeout = null;
 
 function showListingModal() {
-    const backdrop = document.getElementById('listing-modal-backdrop');
-    const container = document.getElementById('listing-modal-container');
+    const backdrop = document.getElementById('trimtab-modal-backdrop');
+    const container = document.getElementById('trimtab-modal-container');
     if (backdrop && container) {
         backdrop.style.display = 'block';
         container.style.display = 'block';
