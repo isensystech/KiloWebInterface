@@ -146,6 +146,8 @@ KiloWebInterface/
 - [x] Rework id="debug-panel" 
 - [x] Make Gear Popups with progress bar
 - [x] Fix Engine button
+- [ ] Create zero "center" markers at 50% of power trim tabs sliders
+- [ ] Debrand "Kilo"
 - [ ] Improve Trim Tab & Gyroscope feedback modal
 - [ ] Improve Anchor Control modal
 - [ ] Fix Payload contlols safety-caps opening
