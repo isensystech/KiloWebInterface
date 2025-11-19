@@ -272,7 +272,7 @@ const APP_STATES = Object.freeze({
     MAIN: 'MAIN'
 });
 
-const IDLE_TIMEOUT_MS = 3 * 60 * 1000;
+const IDLE_TIMEOUT_MS = 8 * 60 * 60 * 1000;
 
 const sessionState = { authenticated: false, legalAck: false };
 let currentAppState = APP_STATES.SPLASH;
