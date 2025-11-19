@@ -142,30 +142,30 @@ KiloWebInterface/
 - [ ] Add "Crewed" mode to AP Modes 
 
 ```
-### To-Do Frontend
+### To-Do Frontend MVP
+- [ ] Rework id="debug-panel" 
 - [ ] Make Gear Popups with progress bar
-- [ ] Fix Engine button
+- [x] Fix Engine button
 - [ ] Improve Trim Tab & Gyroscope feedback modal
 - [ ] Improve Anchor Control modal
 - [ ] Fix Payload contlols safety-caps opening
 - [ ] Add Battery status dot path
 - [ ] Fill tooltips for 1-8 tabs drawer
 - [ ] Create a new PS dash error icon
-- [ ] Unify classes and name it with ID
+- [ ] Add meaning to carousel-titles
+- [ ] Make minimal size 1366 x 768, check other resolutions
+- [ ] Adapt to keyboard
+
+
+```
+### To-Do Frontend 
 - [ ] Unify fonts
 - [ ] Unify colors
+- [ ] Adapt to tablet THIS IS NOT NEEDED!!!!!
+- [ ] Unify classes and name it with ID
 - [ ] Configure and unify all hover functions
 - [ ] Configure all modals correctly and unify it
 - [ ] Configure all modal-backdrops correctly and unify it
 - [ ] Unify all objects (buttons, titles, sliders, displays, ect.)
 - [ ] Configure animation in legal-modal, add kilo-logo.svg
-- [ ] Add meaning to carousel-titles
-- [ ] Make minimal size 1366 x 768, check other resolutions
-- [ ] Adapt to tablet
-- [ ] Adapt to keyboard
 - [ ] Repaint the central boat picture
-
-
-
-
-
