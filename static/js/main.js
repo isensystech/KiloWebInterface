@@ -44,13 +44,24 @@ import {
 // CONFIGURATION
 // ============================================================================
 const MAIN_CONFIG = Object.freeze({
-    // Pixel distance to scroll telemetry drawer per bumper press
+    // Pixel distance to scroll telemetry drawer per bumper press (50–400px keeps it usable)
     drawerScrollStepPx: 200,
-    // CSS scroll behavior for drawer movement
-    drawerScrollBehavior: 'smooth'
+    // CSS scroll behavior token applied to drawer scroll animations ('auto' or 'smooth')
+    drawerScrollBehavior: 'smooth',
+    // Milliseconds of inactivity before forcing the app back to the splash screen (range: 1–8 hr)
+    idleTimeoutMs: 8 * 60 * 60 * 1000,
+    // Label used anywhere we render the craft/vehicle name in overlays or modals
+    vehicleName: 'Kilo #2',
+    // Settings specific to the passive screensaver overlay
+    screensaver: Object.freeze({
+        // Delay before retrying the screensaver WebSocket connection (ms, keep >500)
+        reconnectDelayMs: 2000,
+        // Voltage bounds mapped onto the circular battery gauge (in volts)
+        engineBatteryVoltageRange: Object.freeze({ min: 10, max: 16 }),
+        // Percent bounds applied to the tank gauge (0–100% typical)
+        fuelPercentRange: Object.freeze({ min: 0, max: 100 })
+    })
 });
-
-const VEHICLE_NAME = 'Kilo #2';
 
 // ============================================================================
 // APPLICATION INITIALIZATION (MAIN ENTRY POINT)
@@ -445,7 +456,7 @@ function recordUserActivity() {
 
 function resetIdleTimer() {
     clearIdleTimer();
-    idleTimerId = window.setTimeout(handleIdleTimeout, IDLE_TIMEOUT_MS);
+    idleTimerId = window.setTimeout(handleIdleTimeout, MAIN_CONFIG.idleTimeoutMs);
 }
 
 function clearIdleTimer() {
@@ -527,6 +538,8 @@ function createKeypadController(onSubmit, onCancel) {
     const dialog = modal.querySelector('.passcode-dialog');
     const helper = modal.querySelector('#pc-helper');
     const PASSCODE_LENGTH = 4;
+    const supportsPointer = typeof window !== 'undefined' && 'PointerEvent' in window;
+    const pointerEventName = supportsPointer ? 'pointerdown' : 'touchstart';
     let code = '';
     let active = false;
     let submitting = false;
@@ -575,15 +588,15 @@ function createKeypadController(onSubmit, onCancel) {
         }
     }
 
-    function handleClick(event) {
-        const target = event.target;
-        if (target?.hasAttribute?.('data-pc-close')) {
+    function processInteraction(target) {
+        if (!target) return false;
+        if (target.hasAttribute?.('data-pc-close')) {
             onCancel();
-            return;
+            return true;
         }
 
         const key = target.closest?.('.pc-key');
-        if (!key || submitting) return;
+        if (!key || submitting) return false;
 
         const action = key.getAttribute('data-action');
         const digit = key.getAttribute('data-key');
@@ -592,20 +605,51 @@ function createKeypadController(onSubmit, onCancel) {
             code = '';
             renderDots();
             setHelper('');
-            return;
+            return true;
         }
 
         if (action === 'enter') {
             submitCode();
-            return;
+            return true;
         }
 
         if (digit != null) {
-            if (code.length >= PASSCODE_LENGTH) return;
+            if (code.length >= PASSCODE_LENGTH) return true;
             code += digit;
             renderDots();
             setHelper('');
+            return true;
         }
+
+        return false;
+    }
+
+    function suppressNextClick(element) {
+        if (!element) return;
+        const once = (evt) => {
+            evt.preventDefault();
+            evt.stopPropagation();
+        };
+        element.addEventListener('click', once, { capture: true, once: true });
+    }
+
+    function handlePointerDown(event) {
+        if (!active) return;
+        const target = event.target;
+        const consumed = processInteraction(target);
+        if (!consumed) return;
+
+        if (event.type === 'touchstart' || event.pointerType === 'touch' || event.pointerType === 'pen') {
+            event.preventDefault();
+        }
+        const interactive = target.closest?.('[data-pc-close], .pc-key') || target;
+        suppressNextClick(interactive);
+    }
+
+    function handleClick(event) {
+        // Allow keyboard activation (detail === 0) but skip pointer-triggered clicks.
+        if (event.detail > 0) return;
+        processInteraction(event.target);
     }
 
     function handleKeydown(event) {
@@ -656,6 +700,7 @@ function createKeypadController(onSubmit, onCancel) {
             modal.setAttribute('aria-hidden', 'false');
             dialog?.setAttribute('tabindex', '-1');
             dialog?.focus({ preventScroll: true });
+            modal.addEventListener(pointerEventName, handlePointerDown, { passive: false });
             modal.addEventListener('click', handleClick);
             document.addEventListener('keydown', handleKeydown);
             document.addEventListener('focus', trapFocus, true);
@@ -667,6 +712,7 @@ function createKeypadController(onSubmit, onCancel) {
                 try { document.activeElement.blur(); } catch (_) {}
             }
             modal.setAttribute('aria-hidden', 'true');
+            modal.removeEventListener(pointerEventName, handlePointerDown);
             modal.removeEventListener('click', handleClick);
             document.removeEventListener('keydown', handleKeydown);
             document.removeEventListener('focus', trapFocus, true);
@@ -766,7 +812,7 @@ function initializeScreensaverSocket() {
             }
         };
         screensaverSocket.onclose = () => {
-            setTimeout(connect, 2000);
+            setTimeout(connect, MAIN_CONFIG.screensaver.reconnectDelayMs);
         };
         screensaverSocket.onerror = () => {
             try { screensaverSocket.close(); } catch (_) {}
@@ -781,20 +827,23 @@ function updateScreensaverGauges(data) {
     if (!modal) return;
 
     const titleEl = modal.querySelector('#ss-title');
-    if (titleEl) titleEl.textContent = VEHICLE_NAME;
+    if (titleEl) titleEl.textContent = MAIN_CONFIG.vehicleName;
 
     if (typeof data.engine_battery === 'number') {
         const voltageValue = modal.querySelector('#voltage-gauge-value');
         if (voltageValue) voltageValue.textContent = data.engine_battery.toFixed(1);
         const batteryGauge = modal.querySelector('#battery-gauge-10-6');
         if (batteryGauge) {
-            const percent = Math.max(0, Math.min(100, ((data.engine_battery - 10) / 6) * 100));
+            const { min: minV, max: maxV } = MAIN_CONFIG.screensaver.engineBatteryVoltageRange;
+            const span = Math.max(0.0001, maxV - minV);
+            const percent = Math.max(0, Math.min(100, ((data.engine_battery - minV) / span) * 100));
             batteryGauge.style.setProperty('--pct', `${percent.toFixed(0)}%`);
         }
     }
 
     if (typeof data.fuel_level === 'number') {
-        const clamped = Math.max(0, Math.min(100, data.fuel_level));
+        const { min: minFuel, max: maxFuel } = MAIN_CONFIG.screensaver.fuelPercentRange;
+        const clamped = Math.max(minFuel, Math.min(maxFuel, data.fuel_level));
         const fuelValue = modal.querySelector('#fuel-gauge-value');
         if (fuelValue) fuelValue.textContent = clamped.toFixed(0);
         const fuelUnit = modal.querySelector('#fuel-gauge-unit');

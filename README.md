@@ -124,18 +124,48 @@ KiloWebInterface/
 - [ ] Wire M20 control surface to backend
 - [x] Wire EGES control surface to backend
 - [x] Add MAVLink telemetry & basic commands (arm/disarm, mode, go-to)
-- [ ] Add Dometic drive controls & indicators
+- [x] Add Dometic drive controls & indicators
 - [x] Add OXE engine controls & gauges
 - [x] Introduce a mock backend and “Demo Mode” for UI-only testing
 - [x] Basic auth/session for protected controls
 - [ ] Packaging for deployment on a Raspberry Pi or container
-
+- [ ] Collective Power Trim Tab Joystick binding
 
 ```
-### To_do
+### To_do backend
 - [ ] Fix slow login screen.
 - [ ] Fix Steering gauge to -30 to +30
 - [x] Introduce "Springy", "Pilot hold" control schema
 - [x] Inroduce Gear datapoint in WS message.
 - [x] Fix screensave default values
-- [ ] 
+- [ ] Joystick dash icon should start in red
+- [x] "Crewed" mode to AP Modes 
+
+```
+### To-Do Frontend MVP
+- [ ] Rework id="debug-panel" 
+- [ ] Make Gear Popups with progress bar
+- [x] Fix Engine button
+- [ ] Improve Trim Tab & Gyroscope feedback modal
+- [ ] Improve Anchor Control modal
+- [ ] Fix Payload contlols safety-caps opening
+- [ ] Add Battery status dot path
+- [ ] Fill tooltips for 1-8 tabs drawer
+- [ ] Create a new PS dash error icon
+- [ ] Add meaning to carousel-titles
+- [ ] Make minimal size 1366 x 768, check other resolutions
+- [ ] Adapt to keyboard
+
+
+```
+### To-Do Frontend 
+- [ ] Unify fonts
+- [ ] Unify colors
+- [ ] Adapt to tablet THIS IS NOT NEEDED!!!!!
+- [ ] Unify classes and name it with ID
+- [ ] Configure and unify all hover functions
+- [ ] Configure all modals correctly and unify it
+- [ ] Configure all modal-backdrops correctly and unify it
+- [ ] Unify all objects (buttons, titles, sliders, displays, ect.)
+- [ ] Configure animation in legal-modal, add kilo-logo.svg
+- [ ] Repaint the central boat picture

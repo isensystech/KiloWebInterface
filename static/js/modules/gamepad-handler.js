@@ -6,24 +6,32 @@
 // CONFIGURATION
 // ============================================================================
 const GAMEPAD_CONFIG = Object.freeze({
-    gearNeutralBand: { min: -10, max: 10 },
-    gearReleaseDeadzone: 0.05,
-    deadzone: 0.15,
-    throttleSensitivity: 2.5,
-    steeringSensitivity: 3.0,
-    trimRate: 1,
-    listingRate: 1,
-    watchdogTimeoutMs: 3000,
-    joystickIndicatorHideMs: 3000,
-    gearPopupDurationMs: 500,
+    gearNeutralBand: { min: -10, max: 10 }, // throttle percent treated as neutral (-100 to 100)
+    gearReleaseDeadzone: 0.05, // normalized axis magnitude needed to unlock pilot-hold (0–1)
+    deadzone: 0.15, // normalized axis deadband for noisy sticks (0–1)
+    throttleSensitivity: 2.5, // multiplier applied to throttle axis deltas
+    steeringSensitivity: 3.0, // multiplier applied to steering axis deltas
+    trimRate: 1, // percent-per-frame change when adjusting engine trim
+    listingRate: 1, // percent-per-frame change when adjusting listing trim
+    throttleVisualHalfPercent: 47.5, // percent span from neutral to track edge in the throttle UI
+    throttleNeutralPercent: 50, // percent offset that represents the neutral point visually
+    watchdogTimeoutMs: 3000, // max gap between controller samples before showing warning (ms)
+    joystickIndicatorHideMs: 3000, // how long to show the joystick toast after connect (ms)
+    gearPopupDurationMs: 500, // duration of the gear overlay animation (ms)
     vibration: {
-        durationMs: 200,
-        weakMagnitude: 0.5,
-        strongMagnitude: 0.5
+        durationMs: 200, // rumble duration (ms)
+        weakMagnitude: 0.5, // weak-rumble strength (0–1)
+        strongMagnitude: 0.5 // strong-rumble strength (0–1)
     },
-    throttleCollapseDelayMs: 1000,
-    trimModalTimeoutMs: 1500,
-    listingModalTimeoutMs: 500
+    throttleCollapseDelayMs: 1000, // idle time before auto-collapsing the throttle detail (ms)
+    trimModalTimeoutMs: 1500, // inactivity timeout for the trim modal (ms)
+    listingModalTimeoutMs: 500, // inactivity timeout for the listing modal (ms)
+    axisRampMinPercentPerFrame: 0.5, // minimum percent change applied per frame when easing sticks
+    pollFallbackDeltaMs: 16, // delta-time fallback (ms) when no previous poll timestamp exists
+    rudderMaxDegrees: 35, // visual rudder deflection range in degrees
+    statUpdateBlipMs: 300, // duration the telemetry stat highlight remains visible (ms)
+    trimIndicatorBaseDeg: -15, // trim indicator baseline angle (deg)
+    trimIndicatorSpanDeg: 30 // trim indicator arc sweep (deg)
 });
 
 const JOYSTICK_PREFS_STORAGE_KEY = 'joystickPrefs';
@@ -232,7 +240,7 @@ function formatAxisValue(value) {
 function getAxisRampDelta(axis, deltaMs) {
     const rampMs = AXIS_RAMP_MS[axis];
     if (!rampMs || rampMs <= 0 || !deltaMs) return Infinity;
-    return Math.max(0.5, (deltaMs / rampMs) * 100);
+    return Math.max(GAMEPAD_CONFIG.axisRampMinPercentPerFrame, (deltaMs / rampMs) * 100);
 }
 
 function applySpringyCommand(axis, desiredValue, deltaMs) {
@@ -487,7 +495,9 @@ function pollGamepad() {
     }
 
     const nowPerf = typeof performance !== 'undefined' ? performance.now() : Date.now();
-    const deltaMs = lastPollTimestamp === null ? 16 : Math.max(1, nowPerf - lastPollTimestamp);
+    const deltaMs = lastPollTimestamp === null
+        ? GAMEPAD_CONFIG.pollFallbackDeltaMs
+        : Math.max(1, nowPerf - lastPollTimestamp);
     lastPollTimestamp = nowPerf;
     lastGamepadActivity = Date.now();
 
@@ -771,14 +781,13 @@ export function updateThrottleUI(throttle) {
     const gearFill = document.getElementById('gear-fill');
     if (gearFill) {
         const visualPercent = displayThrottle / 100;
-        const VISUAL_HALF = 47.5;
-        const visualOffset = visualPercent * VISUAL_HALF;
+        const visualOffset = visualPercent * GAMEPAD_CONFIG.throttleVisualHalfPercent;
         gearFill.style.height = `${Math.abs(visualOffset)}%`;
         if (visualOffset > 0) {
-            gearFill.style.bottom = '50%';
+            gearFill.style.bottom = `${GAMEPAD_CONFIG.throttleNeutralPercent}%`;
             gearFill.style.top = 'auto';
         } else {
-            gearFill.style.top = '50%';
+            gearFill.style.top = `${GAMEPAD_CONFIG.throttleNeutralPercent}%`;
             gearFill.style.bottom = 'auto';
         }
     }
@@ -786,9 +795,8 @@ export function updateThrottleUI(throttle) {
     const gearThumb = document.querySelector('.gear-thumb');
     if (gearThumb) {
         const visualPercent = displayThrottle / 100;
-        const VISUAL_HALF = 47.5;
-        const visualOffset = visualPercent * VISUAL_HALF;
-        const thumbPos = 50 + visualOffset;
+        const visualOffset = visualPercent * GAMEPAD_CONFIG.throttleVisualHalfPercent;
+        const thumbPos = GAMEPAD_CONFIG.throttleNeutralPercent + visualOffset;
         gearThumb.style.bottom = `${thumbPos}%`;
     }
 
@@ -834,7 +842,7 @@ function getThrottleDisplayValue(throttle) {
 }
 
 export function updateSteeringUI(steering) {
-    const degrees = (steering / 100) * 35;
+    const degrees = (steering / 100) * GAMEPAD_CONFIG.rudderMaxDegrees;
     const rudderPointer = document.getElementById('rudder-pointer');
     if (rudderPointer) {
         const visualAngle = -degrees;
@@ -852,7 +860,7 @@ export function updateSteeringUI(steering) {
         const boatStat = document.getElementById('boat-rudder-stat');
         if (boatStat) {
             boatStat.classList.add('updating');
-            setTimeout(() => boatStat.classList.remove('updating'), 300);
+            setTimeout(() => boatStat.classList.remove('updating'), GAMEPAD_CONFIG.statUpdateBlipMs);
         }
     }
 
@@ -868,7 +876,7 @@ export function updateEngineTrimUI(trim) {
         const boatStat = document.getElementById('boat-trim-stat');
         if (boatStat) {
             boatStat.classList.add('updating');
-            setTimeout(() => boatStat.classList.remove('updating'), 300);
+            setTimeout(() => boatStat.classList.remove('updating'), GAMEPAD_CONFIG.statUpdateBlipMs);
         }
     }
 
@@ -896,9 +904,9 @@ export function updateEngineTrimUI(trim) {
 
     const trimPointer = document.querySelector('.trim-pointer-img');
     if (trimPointer) {
-        const BASE = -15;
-        const SPAN = 30;
-        const rotation = BASE + SPAN - (trimValue / 100) * SPAN;
+        const base = GAMEPAD_CONFIG.trimIndicatorBaseDeg;
+        const span = GAMEPAD_CONFIG.trimIndicatorSpanDeg;
+        const rotation = base + span - (trimValue / 100) * span;
         trimPointer.style.transform = `rotate(${rotation}deg)`;
     }
 }

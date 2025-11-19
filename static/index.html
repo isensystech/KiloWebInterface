@@ -63,7 +63,7 @@
                 &nbsp; &nbsp; &nbsp;         <!-- SPASE -->
 
                 <div class="info-item" id="coordinate-values">
-                    <span class="info-icon " aria-hidden="true"><img src="images/coordinates-icon.svg" alt=""></span>
+                    <span class="info-icon " aria-hidden="true"><img src="/static/images/coordinates-icon.svg" alt=""></span>
                     <span class="info-unit">LAT</span>
                     <span id="gps_lat_deg" class="info-value">0.000000</span>
                         &nbsp;         <!-- SPASE -->
@@ -165,96 +165,99 @@
             <!-- BOAT -->
             <img class="boat-image" onclick="openTrimModal()" src="/static/images/kilo.svg" style="cursor: pointer;"/>
 
-            <!-- Rudder Angle Indicator -->
-            <div class="rudder-gauge">
-                <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    viewBox="70 60 150 60" 
-                    preserveAspectRatio="xMidYMid meet"
-                >
-                    <g fill="none" font-family="sans-serif" font-size="6" stroke-width="1" text-anchor="middle">
-                    <line stroke="#d32828" stroke-linecap="round" x1="88.9" x2="99.2" y1="78.6" y2="63.8" />
-                    <text fill="#757575" x="84.8" y="87.5">35</text>
-                    <line stroke="#d32828" x1="96.0" x2="105.0" y1="83.2" y2="67.6" />
-                    <text fill="#757575" x="92.4" y="92.4">30</text>
-                    <line stroke="#d32828" x1="103.4" x2="111.0" y1="87.0" y2="70.7" />
-                    <text fill="#757575" x="100.4" y="96.5">25</text>
-                    <line stroke="#d32828" x1="111.1" x2="117.4" y1="90.2" y2="73.3" />
-                    <text fill="#757575" x="108.7" y="100.0">20</text>
-                    <line stroke="#d32828" x1="119.2" x2="123.8" y1="92.8" y2="75.4" />
-                    <text fill="#757575" x="117.2" y="102.7">15</text>
-                    <line stroke="#d32828" x1="127.3" x2="130.4" y1="94.6" y2="76.8" />
-                    <text fill="#757575" x="126.1" y="104.6">10</text>
-                    <line stroke="#d32828" x1="135.6" x2="137.2" y1="95.6" y2="77.8" />
-                    <text fill="#757575" x="135.0" y="105.8">5</text>
-                    <line stroke="#ffffff" x1="144.0" x2="144.0" y1="96.0" y2="78.0" />
-                    <text fill="#757575" x="144.0" y="106.2">0</text>
-                    <line stroke="#00c800" x1="152.4" x2="150.8" y1="95.6" y2="77.8" />
-                    <text fill="#757575" x="153.0" y="105.8">5</text>
-                    <line stroke="#00c800" x1="160.7" x2="157.6" y1="94.6" y2="76.8" />
-                    <text fill="#757575" x="161.9" y="104.6">10</text>
-                    <line stroke="#00c800" x1="169.0" x2="164.2" y1="92.8" y2="75.4" />
-                    <text fill="#757575" x="171.0" y="102.7">15</text>
-                    <line stroke="#00c800" x1="176.9" x2="170.6" y1="90.2" y2="73.3" />
-                    <text fill="#757575" x="179.3" y="100.0">20</text>
-                    <line stroke="#00c800" x1="184.6" x2="177.0" y1="87.0" y2="70.7" />
-                    <text fill="#757575" x="187.6" y="96.5">25</text>
-                    <line stroke="#00c800" x1="192.0" x2="183.0" y1="83.2" y2="67.6" />
-                    <text fill="#757575" x="195.6" y="92.4">30</text>
-                    <line stroke="#00c800" x1="199.1" x2="188.8" y1="78.6" y2="63.8" />
-                    <text fill="#757575" x="203.2" y="87.5">35</text>
-                    </g>
+            <div class="group-container" id="rudder-trim-gauges">
+                <!-- Rudder Angle Indicator -->
+                <div class="rudder-gauge">
+                    <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="70 60 150 60" 
+                        preserveAspectRatio="xMidYMid meet"
+                    >
+                        <g fill="none" font-family="sans-serif" font-size="6" stroke-width="1" text-anchor="middle">
+                        <line stroke="#d32828" stroke-linecap="round" x1="88.9" x2="99.2" y1="78.6" y2="63.8" />
+                        <text fill="#757575" x="84.8" y="87.5">35</text>
+                        <line stroke="#d32828" x1="96.0" x2="105.0" y1="83.2" y2="67.6" />
+                        <text fill="#757575" x="92.4" y="92.4">30</text>
+                        <line stroke="#d32828" x1="103.4" x2="111.0" y1="87.0" y2="70.7" />
+                        <text fill="#757575" x="100.4" y="96.5">25</text>
+                        <line stroke="#d32828" x1="111.1" x2="117.4" y1="90.2" y2="73.3" />
+                        <text fill="#757575" x="108.7" y="100.0">20</text>
+                        <line stroke="#d32828" x1="119.2" x2="123.8" y1="92.8" y2="75.4" />
+                        <text fill="#757575" x="117.2" y="102.7">15</text>
+                        <line stroke="#d32828" x1="127.3" x2="130.4" y1="94.6" y2="76.8" />
+                        <text fill="#757575" x="126.1" y="104.6">10</text>
+                        <line stroke="#d32828" x1="135.6" x2="137.2" y1="95.6" y2="77.8" />
+                        <text fill="#757575" x="135.0" y="105.8">5</text>
+                        <line stroke="#ffffff" x1="144.0" x2="144.0" y1="96.0" y2="78.0" />
+                        <text fill="#757575" x="144.0" y="106.2">0</text>
+                        <line stroke="#00c800" x1="152.4" x2="150.8" y1="95.6" y2="77.8" />
+                        <text fill="#757575" x="153.0" y="105.8">5</text>
+                        <line stroke="#00c800" x1="160.7" x2="157.6" y1="94.6" y2="76.8" />
+                        <text fill="#757575" x="161.9" y="104.6">10</text>
+                        <line stroke="#00c800" x1="169.0" x2="164.2" y1="92.8" y2="75.4" />
+                        <text fill="#757575" x="171.0" y="102.7">15</text>
+                        <line stroke="#00c800" x1="176.9" x2="170.6" y1="90.2" y2="73.3" />
+                        <text fill="#757575" x="179.3" y="100.0">20</text>
+                        <line stroke="#00c800" x1="184.6" x2="177.0" y1="87.0" y2="70.7" />
+                        <text fill="#757575" x="187.6" y="96.5">25</text>
+                        <line stroke="#00c800" x1="192.0" x2="183.0" y1="83.2" y2="67.6" />
+                        <text fill="#757575" x="195.6" y="92.4">30</text>
+                        <line stroke="#00c800" x1="199.1" x2="188.8" y1="78.6" y2="63.8" />
+                        <text fill="#757575" x="203.2" y="87.5">35</text>
+                        </g>
 
-                    <text fill="#757575" font-size="6.6" font-weight="bold" x="80" y="114">PORT</text>
-                    <text fill="#757575" font-size="6.6" font-weight="bold" x="190" y="114">STBD</text>
+                        <text fill="#757575" font-size="6.6" font-weight="bold" x="80" y="114">PORT</text>
+                        <text fill="#757575" font-size="6.6" font-weight="bold" x="190" y="114">STBD</text>
 
-                    <g id="rudder-pointer" transform="rotate(0, 144, 40)">
-                    <line x1="144" y1="50" x2="144" y2="95" stroke="#ffffff" stroke-linecap="round" stroke-width="2.5" />
-                    </g>
-                </svg>
-            </div>
+                        <g id="rudder-pointer" transform="rotate(0, 144, 40)">
+                        <line x1="144" y1="50" x2="144" y2="95" stroke="#ffffff" stroke-linecap="round" stroke-width="2.5" />
+                        </g>
+                    </svg>
+                </div>
 
-            <!-- Rudder Angle INPUT -->
-            <div class="rudder-input-control">
-            <label for="rudder-input">Rudder Angle:</label>
-            <input
-                type="number"
-                id="rudder-input"
-                min="-35"
-                max="35"
-                value="0"
-                onchange="updateRudderFromInput()"
-            />
-            <span>°</span>
-            </div>
-            
-            <!-- BOAT // Rudder & Trim GAUGE row -->
-            <div class="boat-stats-row">
+                <!-- Rudder Angle INPUT -->
+                <div class="rudder-input-control">
+                <label for="rudder-input">Rudder Angle:</label>
+                <input
+                    type="number"
+                    id="rudder-input"
+                    min="-35"
+                    max="35"
+                    value="0"
+                    onchange="updateRudderFromInput()"
+                />
+                <span>°</span>
+                </div>
                 
-                <!-- Left: Rudder Angle -->
-                <div class="boat-stat" id="boat-rudder-stat" aria-label="Rudder angle">
+                <!-- BOAT // Rudder & Trim GAUGE row -->
+                <div class="boat-stats-row">
+                    
+                    <!-- Left: Rudder Angle -->
+                    <div class="boat-stat" id="boat-rudder-stat" aria-label="Rudder angle">
+                        <span class="boat-stat__icon" aria-hidden="true">
+                            <img src="/static/images/rudder-icon.svg" alt="" class="boat-icon">
+                        </span>
+                        <span class="boat-stat__value">
+                            <span id="rudder-angle-value">0</span><span class="deg">°</span>
+                        </span>
+                    </div>
+
+                    <!-- Right: Trim --> 
+                    <div class="boat-stat" id="boat-trim-stat" aria-label="Trim">
                     <span class="boat-stat__icon" aria-hidden="true">
-                        <img src="/static/images/rudder-icon.svg" alt="" class="boat-icon">
+                        <img src="/static/images/trim.svg" alt="" class="boat-icon">
                     </span>
                     <span class="boat-stat__value">
-                        <span id="rudder-angle-value">0</span><span class="deg">°</span>
+                        <span id="trim-value">0</span><span class="deg">°</span>
                     </span>
-                </div>
+                    </div>
 
-                <!-- Right: Trim --> 
-                <div class="boat-stat" id="boat-trim-stat" aria-label="Trim">
-                <span class="boat-stat__icon" aria-hidden="true">
-                    <img src="/static/images/trim.svg" alt="" class="boat-icon">
-                </span>
-                <span class="boat-stat__value">
-                    <span id="trim-value">0</span><span class="deg">°</span>
-                </span>
                 </div>
-
             </div>
 
-            
-	<!-- MODAL THROTTLE -->
+        </div>
+    
+	    <!-- MODAL THROTTLE -->
         <div class="throttle-wrapper" id="throttle-modal">
             <!-- Throttle Up Button -->
             <button class="throttle-button throttle-up">
@@ -303,11 +306,6 @@
             </button>
         </div>
 
-
-
-
-
-        </div>
 
         <!-- TRIM MODAL -->
         <!-- To close an editor -->
@@ -562,7 +560,7 @@
                     </div>
                     <div class="pane-grid">
                             
-                        <!-- Engine -->
+                         <!-- Engine -->
                         <div class="drawer-button-block">
 
                             <div class="drawer-button-header">
@@ -570,7 +568,6 @@
                                 <span class="drawer-button-title">Engine</span>
                             </div>
                         
-                            <!-- Engine -->
                             <button class="battery-engine-status" id="ignitionBtn" data-state="1">
                                 <!-- State 1: single "Ignition" -->
                                 <span class="state-one">
@@ -579,7 +576,7 @@
                                 </span>
 
                                 <!-- State 2: split "Off | Start" -->
-                                <span class="state-two" hidden>
+                                <span class="state-two">
                                     <span class="half half-off">
                                         <img class="button-icon" src="/static/images/engine-power.svg" alt="Engine power">
                                         <span class="battery-engine-label">Off</span>
@@ -594,7 +591,7 @@
                                 </span>
 
                                 <!-- State 3: single "Engine Works" (pulse) -->
-                                <span class="state-three" hidden>
+                                <span class="state-three" >
                                     <img class="button-icon" src="/static/images/engine.svg" alt="Engine power">
                                     <span class="battery-engine-label">Engine Works</span>
                                 </span>
@@ -1048,7 +1045,7 @@
                         
                         <!-- Kill Engine button -->
                         <div class="drawer-button-block">
-                            <button class="big-drawer-button">
+                            <button class="big-drawer-button" id="kill-engine-button">
                                 <img class="button-icon" src="/static/images/engine.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill Engine</span>
                             </button>
@@ -1949,7 +1946,7 @@
                     <div class="status-modal-content">
                         <div class="status-modal-header">
                             <img src="/static/images/helm-icon.svg" alt="Helm icon" class="helm-icon">
-                            <span>AP status</span>
+                            <span>Active Helm</span>
                         </div>
 
                         <div class="helm-display">
@@ -1978,6 +1975,7 @@
 
                         <!-- Mode Buttons -->
                         <button class="ap-mode-btn" data-mode="Manual">Manual</button>
+                        <button class="ap-mode-btn" data-mode="Crewed">Crewed</button>
                         <button class="ap-mode-btn" data-mode="Hold">Hold</button>
                         <button class="ap-mode-btn" data-mode="Auto">Auto</button>
                         <button class="ap-mode-btn" data-mode="Loiter">Loiter</button>
@@ -2187,57 +2185,57 @@
                 This is a simple info modal. Replace image and text later.
             </p>
 
-<!-- Content names + links -->
-<!-- Lorem Ipsum start
+            <!-- Content names + links -->
+            <!-- Lorem Ipsum start
 
-            <section class="info-credits" aria-labelledby="info-credits-title">
-            
-                <div class="status-modal-header" id="info-credits-title">
-                    <img src="/static/images/crew.svg" alt="Team icon" class="helm-icon">
-                    <span>Team</span>
-                </div>
+                        <section class="info-credits" aria-labelledby="info-credits-title">
+                        
+                            <div class="status-modal-header" id="info-credits-title">
+                                <img src="/static/images/crew.svg" alt="Team icon" class="helm-icon">
+                                <span>Team</span>
+                            </div>
 
-                <ul class="team-list">
+                            <ul class="team-list">
 
-                    <li class="team-item">
-                    <img class="team-avatar" src="/static/images/avatars/kilo-alex.png" alt="Alex Bean avatar">
-                        <div class="team-meta">
-                            <strong class="team-name">John Dow</strong>
-                            <span class="team-role">Product Lead</span>
-                            <span class="team-contact">
-                            <a href="mailto:john@example.com">john@example.com</a> · 
-                            <a href="https://www.linkedin.com/in/john" target="_blank" rel="noopener">LinkedIn</a>
-                            </span>
-                        </div>
-                    </li>
+                                <li class="team-item">
+                                <img class="team-avatar" src="/static/images/avatars/kilo-alex.png" alt="Alex Bean avatar">
+                                    <div class="team-meta">
+                                        <strong class="team-name">John Dow</strong>
+                                        <span class="team-role">Product Lead</span>
+                                        <span class="team-contact">
+                                        <a href="mailto:john@example.com">john@example.com</a> · 
+                                        <a href="https://www.linkedin.com/in/john" target="_blank" rel="noopener">LinkedIn</a>
+                                        </span>
+                                    </div>
+                                </li>
 
-                    <li class="team-item">
-                    <img class="team-avatar" src="/static/images/avatars/kilo-scott.png" alt="Scott McLeslie avatar">
-                        <div class="team-meta">
-                            <strong class="team-name">Scott McLeslie</strong>
-                            <span class="team-role">Systems Engineering</span>
-                            <span class="team-contact">
-                            <a href="mailto:scott@example.com">scott@example.com</a>
-                            </span>
-                        </div>
-                    </li>
+                                <li class="team-item">
+                                <img class="team-avatar" src="/static/images/avatars/kilo-scott.png" alt="Scott McLeslie avatar">
+                                    <div class="team-meta">
+                                        <strong class="team-name">Scott McLeslie</strong>
+                                        <span class="team-role">Systems Engineering</span>
+                                        <span class="team-contact">
+                                        <a href="mailto:scott@example.com">scott@example.com</a>
+                                        </span>
+                                    </div>
+                                </li>
 
-                    <li class="team-item">
-                    <img class="team-avatar" src="/static/images/avatars/kilo-katrin.png" alt="Katrin Barshe avatar">
-                        <div class="team-meta">
-                            <strong class="team-name">Katrin Barshe</strong>
-                            <span class="team-role">Lead Designer</span>
-                            <span class="team-contact">
-                            <a href="mailto:kb@example.com">kb@example.com</a> · 
-                            <a href="https://katrinbarshe.com" target="_blank" rel="noopener">Website</a>
-                            </span>
-                        </div>
-                    </li>
+                                <li class="team-item">
+                                <img class="team-avatar" src="/static/images/avatars/kilo-katrin.png" alt="Katrin Barshe avatar">
+                                    <div class="team-meta">
+                                        <strong class="team-name">Katrin Barshe</strong>
+                                        <span class="team-role">Lead Designer</span>
+                                        <span class="team-contact">
+                                        <a href="mailto:kb@example.com">kb@example.com</a> · 
+                                        <a href="https://katrinbarshe.com" target="_blank" rel="noopener">Website</a>
+                                        </span>
+                                    </div>
+                                </li>
 
-                </ul>
-            </section>
+                            </ul>
+                        </section>
 
-Lorem Ipsum end -->
+            Lorem Ipsum end -->
 
 
 
@@ -2261,7 +2259,7 @@ Lorem Ipsum end -->
 
 
 
-<!-- === SPLASH / KEYPAD / LEGAL LAYERS === -->
+<!-- ================ SPLASH / KEYPAD / LEGAL LAYERS ================ -->
 <div id="screensaver-layer">
   <!-- ===================== SCREENSAVER MODAL ===================== -->
   <div class="screensaver-modal" id="screensaverModal" aria-hidden="false">
@@ -2320,8 +2318,8 @@ Lorem Ipsum end -->
   </div>
 </div>
 
+<!-- ===================== PASSCODE MODAL ===================== -->
 <div id="login-layer">
-  <!-- ===================== PASSCODE MODAL ===================== -->
   <div class="passcode-modal" id="passcodeModal" aria-hidden="true">
     <div class="passcode-backdrop" data-pc-close></div>
 
@@ -2369,9 +2367,9 @@ Lorem Ipsum end -->
       </div>
     </div>
   </div>
-  <!-- =================== END PASSCODE MODAL =================== -->
 </div>
 
+<!-- ===================== LEGAL MODAL ===================== -->
 <div id="legal-backdrop" class="modal-backdrop" hidden></div>
 <div id="legal-modal" class="info-modal-window" role="dialog" aria-modal="true" aria-labelledby="legal-title" hidden>
   <div class="modal-content">

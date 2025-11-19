@@ -24,15 +24,36 @@ import {
 // CONFIGURATION
 // ============================================================================
 const WEBSOCKET_CONFIG = Object.freeze({
-  // Interval for sending joystick heartbeat packets to the server
+  // Interval for sending joystick heartbeat packets to the server (ms, 100–500 recommended)
   gamepadHeartbeatIntervalMs: 200,
-  // Bank/switch mapping for the three-way nav-light helper
+  // Bank/switch mapping for the three-way nav-light helper (depends on wiring harness)
   navLightsBank: 1,
   navLightsAnchorSwitch: 3,
   navLightsNavSwitch: 5
 });
 
-const RECONNECT_DELAY_MS = 3000;
+const HEARTBEAT_CONFIG = Object.freeze({
+  // Number of identical MAVLink payloads before flagging the feed as stalled
+  stallRepeatThreshold: 10,
+  // Size of each directional wedge when converting heading to arrows (degrees)
+  headingSliceDeg: 45
+});
+
+const STATUS_LINE_CONFIG = Object.freeze({
+  // Vessel name rendered in the footer heartbeat line
+  vesselName: 'Kilo #2',
+  // Static suffix appended to the heartbeat text for situational awareness
+  eventTailText: ' Buoy Release Safety Designated'
+});
+
+const THROTTLE_FEEDBACK_CONFIG = Object.freeze({
+  // Half-span of the visual throttle bar (% of control track)
+  visualHalfPercent: 47.5,
+  // Percentage offset that represents neutral (typically 50%)
+  neutralCenterPercent: 50
+});
+
+const RECONNECT_DELAY_MS = 3000; // delay between reconnection attempts if socket closes (ms)
 
 let gamepadHeartbeatTimer = null;
 let controlSocket = null;
@@ -313,18 +334,18 @@ function bindClickHandlers() {
 
   function arrowFromHeading(deg) {
     const arrows = ['↑','↗','→','↘','↓','↙','←','↖'];
-    const idx = Math.floor(((deg % 360) + 360) % 360 / 45) % 8;
+    const slice = Math.max(1, HEARTBEAT_CONFIG.headingSliceDeg);
+    const idx = Math.floor(((deg % 360) + 360) % 360 / slice) % arrows.length;
     return arrows[idx];
   }
 
   function renderStatusLine(msg) {
-    const name = 'Kilo #2';
     const hdg = Number(msg.heading_deg ?? 0);
     const spd = Number(msg.gps_speed_ms ?? 0);
     const time = (msg.utc_time_str || '--:--:--').toString();
     const arr = arrowFromHeading(hdg);
-    const eventTail = ' Buoy Release Safety Designated';
-    return `${name} ${arr} ${Math.round(hdg)}° ${Math.round(spd)}m/s [${time}]${eventTail}`;
+    const eventTail = STATUS_LINE_CONFIG.eventTailText;
+    return `${STATUS_LINE_CONFIG.vesselName} ${arr} ${Math.round(hdg)}° ${Math.round(spd)}m/s [${time}]${eventTail}`;
   }
 
   function setHeartbeatStalled(isStalled) {
@@ -368,7 +389,7 @@ function bindClickHandlers() {
         setHeartbeatStalled(false);
       }
     }
-    if (!hbState.stalled && hbState.repeats >= 10) {
+    if (!hbState.stalled && hbState.repeats >= HEARTBEAT_CONFIG.stallRepeatThreshold) {
       hbState.stalled = true;
       setHeartbeatStalled(true);
     }
@@ -431,15 +452,14 @@ function handleThrottleFeedback(throttle, gear, rpm_percent) {
   const feedbackFill = document.getElementById("throttle-feedback-fill");
   if (feedbackFill) {
       const visualPercent = throttle / 100;
-      const VISUAL_HALF = 47.5;
-      const visualOffset = visualPercent * VISUAL_HALF;
+      const visualOffset = visualPercent * THROTTLE_FEEDBACK_CONFIG.visualHalfPercent;
       
       feedbackFill.style.height = `${Math.abs(visualOffset)}%`;
       if (visualOffset > 0) { // Forward
-          feedbackFill.style.bottom = '50%';
+          feedbackFill.style.bottom = `${THROTTLE_FEEDBACK_CONFIG.neutralCenterPercent}%`;
           feedbackFill.style.top = 'auto';
       } else { // Reverse
-          feedbackFill.style.top = '50%';
+          feedbackFill.style.top = `${THROTTLE_FEEDBACK_CONFIG.neutralCenterPercent}%`;
           feedbackFill.style.bottom = 'auto';
       }
   }
@@ -464,9 +484,8 @@ function handleThrottleFeedback(throttle, gear, rpm_percent) {
   // **** THIS IS THE FIX: Also update the THUMB POSITION to match feedback ****
   if (gearThumb) {
       const visualPercent = throttle / 100;
-      const VISUAL_HALF = 47.5;
-      const visualOffset = visualPercent * VISUAL_HALF;
-      const thumbPos = 50 + visualOffset; // 50% is center
+      const visualOffset = visualPercent * THROTTLE_FEEDBACK_CONFIG.visualHalfPercent;
+      const thumbPos = THROTTLE_FEEDBACK_CONFIG.neutralCenterPercent + visualOffset;
       gearThumb.style.bottom = `${thumbPos}%`;
   }
 }
