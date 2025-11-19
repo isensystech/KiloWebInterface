@@ -2364,133 +2364,6 @@
 
 
 
-    /* ANIMATION LOAD */
-
-    /* OVERLAY */
-    #start-loader{
-    position: fixed;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    z-index: 100001;      /* above #throttle-indicator */
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity .2s ease;
-    }
-    #start-loader.show{ opacity: 1; }
-
-    /* Fullscreen slot */
-    #start-loader .loader-slot{
-    width: 100vw; height: 100vh;
-    display: grid; place-items: center;
-    background: var(--color-black);
-    font: 600 18px/1.2 Inter, system-ui, sans-serif;
-    color: var(--color-white); text-transform: uppercase; letter-spacing: .08em;
-    }
-
-    /* (optional) background pulse – remove if you don't use it */
-    #start-loader.show .loader-slot{
-    animation: startLoaderPulse 1.2s ease-in-out infinite;
-    }
-
-    /* POWER icon scale (3×) */
-    #start-loader .start-power{
-    width: 480px; height: 480px;
-    display: grid; place-items: center;
-    }
-    #start-loader .start-power svg{
-    width: 300px; height: 300px; display: block;
-    }
-
-    /* (optional) CSS spinner fallback size */
-    #start-loader .start-spinner{
-    width: 480px; height: 480px; display: grid; place-items: center;
-    }
-    #start-loader .start-spinner__ring{
-    width: 216px; height: 216px; border-width: 18px;
-    }
-
-    /* POWER icon root: enable GPU hint for jitter */
-    .start-power{ will-change: transform, filter; }
-
-    /* Track circle (latest: black) */
-    .start-power__track{
-    fill: none;
-    stroke:  var(--color-black);
-    stroke-width: 10;
-    }
-
-    /* Progress arc (pathLength=1), starts at 1 o’clock, jerky fill with easing */
-    .start-power__progress{
-    --C: 1;
-    --S: var(--start-frac, 0.0833333);    /* 30°/360 */
-    --ARC: var(--sweep-frac, 0.8333333);  /* 300°/360 */
-
-    fill: none;
-    stroke: var(--color-white);
-    stroke-width: 10;
-    stroke-linecap: round;
-
-    stroke-dasharray: 0 var(--C);
-    transform-origin: 50% 50%;
-    transform: rotate(-90deg);
-    stroke-dashoffset: calc(-1 * var(--S));
-
-    /* last chosen timing: cubic-bezier(.42,0,.58,1) */
-    animation: startPowerFillJerk var(--fill-ms,2000ms) cubic-bezier(.42,0,.58,1) forwards;
-    filter: drop-shadow(0 0 6px rgba(171,171,171,0.45));
-    }
-
-    /* Jerky/stuttered growth */
-    @keyframes startPowerFillJerk{
-    0%   { stroke-dasharray: 0                        var(--C); }
-    8%   { stroke-dasharray: calc(var(--ARC)*0.04)    var(--C); } /* gentle jump */
-    10%  { stroke-dasharray: calc(var(--ARC)*0.10)    var(--C); }
-    13%  { stroke-dasharray: calc(var(--ARC)*0.12)    var(--C); }
-    25%  { stroke-dasharray: calc(var(--ARC)*0.22)    var(--C); }
-    35%  { stroke-dasharray: calc(var(--ARC)*0.38)    var(--C); }
-    45%  { stroke-dasharray: calc(var(--ARC)*0.41)    var(--C); }
-    60%  { stroke-dasharray: calc(var(--ARC)*0.60)    var(--C); }
-    70%  { stroke-dasharray: calc(var(--ARC)*0.63)    var(--C); }
-    82%  { stroke-dasharray: calc(var(--ARC)*0.78)    var(--C); }
-    90%  { stroke-dasharray: calc(var(--ARC)*0.82)    var(--C); }
-    91%  { stroke-dasharray: calc(var(--ARC)*0.985)   var(--C); } /* late squeeze */
-    100% { stroke-dasharray: var(--ARC)               var(--C); }
-    }
-
-    /* Jitter (applies while filling) */
-    .start-power.is-booting{
-    animation: startPowerJitter var(--fill-ms,2000ms) ease-in-out;
-    will-change: transform, filter;
-    }
-    @keyframes startPowerJitter{
-    0%   { transform: translate(0,0);           filter: brightness(1); }
-    8%   { transform: translate(-1.2px,-0.8px); filter: brightness(1.02); }
-    16%  { transform: translate(1.6px,0.4px);   filter: brightness(0.98); }
-    24%  { transform: translate(-0.8px,1.2px);  filter: brightness(1.01); }
-    36%  { transform: translate(2px,-0.4px);    filter: brightness(0.99); }
-    48%  { transform: translate(-1.6px,0.8px);  filter: brightness(1.02); }
-    62%  { transform: translate(1.2px,-1.2px);  filter: brightness(0.99); }
-    76%  { transform: translate(-1px,0.4px);    filter: brightness(1.01); }
-    88%  { transform: translate(0.8px,-0.6px);  filter: brightness(1.00); }
-    100% { transform: translate(0,0);           filter: brightness(1); }
-    }
-
-    /* Vertical bar (phase 2) */
-    .start-power__line{
-    stroke: var(--color-white);
-    stroke-width: 10;
-    stroke-linecap: round;
-    opacity: 0;
-    }
-    .start-power.is-filled .start-power__line{
-    animation: startPowerLine var(--line-ms,1000ms) ease forwards;
-    filter: drop-shadow(0 0 8px rgba(115,115,115,0.65));
-    }
-    @keyframes startPowerLine{ from{opacity:0} to{opacity:1} }
-
-
-
 
 /* MODAL GAUGES PANEL */
 
@@ -3072,7 +2945,7 @@
             .battery-engine-status {
                 position: relative;
                 height: 48px;
-                padding: 2;
+                padding: 2px;
                 background:  var(--color-drawer-bg);    /* default = state 1 */
                 border: none;
                 border-radius: 6px;
@@ -3275,7 +3148,362 @@
         
 
 
-            /* ===== Communication block (scoped) ===== */
+
+
+/* ======== START ENGINE BUTTON STYLES  ======== */
+
+
+
+            /* TAB 1: Engine Status Ignition, Off | Start, Engine Kill */
+
+            /* Base button */
+            .battery-engine-status {
+                position: relative;
+                height: 48px;
+                padding: 2px;
+                background: #303030;    /* default = state 1 */
+                border: none;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;    /* center icon+text vertically */
+                justify-content: center;/* center content horizontally */
+                gap: 8px;
+
+
+                font-family: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
+                font-size: 16px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                color: #fff;
+
+                cursor: pointer;
+                transition: background 0.2s, transform 0.1s, color 0.2s;
+                box-sizing: border-box;
+            }
+
+            /* Hover/pressed */
+            /* Blue glow on hover */
+            .battery-engine-status:hover {
+                background: #808080;
+            }
+
+            .battery-engine-status:active { transform: scale(0.98); }
+
+
+            /* Hide all states by default */
+            .battery-engine-status .state-one,
+            .battery-engine-status .state-two,
+            .battery-engine-status .state-three {
+                display: none;
+                width: 100%;
+                height: 100%;
+            }
+
+            /* Show only the state that matches data-state */
+            .battery-engine-status[data-state="1"] .state-one   { 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                gap: 8px; }
+
+            .battery-engine-status[data-state="2"] .state-two   { 
+                display: flex; 
+                align-items: center; 
+                border-radius: 6px;
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.253);
+                justify-content: space-between; }
+
+            .battery-engine-status[data-state="3"] .state-three { 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                gap: 8px; }
+
+            /* Split layout (state 2) */
+            .battery-engine-status .half {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                height: 100%;
+                transition: background 0.2s, transform 0.1s;
+                cursor: pointer; /* make it clickable */
+            }
+
+            /* Hover effect on halves */
+            .battery-engine-status .half:hover {
+                background: rgba(255,255,255,0.1);
+            }
+
+            /* Hover effect on halves */
+            .battery-engine-status .half-off:hover {
+                border-radius: 6px 0 0 6px;
+            }
+
+
+
+
+
+
+            /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+            /* On hover of the left half, remove the parent's glow */
+            /* Requires :has() support */
+            .battery-engine-status[data-state="2"] .state-two {
+            transition: box-shadow .2s ease; /* smoother toggle */
+            }
+            .battery-engine-status[data-state="2"] .state-two:has(.half-off:hover) {
+            box-shadow: none; /* hide glow while hovering .half-off */
+            }
+
+            /* Your existing hover on the half */
+            .battery-engine-status .half-off:hover {
+            border-radius: 6px 0 0 6px; /* keep your corner change */
+            }
+
+
+
+
+
+
+
+
+
+
+            /* Hover effect on halves */
+            .battery-engine-status .half-start:hover {
+            border-radius: 0 6px 6px 0;
+            }
+
+            /* Pressed effect */
+            .battery-engine-status .half:active {
+            transform: scale(0.97);
+            }
+
+
+            .battery-engine-status .divider {
+            width: 1px;
+            height: 24px;
+            background: #fff;
+            opacity:1;
+            }
+
+            /* Icon + label */
+            .battery-engine-status .button-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            filter: brightness(0) invert(1);   /* white */
+            transition: filter 0.2s;
+            }
+            .battery-engine-status .battery-engine-label {
+            color: #fff;
+            transition: color 0.2s;
+            }
+
+            /* Ensure label stays white in all states (can be tuned per state if needed) */
+            .battery-engine-status[data-state="2"] .battery-engine-label,
+            .battery-engine-status[data-state="3"] .battery-engine-label {
+            color: #fff;
+            }
+
+            /* --- state backgrounds --- */
+            .battery-engine-status[data-state="1"] { background:#606060; } /* single (gray) */
+            .battery-engine-status[data-state="2"] { background:#909090; } /* split */
+            .battery-engine-status[data-state="3"] { background:#bbbbbb;   
+                animation: blue-pulse 2.2s ease-in-out infinite; /* smooth, even pulse */
+            } 
+
+  
+            /* Keyframes: keep color, change blur/intensity slightly */
+            @keyframes blue-pulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.35); } /* base */
+            50%      { box-shadow: 0 0 14px rgba(255, 255, 255, 0.75); } /* brighter */
+            }
+
+            /* Respect reduced motion */
+            @media (prefers-reduced-motion: reduce) {
+            .battery-engine-status:hover { animation: none; box-shadow: 0 0 10px rgba(255, 255, 255, 0.55); }
+            }
+
+
+            /* --- hover per state (place AFTER the rules above) --- */
+            .battery-engine-status[data-state="1"]:hover { 
+            background:#707070;          /* darker gray on hover */
+            box-shadow: 0 0 14px rgba(255, 255, 255, 0.15);
+            }
+
+            .battery-engine-status[data-state="3"]:hover { 
+            background:#909090;          /* slightly darker green on hover */
+            }
+
+            /* Ensure label can host an overlay */
+            .battery-engine-status .battery-engine-label{
+            position: relative;      /* create containing block for ::after */
+            display: inline-block;   /* stable overlay box */
+            }
+
+            /* On hover: hide original text and show replacement */
+            .battery-engine-status[data-state="3"]:hover .battery-engine-label{
+            color: transparent;      /* hide original string */
+            }
+            .battery-engine-status[data-state="3"]:hover .battery-engine-label::after{
+            content: "Stop Engine";  /* replacement text */
+            position: absolute;
+            inset: 0;                /* fill the label box */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;             /* choose text color for green bg */
+            pointer-events: none;    /* keep hover on the parent */
+            }
+
+
+            /* pressed is fine to keep generic */
+            .battery-engine-status:active { transform: scale(0.98); }
+
+
+
+
+            
+            /* ENGINE ANIMATION LOAD */
+
+            /* OVERLAY */
+            #start-loader{
+            position: fixed;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            z-index: 100001;      /* above #throttle-indicator */
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .2s ease;
+            }
+            #start-loader.show{ opacity: 1; }
+
+            /* Fullscreen slot */
+            #start-loader .loader-slot{
+            width: 100vw; height: 100vh;
+            display: grid; place-items: center;
+            background: rgba(0, 0, 0, 0.6);
+            font: 600 18px/1.2 Inter, system-ui, sans-serif;
+            color: var(--color-white); text-transform: uppercase; letter-spacing: .08em;
+            }
+
+            /* (optional) background pulse – remove if you don't use it */
+            #start-loader.show .loader-slot{
+            animation: startLoaderPulse 1.2s ease-in-out infinite;
+            }
+
+            /* POWER icon scale (3×) */
+            #start-loader .start-power{
+            width: 480px; height: 480px;
+            display: grid; place-items: center;
+            }
+            #start-loader .start-power svg{
+            width: 300px; height: 300px; display: block;
+            }
+
+            /* (optional) CSS spinner fallback size */
+            #start-loader .start-spinner{
+            width: 480px; height: 480px; display: grid; place-items: center;
+            }
+            #start-loader .start-spinner__ring{
+            width: 216px; height: 216px; border-width: 18px;
+            }
+
+            /* POWER icon root: enable GPU hint for jitter */
+            .start-power{ will-change: transform, filter; }
+
+            /* Track circle (latest: black) */
+            .start-power__track{
+            fill: none;
+            stroke:  var(--color-black);
+            stroke-width: 10;
+            }
+
+            /* Progress arc (pathLength=1), starts at 1 o’clock, jerky fill with easing */
+            .start-power__progress{
+            --C: 1;
+            --S: var(--start-frac, 0.0833333);    /* 30°/360 */
+            --ARC: var(--sweep-frac, 0.8333333);  /* 300°/360 */
+
+            fill: none;
+            stroke: var(--color-white);
+            stroke-width: 10;
+            stroke-linecap: round;
+
+            stroke-dasharray: 0 var(--C);
+            transform-origin: 50% 50%;
+            transform: rotate(-90deg);
+            stroke-dashoffset: calc(-1 * var(--S));
+
+            /* last chosen timing: cubic-bezier(.42,0,.58,1) */
+            animation: startPowerFillJerk var(--fill-ms,2000ms) cubic-bezier(.42,0,.58,1) forwards;
+            filter: drop-shadow(0 0 6px rgba(171,171,171,0.45));
+            }
+
+            /* Jerky/stuttered growth */
+            @keyframes startPowerFillJerk{
+            0%   { stroke-dasharray: 0                        var(--C); }
+            8%   { stroke-dasharray: calc(var(--ARC)*0.04)    var(--C); } /* gentle jump */
+            10%  { stroke-dasharray: calc(var(--ARC)*0.10)    var(--C); }
+            13%  { stroke-dasharray: calc(var(--ARC)*0.12)    var(--C); }
+            25%  { stroke-dasharray: calc(var(--ARC)*0.22)    var(--C); }
+            35%  { stroke-dasharray: calc(var(--ARC)*0.38)    var(--C); }
+            45%  { stroke-dasharray: calc(var(--ARC)*0.41)    var(--C); }
+            60%  { stroke-dasharray: calc(var(--ARC)*0.60)    var(--C); }
+            70%  { stroke-dasharray: calc(var(--ARC)*0.63)    var(--C); }
+            82%  { stroke-dasharray: calc(var(--ARC)*0.78)    var(--C); }
+            90%  { stroke-dasharray: calc(var(--ARC)*0.82)    var(--C); }
+            91%  { stroke-dasharray: calc(var(--ARC)*0.985)   var(--C); } /* late squeeze */
+            100% { stroke-dasharray: var(--ARC)               var(--C); }
+            }
+
+            /* Jitter (applies while filling) */
+            .start-power.is-booting{
+            animation: startPowerJitter var(--fill-ms,2000ms) ease-in-out;
+            will-change: transform, filter;
+            }
+            @keyframes startPowerJitter{
+            0%   { transform: translate(0,0);           filter: brightness(1); }
+            8%   { transform: translate(-1.2px,-0.8px); filter: brightness(1.02); }
+            16%  { transform: translate(1.6px,0.4px);   filter: brightness(0.98); }
+            24%  { transform: translate(-0.8px,1.2px);  filter: brightness(1.01); }
+            36%  { transform: translate(2px,-0.4px);    filter: brightness(0.99); }
+            48%  { transform: translate(-1.6px,0.8px);  filter: brightness(1.02); }
+            62%  { transform: translate(1.2px,-1.2px);  filter: brightness(0.99); }
+            76%  { transform: translate(-1px,0.4px);    filter: brightness(1.01); }
+            88%  { transform: translate(0.8px,-0.6px);  filter: brightness(1.00); }
+            100% { transform: translate(0,0);           filter: brightness(1); }
+            }
+
+            /* Vertical bar (phase 2) */
+            .start-power__line{
+            stroke: var(--color-white);
+            stroke-width: 10;
+            stroke-linecap: round;
+            opacity: 0;
+            }
+            .start-power.is-filled .start-power__line{
+            animation: startPowerLine var(--line-ms,1000ms) ease forwards;
+            filter: drop-shadow(0 0 8px rgba(115,115,115,0.65));
+            }
+            @keyframes startPowerLine{ from{opacity:0} to{opacity:1} }
+
+
+
+
+/* ======== END ENGINE BUTTON STYLES ======== */
+
+
+
+
+
+
+
+            /* ===== Communication block Radar (scoped) ===== */
 
             /* Display container */
             .comm-display{
