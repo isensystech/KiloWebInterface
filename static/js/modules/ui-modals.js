@@ -724,14 +724,6 @@ export function initializeTrimTabModal() {
     };
 
     trigger.addEventListener('click', open);
-    backdrop.addEventListener('click', close);
-    container.addEventListener('click', (event) => {
-        if (!modalWindow.contains(event.target)) close();
-    });
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && container.style.display === 'block') close();
-    });
-
     window.trimTabApplySettings = function trimTabApplySettings() {
         close();
     };
@@ -763,19 +755,12 @@ export function initializeAnchorModal() {
     };
 
     trigger.addEventListener('click', open);
-    backdrop.addEventListener('click', close);
-    container.addEventListener('click', (event) => {
-        if (!modalWindow.contains(event.target)) close();
-    });
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && container.style.display === 'block') close();
-    });
-
     window.anchorApplySettings = function anchorApplySettings() {
         close();
     };
 
     initializeAnchorSlider();
+    initializeBottomDepthControl();
 }
 
 let trimtabSlidersInitialized = false;
@@ -785,7 +770,7 @@ function initializeTrimtabSliders() {
     if (!overlays.length) return;
     trimtabSlidersInitialized = true;
 
-    const STEP = 5;
+    const STEP = 5; // 5% per step => 20 discrete steps across 0-100%
     const clampValue = (value) => Math.max(-100, Math.min(100, Math.round(value ?? 0)));
         const clampPct = (pct) => Math.max(0, Math.min(100, pct));
         const pctFromValue = (value) => clampPct(50 - clampValue(value) / 2);
@@ -992,6 +977,7 @@ function initializeAnchorSlider() {
     const thumb = document.getElementById('anchor-thumb');
     const fill = document.getElementById('anchor-fill');
     const readout = document.getElementById('anchor-readout');
+    const gaugeFill = document.getElementById('anchor-rode-gauge-fill');
     const track = document.querySelector('.anchor-track-bg');
     const upButton = document.getElementById('anchor-throttle-up');
     const downButton = document.getElementById('anchor-throttle-down');
@@ -1006,10 +992,15 @@ function initializeAnchorSlider() {
         thumb.style.top = `${pct}%`;
         fill.style.height = `${pct}%`;
 
-        const percent = 1 - (pct / 100);
+        const percentDown = pct / 100; // 0 at top, 1 at bottom
         if (readout) {
-            const raw = Math.round((1 - percent) * 14) + 1;
-            readout.textContent = Math.max(1, Math.min(15, raw));
+            const raw = Math.round(percentDown * 20);
+            readout.textContent = Math.max(0, Math.min(20, raw));
+        }
+        if (gaugeFill) {
+            const clampedVal = Math.max(0, Math.min(20, Math.round(percentDown * 20)));
+            const pctFill = (clampedVal / 20) * 100;
+            gaugeFill.style.width = `${pctFill}%`;
         }
     };
 
@@ -1070,6 +1061,28 @@ function initializeAnchorSlider() {
     track.addEventListener('touchstart', startDrag, { passive: false });
 
     applyFromTopPct(getTopPct());
+}
+
+function initializeBottomDepthControl() {
+    const valueEl = document.getElementById('bottom-distance');
+    const upBtn = document.getElementById('bottom-depth-up');
+    const downBtn = document.getElementById('bottom-depth-down');
+    if (!valueEl || !upBtn || !downBtn) return;
+
+    const clamp = (v) => Math.max(-10, Math.min(0, Math.round(v)));
+    const parseValue = () => {
+        const n = parseFloat(valueEl.textContent);
+        return Number.isFinite(n) ? n : 0;
+    };
+    const setValue = (next) => {
+        const clamped = clamp(next);
+        valueEl.textContent = clamped;
+        return clamped;
+    };
+
+    // Up moves toward surface (toward 0), down moves deeper (toward -10)
+    upBtn.addEventListener('click', () => setValue(parseValue() + 1));
+    downBtn.addEventListener('click', () => setValue(parseValue() - 1));
 }
 
 

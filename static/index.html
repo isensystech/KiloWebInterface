@@ -2071,7 +2071,8 @@
                     <div class="editor-modal-close" onclick="anchorApplySettings()">✕</div>
 
                     <div class="trim-image-wrapper">
-                        <img alt="KILO" class="anchor-boat-image" src="/static/images/kilo-half-anchor.svg"/>
+                        <img alt="KILO" class="anchor-boat-image" id="anchor-boat" src="/static/images/kilo-half-anchor.svg"/>
+                        <div class="gyro-water anchor-water" aria-hidden="true"></div>
 
                             <div class="anchor-slider-overlay">
 
@@ -2081,15 +2082,13 @@
 
                                 <div class="anchor-labels">
                                     Up<br/>
-                                    0<br/>1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>11<br/>12<br/>13<br/>14<br/>15<br/>16<br/>17<br/>18<br/>19<br/>20<br/>21<br/>22<br/>23<br/>24<br/>25<br/>26<br/>27<br/>28<br/>29<br/>30
-                                    <br/>Max
+                                    0<br/>1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>11<br/>12<br/>13<br/>14<br/>15<br/>16<br/>17<br/>18<br/>19<br/>20
                                 </div>
 
                                 <div class="anchor-track-bg"></div>
                                 <div class="anchor-track-fill" id="anchor-fill"></div>
                                 <div class="anchor-thumb" id="anchor-thumb"></div>
 
-                            <div class="anchor-readout" id="anchor-readout">1</div>
                             <div class="anchor-slider-wrapper"></div>
 
                             <button id="anchor-throttle-down" class="throttle-button throttle-down" type="button" aria-label="Anchor down">
@@ -2097,6 +2096,55 @@
                             </button>
 
                         </div>
+                        <div class="anchor-info-panel">
+                            <div class="anchor-toggle-block">
+                                <div class="drawer-button-header">
+                                  <img class="drawer-button-icon" src="/static/images/anchor-icon.svg" alt="Scope ratio icon">
+                                  <span class="drawer-button-title">Scope Ratio</span>
+                                </div>
+                                <div class="solo-controls">
+                                    <div class="solo-toggle" id="anchor-toggle" role="group" aria-label="Anchor toggle">
+                                        <button class="solo-btn off active" type="button" data-value="off">4:1</button>
+                                        <button class="solo-btn on" type="button" data-value="on">7:1</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="battery-button-block anchor-display">
+                                <div class="drawer-button-header">
+                                  <img class="drawer-button-icon" src="/static/images/anchor-icon.svg" alt="Anchor depth icon">
+                                  <span class="drawer-button-title">Anchor Rode</span>
+                                </div>
+                                <div class="drawer-button-display anchor-rode-display">
+                                  <div class="gauge-line anchor-rode-line">
+                                    <span class="value value-lg" id="anchor-readout">1</span>
+                                    <span class="unit unit-lg">m</span>
+                                  </div>
+                                  <div class="mini-gauge" id="anchor-rode-gauge" role="img" aria-label="Anchor rode length">
+                                    <div class="mini-gauge-fill" id="anchor-rode-gauge-fill"></div>
+                                  </div>
+                                </div>
+                            </div>
+
+                            <div class="battery-button-block anchor-display">
+                                <div class="drawer-button-header">
+                                  <img class="drawer-button-icon" src="/static/images/altimeter-icon.svg" alt="Seafloor depth icon">
+                                  <span class="drawer-button-title">Bottom Depth</span>
+                                </div>
+                                <div class="drawer-button-display">
+                                  <div class="bottom-depth-display">
+                                    <div class="bottom-depth-value">
+                                      <span class="value value-lg" id="bottom-distance">--</span>
+                                      <span class="unit unit-lg">m</span>
+                                    </div>
+                                    <div class="bottom-depth-buttons" aria-label="Adjust bottom depth">
+                                      <button type="button" class="bottom-depth-btn" id="bottom-depth-up" aria-label="Increase bottom depth">▲</button>
+                                      <button type="button" class="bottom-depth-btn" id="bottom-depth-down" aria-label="Decrease bottom depth">▼</button>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="anchor-bottom-line" aria-hidden="true"></div>
 
                     </div>
 
