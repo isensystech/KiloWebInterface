@@ -994,12 +994,12 @@ function initializeAnchorSlider() {
 
         const percentDown = pct / 100; // 0 at top, 1 at bottom
         if (readout) {
-            const raw = Math.round(percentDown * 20);
-            readout.textContent = Math.max(0, Math.min(20, raw));
+            const raw = Math.round(percentDown * 60);
+            readout.textContent = Math.max(0, Math.min(60, raw));
         }
         if (gaugeFill) {
-            const clampedVal = Math.max(0, Math.min(20, Math.round(percentDown * 20)));
-            const pctFill = (clampedVal / 20) * 100;
+            const clampedVal = Math.max(0, Math.min(60, Math.round(percentDown * 60)));
+            const pctFill = (clampedVal / 60) * 100;
             gaugeFill.style.width = `${pctFill}%`;
         }
     };
@@ -1009,7 +1009,7 @@ function initializeAnchorSlider() {
         return Number.isFinite(value) ? value : 50;
     };
 
-    const STEP = 5;
+    const STEP = 100 / 60; // ~1.67% per step gives 60 notches
     const moveUp = () => applyFromTopPct(getTopPct() - STEP);
     const moveDown = () => applyFromTopPct(getTopPct() + STEP);
 
