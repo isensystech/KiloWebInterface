@@ -21,6 +21,7 @@ export function initializeThrottleSlider() {
     const gearThumb = document.querySelector(".gear-thumb");
     const gearFill = document.getElementById("gear-fill");
     const thumbText = gearThumb?.querySelector(".gear-thumb-text");
+    const throttleWrapper = document.querySelector(".throttle-wrapper");
 
     if (!gearTrack || !gearThumb || !gearFill) return;
 
@@ -31,6 +32,30 @@ export function initializeThrottleSlider() {
 
     let logicalPercent = 0;      // value from -1 to +1
     let isDragging = false;
+    let isMouseLockedByJoystick = false;
+
+    function setMouseLockState(nextLocked) {
+        isMouseLockedByJoystick = Boolean(nextLocked);
+        throttleWrapper?.classList.toggle('joystick-locked', isMouseLockedByJoystick);
+    }
+
+    function guardIfLocked(event, { whileDraggingOnly = false } = {}) {
+        if (!isMouseLockedByJoystick) return false;
+        if (whileDraggingOnly && !isDragging) return false;
+        isDragging = false;
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        return true;
+    }
+
+    const initialLock =
+        typeof document !== 'undefined' && document.body?.dataset?.joystickConnected === '1';
+    setMouseLockState(initialLock);
+    window.addEventListener('joystick:connection-changed', (event) => {
+        setMouseLockState(Boolean(event?.detail?.connected));
+    });
 
     function renderSlider(logical) {
         const clamped = Math.max(-1, Math.min(1, logical));
@@ -77,6 +102,7 @@ export function initializeThrottleSlider() {
 
     // Start dragging
     gearThumb.addEventListener("mousedown", (e) => {
+        if (guardIfLocked(e)) return;
         isDragging = true;
         updateSliderFromMouse(e.clientY);
         e.preventDefault();
@@ -84,6 +110,7 @@ export function initializeThrottleSlider() {
 
     // Update while dragging
     document.addEventListener("mousemove", (e) => {
+        if (guardIfLocked(e, { whileDraggingOnly: true })) return;
         if (isDragging) updateSliderFromMouse(e.clientY);
     });
 
@@ -93,6 +120,7 @@ export function initializeThrottleSlider() {
 
     // ▲▼ control buttons
     function moveThrottle(up = true) {
+        if (guardIfLocked()) return;
         logicalPercent += (up ? -1 : 1) * (STEP / VISUAL_HALF);
         logicalPercent = Math.max(-1, Math.min(1, logicalPercent));
         renderSlider(logicalPercent);

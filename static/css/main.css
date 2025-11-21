@@ -844,6 +844,18 @@
         font: var(--type-caption-mono-bold);
         }
 
+        .throttle-wrapper.joystick-locked {
+        opacity: 0.9;
+        }
+        .throttle-wrapper.joystick-locked .gear-track,
+        .throttle-wrapper.joystick-locked .gear-thumb,
+        .throttle-wrapper.joystick-locked .forward-button,
+        .throttle-wrapper.joystick-locked .neutral-button,
+        .throttle-wrapper.joystick-locked .reverse-button,
+        .throttle-wrapper.joystick-locked .throttle-button {
+        cursor: not-allowed;
+        }
+
 
 
     /* RULE RUDDER ANGLE INDICATOR */

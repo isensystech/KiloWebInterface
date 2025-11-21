@@ -488,6 +488,16 @@ export const handleStatusIndicator = (
     indicator.classList.remove('connected', 'disconnected', 'never-connected');
     indicator.classList.add(nextState);
 
+    const isConnected = nextState === 'connected';
+    if (typeof document !== 'undefined' && document.body) {
+      document.body.dataset.joystickConnected = isConnected ? '1' : '0';
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('joystick:connection-changed', { detail: { connected: isConnected } })
+      );
+    }
+
     joystickIndicatorStatus.lastState = nextState;
     if (newStatus) joystickIndicatorStatus.hasConnected = true;
     return;
