@@ -147,7 +147,7 @@ KiloWebInterface/
 - [x] Make Gear Popups with progress bar
 - [x] Fix Engine button
 - [x] Create zero "center" markers at 50% of power trim tabs sliders
-- [ ] Debrand "Kilo"
+- [x] Debrand "Kilo"
 - [x] Fix Active Helm and AP Stat logic
 - [x] Improve Trim Tab & Gyroscope feedback modal
 - [x] Improve Anchor Control modal
