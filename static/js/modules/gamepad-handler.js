@@ -2,6 +2,8 @@
 // GAMEPAD HANDLER MODULE - JOYSTICK SCHEMAS & PILOT HOLD
 // ============================================================================
 
+import { handleStatusIndicator } from './ui-telemetry.js';
+
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
@@ -176,13 +178,7 @@ export function initializeGamepadHandler() {
             lastGamepadActivity = Date.now();
             console.log('✅ Gamepad connected at index', gamepadIndex);
 
-            const indicator = document.getElementById('joystick-indicator');
-            if (indicator) {
-                indicator.style.display = 'inline-block';
-                indicator.classList.remove('disconnected');
-                indicator.classList.add('connected');
-                setTimeout(() => (indicator.style.display = 'none'), GAMEPAD_CONFIG.joystickIndicatorHideMs);
-            }
+            handleStatusIndicator('joystick-indicator', true);
 
             startGamepadPolling();
         }
@@ -196,12 +192,7 @@ export function initializeGamepadHandler() {
             gamepadControlState.throttle = 0;
             gamepadControlState.steering = 0;
 
-            const indicator = document.getElementById('joystick-indicator');
-            if (indicator) {
-                indicator.style.display = 'inline-block';
-                indicator.classList.remove('connected');
-                indicator.classList.add('disconnected');
-            }
+            handleStatusIndicator('joystick-indicator', false);
         }
     });
 
@@ -211,6 +202,7 @@ export function initializeGamepadHandler() {
             if (pads[i]) {
                 gamepadIndex = i;
                 console.log('✅ Gamepad already connected at index', i);
+                handleStatusIndicator('joystick-indicator', true);
                 startGamepadPolling();
                 break;
             }
