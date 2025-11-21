@@ -318,6 +318,125 @@
         <!-- To close an editor -->
         <div class="modal-backdrop" id="modal-backdrop" style="display: none;"></div>
         <div id="edit-modal-container" style="display: none;"></div>
+        <!-- BUTTON EDITOR TEMPLATE -->
+        <template id="editor-modal-template">
+            <div class="editor-modal-backdrop">
+                <div class="editor-modal-window">
+                    <h2 class="editor-modal-title">Button edit</h2>
+                    <div class="editor-modal-close" data-editor-close>✕</div>
+                    <div class="editor-modal-content">
+                        <div class="editor-preview-frame">
+                            <div class="editor-preview-content">
+                                <div class="editor-control-button preview-position" data-device="preview_button">
+                                    <div class="editor-cap-container state-safety" data-editor-cap-toggle>
+                                        <div class="editor-safety-cap">
+                                            <img src="/static/images/disabled.svg" alt="Icon on cap" class="editor-cap-icon">
+                                        </div>
+                                        <div class="editor-no-safety-cap"></div>
+                                        <div class="editor-safety-cap-hover"></div>
+                                    </div>
+
+                                    <button class="editor-preview-button" type="button" data-id="0x999" data-bit="0">
+                                        <img src="/static/images/disabled.svg" alt="Icon" class="editor-button-icon icon-selected">
+                                    </button>
+
+                                    <div class="editor-button-label edited" contenteditable="true">Label</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="editor-icon-picker-modal" id="iconPicker">
+                            <div class="editor-icon-grid">
+                                <img src="/static/images/disabled.svg" alt="Disabled" data-icon-choice>
+                                <img src="/static/images/vtol.svg" alt="VTOL" data-icon-choice>
+                                <img src="/static/images/helicopter.svg" alt="Helicopter" data-icon-choice>
+                                <img src="/static/images/fpv.svg" alt="FPV Drone" data-icon-choice>
+                                <img src="/static/images/uav.svg" alt="UAV Drone" data-icon-choice>
+                                <img src="/static/images/torpedo.svg" alt="Torpedo" data-icon-choice>
+                                <img src="/static/images/boat.svg" alt="Boat" data-icon-choice>
+                                <img src="/static/images/mako.svg" alt="MAKO" data-icon-choice>
+                                <img src="/static/images/kilo-icon.svg" alt="Kilo" data-icon-choice>
+                                <img src="/static/images/catamaran.svg" alt="Catamaran" data-icon-choice>
+                                <img src="/static/images/drift-buoy.svg" alt="Drift Buoy" data-icon-choice>
+                                <img src="/static/images/picsea.svg" alt="Picsea" data-icon-choice>
+                                <img src="/static/images/6drov.svg" alt="6DROV" data-icon-choice>
+                                <img src="/static/images/rov.svg" alt="ROV" data-icon-choice>
+                                <img src="/static/images/tether.svg" alt="Tether" data-icon-choice>
+                                <img src="/static/images/component-hardware.svg" alt="Hardware component" data-icon-choice>
+                                <img src="/static/images/camera.svg" alt="Camera" data-icon-choice>
+                                <img src="/static/images/robo-dog.svg" alt="Robo-dog" data-icon-choice>
+                                <img src="/static/images/headquarters.svg" alt="Headquarters" data-icon-choice>
+                                <img src="/static/images/satellite.svg" alt="Satellite" data-icon-choice>
+                                <img src="/static/images/tower.svg" alt="Tower" data-icon-choice>
+                                <img src="/static/images/scan-forward.svg" alt="Scan-forward" data-icon-choice>
+                                <img src="/static/images/scan-side.svg" alt="Scan-side" data-icon-choice>
+                                <img src="/static/images/dvl.svg" alt="DVL" data-icon-choice>
+                                <img src="/static/images/12vchg.svg" alt="12 vchg" data-icon-choice>
+                                <img src="/static/images/24vchg.svg" alt="24 vchg" data-icon-choice>
+                                <img src="/static/images/actuator.svg" alt="Actuator" data-icon-choice>
+                                <img src="/static/images/asterisk.svg" alt="Asterisk" data-icon-choice>
+                                <img src="/static/images/atak.svg" alt="ATAK" data-icon-choice>
+                                <img src="/static/images/bilge.svg" alt="Bilge" data-icon-choice>
+                                <img src="/static/images/blower.svg" alt="Blower" data-icon-choice>
+                                <img src="/static/images/engine.svg" alt="Engine" data-icon-choice>
+                                <img src="/static/images/gear.svg" alt="Gear" data-icon-choice>
+                                <img src="/static/images/latch.svg" alt="Latch" data-icon-choice>
+                                <img src="/static/images/radar.svg" alt="Radar" data-icon-choice>
+                                <img src="/static/images/starter.svg" alt="Starter" data-icon-choice>
+                                <img src="/static/images/timer.svg" alt="Timer" data-icon-choice>
+                                <img src="/static/images/toggle.svg" alt="Toggle" data-icon-choice>
+                            </div>
+                        </div>
+
+                        <div class="editor-options-row">
+                            <div class="editor-option-wrapper active" data-mode="disabled">
+                                <div class="editor-option-block">
+                                    <img src="/static/images/disabled.svg" alt="Disabled">
+                                </div>
+                                <span class="editor-option-label">Disabled</span>
+                            </div>
+
+                            <div class="editor-option-wrapper" data-mode="latch">
+                                <div class="editor-option-block">
+                                    <img src="/static/images/latch.svg" alt="Latch">
+                                </div>
+                                <span class="editor-option-label">One Shot</span>
+                            </div>
+
+                            <div class="editor-option-wrapper" data-mode="toggle">
+                                <div class="editor-option-block">
+                                    <img src="/static/images/toggle.svg" alt="Toggle">
+                                </div>
+                                <span class="editor-option-label">Momentary</span>
+                            </div>
+
+                            <div class="editor-option-wrapper" data-mode="timer">
+                                <div class="editor-option-block">
+                                    <img src="/static/images/timer.svg" alt="Timer">
+                                </div>
+                                <span class="editor-option-label">Timer</span>
+                            </div>
+                        </div>
+
+                        <div class="editor-value-box-wrapper">
+                            <div class="editor-value-box">
+                                <div class="editor-arrow-controls">
+                                    <button type="button" class="arrow-up">▲</button>
+                                    <button type="button" class="arrow-down">▼</button>
+                                </div>
+                                <input type="number" min="100" max="9900" step="50" value="300" class="editor-value-input" />
+                                <span class="editor-unit-label">ms</span>
+                            </div>
+                        </div>
+
+                        <div class="editor-modal-actions">
+                            <button class="editor-cancel-button" type="button">Cancel</button>
+                            <button class="editor-apply-button" type="button">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
 
         <!-- TRIM MODAL -->
         <div class="modal-backdrop" id="trim-modal-backdrop" style="display: none;"></div>

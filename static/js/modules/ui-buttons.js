@@ -70,8 +70,10 @@ export function initializeButtons() {
         button.addEventListener('click', () => {
             // Assume editMode is a global variable
             if (window.editMode) {
-                // openEditModal(deviceName); // Assuming openEditModal is defined elsewhere
-                console.log('Edit mode: opening modal for', deviceName);
+                if (window.buttonEditor?.openEditorForDevice) {
+                    window.buttonEditor.openEditorForDevice(deviceName);
+                }
+                return;
             } else {
                 handleButtonClick(deviceName);
             }

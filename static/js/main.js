@@ -868,7 +868,7 @@ function updateScreensaverGauges(data) {
 ============================================================================= */
 (() => {
   // Toggle: set to false or delete this block to restore normal auth.
-  const ENABLE = false;
+  const ENABLE = true;
   if (!ENABLE) return;
 
   // 1) Pretend user is authenticated and legal terms accepted

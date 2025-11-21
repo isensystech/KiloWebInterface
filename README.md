@@ -152,7 +152,7 @@ KiloWebInterface/
 - [x] Improve Trim Tab & Gyroscope feedback modal
 - [x] Improve Anchor Control modal
 - [x] Fix Payload contlols safety-caps opening
-- [ ] Fix Payload control buttons edit
+- [x] Fix Payload control buttons edit
 - [ ] Add Battery status dot path
 - [ ] Fill tooltips for 1-8 tabs drawer
 - [ ] Create a new PS dash error icon
