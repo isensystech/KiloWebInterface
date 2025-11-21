@@ -462,6 +462,10 @@ export function initializeSensorToggles() {
 // ============================================================================
 
 const indicatorStates = {};
+const joystickIndicatorStatus = {
+  hasConnected: false,
+  lastState: 'never'
+};
 // **** THIS IS THE FIX: Added 'export' back. ****
 export const handleStatusIndicator = (
   elementId,
@@ -472,6 +476,23 @@ export const handleStatusIndicator = (
 ) => {
   const indicator = document.getElementById(elementId);
   if (!indicator) return;
+
+  if (elementId === 'joystick-indicator') {
+    const nextState = newStatus
+      ? 'connected'
+      : (joystickIndicatorStatus.hasConnected ? 'disconnected' : 'never-connected');
+
+    if (joystickIndicatorStatus.lastState === nextState) return;
+
+    indicator.style.display = 'inline-flex';
+    indicator.classList.remove('connected', 'disconnected', 'never-connected');
+    indicator.classList.add(nextState);
+
+    joystickIndicatorStatus.lastState = nextState;
+    if (newStatus) joystickIndicatorStatus.hasConnected = true;
+    return;
+  }
+
   const previousStatus = indicatorStates[elementId];
   if (newStatus !== previousStatus) {
     if (newStatus) {

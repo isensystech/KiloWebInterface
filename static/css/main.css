@@ -5607,6 +5607,11 @@
             opacity: 1;
         }
 
+        #joystick-indicator.never-connected img {
+            /* Grey color */
+            filter: grayscale(1) brightness(75%) contrast(90%);
+        }
+
         #joystick-indicator.disconnected img {
             /* Red color */
             filter: invert(30%) sepia(90%) saturate(6000%) hue-rotate(350deg) brightness(90%) contrast(120%);
