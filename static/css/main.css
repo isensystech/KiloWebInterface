@@ -210,6 +210,30 @@
         overflow-y: auto;
         }
 
+        #moving-map-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background: var(--color-bg);
+        }
+
+        #moving-map-layer .leaflet-pane,
+        #moving-map-layer .leaflet-control-container {
+        pointer-events: none;
+        }
+
+        .leaflet-container {
+        background: transparent;
+        }
+
+        .boat-marker img {
+        width: 64px;
+        height: 64px;
+        transform-origin: center;
+        filter: drop-shadow(0 0 6px rgba(0,0,0,0.45));
+        }
+
         .scale-container {
         width: 100vw;
         height: 100vh;
@@ -227,6 +251,8 @@
         }
 
         .control-screen {
+        position: relative;
+        z-index: 1;
         display: flex;
         flex-direction: column;
         min-height: 100vh;

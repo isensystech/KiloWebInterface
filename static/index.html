@@ -9,6 +9,7 @@
 
     <!-- body and base styles -->
    <link rel="stylesheet" href="/static/css/main.css">
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <!-- Favicon -->
     <link rel="icon" href="/static/images/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/static/images/favicon.ico">
@@ -19,6 +20,7 @@
 
 
 <body>
+    <div id="moving-map-layer" aria-hidden="true"></div>
     <div class="control-screen">
         <!-- INFO BAR -->
         <div class="info-bar">
@@ -603,10 +605,10 @@
                                     </span>
                                 </span>
 
-                                <!-- State 3: single "Engine Works" (pulse) -->
+                                <!-- State 3: single "Engine Running" (pulse) -->
                                 <span class="state-three" >
                                     <img class="button-icon" src="/static/images/engine.svg" alt="Engine power">
-                                    <span class="battery-engine-label">Engine Works</span>
+                                    <span class="battery-engine-label">Engine Running</span>
                                 </span>
                             </button>
                         </div>
@@ -2401,6 +2403,7 @@
 
 <div id="auth-overlay" class="modal-backdrop" hidden style="backdrop-filter: blur(78px); background: rgba(0,0,0,0.65); z-index: 9500;"></div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script type="module" src="/static/js/modules/ui-navigation.js"></script>
 <script type="module" src="/static/js/modules/ui-buttons.js"></script>
 <script type="module" src="/static/js/modules/ui-modals.js"></script>
