@@ -157,7 +157,7 @@ KiloWebInterface/
 - [ ] Fill tooltips for 1-8 tabs drawer
 - [x] Create a new PS dash error icon
 - [ ] Add meaning to carousel-titles
-- [ ] Make minimal size 1366 x 768, check other resolutions
+- [x] Make minimal size 1366 x 768, check other resolutions
 - [ ] Adapt to keyboard
 
 

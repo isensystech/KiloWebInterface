@@ -1,9 +1,11 @@
 /* Fonts & colors facelifting Kate */
 
- :root{
+:root{
     /* Sans stack with robust fallbacks */
     --font-sans: "Roboto", "Segoe UI", "Inter", "Helvetica Neue", Arial, system-ui, -apple-system, "Noto Sans", "Liberation Sans", sans-serif;
     --font-mono: "Roboto Mono", "Consolas", "SFMono-Regular", "Menlo", "ui-monospace", "monospace";
+    /* Uniform downscale for short viewports (height < 910px) */
+    --height-scale: clamp(0.7, calc(100vh / 910), 1);
     
 
     /* === Weight size/line-height family === */
@@ -202,13 +204,26 @@
         height: auto;
         }
         
-        html, body {
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        overflow-x: hidden;
-        overflow-y: auto;
-        }
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Height-based global zoom (browser-like) */
+html {
+    zoom: var(--height-scale);
+}
+@supports not (zoom: 1) {
+    html {
+        transform: scale(var(--height-scale));
+        transform-origin: top center;
+        width: calc(100% / var(--height-scale));
+        height: calc(100% / var(--height-scale));
+    }
+}
 
         .scale-container {
         width: 100vw;
@@ -226,11 +241,11 @@
         height: fit-content;
         }
 
-        .control-screen {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        }
+.control-screen {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
         #main {
         flex: 1;

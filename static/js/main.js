@@ -68,7 +68,42 @@ const MAIN_CONFIG = Object.freeze({
 // ============================================================================
 document.addEventListener('DOMContentLoaded', () => {
     console.log("🚀 Kilo UI Application Starting...");
-    
+
+    // Global height-based zoom (browser-like)
+    (function applyHeightZoom() {
+        const root = document.documentElement;
+        const body = document.body;
+        let supportsZoom = false;
+        try {
+            const prev = root.style.zoom;
+            root.style.zoom = '1';
+            supportsZoom = root.style.zoom === '1';
+            root.style.zoom = prev;
+        } catch (e) { supportsZoom = false; }
+
+        const applyScale = () => {
+            const scale = Math.max(0.7, Math.min(1, window.innerHeight / 910));
+            root.style.setProperty('--height-scale', scale);
+
+            if (supportsZoom) {
+                root.style.zoom = scale;
+                body.style.transform = '';
+                body.style.transformOrigin = '';
+                body.style.width = '';
+                body.style.height = '';
+            } else {
+                root.style.zoom = '';
+                body.style.transform = `scale(${scale})`;
+                body.style.transformOrigin = 'top center';
+                body.style.width = `${100 / scale}%`;
+                body.style.height = `${100 / scale}%`;
+            }
+        };
+
+        applyScale();
+        window.addEventListener('resize', applyScale);
+    })();
+
     // Initialize all UI modules
     try {
         // Initialize Modals
@@ -868,12 +903,12 @@ function updateScreensaverGauges(data) {
 ============================================================================= */
 (() => {
   // Toggle: set to false or delete this block to restore normal auth.
-  const ENABLE = false;
+  const ENABLE = true;
   if (!ENABLE) return;
 
   // 1) Pretend user is authenticated and legal terms accepted
   try {
-    sessionState.authenticated = true;
+    sessionState.authenticated = false;
     sessionState.legalAck = true;
   } catch (_e) { /* ignore if not yet defined */ }
 
