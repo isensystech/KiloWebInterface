@@ -258,6 +258,161 @@
         min-height: 100vh;
         }
 
+        body.view-map .rudder-wrapper,
+        body.view-camera .rudder-wrapper {
+        display: none !important;
+        }
+
+        body.view-map .throttle-wrapper,
+        body.view-camera .throttle-wrapper {
+        position: fixed;
+        left: calc(3vh + 128px + 24px); /* just to the right of the gauges panel */
+        top: 50%;
+        transform: translateY(-50%);
+        }
+
+        .camera-feed-overlay {
+        position: fixed;
+        right: calc(3vh + 288px + 16px);
+        bottom: 28px;
+        left: auto;
+        top: auto;
+        transform: none;
+        z-index: 1100;
+        display: none;
+        width: 300px;
+        max-width: 90vw;
+        max-height: 72vh;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45);
+        background: rgba(0,0,0,0.85);
+        border: 1px solid rgba(255,255,255,0.08);
+        padding: 12px;
+        flex-direction: column;
+        gap: 10px;
+        }
+
+        .camera-feed-body {
+        border-radius: 10px;
+        overflow: hidden;
+        background: #000;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+        }
+
+        .camera-feed-overlay img,
+        .camera-feed-body img {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        }
+
+        body.view-camera .camera-feed-overlay {
+        display: flex;
+        }
+
+        .camera-controls {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 4px 2px;
+        }
+
+        .camera-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.15);
+        background: rgba(255,255,255,0.04);
+        color: var(--color-white);
+        font: var(--type-caption-mono-bold);
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .camera-btn:hover {
+        transform: translateY(-1px);
+        border-color: rgba(76, 227, 255, 0.5);
+        background: rgba(76, 227, 255, 0.08);
+        }
+
+        .camera-btn-icon {
+        display: inline-flex;
+        width: 16px;
+        height: 16px;
+        opacity: 0.9;
+        }
+
+        body.camera-zoomed .camera-feed-overlay {
+        width: min(960px, 90vw);
+        max-height: 85vh;
+        right: 32px;
+        bottom: 32px;
+        }
+
+        body.camera-fullscreen .camera-feed-overlay {
+        top: 0;
+        left: 0;
+        transform: none;
+        width: 100vw;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        padding: 18px 18px 14px;
+        background: rgba(0,0,0,0.9);
+        box-shadow: none;
+        }
+
+        body.camera-fullscreen .camera-feed-body {
+        flex: 1;
+        }
+
+        body.camera-fullscreen #moving-map-layer {
+        width: min(360px, 42vw);
+        height: 220px;
+        position: fixed !important;
+        right: 24px !important;
+        bottom: 24px !important;
+        top: auto !important;
+        left: auto !important;
+        inset: auto !important;
+        z-index: 1400;
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 18px 36px rgba(0,0,0,0.55);
+        opacity: 0.95;
+        background: #000;
+        pointer-events: auto;
+        cursor: pointer;
+        }
+
+        body.camera-fullscreen #moving-map-layer::after {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 28px;
+        height: 28px;
+        background: url('/static/images/boat.svg') center/contain no-repeat;
+        filter: drop-shadow(0 0 6px rgba(0,0,0,0.45));
+        pointer-events: none;
+        }
+
+        body.camera-fullscreen #moving-map-layer .boat-marker img {
+        width: 24px;
+        height: 24px;
+        }
+
+        body.camera-fullscreen #moving-map-layer .leaflet-pane,
+        body.camera-fullscreen #moving-map-layer .leaflet-control-container {
+        pointer-events: auto;
+        }
+
         #main {
         flex: 1;
         display: flex;
@@ -1012,6 +1167,26 @@
     /* Update feedback effect */
     .boat-stat.updating .boat-stat__value {
     text-shadow: 0 0 8px rgba(255,255,255,0.15);
+    }
+
+    /* Compact styling when embedded in the left gauges column */
+    .gauge-boat-stats {
+    padding: 4px 10px 0;
+    gap: 12px;
+    justify-content: flex-start;
+    }
+
+    .gauge-boat-stats .boat-stat__value {
+    font: var(--type-caption-mono-bold);
+    }
+
+    .gauge-boat-stats .boat-icon {
+    width: 18px;
+    height: 18px;
+    }
+
+    .gauge-boat-stats .deg {
+    opacity: 0.7;
     }
 
   
@@ -2196,9 +2371,20 @@
         }
             .rudder-wrapper,
             .boat-image {
-            pointer-events: auto;
-            }
+        pointer-events: auto;
+        }
 
+
+        /* Safety override: keep mini map pinned bottom-right in camera fullscreen */
+        body.camera-fullscreen #moving-map-layer {
+        position: fixed !important;
+        right: 24px !important;
+        bottom: auto !important;
+        top: calc(100vh - 220px - 24px) !important;
+        left: auto !important;
+        inset: auto !important;
+        transform: none !important;
+        }
 
         .main-content {
             display: flex;

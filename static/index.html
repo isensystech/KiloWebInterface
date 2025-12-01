@@ -83,8 +83,8 @@
                 <button class="nav-arrow left" id="prev-screen">◀</button>
                 <div class="carousel-titles">
                     <div class="carousel-title active" data-screen="1">Kilo #06</div>
-                    <div class="carousel-title" data-screen="2">Kilo #14</div>
-                    <div class="carousel-title" data-screen="3">Kilo #22</div>
+                    <div class="carousel-title" data-screen="2">TACtical Map</div>
+                    <div class="carousel-title" data-screen="3">FPV Camera</div>
                 </div>
                 <button class="nav-arrow right" id="next-screen">▶</button>
             </div>
@@ -237,33 +237,35 @@
                 />
                 <span>°</span>
                 </div>
-                
-                <!-- BOAT // Rudder & Trim GAUGE row -->
-                <div class="boat-stats-row">
-                    
-                    <!-- Left: Rudder Angle -->
-                    <div class="boat-stat" id="boat-rudder-stat" aria-label="Rudder angle">
-                        <span class="boat-stat__icon" aria-hidden="true">
-                            <img src="/static/images/rudder-icon.svg" alt="" class="boat-icon">
-                        </span>
-                        <span class="boat-stat__value">
-                            <span id="rudder-angle-value">0</span><span class="deg">°</span>
-                        </span>
-                    </div>
-
-                    <!-- Right: Trim --> 
-                    <div class="boat-stat" id="boat-trim-stat" aria-label="Trim">
-                    <span class="boat-stat__icon" aria-hidden="true">
-                        <img src="/static/images/trim.svg" alt="" class="boat-icon">
-                    </span>
-                    <span class="boat-stat__value">
-                        <span id="trim-value">0</span><span class="deg">°</span>
-                    </span>
-                    </div>
-
-                </div>
             </div>
 
+        </div>
+
+        <div id="camera-feed-overlay" class="camera-feed-overlay" aria-hidden="true">
+            <div class="camera-feed-body">
+                <img src="/static/images/DummyCameraFeed.jpg" alt="Live camera feed placeholder" class="camera-feed-img">
+            </div>
+            <div class="camera-controls">
+                <button id="camera-fullscreen-btn" class="camera-btn" type="button" aria-pressed="false">
+                    <span class="camera-btn-icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>
+                        </svg>
+                    </span>
+                    <span class="camera-btn-label">Full Screen</span>
+                </button>
+                <button id="camera-zoom-btn" class="camera-btn" type="button" aria-pressed="false">
+                    <span class="camera-btn-label">X2</span>
+                </button>
+                <button id="camera-mode-btn" class="camera-btn" type="button" aria-pressed="false">
+                    <span class="camera-btn-icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12h18M12 3v18"/>
+                        </svg>
+                    </span>
+                    <span class="camera-btn-label">Night Vision</span>
+                </button>
+            </div>
         </div>
     
 	    <!-- MODAL THROTTLE -->
@@ -508,6 +510,25 @@
                                 <span class="value-rate" id="fuel-burn-gauge-value">3.5</span>
                                 <span class="unit-rate" id="fuel-burn-gauge-unit">G/Hr</span>
                             </div>
+                        </div>
+                    </div>
+                    <div class="gauge-boat-stats boat-stats-row">
+                        <div class="boat-stat" id="boat-rudder-stat" aria-label="Rudder angle" title="Rudder angle (°) — live rudder position">
+                            <span class="boat-stat__icon" aria-hidden="true">
+                                <img src="/static/images/rudder-icon.svg" alt="" class="boat-icon">
+                            </span>
+                            <span class="boat-stat__value">
+                                <span id="rudder-angle-value">0</span><span class="deg">°</span>
+                            </span>
+                        </div>
+
+                        <div class="boat-stat" id="boat-trim-stat" aria-label="Trim" title="Trim angle (°) — engine trim position">
+                            <span class="boat-stat__icon" aria-hidden="true">
+                                <img src="/static/images/trim.svg" alt="" class="boat-icon">
+                            </span>
+                            <span class="boat-stat__value">
+                                <span id="trim-value">0</span><span class="deg">°</span>
+                            </span>
                         </div>
                     </div>
                 </div>

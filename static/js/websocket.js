@@ -19,6 +19,7 @@ import {
     updateRelayVoltage,  // <-- Handles CZone voltage (Tab 4) AND Left Gauge
     updateM20RelayCurrent // <-- Handles M20 current (Tab 8)
 } from './modules/ui-telemetry.js';
+import { updateMapFromMavlink } from './map-layer.js';
 
 // ============================================================================
 // CONFIGURATION
@@ -399,6 +400,7 @@ function bindClickHandlers() {
     updateTelemetryValue('gps_satellites', msg.gps_satellites);
     updateTelemetryValue('gps_lat_deg', msg.gps_lat_deg, 6);
     updateTelemetryValue('gps_lng_deg', msg.gps_lng_deg, 6);
+    updateMapFromMavlink(msg);
     updateTelemetryValue('ap_mode', msg.ap_mode || '--');
     if (msg.ap_mode) {
       window.__kiloLatestApMode = msg.ap_mode;

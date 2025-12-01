@@ -38,6 +38,7 @@ import {
     disconnectControlWebSocket,
     initializeControlClickHandlers
 } from './websocket.js';
+import { initializeMovingMapLayer } from './map-layer.js';
 
 
 // ============================================================================
@@ -71,6 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize all UI modules
     try {
+        initializeMovingMapLayer();
+
         // Initialize Modals
         initializeAPToggle();
         initializeHelmToggle();
