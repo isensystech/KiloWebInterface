@@ -557,13 +557,231 @@
 
     <!-- TAB 2 -->
 
+        <!-- PAYLOAD DEPLOYMENT DISPLAY -->
+        <article
+            data-coach-for="#payload-deployment-display"
+            data-coach-placement="left"
+            data-coach-order="90"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Payload Deployment Display</div>
+            <div class="coach-text">
+                The Payload Deployment display tells you whether releases are currently permitted. When it shows “Release Authorized” with the unlocked icon, all interlocks are clear and payload buttons can execute; when it switches to “Release Prohibited” with the lock icon, releases are blocked until the upstream system or safety conditions allow it again.
+
+                Use this indicator as your go/no-go gate before firing any payloads. If it is locked, do not attempt deployment; check mission rules or upstream safety signals and wait for it to return to “Authorized.”
+            </div>
+        </article>
+
+        <!-- PAYLOAD BUTTONS -->
+        <article
+            data-coach-for="#payload-buttons"
+            data-coach-placement="left"
+            data-coach-order="100"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Payload Buttons</div>
+            <div class="coach-text">
+                Payload buttons control the arming and release of individual payloads (buoys, VTOL, ROV, and other modules). Each tile is protected by a safety cap: lift the cap to expose the control, then press the button to execute the payload’s action as labeled. The system must be authorized before any armed button will respond.
+
+                Cap and button states give clear feedback:
+                • Closed cap — the payload cannot be activated.
+                • Armed (cap open) — the button lights to show it’s ready.
+                • Active/On — the highlight confirms the payload has been commanded.
+
+                Open only the payload you intend to use and keep all other caps closed to avoid accidental deployment.            </div>
+        </article>
+
+
     <!-- TAB 3 -->
+
+        <!-- ENGINE STATUS -->
+        <article
+            data-coach-for="#coolant-temperature"
+            data-coach-placement="left"
+            data-coach-order="130"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine coolant temp</div>
+            <div class="coach-text">
+                Temperature of the engine’s coolant fluid. Indicates how hot the engine is running.
+
+                Measured in °C / °F.            
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#oil-temperature"
+            data-coach-placement="left"
+            data-coach-order="131"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine oil temperature</div>
+            <div class="coach-text">
+                Temperature of the engine oil circulating through the system. High values may indicate overload or poor cooling.
+                
+                Measured in °C / °F.            
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#oil-pressure"
+            data-coach-placement="left"
+            data-coach-order="132"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine oil pressure</div>
+            <div class="coach-text">
+                Pressure of the lubricating oil inside the engine. Low pressure can signal lubrication problems.
+                
+                Measured in bar / psi.           
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#gas-temperature"
+            data-coach-placement="left"
+            data-coach-order="133"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Exhaust gas temperature</div>
+            <div class="coach-text">
+                Temperature of gases leaving the engine. Used to monitor combustion quality and detect overheating.
+                
+                Measured in °C / °F.
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#manifold-air-pressure"
+            data-coach-placement="left"
+            data-coach-order="134"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Manifold air pressure</div>
+            <div class="coach-text">
+                Pressure in the intake manifold. Reflects engine load and turbocharger performance.
+                
+                Measured in bar / psi / kPa.
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#manifold-air-temperature"
+            data-coach-placement="left"
+            data-coach-order="135"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Manifold air temperature</div>
+            <div class="coach-text">
+                Temperature of air entering the engine manifold. Affects engine efficiency and power output.
+
+                Measured in °C / °F.
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#gearbox-oil-pressure"
+            data-coach-placement="left"
+            data-coach-order="136"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Gearbox oil pressure</div>
+            <div class="coach-text">
+                Lubrication pressure inside the gearbox. Ensures gears are protected from friction and wear.
+                
+                Measured in psi / bar.
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#fuel-rate-avg"
+            data-coach-placement="left"
+            data-coach-order="137"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Fuel rate average</div>
+            <div class="coach-text">
+                Average fuel consumption per hour of operation.
+                
+                Measured in G/h (gallons per hour).
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#fuel-distance"
+            data-coach-placement="left"
+            data-coach-order="138"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Fuel distance</div>
+            <div class="coach-text">
+                Average fuel consumption per nautical mile or mile traveled.
+                
+                Measured in G/m (gallons per mile).
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#propeller-speed-low"
+            data-coach-placement="left"
+            data-coach-order="139"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Propeller speed low</div>
+            <div class="coach-text">
+                Status of the propeller’s rotational speed. “OK” indicates normal low-speed operation.
+                
+                Measured typically in RPM, but here shown as a status.
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#fuel-used"
+            data-coach-placement="left"
+            data-coach-order="140"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Fuel used</div>
+            <div class="coach-text">
+                Total fuel consumed since the start of the trip or last reset.
+                
+                Measured in G (gallons).
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#traveled-distance"
+            data-coach-placement="left"
+            data-coach-order="141"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Traveled distance</div>
+            <div class="coach-text">
+                Total distance traveled since the start of the trip or last reset.
+                
+                Measured in Nm (nautical miles).
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#engine-hrs"
+            data-coach-placement="left"
+            data-coach-order="142"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine hours</div>
+            <div class="coach-text">
+                Total hours the engine has operated since the start of the trip or last reset.
+                
+                Measured in hours (Hr).
+            </div>
+        </article>
 
         <!-- KILL ENGINE BUTTON -->
         <article
             data-coach-for="#kill-engine-button"
             data-coach-placement="left"
-            data-coach-order="160"
+            data-coach-order="150"
             data-coach-interact="false"
             >
             <div class="coach-title">Kill Engine Button</div>
