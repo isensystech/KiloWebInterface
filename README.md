@@ -121,6 +121,8 @@ KiloWebInterface/
 ### Roadmap
 
 - [ ] Persist tab/screen state across reloads (```localStorage```)
+- [ ] Make Steering twice slower
+- [ ] Actual feedback gauge
 - [x] Wire M20 control surface to backend
 - [x] Wire EGES control surface to backend
 - [x] Add MAVLink telemetry & basic commands (arm/disarm, mode, go-to)
@@ -128,8 +130,14 @@ KiloWebInterface/
 - [x] Add OXE engine controls & gauges
 - [x] Introduce a mock backend and “Demo Mode” for UI-only testing
 - [x] Basic auth/session for protected controls
+- [x] Collective Power Trim Tab Joystick binding
+- [X] Create Moving maps background
+- [x] Create Video feed screen
+- [ ] Create Tacktical Map View
 - [ ] Packaging for deployment on a Raspberry Pi or container
-- [ ] Collective Power Trim Tab Joystick binding
+- [ ] Hookup Ignition Button
+
+
 
 ```
 ### To_do backend
@@ -143,6 +151,7 @@ KiloWebInterface/
 
 ```
 ### To-Do Frontend MVP
+- [ ] Create boat attitude gauge widget
 - [x] Rework id="debug-panel" 
 - [x] Make Gear Popups with progress bar
 - [x] Fix Engine button
@@ -152,12 +161,12 @@ KiloWebInterface/
 - [x] Improve Trim Tab & Gyroscope feedback modal
 - [x] Improve Anchor Control modal
 - [x] Fix Payload contlols safety-caps opening
-- [x] Fix Payload control buttons edit
+- [ ] Fix Payload control buttons edit
 - [ ] Add Battery status dot path
 - [ ] Fill tooltips for 1-8 tabs drawer
-- [x] Create a new PS dash error icon
+- [ ] Create a new PS dash error icon
 - [ ] Add meaning to carousel-titles
-- [x] Make minimal size 1366 x 768, check other resolutions
+- [ ] Make minimal size 1366 x 768, check other resolutions
 - [ ] Adapt to keyboard
 
 
