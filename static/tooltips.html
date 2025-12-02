@@ -285,8 +285,6 @@
 
 
 
-
-
     <!-- STATUS CONTENT -->
     <article
         data-coach-for=".status-content"
@@ -299,9 +297,6 @@
             The Status Content panel provides a live summary of vessel activity and communication state. The connection indicator on the left shows the current link status with the controller or remote host — blue when connected, and red when the link is lost. The status text displays mission identifiers, heading, speed, and operational messages such as “Buoy Release,” “Safety,” or “Designated.” This field updates automatically to reflect the latest telemetry and command acknowledgments. Use it to confirm active connection and monitor real-time vessel behavior without opening diagnostic windows.
         </div>
     </article>
-
-
-
 
 
 
@@ -372,12 +367,193 @@
 
 
 
-
-    
     
 <!-- DRAWER CONTROL PANEL -->
 
     <!-- TAB 1 -->
+
+        <!-- ENGINE BUTTON -->
+        <article
+            data-coach-for="#engine-button"
+            data-coach-placement="left"
+            data-coach-order="60"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine Start</div>
+            <div class="coach-text">
+            The Engine Start control manages the ignition sequence for the vessel’s main engine. In its default state, the control appears as a single “Ignition” button, indicating that the system is armed and ready.
+
+            When pressed, the button expands into a two-step safety layout: Off on the left and Start on the right. Selecting Start initiates the engine cranking sequence and displays a brief visual confirmation while the ignition is engaged. Choosing Off returns the control to its neutral state without starting the engine.
+
+            This two-stage design prevents accidental activation and ensures that the operator confirms intent before powering the engine.
+            </div>
+        </article>
+    
+        <!-- RADAR BUTTON -->
+        <article
+            data-coach-for="#radar-button"
+            data-coach-placement="left"
+            data-coach-order="62"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Radar Control</div>
+            <div class="coach-text">
+                The Radar control manages power to the vessel’s radar system. In its default state, the indicator shows Off, meaning the radar transmitter and display stack are inactive.
+
+                Tapping On powers up the radar and switches the control to its active state. The button highlights to confirm that the radar is energized and transmitting.
+                
+                Tapping Off safely shuts the system down and returns the control to standby, preventing further scans until re-activated.
+
+                This control provides a clear, deliberate on/off workflow to avoid unintended radar transmission.
+            </div>
+        </article>
+        
+        <!-- AIS BUTTON -->
+        <article
+            data-coach-for="#ais-button"
+            data-coach-placement="left"
+            data-coach-order="64"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">AIS Control</div>
+            <div class="coach-text">
+                The AIS control manages the vessel’s Automatic Identification System. In the default Off state, the transceiver is powered down and does not send or receive identification data.
+
+                Selecting Silent enables receive-only mode, allowing the vessel to view nearby AIS traffic without broadcasting its own position.
+
+                Selecting On activates full transmit/receive operation, sending the vessel’s identity and navigation data while continuing to receive information from others.
+
+                Tapping Off powers the system down and returns it to a non-broadcasting standby state.
+            </div>
+        </article>
+        
+        <!-- NAVIGATION LIGHTS BUTTON -->
+        <article
+            data-coach-for="#navlights-button"
+            data-coach-placement="left"
+            data-coach-order="66"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Navigation Lights</div>
+            <div class="coach-text">
+                The Navigation Lights control manages the vessel’s external lighting for visibility and compliance. In the default Off state, all navigation and anchor lights are disabled.
+
+                Selecting Anchor activates anchor-only lighting, used when the vessel is stationary and secured.
+
+                Selecting On enables the full navigation light set for underway operation, ensuring proper visibility and signaling to other vessels.
+
+                Tapping Off turns all lights back off and returns the system to standby.
+            </div>
+        </article>
+
+        <!-- BEACON BUTTON -->
+        <article
+            data-coach-for="#beacon-button"
+            data-coach-placement="left"
+            data-coach-order="68"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Beacon</div>
+            <div class="coach-text">
+                The Beacon control manages the vessel’s signaling beacon. In the default Off state, the beacon is inactive.
+
+                Tapping On activates the beacon, enabling a high-visibility signal used for locating the vessel, marking position in low-visibility conditions, or drawing attention during safety procedures.
+
+                Tapping Off deactivates the beacon and returns the system to standby.
+            </div>
+        </article>
+
+        <!-- PUMP BUTTONS -->
+        <article
+            data-coach-for="#pump-buttons"
+            data-coach-placement="left"
+            data-coach-order="70"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Pumps</div>
+            <div class="coach-text">
+                The vessel is equipped with two independent bilge pumps: a Low pump located at the bottom of the bilge and a High pump positioned above it. Both pumps operate in Auto mode by default, activating only when their respective float switches or water-level sensors detect rising water.
+
+                Selecting On forces the chosen pump to run continuously, bypassing sensor control until you return it to Auto. Each pump is controlled separately, allowing the operator to activate only the level required for the current situation.
+            </div>
+        </article>
+
+        <!-- ACTIVE HELM BUTTON -->
+        <article
+            data-coach-for="#helm-button"
+            data-coach-placement="left"
+            data-coach-order="72"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Active Helm</div>
+            <div class="coach-text">
+                The Active Helm panel shows which control source currently has authority over the vessel’s steering. It includes three status displays — Main, AUX, and Robot — each indicating whether that helm is active, available, or idle.
+
+                The panel also provides a Take Control button. Pressing it requests helm authority for your station, handing steering control to the local operator if no higher-priority source is engaged or if transfer is permitted.
+
+                This interface gives a clear, real-time view of who is steering the vessel and allows the operator to assume control when needed.
+            </div>
+        </article>
+
+        <!-- AUTOPILOT BUTTON -->
+        <article
+            data-coach-for="#ap-button"
+            data-coach-placement="left"
+            data-coach-order="74"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Autopilot (AP)</div>
+            <div class="coach-text">
+                The Autopilot panel manages the vessel’s steering modes. Tapping the AP button opens the mode selector, where each option represents a distinct control strategy for navigation. Selecting a mode updates the button label and sends the corresponding command to the autopilot controller, clearly indicating whether the vessel is under manual steering or automated control.
+
+                Autopilot Mode Definitions:
+
+                Manual — The vessel is steered directly by the operator with no autopilot stabilization.
+                
+                Hold — Maintains the current heading or rudder position for basic course stabilization.
+                                
+                Auto — Follows a commanded course or navigation plan, applying continuous steering corrections.
+                                
+                Loiter — Circles a fixed point in a slow, controlled orbit for station-keeping or waiting.
+                                
+                Acro — Provides direct, rate-based steering with minimal stabilization for advanced operators.
+                                
+                RTL (Return to Launch) — Returns the vessel to its home or launch position using autonomous navigation.
+            </div>
+        </article>
+
+        <!-- TRIM TAB BUTTON -->
+        <article
+            data-coach-for="#trimtab-button"
+            data-coach-placement="left"
+            data-coach-order="76"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Trim Tab</div>
+            <div class="coach-text">
+                The Trim Tab control balances the hull side-to-side using the port and starboard tabs. Each vertical slider sets a tab’s deflection from +7 (tab up) through 0 (neutral) to −7 (tab down), with fills showing how far you’ve moved from center. You can drag the thumb directly or use the ▲/▼ nudge buttons for precise adjustments; all values are constrained to the displayed range.
+
+                A live roll indicator above the sliders visualizes how tab adjustments affect hull attitude: the boat illustration tilts dynamically as you change either side, and the numeric roll readout updates in real time. This feedback loop lets you see the vessel “react” to your inputs, helping you level the boat quickly and reduce heel under load or uneven weight distribution.
+            </div>
+        </article>
+
+        <!-- ANCHOR BUTTON -->
+        <article
+            data-coach-for="#anchor-button"
+            data-coach-placement="left"
+            data-coach-order="78"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Anchor</div>
+            <div class="coach-text">
+                The Anchor control manages how much rode you pay out and shows your holding setup at a glance. Opening it reveals a vertical slider from Up/0 down to 60 m; drag the thumb or use the ▲/▼ nudge buttons to lower or raise the line. As you adjust, both the rode length readout and the mini gauge under the boat icon update in real time.
+
+                A built-in depth display shows your current water depth, so you can immediately judge how much rode you need for safe anchoring.
+
+                Use the scope selector to choose a target ratio (4:1 or 7:1). The interface highlights how close you are to that target, helping you match rode length to depth for reliable holding. Adjust gradually and follow the live indicators to avoid overpaying line or drifting outside your intended scope.
+            </div>
+        </article>
+
 
     <!-- TAB 2 -->
 
@@ -387,7 +563,7 @@
         <article
             data-coach-for="#kill-engine-button"
             data-coach-placement="left"
-            data-coach-order="60"
+            data-coach-order="160"
             data-coach-interact="false"
             >
             <div class="coach-title">Kill Engine Button</div>
