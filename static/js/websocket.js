@@ -17,7 +17,8 @@ import {
     updateTelemetryValue, 
     updateRpmGauge, 
     updateRelayVoltage,  // <-- Handles CZone voltage (Tab 4) AND Left Gauge
-    updateM20RelayCurrent // <-- Handles M20 current (Tab 8)
+    updateM20RelayCurrent, // <-- Handles M20 current (Tab 8)
+    updateFuelGauge
 } from './modules/ui-telemetry.js';
 
 // ============================================================================
@@ -130,6 +131,9 @@ function handleIncomingMessage(evt) {
       break;
     case 'relay.voltage':
       updateRelayVoltage(msg);
+      break;
+    case 'fuel_gauge':
+      updateFuelGauge(msg.percentage);
       break;
     case 'relay.state':
       const czone_block = document.querySelector(`.battery-button-block[data-bank="${msg.bank}"][data-switch="${msg.switch}"]`);
