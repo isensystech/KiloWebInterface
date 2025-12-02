@@ -792,6 +792,102 @@
         </article>
 
     <!-- TAB 4 -->
+
+        <article
+            data-coach-for="#kill-engine-button"
+            data-coach-placement="left"
+            data-coach-order="160"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine Start</div>
+            <div class="coach-text">
+                Controls the starter battery feed for engine cranking. The Off/On toggle connects or disconnects the start circuit, while the voltage readout shows live battery potential under load. Use this block to confirm the starter bank is healthy before engaging the engine.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#kill-engine-button"
+            data-coach-placement="left"
+            data-coach-order="161"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine Control</div>
+            <div class="coach-text">
+                Supplies power to the engine control electronics and sensors. The Off/On toggle enables or cuts power to this control rail, and the voltage display tracks its live supply level. Use it to verify that engine control systems are powered and within a safe voltage range.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#kill-engine-button"
+            data-coach-placement="left"
+            data-coach-order="162"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine → House</div>
+            <div class="coach-text">
+                Manages the relay that links the engine bank to the house bank. Off keeps the banks isolated, On forces them to be tied together, and Auto lets the system connect them based on configured charge conditions. The voltage readout shows the relay side monitored for this link, helping you see when the engine is effectively charging the house bank.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#kill-engine-button"
+            data-coach-placement="left"
+            data-coach-order="163"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">House → Payload 1</div>
+            <div class="coach-text">
+                Controls the power feed from the house bank to the first payload bus. The Off/On toggle disconnects or energizes Payload 1, while the voltage display shows the live supply level at that branch. Use it to power up or shed the first payload group as needed.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#kill-engine-button"
+            data-coach-placement="left"
+            data-coach-order="164"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">House Loads</div>
+            <div class="coach-text">
+                Represents the general house-load rail (lights, electronics, and auxiliary systems). The Off/On toggle controls power to this distribution line, and the voltage readout indicates how the house supply is holding under current load. Use this block to monitor and manage overall house consumption.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#kill-engine-button"
+            data-coach-placement="left"
+            data-coach-order="165"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Payload 1 Loads</div>
+            <div class="coach-text">
+                Controls and monitors the primary payload load group. Off/On switches the group’s supply, and the voltage value reflects the active bus level. Use this to confirm that Payload 1 equipment is powered correctly or safely shut down.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#kill-engine-button"
+            data-coach-placement="left"
+            data-coach-order="166"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Payload 1 → Payload 2</div>
+            <div class="coach-text">
+                Manages the feed from the first payload bus to the second. Turning it On extends power downstream to Payload 2; Off keeps the second stage isolated. The voltage display shows the health of this link so you can see when the second payload rail is actually energized.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#kill-engine-button"
+            data-coach-placement="left"
+            data-coach-order="167"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Payload 2 Loads</div>
+            <div class="coach-text">
+                Controls the second payload load group at the far end of the chain. The Off/On toggle powers the Payload 2 devices, and the voltage readout confirms supply level on that bus. Use this block to bring the final payload cluster online or take it offline without affecting upstream circuits.  
+            </div>
+        </article>
      
     <!-- TAB 5 -->
 
