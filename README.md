@@ -122,7 +122,7 @@ KiloWebInterface/
 
 - [ ] Persist tab/screen state across reloads (```localStorage```)
 - [ ] Make Steering twice slower
-- [ ] Actual feedback gauge
+- [ ] Actual steering feedback gauge
 - [x] Wire M20 control surface to backend
 - [x] Wire EGES control surface to backend
 - [x] Add MAVLink telemetry & basic commands (arm/disarm, mode, go-to)
@@ -141,13 +141,16 @@ KiloWebInterface/
 
 ```
 ### To_do backend
-- [ ] Fix slow login screen.
+- [x] Fix slow login screen
 - [ ] Fix Steering gauge to -30 to +30
 - [x] Introduce "Springy", "Pilot hold" control schema
-- [x] Inroduce Gear datapoint in WS message.
+- [x] Inroduce Gear datapoint in WS message
 - [x] Fix screensave default values
-- [ ] Joystick dash icon should start in red
+- [x] Joystick dash icon should start in red
 - [x] "Crewed" mode to AP Modes 
+- [x] Wire up fuel gauge
+- [ ] Eges Switch Manual mode "2" implementation
+
 
 ```
 ### To-Do Frontend MVP
