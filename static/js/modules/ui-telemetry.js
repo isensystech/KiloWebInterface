@@ -604,6 +604,7 @@ export function updateFuelGauge(percentage) {
   const pctDisplay = clampedPct.toFixed(2);
   const gallons = (clampedPct / 100) * TELEMETRY_CONFIG.fuelGauge.capacityGallons;
   const gallonsDisplay = gallons.toFixed(2);
+  const fillColor = clampedPct < 10 ? 'var(--gauge-red)' : 'var(--color-white)';
   const isVisibleGauge = (el) => !el.closest('#screensaverModal');
 
   Array.from(document.querySelectorAll('.fuel-gauge.gauge-block'))
@@ -612,7 +613,10 @@ export function updateFuelGauge(percentage) {
 
   Array.from(document.querySelectorAll('#fuel-mini-gauge-fill'))
     .filter(isVisibleGauge)
-    .forEach((fill) => { fill.style.width = pctCss; });
+    .forEach((fill) => {
+      fill.style.width = pctCss;
+      fill.style.backgroundColor = fillColor;
+    });
 
   Array.from(document.querySelectorAll('#fuel-gauge-value'))
     .filter(isVisibleGauge)
