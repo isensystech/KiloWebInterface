@@ -1571,7 +1571,7 @@
                     <div class="pane-grid">
 
                         <!-- Mission hours -->
-                        <div class="drawer-button-block">
+                        <div class="drawer-button-block" id="mission-hours">
                             <div class="drawer-button-header">
                                 <img class="drawer-button-icon" src="/static/images/time-light.svg" alt="Temperature icon">
                                 <span class="drawer-button-title">Mission hours</span>
@@ -1583,7 +1583,7 @@
                         </div>
                         
                         <!-- Engine hours -->
-                        <div class="drawer-button-block">
+                        <div class="drawer-button-block" id="engine-hours">
                             <div class="drawer-button-header">
                                 <img class="drawer-button-icon" src="/static/images/engine-hrs.svg" alt="Temperature icon">
                                 <span class="drawer-button-title">Engine hour</span>
@@ -1596,7 +1596,7 @@
 
                         
                         <!-- Last Service -->
-                        <div class="drawer-button-block">
+                        <div class="drawer-button-block" id="last-service">
                             <div class="drawer-button-header">
                                 <img class="drawer-button-icon" src="/static/images/engine.svg" alt="Temperature icon">
                                 <span class="drawer-button-title">Last Service</span>
@@ -1613,37 +1613,37 @@
                         <div class="button-block">
 
                             <!-- Kill Engine button -->
-                            <button class="big-drawer-button">
+                            <button class="big-drawer-button" id="kill-engine">
                                 <img class="button-icon" src="/static/images/engine.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill Engine</span>
                             </button>
 
-                            <button class="big-drawer-button">
+                            <button class="big-drawer-button" id="kill-12v-bus">
                                 <img class="button-icon" src="/static/images/battery.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill 12V Bus</span>
                             </button>
                             
-                            <button class="big-drawer-button">
+                            <button class="big-drawer-button" id="kill-24v-bus">
                                 <img class="button-icon" src="/static/images/battery.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill 24V Bus</span>
                             </button>
                             
-                            <button class="big-drawer-button">
+                            <button class="big-drawer-button" id="kill-payload-power">
                                 <img class="button-icon" src="/static/images/kilo-icon.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill Payload Power</span>
                             </button>
                             
-                            <button class="big-drawer-button">
+                            <button class="big-drawer-button" id="kill-radio">
                                 <img class="button-icon" src="/static/images/radio-icon.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill Radio</span>
                             </button>
                             
-                            <button class="big-drawer-button">
+                            <button class="big-drawer-button" id="kill-satellite">
                                 <img class="button-icon" src="/static/images/satellite.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Kill Satellite</span>
                             </button>
                             
-                            <button class="big-drawer-button">
+                            <button class="big-drawer-button" id="silent-mode">
                                 <img class="button-icon" src="/static/images/silent-mode.svg" alt="Engine icon">
                                 <span class="button-drawer-label">Silent Mode</span>
                             </button>
@@ -1662,7 +1662,7 @@
 
                         <div class="pane-grid">
 
-                            <div class="pane-card">
+                            <div class="pane-card" id="assets-card-1">
                                 <div class="asset-main">
 
                                     <div class="asset-info">
@@ -1687,7 +1687,7 @@
                                 </div>
                             </div>
                             
-                            <div class="pane-card">
+                            <div class="pane-card" id="assets-card-2">
                                 <div class="asset-main">
 
                                     <div class="asset-info">
@@ -1712,7 +1712,7 @@
                                 </div>
                             </div>
 
-                            <div class="pane-card">
+                            <div class="pane-card" id="assets-card-3">
                                 <div class="asset-main">
 
                                     <div class="asset-info">
@@ -1737,7 +1737,7 @@
                                 </div>
                             </div>
                             
-                            <div class="pane-card">
+                            <div class="pane-card" id="assets-card-4">
                                 <div class="asset-main">
 
                                     <div class="asset-info">
@@ -1762,7 +1762,7 @@
                                 </div>
                             </div>
 
-                            <div class="pane-card">
+                            <div class="pane-card" id="assets-card-5">
                                 <div class="asset-main">
 
                                     <div class="asset-info">
@@ -1787,7 +1787,7 @@
                                 </div>
                             </div>
                             
-                            <div class="pane-card">
+                            <div class="pane-card" id="assets-card-6">
                                 <div class="asset-main">
 
                                     <div class="asset-info">
@@ -1812,7 +1812,7 @@
                                 </div>
                             </div>
                             
-                            <div class="pane-card">
+                            <div class="pane-card" id="assets-card-7">
                                 <div class="asset-main">
 
                                     <div class="asset-info">
@@ -1837,7 +1837,7 @@
                                 </div>
                             </div>
 
-                            <div class="pane-card">
+                            <div class="pane-card" id="assets-card-8">
                                 <div class="asset-main">
 
                                     <div class="asset-info">
@@ -1862,7 +1862,7 @@
                                 </div>
                             </div>
 
-                            <div class="pane-card">
+                            <div class="pane-card" id="assets-card-9">
                                 <div class="asset-main">
 
                                     <div class="asset-info">
@@ -1887,7 +1887,7 @@
                                 </div>
                             </div>
                             
-                            <div class="pane-card">
+                            <div class="pane-card" id="assets-card-10">
                                 <div class="asset-main">
 
                                     <div class="asset-info">
@@ -1912,7 +1912,7 @@
                                 </div>
                             </div>
 
-                            <div class="pane-card">
+                            <div class="pane-card" id="assets-card-11">
                                 <div class="asset-main">
 
                                     <div class="asset-info">
