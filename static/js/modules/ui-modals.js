@@ -1500,6 +1500,7 @@ function synthesizeClickSequence(target, originEvent) {
   let hoverEl  = null;      // hovered step target
   let rafHoverId = 0;       // rAF throttle
   let combinedSelectors = '';
+  let drawerTabListenerAttached = false;
 
   /* Spotlight helpers (CSS variables drive the mask hole) */
   function setSpotlightByRect(r){
@@ -1536,6 +1537,57 @@ function synthesizeClickSequence(target, originEvent) {
     if (!el || !el.closest) return -1;
     for (let i = 0; i < TOUR_STEPS.length; i++){
       if (el.closest(TOUR_STEPS[i].selector)) return i;
+    }
+    return -1;
+  }
+
+  function isElementVisible(el) {
+    if (!el || !document.body.contains(el)) return false;
+    const style = getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0;
+  }
+
+  function clearCoachHighlight() {
+    if (hoverEl && hoverEl !== activeEl) hoverEl.classList.remove('coach-glow');
+    if (activeEl) activeEl.classList.remove('coach-glow');
+    hoverEl = null;
+    activeEl = null;
+    if (mask) {
+      mask.style.setProperty('--r', '0px');
+      mask.style.setProperty('--x', '0px');
+      mask.style.setProperty('--y', '0px');
+    }
+    if (tip) {
+      tip.style.transform = 'translate(-9999px, -9999px)';
+      tipText.innerHTML = '';
+    }
+  }
+
+  function findNextVisibleStep(startIdx = 0) {
+    if (!TOUR_STEPS.length) return -1;
+    for (let offset = 0; offset < TOUR_STEPS.length; offset++) {
+      const i = (startIdx + offset) % TOUR_STEPS.length;
+      const candidate = document.querySelector(TOUR_STEPS[i].selector);
+      if (isElementVisible(candidate)) return i;
+    }
+    return -1;
+  }
+
+  function getTabNumberForElement(el) {
+    const pane = el?.closest?.('.tab-pane[data-tab]');
+    const tabNum = pane ? Number(pane.dataset.tab) : NaN;
+    return Number.isFinite(tabNum) ? tabNum : null;
+  }
+
+  function findFirstStepForTab(tabNum) {
+    if (!Number.isFinite(tabNum)) return -1;
+    for (let i = 0; i < TOUR_STEPS.length; i++) {
+      const target = document.querySelector(TOUR_STEPS[i].selector);
+      if (!target) continue;
+      const paneNum = getTabNumberForElement(target);
+      if (paneNum === tabNum) return i;
     }
     return -1;
   }
@@ -1669,10 +1721,22 @@ async function renderStep(){
   function renderStep(){
     if (!TOUR_STEPS.length) return;
     const step = TOUR_STEPS[idx];
-    const target = document.querySelector(step.selector);
-    if (!target){
-      idx = (idx + 1) % TOUR_STEPS.length;
-      return renderStep();
+    let target = document.querySelector(step.selector);
+    if (!isElementVisible(target)) {
+      const nextIdx = findNextVisibleStep(idx);
+      if (nextIdx < 0) {
+        clearCoachHighlight();
+        return;
+      }
+      if (nextIdx !== idx) {
+        idx = nextIdx;
+        return renderStep();
+      }
+      target = document.querySelector(step.selector);
+      if (!isElementVisible(target)) {
+        clearCoachHighlight();
+        return;
+      }
     }
 
     if (activeEl && activeEl !== hoverEl) activeEl.classList.remove('coach-glow');
@@ -1757,6 +1821,19 @@ async function renderStep(){
     e.stopPropagation();
   }
 
+  function onDrawerTabChanged(e) {
+    if (overlay.hidden) return;
+    const nextTab = Number(e?.detail?.tab);
+    clearCoachHighlight();
+    requestAnimationFrame(() => {
+      const tabIdx = findFirstStepForTab(nextTab);
+      if (tabIdx >= 0) {
+        idx = tabIdx;
+        renderStep();
+      }
+    });
+  }
+
   /* Keyboard */
   function onKey(e){
     if (e.key === 'Escape') return closeTour();
@@ -1778,6 +1855,10 @@ async function renderStep(){
     overlay.addEventListener('mousemove', onOverlayMouseMove);
     overlay.addEventListener('click', onOverlayClick);
     overlay.addEventListener('pointerdown', onOverlayPointerDownCapture, true); // capture phase
+    if (!drawerTabListenerAttached) {
+      window.addEventListener('drawer:tab-changed', onDrawerTabChanged, { passive: true });
+      drawerTabListenerAttached = true;
+    }
 
   }
 
@@ -1787,6 +1868,10 @@ function closeTour(){
   window.removeEventListener('resize', renderStep);
   overlay.removeEventListener('mousemove', onOverlayMouseMove);
   overlay.removeEventListener('click', onOverlayClick);
+  if (drawerTabListenerAttached) {
+    window.removeEventListener('drawer:tab-changed', onDrawerTabChanged);
+    drawerTabListenerAttached = false;
+  }
 
   if (rafHoverId) { cancelAnimationFrame(rafHoverId); rafHoverId = 0; }
 
