@@ -94,6 +94,7 @@ export function initializeDrawerTabs() {
     panes.forEach(p => p.classList.remove('active'));
     const pane = panes.find(p => Number(p.dataset.tab) === n);
     if (pane) pane.classList.add('active');
+    window.dispatchEvent(new CustomEvent('drawer:tab-changed', { detail: { tab: n } }));
   }
 
   tabs.forEach(tab => {
