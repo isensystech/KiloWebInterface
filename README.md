@@ -136,7 +136,8 @@ KiloWebInterface/
 - [ ] Create Tacktical Map View
 - [ ] Packaging for deployment on a Raspberry Pi or container
 - [ ] Hookup Ignition Button
-
+- [ ] Create WebSocket hookup for screensaver modal
+- [ ] Refractor Throttle (too twitchy on the lower range of travel, hard to set percicely, scaling is too agressive, introduce "inercia" limitation)
 
 
 ```
@@ -182,3 +183,4 @@ KiloWebInterface/
 - [ ] Unify all objects (buttons, titles, sliders, displays, ect.)
 - [ ] Configure animation in legal-modal, add kilo-logo.svg
 - [ ] Repaint the central boat picture
+- [ ] "Safety" label becomes unreadable on bright FPV background.

@@ -21,6 +21,27 @@
 
 <body>
     <div id="moving-map-layer" aria-hidden="true"></div>
+    <div id="map-pip-controls" class="map-pip-controls camera-controls" aria-hidden="true">
+        <button class="camera-btn" type="button" aria-pressed="false" data-camera-mode-btn>
+            <span class="camera-btn-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                </svg>
+            </span>
+            <span class="camera-btn-label">IR</span>
+        </button>
+        <button class="camera-btn" type="button" aria-pressed="false" data-camera-zoom-btn>
+            <span class="camera-btn-label">X2</span>
+        </button>
+        <button class="camera-btn" type="button" aria-pressed="false" data-camera-record-btn>
+            <span class="camera-btn-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="12" cy="12" r="5"></circle>
+                </svg>
+            </span>
+            <span class="camera-btn-label">Rec</span>
+        </button>
+    </div>
     <div class="control-screen">
         <!-- INFO BAR -->
         <div class="info-bar">
@@ -242,28 +263,28 @@
         </div>
 
         <div id="camera-feed-overlay" class="camera-feed-overlay" aria-hidden="true">
-            <div class="camera-feed-body">
+            <div class="camera-feed-body" id="camera-feed-stage" role="button" aria-label="Swap FPV and map views">
                 <img src="/static/images/DummyCameraFeed.jpg" alt="Live camera feed placeholder" class="camera-feed-img">
             </div>
             <div class="camera-controls">
-                <button id="camera-fullscreen-btn" class="camera-btn" type="button" aria-pressed="false">
+                <button class="camera-btn" type="button" aria-pressed="false" data-camera-mode-btn>
                     <span class="camera-btn-icon" aria-hidden="true">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
                         </svg>
                     </span>
-                    <span class="camera-btn-label">Full Screen</span>
+                    <span class="camera-btn-label">IR</span>
                 </button>
-                <button id="camera-zoom-btn" class="camera-btn" type="button" aria-pressed="false">
+                <button class="camera-btn" type="button" aria-pressed="false" data-camera-zoom-btn>
                     <span class="camera-btn-label">X2</span>
                 </button>
-                <button id="camera-mode-btn" class="camera-btn" type="button" aria-pressed="false">
+                <button class="camera-btn" type="button" aria-pressed="false" data-camera-record-btn>
                     <span class="camera-btn-icon" aria-hidden="true">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 12h18M12 3v18"/>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="5"></circle>
                         </svg>
                     </span>
-                    <span class="camera-btn-label">Night Vision</span>
+                    <span class="camera-btn-label">Rec</span>
                 </button>
             </div>
         </div>

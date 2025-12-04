@@ -3,6 +3,8 @@
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
+import { invalidateMovingMapSize } from '../map-layer.js';
+
 const NAVIGATION_CONFIG = Object.freeze({
     // Number of carousel screens (used to wrap arrow navigation)
     screenCount: 3
@@ -28,87 +30,84 @@ export function initializeNavigation() {
     const nextArrow = document.getElementById('next-screen');
     const cameraOverlay = document.getElementById('camera-feed-overlay');
     const cameraFeedImg = cameraOverlay?.querySelector('.camera-feed-img');
-    const cameraFullscreenBtn = document.getElementById('camera-fullscreen-btn');
-    const cameraZoomBtn = document.getElementById('camera-zoom-btn');
-    const cameraModeBtn = document.getElementById('camera-mode-btn');
+    const cameraStage = document.getElementById('camera-feed-stage');
     const movingMapLayer = document.getElementById('moving-map-layer');
+    const mapPipControls = document.getElementById('map-pip-controls');
+    const modeButtons = Array.from(document.querySelectorAll('[data-camera-mode-btn]'));
+    const zoomButtons = Array.from(document.querySelectorAll('[data-camera-zoom-btn]'));
+    const recordButtons = Array.from(document.querySelectorAll('[data-camera-record-btn]'));
+    const modeLabels = modeButtons.map(btn => btn.querySelector('.camera-btn-label') || btn);
+    const zoomLabels = zoomButtons.map(btn => btn.querySelector('.camera-btn-label') || btn);
+    const recordLabels = recordButtons.map(btn => btn.querySelector('.camera-btn-label') || btn);
 
     const cameraState = {
-        fullscreen: false,
+        primary: 'map',
         zoom: false,
-        night: false
+        mode: 'eo',
+        recording: false
     };
-
-    const fullscreenLabel = cameraFullscreenBtn?.querySelector('.camera-btn-label');
-    const zoomLabel = cameraZoomBtn?.querySelector('.camera-btn-label') || cameraZoomBtn;
-    const modeLabel = cameraModeBtn?.querySelector('.camera-btn-label') || cameraModeBtn;
 
     function applyCameraLayout() {
         const body = document.body;
         if (!body) return;
 
         const isCameraView = currentScreen === 3;
-        const fullscreenActive = isCameraView && cameraState.fullscreen;
-        const zoomActive = isCameraView && cameraState.zoom;
+        const cameraPrimary = isCameraView && cameraState.primary === 'camera';
 
-        body.classList.toggle('camera-fullscreen', fullscreenActive);
-        body.classList.toggle('camera-zoomed', zoomActive);
+        body.classList.toggle('fpv-camera-primary', cameraPrimary);
+        body.classList.toggle('fpv-map-primary', isCameraView && cameraState.primary === 'map');
+        body.classList.toggle('fpv-pip-zoomed', isCameraView && cameraState.zoom);
 
-        if (cameraFullscreenBtn) {
-            cameraFullscreenBtn.setAttribute('aria-pressed', fullscreenActive ? 'true' : 'false');
-        }
-        if (fullscreenLabel) {
-            fullscreenLabel.textContent = fullscreenActive ? 'Exit Full Screen' : 'Full Screen';
+        if (cameraOverlay) {
+            cameraOverlay.classList.toggle('is-recording', isCameraView && cameraState.recording);
         }
 
-        if (cameraZoomBtn) {
-            cameraZoomBtn.setAttribute('aria-pressed', zoomActive ? 'true' : 'false');
-        }
-        if (zoomLabel) {
-            zoomLabel.textContent = zoomActive ? 'X1' : 'X2';
+        if (cameraFeedImg) {
+            cameraFeedImg.src = cameraState.mode === 'ir' ? CAMERA_MEDIA.night : CAMERA_MEDIA.normal;
         }
 
-        if (cameraModeBtn) {
-            cameraModeBtn.setAttribute('aria-pressed', cameraState.night ? 'true' : 'false');
-        }
-        if (modeLabel) {
-            modeLabel.textContent = cameraState.night ? 'Normal Camera' : 'Night Vision';
-        }
+        modeButtons.forEach(btn => btn.setAttribute('aria-pressed', cameraState.mode === 'ir' ? 'true' : 'false'));
+        modeLabels.forEach(label => { label.textContent = cameraState.mode === 'ir' ? 'EO' : 'IR'; });
+
+        zoomButtons.forEach(btn => btn.setAttribute('aria-pressed', cameraState.zoom ? 'true' : 'false'));
+        zoomLabels.forEach(label => { label.textContent = cameraState.zoom ? 'X1' : 'X2'; });
+
+        recordButtons.forEach(btn => btn.setAttribute('aria-pressed', cameraState.recording ? 'true' : 'false'));
+        recordLabels.forEach(label => { label.textContent = cameraState.recording ? 'Stop' : 'Rec'; });
 
         if (movingMapLayer) {
-            if (fullscreenActive) {
-                movingMapLayer.style.setProperty('position', 'fixed', 'important');
-                movingMapLayer.style.setProperty('right', '24px', 'important');
-                movingMapLayer.style.setProperty('bottom', 'auto', 'important');
-                const topValue = Math.max(0, window.innerHeight - 220 - 24);
-                movingMapLayer.style.setProperty('top', `${topValue}px`, 'important');
-                movingMapLayer.style.setProperty('left', 'auto', 'important');
-                movingMapLayer.style.setProperty('inset', 'auto', 'important');
-                movingMapLayer.style.setProperty('width', '360px', 'important');
-                movingMapLayer.style.setProperty('height', '220px', 'important');
-                movingMapLayer.style.setProperty('pointer-events', 'auto', 'important');
-                movingMapLayer.style.setProperty('z-index', '1400', 'important');
-            } else {
+            movingMapLayer.classList.toggle('is-pip', cameraPrimary);
+            movingMapLayer.classList.toggle('is-pip-zoomed', cameraPrimary && cameraState.zoom);
+            if (!cameraPrimary) {
                 movingMapLayer.removeAttribute('style');
             }
+            invalidateMovingMapSize();
+        }
+
+        if (mapPipControls) {
+            const isVisible = cameraPrimary && currentScreen === 3;
+            mapPipControls.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
+            mapPipControls.classList.toggle('is-zoomed', cameraPrimary && cameraState.zoom);
         }
     }
 
-    function setCameraMode(nightOn) {
-        cameraState.night = nightOn;
-        if (cameraFeedImg) {
-            cameraFeedImg.src = nightOn ? CAMERA_MEDIA.night : CAMERA_MEDIA.normal;
-        }
-        applyCameraLayout();
-    }
-
-    function toggleFullscreen() {
-        cameraState.fullscreen = !cameraState.fullscreen;
+    function setCameraMode(mode) {
+        cameraState.mode = mode === 'ir' ? 'ir' : 'eo';
         applyCameraLayout();
     }
 
     function toggleZoom() {
         cameraState.zoom = !cameraState.zoom;
+        applyCameraLayout();
+    }
+
+    function toggleRecording() {
+        cameraState.recording = !cameraState.recording;
+        applyCameraLayout();
+    }
+
+    function swapFeeds() {
+        cameraState.primary = cameraState.primary === 'camera' ? 'map' : 'camera';
         applyCameraLayout();
     }
 
@@ -124,13 +123,13 @@ export function initializeNavigation() {
             body.classList.add('view-camera');
         }
 
-        if (screenNumber !== 3) {
-            body.classList.remove('camera-fullscreen', 'camera-zoomed');
-        }
-
         if (cameraOverlay) {
             const isCamera = screenNumber === 3;
             cameraOverlay.setAttribute('aria-hidden', isCamera ? 'false' : 'true');
+        }
+
+        if (screenNumber !== 3) {
+            body.classList.remove('fpv-camera-primary', 'fpv-map-primary', 'fpv-pip-zoomed');
         }
 
         applyCameraLayout();
@@ -197,29 +196,37 @@ export function initializeNavigation() {
         });
     }
 
-    if (cameraFullscreenBtn) {
-        cameraFullscreenBtn.addEventListener('click', () => {
-            toggleFullscreen();
+    if (cameraStage) {
+        cameraStage.addEventListener('click', () => {
+            if (currentScreen === 3 && cameraState.primary === 'map') {
+                swapFeeds();
+            }
         });
     }
 
-    if (cameraZoomBtn) {
-        cameraZoomBtn.addEventListener('click', () => {
+    zoomButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
             toggleZoom();
         });
-    }
+    });
 
-    if (cameraModeBtn) {
-        cameraModeBtn.addEventListener('click', () => {
-            setCameraMode(!cameraState.night);
+    modeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const nextMode = cameraState.mode === 'eo' ? 'ir' : 'eo';
+            setCameraMode(nextMode);
         });
-    }
+    });
+
+    recordButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            toggleRecording();
+        });
+    });
 
     if (movingMapLayer) {
         movingMapLayer.addEventListener('click', () => {
-            if (cameraState.fullscreen && currentScreen === 3) {
-                cameraState.fullscreen = false;
-                applyCameraLayout();
+            if (currentScreen === 3 && cameraState.primary === 'camera') {
+                swapFeeds();
             }
         });
     }

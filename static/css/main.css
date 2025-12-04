@@ -78,6 +78,13 @@
     --gauge-blue: #1f8fff;
     --color-tech: rgb(255, 0, 200); 
 
+    /* FPV layout */
+    --fpv-pip-width: 350px;
+    --fpv-pip-height: 220px;
+    --fpv-pip-offset-right: calc(3vh + 288px + 24px);
+    --fpv-pip-offset-bottom: calc(64px + 24px);
+    --fpv-top-offset: 36px;
+
 
     /* HOVER */
     --hover-brightness: 1.08; 
@@ -273,38 +280,52 @@
 
         .camera-feed-overlay {
         position: fixed;
-        right: calc(3vh + 288px + 16px);
-        bottom: 28px;
+        right: var(--fpv-pip-offset-right);
+        bottom: var(--fpv-pip-offset-bottom);
         left: auto;
         top: auto;
         transform: none;
-        z-index: 1100;
+        z-index: 500;
         display: none;
-        width: 300px;
-        max-width: 90vw;
-        max-height: 72vh;
+        width: var(--fpv-pip-width);
+        max-width: 92vw;
+        max-height: 76vh;
         border-radius: 16px;
         overflow: hidden;
         box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45);
-        background: rgba(0,0,0,0.85);
+        background: linear-gradient(160deg, rgba(10,10,10,0.95), rgba(24,24,24,0.9));
         border: 1px solid rgba(255,255,255,0.08);
         padding: 12px;
         flex-direction: column;
         gap: 10px;
+        backdrop-filter: blur(4px);
+        }
+
+        .camera-feed-overlay.is-recording {
+        border-color: rgba(255, 87, 87, 0.55);
+        box-shadow: 0 0 0 1px rgba(255, 87, 87, 0.25), 0 20px 48px rgba(0, 0, 0, 0.55);
         }
 
         .camera-feed-body {
-        border-radius: 10px;
+        border-radius: 12px;
         overflow: hidden;
         background: #000;
         box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+        cursor: pointer;
+        min-height: var(--fpv-pip-height);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .camera-feed-body:hover {
+        transform: translateY(-1px);
+        box-shadow: inset 0 0 0 1px rgba(76, 227, 255, 0.35);
         }
 
         .camera-feed-overlay img,
         .camera-feed-body img {
         display: block;
         width: 100%;
-        height: auto;
+        height: 100%;
         object-fit: cover;
         }
 
@@ -331,13 +352,24 @@
         font: var(--type-caption-mono-bold);
         letter-spacing: 0.04em;
         cursor: pointer;
-        transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+        transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
         }
 
         .camera-btn:hover {
         transform: translateY(-1px);
         border-color: rgba(76, 227, 255, 0.5);
         background: rgba(76, 227, 255, 0.08);
+        }
+
+        .camera-btn[aria-pressed="true"] {
+        border-color: rgba(76, 227, 255, 0.6);
+        background: rgba(76, 227, 255, 0.14);
+        }
+
+        #camera-record-btn[aria-pressed="true"] {
+        border-color: rgba(255, 87, 87, 0.65);
+        background: rgba(255, 87, 87, 0.18);
+        color: #ff5757;
         }
 
         .camera-btn-icon {
@@ -347,39 +379,75 @@
         opacity: 0.9;
         }
 
-        body.camera-zoomed .camera-feed-overlay {
-        width: min(960px, 90vw);
-        max-height: 85vh;
-        right: 32px;
-        bottom: 32px;
+        body.fpv-pip-zoomed .camera-feed-overlay {
+        width: min(calc(var(--fpv-pip-width) * 2), 92vw);
+        max-height: 88vh;
+        right: var(--fpv-pip-offset-right);
+        bottom: calc(var(--fpv-pip-offset-bottom) + 8px);
         }
 
-        body.camera-fullscreen .camera-feed-overlay {
-        top: 0;
+        .map-pip-controls {
+        position: fixed;
+        right: var(--fpv-pip-offset-right);
+        bottom: calc(var(--fpv-pip-offset-bottom) + 6px);
+        display: none;
+        z-index: 1500;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 4px 2px;
+        }
+
+        body.fpv-camera-primary .map-pip-controls {
+        display: inline-flex;
+        }
+
+        body.fpv-camera-primary.fpv-pip-zoomed .map-pip-controls {
+        bottom: calc(var(--fpv-pip-offset-bottom) + 14px);
+        }
+
+        body.fpv-camera-primary .camera-feed-overlay {
+        top: var(--fpv-top-offset);
         left: 0;
-        transform: none;
+        right: 0;
+        bottom: 0;
         width: 100vw;
-        height: 100vh;
-        max-height: 100vh;
+        height: calc(100vh - var(--fpv-top-offset));
+        max-height: calc(100vh - var(--fpv-top-offset));
         border-radius: 0;
         padding: 18px 18px 14px;
         background: rgba(0,0,0,0.9);
         box-shadow: none;
+        align-items: center;
+        justify-content: flex-start;
         }
 
-        body.camera-fullscreen .camera-feed-body {
+        body.fpv-camera-primary .camera-feed-body {
         flex: 1;
+        min-height: 0;
+        border-radius: 16px;
+        max-width: min(92vw, 1480px);
+        width: 100%;
         }
 
-        body.camera-fullscreen #moving-map-layer {
-        width: min(360px, 42vw);
-        height: 220px;
+        body.fpv-camera-primary .camera-controls {
+        justify-content: flex-end;
+        width: 100%;
+        max-width: min(92vw, 1480px);
+        }
+
+        body.fpv-camera-primary .camera-feed-overlay {
+        align-items: center;
+        }
+
+        body.fpv-camera-primary #moving-map-layer {
+        width: min(var(--fpv-pip-width), 94vw);
+        height: var(--fpv-pip-height);
         position: fixed !important;
-        right: 24px !important;
-        bottom: 24px !important;
+        right: var(--fpv-pip-offset-right) !important;
+        bottom: var(--fpv-pip-offset-bottom) !important;
         top: auto !important;
         left: auto !important;
-        inset: auto !important;
+        transform: none !important;
         z-index: 1400;
         border: 1px solid rgba(255,255,255,0.18);
         border-radius: 12px;
@@ -391,7 +459,14 @@
         cursor: pointer;
         }
 
-        body.camera-fullscreen #moving-map-layer::after {
+        body.fpv-camera-primary.fpv-pip-zoomed #moving-map-layer {
+        width: min(calc(var(--fpv-pip-width) * 2), 94vw);
+        height: calc(var(--fpv-pip-height) * 2);
+        right: var(--fpv-pip-offset-right) !important;
+        bottom: calc(var(--fpv-pip-offset-bottom) + 8px) !important;
+        }
+
+        body.fpv-camera-primary #moving-map-layer::after {
         content: "";
         position: absolute;
         top: 10px;
@@ -403,14 +478,60 @@
         pointer-events: none;
         }
 
-        body.camera-fullscreen #moving-map-layer .boat-marker img {
+        body.fpv-camera-primary #moving-map-layer .boat-marker img {
         width: 24px;
         height: 24px;
         }
 
-        body.camera-fullscreen #moving-map-layer .leaflet-pane,
-        body.camera-fullscreen #moving-map-layer .leaflet-control-container {
+        body.fpv-camera-primary #moving-map-layer .leaflet-pane,
+        body.fpv-camera-primary #moving-map-layer .leaflet-control-container {
         pointer-events: auto;
+        }
+
+        /* Explicit class for PiP placement to ensure consistency across views */
+        #moving-map-layer.is-pip {
+        width: min(var(--fpv-pip-width), 94vw) !important;
+        height: var(--fpv-pip-height) !important;
+        position: fixed !important;
+        right: var(--fpv-pip-offset-right) !important;
+        bottom: var(--fpv-pip-offset-bottom) !important;
+        top: auto !important;
+        left: auto !important;
+        inset: auto !important;
+        transform: none !important;
+        z-index: 1400 !important;
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 18px 36px rgba(0,0,0,0.55);
+        opacity: 0.95;
+        background: #000;
+        pointer-events: auto;
+        cursor: pointer;
+        }
+
+        #moving-map-layer.is-pip.is-pip-zoomed {
+        width: min(calc(var(--fpv-pip-width) * 2), 94vw) !important;
+        height: calc(var(--fpv-pip-height) * 2) !important;
+        right: var(--fpv-pip-offset-right) !important;
+        bottom: calc(var(--fpv-pip-offset-bottom) + 8px) !important;
+        }
+
+        #moving-map-layer.is-pip::after {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 28px;
+        height: 28px;
+        background: url('/static/images/boat.svg') center/contain no-repeat;
+        filter: drop-shadow(0 0 6px rgba(0,0,0,0.45));
+        pointer-events: none;
+        }
+
+        #moving-map-layer.is-pip .boat-marker img {
+        width: 24px;
+        height: 24px;
         }
 
         #main {
@@ -2372,18 +2493,6 @@
             .rudder-wrapper,
             .boat-image {
         pointer-events: auto;
-        }
-
-
-        /* Safety override: keep mini map pinned bottom-right in camera fullscreen */
-        body.camera-fullscreen #moving-map-layer {
-        position: fixed !important;
-        right: 24px !important;
-        bottom: auto !important;
-        top: calc(100vh - 220px - 24px) !important;
-        left: auto !important;
-        inset: auto !important;
-        transform: none !important;
         }
 
         .main-content {

@@ -123,3 +123,15 @@ export function updateMapFromMavlink(msg = {}) {
 
   applyStateToMap(state);
 }
+
+export function invalidateMovingMapSize() {
+  if (!mapInstance) return;
+  // Defer to next frame to let layout/style changes settle before resizing
+  requestAnimationFrame(() => {
+    try {
+      mapInstance.invalidateSize(false);
+    } catch (err) {
+      console.warn('Failed to invalidate map size', err);
+    }
+  });
+}
