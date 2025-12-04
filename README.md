@@ -171,6 +171,7 @@ KiloWebInterface/
 - [x] Add meaning to carousel-titles
 - [x] Make minimal size 1366 x 768, check other resolutions
 - [ ] Adapt to keyboard
+- [ ] MODAL GAUGES PANEL, Voltage. Delete V duble.
 
 
 ```

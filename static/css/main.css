@@ -132,11 +132,16 @@
     .kill-all-btn,
     .battery-engine-status { 
     letter-spacing: 0.6px; /* mono tracking tech look */
+    font-variant-numeric: tabular-nums;
     } 
 
-    .display-label 
-    .display-unit { 
+    .display-label { 
     font: var(--type-caption-regular); 
+    color: var(--color-light);
+    }
+
+    .display-unit {
+    font: var(--type-display-mono-regular);
     color: var(--color-light);
     }
 
@@ -3618,7 +3623,7 @@ html {
             line-height: 20px;
             color:var(--color-white);
             }
-            .comm-metric .display-unit{ color:#9a9a9a; font: var(--type-button-regular); }
+            .comm-metric .display-unit{ color:#9a9a9a; font: var(--type-display-mono-regular); }
 
             /* Vertical divider */
             .comm-divider{
@@ -4557,12 +4562,12 @@ html {
         }
 
         .status-display-value {
-        font: var(--type-button-regular);
+        font: var(--type-display-mono-bold);
         color: var(--color-white);
         }
 
         .status-display-unit {
-        font: var(--type-button-regular);
+        font: var(--type-display-mono-regular);
         color:  var(--text-inactive);
         }
 
@@ -5154,12 +5159,12 @@ html {
         }
 
         .metric-value {
-            font: var(--type-caption-bold);
+            font: var(--type-caption-mono-bold);
             color: var(--color-white);
         }
 
         .metric-label {
-            font: var(--type-caption-regular);
+            font: var(--type-caption-mono-regular);
             color:  var(--text-inactive);
             white-space: nowrap;
             overflow: hidden;
