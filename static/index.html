@@ -1262,24 +1262,25 @@
                                 </div>
                             </div>
 
-                            <!-- House → Payload 1 -->
-                            <div class="battery-button-block" data-bank="8" data-switch="1" id="house-to-payload1-block">
-                                <div class="drawer-button-header">
-                                <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
-                                <span class="drawer-button-title">House → Payload 1</span>
-                                </div>
-                                <div class="sensor-controls">
-                                <div class="drawer-button-toggle">
-                                    <button class="toggle-btn off" data-state="0">Off</button>
-                                    <button class="toggle-btn on"  data-state="1">On</button>
-                                </div>
-                                <div class="drawer-button-display">
-                                    <!-- table: 8-6 Payload 1 -->
-                                    <span class="display-value" data-bank="8" data-stud="6">--</span>
-                                    <span class="display-unit">V</span>
-                                </div>
-                                </div>
-                            </div>
+  <!-- House → Payload 1 -->
+  <div class="battery-button-block" data-bank="8" data-switch="1">
+    <div class="drawer-button-header">
+      <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
+      <span class="drawer-button-title">House → Payload 1</span>
+    </div>
+    <div class="relay-controls">
+      <div class="drawer-button-relay">
+        <button class="relay-btn off"  data-state="0">Off</button>
+        <button class="relay-btn auto" data-state="2">Auto</button>
+        <button class="relay-btn on"   data-state="1">On</button>
+      </div>
+      <div class="drawer-button-display">
+        <!-- table: 8-6 Payload 1 -->
+        <span class="display-value" data-bank="8" data-stud="6">--</span>
+        <span class="display-unit">V</span>
+      </div>
+    </div>
+  </div>
 
                             <!-- House Loads -->
                             <div class="battery-button-block" data-bank="8" data-switch="2" id="house-loads-block">
@@ -1321,24 +1322,25 @@
                                 </div>
                             </div>
 
-                            <!-- Payload 1 → Payload 2 -->
-                            <div class="battery-button-block" data-bank="10" data-switch="2" id="payload-1-to-payload-2-block">
-                                <div class="drawer-button-header">
-                                <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
-                                <span class="drawer-button-title">Payload 1 → Payload 2</span>
-                                </div>
-                                <div class="sensor-controls">
-                                <div class="drawer-button-toggle">
-                                    <button class="toggle-btn off" data-state="0">Off</button>
-                                    <button class="toggle-btn on"  data-state="1">On</button>
-                                </div>
-                                <div class="drawer-button-display">
-                                    <!-- table: bank 10, stud 8 -->
-                                    <span class="display-value" data-bank="10" data-stud="8">--</span>
-                                    <span class="display-unit">V</span>
-                                </div>
-                                </div>
-                            </div>
+  <!-- Payload 1 → Payload 2 -->
+  <div class="battery-button-block" data-bank="10" data-switch="2">
+    <div class="drawer-button-header">
+      <img class="drawer-button-icon" src="/static/images/battery.svg" alt="Temperature icon">
+      <span class="drawer-button-title">Payload 1 → Payload 2</span>
+    </div>
+    <div class="relay-controls">
+      <div class="drawer-button-relay">
+        <button class="relay-btn off"  data-state="0">Off</button>
+        <button class="relay-btn auto" data-state="2">Auto</button>
+        <button class="relay-btn on"   data-state="1">On</button>
+      </div>
+      <div class="drawer-button-display">
+        <!-- table: bank 10, stud 8 -->
+        <span class="display-value" data-bank="10" data-stud="8">--</span>
+        <span class="display-unit">V</span>
+      </div>
+    </div>
+  </div>
 
                             <!-- Payload 2 Loads -->
                             <div class="battery-button-block" data-bank="10" data-switch="3" id="payload-2-loads-block">

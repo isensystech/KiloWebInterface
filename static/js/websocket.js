@@ -112,6 +112,16 @@ function clearReconnectTimer() {
   }
 }
 
+function applyRelayStateToUi(bank, sw, state) {
+  const block = document.querySelector(`.battery-button-block[data-bank="${bank}"][data-switch="${sw}"]`);
+  if (!block) return;
+  const group = block.querySelector('.drawer-button-toggle, .drawer-button-relay');
+  if (!group) return;
+  group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  const btn = group.querySelector(`button[data-state="${state}"]`);
+  if (btn) btn.classList.add('active');
+}
+
 function handleIncomingMessage(evt) {
   let msg;
   try { 
@@ -130,21 +140,17 @@ function handleIncomingMessage(evt) {
       window.__kiloOnMavlinkState?.(msg);
       break;
     case 'relay.voltage':
+    case 'relay_voltage':
       updateRelayVoltage(msg);
       break;
     case 'fuel_gauge':
       updateFuelGauge(msg.percentage);
       break;
     case 'relay.state':
-      const czone_block = document.querySelector(`.battery-button-block[data-bank="${msg.bank}"][data-switch="${msg.switch}"]`);
-      if (czone_block) {
-        const group = czone_block.querySelector('.drawer-button-toggle, .drawer-button-relay');
-        if (group) {
-          group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-          const btn = group.querySelector(`button[data-state="${msg.state}"]`);
-          if (btn) btn.classList.add('active');
-        }
-      }
+    case 'relay.set':
+    case 'relay_state':
+    case 'relay_set':
+      applyRelayStateToUi(msg.bank, msg.switch, msg.state);
       break;
     case 'm20relay.state':
       const m20_bank = msg.bank;
@@ -257,6 +263,7 @@ function bindClickHandlers() {
       const bank  = Number(block?.dataset.bank);
       const sw    = Number(block?.dataset.switch);
       const state = Number(btn.dataset.state);
+      if (!Number.isFinite(bank) || !Number.isFinite(sw) || !block) return;
 
       // This is for Tab 4, which you said should be CZone
       const payload = { type:'relay.set', bank, switch: sw, state };
