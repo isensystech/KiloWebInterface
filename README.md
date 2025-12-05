@@ -137,12 +137,13 @@ KiloWebInterface/
 - [ ] Packaging for deployment on a Raspberry Pi or container
 - [ ] Hookup Ignition Button
 - [ ] Create WebSocket hookup for screensaver modal
-- [ ] Refractor Throttle (too twitchy on the lower range of travel, hard to set percicely, scaling is too agressive, introduce "inercia" limitation)
+- [ ] Refractor Throttle Adress it being too twitchy on the lower range of travel, hard to set percicely, scaling is too agressive, introduce "inercia" limitation
+- [ ] Make throttle yellow ribbon represent RPM feedback.
 
 
 ```
 ### To_do backend
-- [ ] Fix slow login screen.
+- [x] Fix slow login screen.
 - [ ] Fix Steering gauge to -30 to +30
 - [x] Introduce "Springy", "Pilot hold" control schema
 - [x] Inroduce Gear datapoint in WS message.
