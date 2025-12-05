@@ -285,8 +285,6 @@
 
 
 
-
-
     <!-- STATUS CONTENT -->
     <article
         data-coach-for=".status-content"
@@ -299,9 +297,6 @@
             The Status Content panel provides a live summary of vessel activity and communication state. The connection indicator on the left shows the current link status with the controller or remote host — blue when connected, and red when the link is lost. The status text displays mission identifiers, heading, speed, and operational messages such as “Buoy Release,” “Safety,” or “Designated.” This field updates automatically to reflect the latest telemetry and command acknowledgments. Use it to confirm active connection and monitor real-time vessel behavior without opening diagnostic windows.
         </div>
     </article>
-
-
-
 
 
 
@@ -372,22 +367,421 @@
 
 
 
-
-    
     
 <!-- DRAWER CONTROL PANEL -->
 
     <!-- TAB 1 -->
 
+        <!-- ENGINE BUTTON -->
+        <article
+            data-coach-for="#engine-button"
+            data-coach-placement="left"
+            data-coach-order="60"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine Start</div>
+            <div class="coach-text">
+            The Engine Start control manages the ignition sequence for the vessel’s main engine. In its default state, the control appears as a single “Ignition” button, indicating that the system is armed and ready.
+
+            When pressed, the button expands into a two-step safety layout: Off on the left and Start on the right. Selecting Start initiates the engine cranking sequence and displays a brief visual confirmation while the ignition is engaged. Choosing Off returns the control to its neutral state without starting the engine.
+
+            This two-stage design prevents accidental activation and ensures that the operator confirms intent before powering the engine.
+            </div>
+        </article>
+    
+        <!-- RADAR BUTTON -->
+        <article
+            data-coach-for="#radar-button"
+            data-coach-placement="left"
+            data-coach-order="62"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Radar Control</div>
+            <div class="coach-text">
+                The Radar control manages power to the vessel’s radar system. In its default state, the indicator shows Off, meaning the radar transmitter and display stack are inactive.
+
+                Tapping On powers up the radar and switches the control to its active state. The button highlights to confirm that the radar is energized and transmitting.
+                
+                Tapping Off safely shuts the system down and returns the control to standby, preventing further scans until re-activated.
+
+                This control provides a clear, deliberate on/off workflow to avoid unintended radar transmission.
+            </div>
+        </article>
+        
+        <!-- AIS BUTTON -->
+        <article
+            data-coach-for="#ais-button"
+            data-coach-placement="left"
+            data-coach-order="64"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">AIS Control</div>
+            <div class="coach-text">
+                The AIS control manages the vessel’s Automatic Identification System. In the default Off state, the transceiver is powered down and does not send or receive identification data.
+
+                Selecting Silent enables receive-only mode, allowing the vessel to view nearby AIS traffic without broadcasting its own position.
+
+                Selecting On activates full transmit/receive operation, sending the vessel’s identity and navigation data while continuing to receive information from others.
+
+                Tapping Off powers the system down and returns it to a non-broadcasting standby state.
+            </div>
+        </article>
+        
+        <!-- NAVIGATION LIGHTS BUTTON -->
+        <article
+            data-coach-for="#navlights-button"
+            data-coach-placement="left"
+            data-coach-order="66"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Navigation Lights</div>
+            <div class="coach-text">
+                The Navigation Lights control manages the vessel’s external lighting for visibility and compliance. In the default Off state, all navigation and anchor lights are disabled.
+
+                Selecting Anchor activates anchor-only lighting, used when the vessel is stationary and secured.
+
+                Selecting On enables the full navigation light set for underway operation, ensuring proper visibility and signaling to other vessels.
+
+                Tapping Off turns all lights back off and returns the system to standby.
+            </div>
+        </article>
+
+        <!-- BEACON BUTTON -->
+        <article
+            data-coach-for="#beacon-button"
+            data-coach-placement="left"
+            data-coach-order="68"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Beacon</div>
+            <div class="coach-text">
+                The Beacon control manages the vessel’s signaling beacon. In the default Off state, the beacon is inactive.
+
+                Tapping On activates the beacon, enabling a high-visibility signal used for locating the vessel, marking position in low-visibility conditions, or drawing attention during safety procedures.
+
+                Tapping Off deactivates the beacon and returns the system to standby.
+            </div>
+        </article>
+
+        <!-- PUMP BUTTONS -->
+        <article
+            data-coach-for="#pump-buttons"
+            data-coach-placement="left"
+            data-coach-order="70"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Pumps</div>
+            <div class="coach-text">
+                The vessel is equipped with two independent bilge pumps: a Low pump located at the bottom of the bilge and a High pump positioned above it. Both pumps operate in Auto mode by default, activating only when their respective float switches or water-level sensors detect rising water.
+
+                Selecting On forces the chosen pump to run continuously, bypassing sensor control until you return it to Auto. Each pump is controlled separately, allowing the operator to activate only the level required for the current situation.
+            </div>
+        </article>
+
+        <!-- ACTIVE HELM BUTTON -->
+        <article
+            data-coach-for="#helm-button"
+            data-coach-placement="left"
+            data-coach-order="72"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Active Helm</div>
+            <div class="coach-text">
+                The Active Helm panel shows which control source currently has authority over the vessel’s steering. It includes three status displays — Main, AUX, and Robot — each indicating whether that helm is active, available, or idle.
+
+                The panel also provides a Take Control button. Pressing it requests helm authority for your station, handing steering control to the local operator if no higher-priority source is engaged or if transfer is permitted.
+
+                This interface gives a clear, real-time view of who is steering the vessel and allows the operator to assume control when needed.
+            </div>
+        </article>
+
+        <!-- AUTOPILOT BUTTON -->
+        <article
+            data-coach-for="#ap-button"
+            data-coach-placement="left"
+            data-coach-order="74"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Autopilot (AP)</div>
+            <div class="coach-text">
+                The Autopilot panel manages the vessel’s steering modes. Tapping the AP button opens the mode selector, where each option represents a distinct control strategy for navigation. Selecting a mode updates the button label and sends the corresponding command to the autopilot controller, clearly indicating whether the vessel is under manual steering or automated control.
+
+                Autopilot Mode Definitions:
+
+                Manual — The vessel is steered directly by the operator with no autopilot stabilization.
+                
+                Hold — Maintains the current heading or rudder position for basic course stabilization.
+                                
+                Auto — Follows a commanded course or navigation plan, applying continuous steering corrections.
+                                
+                Loiter — Circles a fixed point in a slow, controlled orbit for station-keeping or waiting.
+                                
+                Acro — Provides direct, rate-based steering with minimal stabilization for advanced operators.
+                                
+                RTL (Return to Launch) — Returns the vessel to its home or launch position using autonomous navigation.
+            </div>
+        </article>
+
+        <!-- TRIM TAB BUTTON -->
+        <article
+            data-coach-for="#trimtab-button"
+            data-coach-placement="left"
+            data-coach-order="76"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Trim Tab</div>
+            <div class="coach-text">
+                The Trim Tab control balances the hull side-to-side using the port and starboard tabs. Each vertical slider sets a tab’s deflection from +7 (tab up) through 0 (neutral) to −7 (tab down), with fills showing how far you’ve moved from center. You can drag the thumb directly or use the ▲/▼ nudge buttons for precise adjustments; all values are constrained to the displayed range.
+
+                A live roll indicator above the sliders visualizes how tab adjustments affect hull attitude: the boat illustration tilts dynamically as you change either side, and the numeric roll readout updates in real time. This feedback loop lets you see the vessel “react” to your inputs, helping you level the boat quickly and reduce heel under load or uneven weight distribution.
+            </div>
+        </article>
+
+        <!-- ANCHOR BUTTON -->
+        <article
+            data-coach-for="#anchor-button"
+            data-coach-placement="left"
+            data-coach-order="78"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Anchor</div>
+            <div class="coach-text">
+                The Anchor control manages how much rode you pay out and shows your holding setup at a glance. Opening it reveals a vertical slider from Up/0 down to 60 m; drag the thumb or use the ▲/▼ nudge buttons to lower or raise the line. As you adjust, both the rode length readout and the mini gauge under the boat icon update in real time.
+
+                A built-in depth display shows your current water depth, so you can immediately judge how much rode you need for safe anchoring.
+
+                Use the scope selector to choose a target ratio (4:1 or 7:1). The interface highlights how close you are to that target, helping you match rode length to depth for reliable holding. Adjust gradually and follow the live indicators to avoid overpaying line or drifting outside your intended scope.
+            </div>
+        </article>
+
+
     <!-- TAB 2 -->
 
+        <!-- PAYLOAD DEPLOYMENT DISPLAY -->
+        <article
+            data-coach-for="#payload-deployment-display"
+            data-coach-placement="left"
+            data-coach-order="90"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Payload Deployment Display</div>
+            <div class="coach-text">
+                The Payload Deployment display tells you whether releases are currently permitted. When it shows “Release Authorized” with the unlocked icon, all interlocks are clear and payload buttons can execute; when it switches to “Release Prohibited” with the lock icon, releases are blocked until the upstream system or safety conditions allow it again.
+
+                Use this indicator as your go/no-go gate before firing any payloads. If it is locked, do not attempt deployment; check mission rules or upstream safety signals and wait for it to return to “Authorized.”
+            </div>
+        </article>
+
+        <!-- PAYLOAD BUTTONS -->
+        <article
+            data-coach-for="#payload-buttons"
+            data-coach-placement="left"
+            data-coach-order="100"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Payload Buttons</div>
+            <div class="coach-text">
+                Payload buttons control the arming and release of individual payloads (buoys, VTOL, ROV, and other modules). Each tile is protected by a safety cap: lift the cap to expose the control, then press the button to execute the payload’s action as labeled. The system must be authorized before any armed button will respond.
+
+                Cap and button states give clear feedback:
+                • Closed cap — the payload cannot be activated.
+                • Armed (cap open) — the button lights to show it’s ready.
+                • Active/On — the highlight confirms the payload has been commanded.
+
+                Open only the payload you intend to use and keep all other caps closed to avoid accidental deployment.            </div>
+        </article>
+
+
     <!-- TAB 3 -->
+
+        <!-- ENGINE STATUS -->
+        <article
+            data-coach-for="#coolant-temperature"
+            data-coach-placement="left"
+            data-coach-order="130"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine coolant temp</div>
+            <div class="coach-text">
+                Temperature of the engine’s coolant fluid. Indicates how hot the engine is running.
+
+                Measured in °C / °F.            
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#oil-temperature"
+            data-coach-placement="left"
+            data-coach-order="131"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine oil temperature</div>
+            <div class="coach-text">
+                Temperature of the engine oil circulating through the system. High values may indicate overload or poor cooling.
+                
+                Measured in °C / °F.            
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#oil-pressure"
+            data-coach-placement="left"
+            data-coach-order="132"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine oil pressure</div>
+            <div class="coach-text">
+                Pressure of the lubricating oil inside the engine. Low pressure can signal lubrication problems.
+                
+                Measured in bar / psi.           
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#gas-temperature"
+            data-coach-placement="left"
+            data-coach-order="133"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Exhaust gas temperature</div>
+            <div class="coach-text">
+                Temperature of gases leaving the engine. Used to monitor combustion quality and detect overheating.
+                
+                Measured in °C / °F.
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#manifold-air-pressure"
+            data-coach-placement="left"
+            data-coach-order="134"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Manifold air pressure</div>
+            <div class="coach-text">
+                Pressure in the intake manifold. Reflects engine load and turbocharger performance.
+                
+                Measured in bar / psi / kPa.
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#manifold-air-temperature"
+            data-coach-placement="left"
+            data-coach-order="135"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Manifold air temperature</div>
+            <div class="coach-text">
+                Temperature of air entering the engine manifold. Affects engine efficiency and power output.
+
+                Measured in °C / °F.
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#gearbox-oil-pressure"
+            data-coach-placement="left"
+            data-coach-order="136"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Gearbox oil pressure</div>
+            <div class="coach-text">
+                Lubrication pressure inside the gearbox. Ensures gears are protected from friction and wear.
+                
+                Measured in psi / bar.
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#fuel-rate-avg"
+            data-coach-placement="left"
+            data-coach-order="137"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Fuel rate average</div>
+            <div class="coach-text">
+                Average fuel consumption per hour of operation.
+                
+                Measured in G/h (gallons per hour).
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#fuel-distance"
+            data-coach-placement="left"
+            data-coach-order="138"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Fuel distance</div>
+            <div class="coach-text">
+                Average fuel consumption per nautical mile or mile traveled.
+                
+                Measured in G/m (gallons per mile).
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#propeller-speed-low"
+            data-coach-placement="left"
+            data-coach-order="139"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Propeller speed low</div>
+            <div class="coach-text">
+                Status of the propeller’s rotational speed. “OK” indicates normal low-speed operation.
+                
+                Measured typically in RPM, but here shown as a status.
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#fuel-used"
+            data-coach-placement="left"
+            data-coach-order="140"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Fuel used</div>
+            <div class="coach-text">
+                Total fuel consumed since the start of the trip or last reset.
+                
+                Measured in G (gallons).
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#traveled-distance"
+            data-coach-placement="left"
+            data-coach-order="141"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Traveled distance</div>
+            <div class="coach-text">
+                Total distance traveled since the start of the trip or last reset.
+                
+                Measured in Nm (nautical miles).
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#engine-hrs"
+            data-coach-placement="left"
+            data-coach-order="142"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine hours</div>
+            <div class="coach-text">
+                Total hours the engine has operated since the start of the trip or last reset.
+                
+                Measured in hours (Hr).
+            </div>
+        </article>
 
         <!-- KILL ENGINE BUTTON -->
         <article
             data-coach-for="#kill-engine-button"
             data-coach-placement="left"
-            data-coach-order="60"
+            data-coach-order="150"
             data-coach-interact="false"
             >
             <div class="coach-title">Kill Engine Button</div>
@@ -398,14 +792,464 @@
         </article>
 
     <!-- TAB 4 -->
+
+        <article
+            data-coach-for="#engine-start-block"
+            data-coach-placement="left"
+            data-coach-order="160"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine Start</div>
+            <div class="coach-text">
+                Controls the starter battery feed for engine cranking. The Off/On toggle connects or disconnects the start circuit, while the voltage readout shows live battery potential under load. Use this block to confirm the starter bank is healthy before engaging the engine.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#engine-control-block"
+            data-coach-placement="left"
+            data-coach-order="161"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine Control</div>
+            <div class="coach-text">
+                Supplies power to the engine control electronics and sensors. The Off/On toggle enables or cuts power to this control rail, and the voltage display tracks its live supply level. Use it to verify that engine control systems are powered and within a safe voltage range.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#engine-to-house-block"
+            data-coach-placement="left"
+            data-coach-order="162"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine → House</div>
+            <div class="coach-text">
+                Manages the relay that links the engine bank to the house bank. Off keeps the banks isolated, On forces them to be tied together, and Auto lets the system connect them based on configured charge conditions. The voltage readout shows the relay side monitored for this link, helping you see when the engine is effectively charging the house bank.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#house-to-payload1-block"
+            data-coach-placement="left"
+            data-coach-order="163"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">House → Payload 1</div>
+            <div class="coach-text">
+                Controls the power feed from the house bank to the first payload bus. The Off/On toggle disconnects or energizes Payload 1, while the voltage display shows the live supply level at that branch. Use it to power up or shed the first payload group as needed.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#house-loads-block"
+            data-coach-placement="left"
+            data-coach-order="164"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">House Loads</div>
+            <div class="coach-text">
+                Represents the general house-load rail (lights, electronics, and auxiliary systems). The Off/On toggle controls power to this distribution line, and the voltage readout indicates how the house supply is holding under current load. Use this block to monitor and manage overall house consumption.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#payload-1-loads-block"
+            data-coach-placement="left"
+            data-coach-order="165"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Payload 1 Loads</div>
+            <div class="coach-text">
+                Controls and monitors the primary payload load group. Off/On switches the group’s supply, and the voltage value reflects the active bus level. Use this to confirm that Payload 1 equipment is powered correctly or safely shut down.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#payload-1-to-payload-2-block"
+            data-coach-placement="left"
+            data-coach-order="166"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Payload 1 → Payload 2</div>
+            <div class="coach-text">
+                Manages the feed from the first payload bus to the second. Turning it On extends power downstream to Payload 2; Off keeps the second stage isolated. The voltage display shows the health of this link so you can see when the second payload rail is actually energized.  
+            </div>
+        </article>
+
+        <article
+            data-coach-for="#payload-2-loads-block"
+            data-coach-placement="left"
+            data-coach-order="167"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Payload 2 Loads</div>
+            <div class="coach-text">
+                Controls the second payload load group at the far end of the chain. The Off/On toggle powers the Payload 2 devices, and the voltage readout confirms supply level on that bus. Use this block to bring the final payload cluster online or take it offline without affecting upstream circuits.  
+            </div>
+        </article>
      
     <!-- TAB 5 -->
 
+        <!-- MISSION PLEER -->
+        <article
+            data-coach-for="#mission-pleer"
+            data-coach-placement="left"
+            data-coach-order="180"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Mission Pleer</div>
+            <div class="coach-text">
+                The Mission Player lets you step through mission waypoints like a timeline. The top bar shows the mission name and time markers; the central track displays each waypoint as a dot, with a yellow cursor showing your current position.
+
+                Use Prev / Next to move between waypoints, or Play/Pause to auto-advance through the route. Distance (DST) and heading (HDN) readouts update with each step so you can preview what the vessel will do at that point in the mission.            </div>
+        </article>
+
+        <!-- KILO -->
+        <article
+            data-coach-for="#mission-card-kilo"
+            data-coach-placement="left"
+            data-coach-order="182"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Kilo Card</div>
+            <div class="coach-text">
+                The Kilo card summarizes the vessel’s current mission status. It displays formation state, heading, range to target, altitude above water, and live coordinates. The card provides a quick operational snapshot of the boat’s position and behavior within the mission.
+        </article>
+
+        <!-- VTOL -->
+        <article
+            data-coach-for="#mission-card-vtol"
+            data-coach-placement="left"
+            data-coach-order="184"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">VTOL Card</div>
+            <div class="coach-text">
+                The VTOL card shows the status of an airborne vehicle assigned to the mission. It includes formation state, heading, range, altitude above ground, and coordinates. Use it to monitor the VTOL’s orientation and location relative to the rest of the mission group.
+        </article>
+        
+        <!-- QUADRO -->
+        <article
+            data-coach-for="#mission-card-quadro"
+            data-coach-placement="left"
+            data-coach-order="186"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Quadro Card</div>
+            <div class="coach-text">
+                The Quadro card provides mission status for a quadrotor aircraft. It lists formation state, heading, range, altitude, and coordinates. The card offers a concise view of the Quadro’s current position and alignment within the mission.
+        </article>
+        
+
     <!-- TAB 6 -->
 
+        <!-- MISSION HOURS -->
+        <article
+            data-coach-for="#mission-hours"
+            data-coach-placement="left"
+            data-coach-order="200"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Mission hours</div>
+            <div class="coach-text">
+                The Quadro and alignment within the mission.
+        </article>
+
+        <!-- ENGINE HOURS -->
+        <article
+            data-coach-for="#engine-hours"
+            data-coach-placement="left"
+            data-coach-order="202"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Engine hours</div>
+            <div class="coach-text">
+                The Quadro and alignment within the mission.
+        </article>
+
+        <!-- LAST SERVICE -->
+        <article
+            data-coach-for="#last-service"
+            data-coach-placement="left"
+            data-coach-order="204"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Last Service</div>
+            <div class="coach-text">
+                The Quadro and alignment within the mission.
+        </article>
+
+        <!-- Kill Engine button -->
+        <article
+            data-coach-for="#kill-engine"
+            data-coach-placement="left"
+            data-coach-order="206"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Kill Engine</div>
+            <div class="coach-text">
+                The Quadro and alignment within the mission.
+        </article>
+
+        <!-- KILL 12V BUS -->
+        <article
+            data-coach-for="#kill-12v-bus"
+            data-coach-placement="left"
+            data-coach-order="208"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Kill 12V Bus</div>
+            <div class="coach-text">
+                Kill 12V Bus is used to disable the 12-volt electrical system of the vessel. This action cuts power to all 12V components, effectively shutting down non-essential systems that rely on this voltage level. It is typically used in emergency situations or when performing maintenance to ensure safety and prevent electrical hazards.
+        </article>
+
+        <!-- KILL 24V BUS -->
+        <article
+            data-coach-for="#kill-24v-bus"
+            data-coach-placement="left"
+            data-coach-order="210"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Kill 24V Bus</div>
+            <div class="coach-text">
+                kill-24v-bus is used to disable the 24-volt electrical system of the vessel. This action cuts power to all 24V components, effectively shutting down systems that rely on this voltage level. It is typically used in emergency situations or when performing maintenance to ensure safety and prevent electrical hazards.
+        </article>
+
+        <!-- KILL PAYLOAD POWER -->
+        <article
+            data-coach-for="#kill-payload-power"
+            data-coach-placement="left"
+            data-coach-order="212"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Kill Payload Power</div>
+            <div class="coach-text">
+                Kill Payload Power is used to disable the power supply to the payload systems on the vessel. This action cuts power to all payload-related components, ensuring they are safely powered down. It is typically used in emergency situations or when performing maintenance to prevent damage or hazards.
+        </article>
+
+        <!-- KILL RADIO -->
+        <article
+            data-coach-for="#kill-radio"
+            data-coach-placement="left"
+            data-coach-order="214"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Kill Radio</div>
+            <div class="coach-text">
+                Kill Radio is used to disable the radio communication systems on the vessel. This action cuts power to all radio components, effectively silencing all radio transmissions and receptions. It is typically used in emergency situations or when performing maintenance to ensure safety and prevent interference.
+        </article>
+
+        <!-- KILL SATELLITE -->
+        <article
+            data-coach-for="#kill-satellite"
+            data-coach-placement="left"
+            data-coach-order="216"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Kill Satellite</div>
+            <div class="coach-text">
+                Kill Satellite is used to disable the satellite communication systems on the vessel. This action cuts power to all satellite components, effectively silencing all satellite transmissions and receptions. It is typically used in emergency situations or when performing maintenance to ensure safety and prevent interference.
+        </article>
+
+        <!-- SILENT MODE -->
+        <article
+            data-coach-for="#silent-mode"
+            data-coach-placement="left"
+            data-coach-order="218"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Silent Mode</div>
+            <div class="coach-text">
+                Silent Mode is used to disable all non-essential sound and communication systems on the vessel. This action ensures that the vessel operates quietly, minimizing noise and radio transmissions. It is typically used in stealth operations or situations where silence is critical for safety or mission success.
+        </article>
+
     <!-- TAB 7 -->
-     
+
+        <!-- ASSETS CARDS -->
+        <article
+            data-coach-for="#assets-card-1"
+            data-coach-placement="left"
+            data-coach-order="231"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Assets card</div>
+            <div class="coach-text">
+                A pane card is a compact information block used to present key data for the active tab. It groups related values into a clean, readable layout and updates as the underlying system state changes. Pane cards provide a quick operational snapshot without requiring the operator to open additional menus or views.        
+        </article>
+
+        <article
+            data-coach-for="#assets-card-2"
+            data-coach-placement="left"
+            data-coach-order="232"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Assets card</div>
+            <div class="coach-text">
+                A pane card is a compact information block used to present key data for the active tab. It groups related values into a clean, readable layout and updates as the underlying system state changes. Pane cards provide a quick operational snapshot without requiring the operator to open additional menus or views.        
+        </article>
+
+        <article
+            data-coach-for="#assets-card-3"
+            data-coach-placement="left"
+            data-coach-order="233"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Assets card</div>
+            <div class="coach-text">
+                A pane card is a compact information block used to present key data for the active tab. It groups related values into a clean, readable layout and updates as the underlying system state changes. Pane cards provide a quick operational snapshot without requiring the operator to open additional menus or views.        
+        </article>
+        
+        <article
+            data-coach-for="#assets-card-4"
+            data-coach-placement="left"
+            data-coach-order="234"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Assets card</div>
+            <div class="coach-text">
+                A pane card is a compact information block used to present key data for the active tab. It groups related values into a clean, readable layout and updates as the underlying system state changes. Pane cards provide a quick operational snapshot without requiring the operator to open additional menus or views.        
+        </article>
+        
+        <article
+            data-coach-for="#assets-card-5"
+            data-coach-placement="left"
+            data-coach-order="235"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Assets card</div>
+            <div class="coach-text">
+                A pane card is a compact information block used to present key data for the active tab. It groups related values into a clean, readable layout and updates as the underlying system state changes. Pane cards provide a quick operational snapshot without requiring the operator to open additional menus or views.        
+        </article>
+        
+        <article
+            data-coach-for="#assets-card-6"
+            data-coach-placement="left"
+            data-coach-order="236"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Assets card</div>
+            <div class="coach-text">
+                A pane card is a compact information block used to present key data for the active tab. It groups related values into a clean, readable layout and updates as the underlying system state changes. Pane cards provide a quick operational snapshot without requiring the operator to open additional menus or views.        
+        </article>
+        
+        <article
+            data-coach-for="#assets-card-7"
+            data-coach-placement="left"
+            data-coach-order="237"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Assets card</div>
+            <div class="coach-text">
+                A pane card is a compact information block used to present key data for the active tab. It groups related values into a clean, readable layout and updates as the underlying system state changes. Pane cards provide a quick operational snapshot without requiring the operator to open additional menus or views.        
+        </article>
+        
+        <article
+            data-coach-for="#assets-card-8"
+            data-coach-placement="left"
+            data-coach-order="238"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Assets card</div>
+            <div class="coach-text">
+                A pane card is a compact information block used to present key data for the active tab. It groups related values into a clean, readable layout and updates as the underlying system state changes. Pane cards provide a quick operational snapshot without requiring the operator to open additional menus or views.        
+        </article>
+        
+        <article
+            data-coach-for="#assets-card-9"
+            data-coach-placement="left"
+            data-coach-order="239"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Assets card</div>
+            <div class="coach-text">
+                A pane card is a compact information block used to present key data for the active tab. It groups related values into a clean, readable layout and updates as the underlying system state changes. Pane cards provide a quick operational snapshot without requiring the operator to open additional menus or views.        
+        </article>
+        
+        <article
+            data-coach-for="#assets-card-10"
+            data-coach-placement="left"
+            data-coach-order="240"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Assets card</div>
+            <div class="coach-text">
+                A pane card is a compact information block used to present key data for the active tab. It groups related values into a clean, readable layout and updates as the underlying system state changes. Pane cards provide a quick operational snapshot without requiring the operator to open additional menus or views.        
+        </article>
+        
+        <article
+            data-coach-for="#assets-card-11"
+            data-coach-placement="left"
+            data-coach-order="241"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Assets card</div>
+            <div class="coach-text">
+                A pane card is a compact information block used to present key data for the active tab. It groups related values into a clean, readable layout and updates as the underlying system state changes. Pane cards provide a quick operational snapshot without requiring the operator to open additional menus or views.        
+        </article>
+        
+
+
     <!-- TAB 8 -->
 
+        <!-- TUNNELS -->
+        <article
+            data-coach-for="#btn-tunnels"
+            data-coach-placement="left"
+            data-coach-order="270"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Tunnels</div>
+            <div class="coach-text">
+                The Tunnels control selects the active VPN link for command and telemetry. Only one tunnel operates at a time. Choose VPN 1 or VPN 2 to switch the network route used by the system.
+        </article>
+
+        <!-- SATELLITE -->
+        <article
+            data-coach-for="#btn-sat"
+            data-coach-placement="left"
+            data-coach-order="272"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Satellite</div>
+            <div class="coach-text">
+                The SAT control enables or disables the satellite communication link. The percentage readout shows current signal or link quality. Use this control to bring the SAT channel online or take it offline when operating in mixed-link environments.
+        </article>
+        
+        <!-- CELL -->
+        <article
+            data-coach-for="#btn-cell"
+            data-coach-placement="left"
+            data-coach-order="274"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Cell</div>
+            <div class="coach-text">
+                The CELL control manages the cellular communication link. The signal percentage reflects current network strength. Turn the link On or Off depending on coverage and mission requirements.
+        </article>
+  
+        <!-- LOS -->
+        <article
+            data-coach-for="#btn-los"
+            data-coach-placement="left"
+            data-coach-order="276"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">LOS</div>
+            <div class="coach-text">
+                The LOS control enables the line-of-sight radio link. The percentage value indicates received signal quality. Activate this channel when operating within radio range for low-latency communication.
+        </article>
+  
+        <!-- FREQUENCY BANDS -->
+        <article
+            data-coach-for="#btn-frequency"
+            data-coach-placement="left"
+            data-coach-order="278"
+            data-coach-interact="false"
+            >
+            <div class="coach-title">Frequency Bands</div>
+            <div class="coach-text">
+                The Frequency Bands selector chooses the radio band used for the active communication link. Select 1.2 GHz, 2.4 GHz, or 5.8 GHz depending on mission environment and required range versus throughput.
+        </article>
 
 </section>

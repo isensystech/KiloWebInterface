@@ -70,8 +70,10 @@ export function initializeButtons() {
         button.addEventListener('click', () => {
             // Assume editMode is a global variable
             if (window.editMode) {
-                // openEditModal(deviceName); // Assuming openEditModal is defined elsewhere
-                console.log('Edit mode: opening modal for', deviceName);
+                if (window.buttonEditor?.openEditorForDevice) {
+                    window.buttonEditor.openEditorForDevice(deviceName);
+                }
+                return;
             } else {
                 handleButtonClick(deviceName);
             }
@@ -334,7 +336,7 @@ function requestStatus() {
 
             // Helpers
             const clearStates = () => {
-            [offBtn, autoBtn, onBtn].forEach(b => {
+            [offBtn, autoBtn, onBtn].filter(Boolean).forEach(b => {
                 b.classList.remove('active'); // gray fill (manual selection)
                 b.classList.remove('live');   // white outline (actual state)
             });
@@ -365,14 +367,14 @@ function requestStatus() {
             clearStates();
 
             if (mode === 'off') {
-                offBtn.classList.add('active');
-                offBtn.classList.add('live');         // real state = Off
+                offBtn?.classList.add('active');
+                offBtn?.classList.add('live');         // real state = Off
             } else if (mode === 'on') {
-                onBtn.classList.add('active');
-                onBtn.classList.add('live');          // real state = On
+                onBtn?.classList.add('active');
+                onBtn?.classList.add('live');          // real state = On
             } else { // 'auto'
-                autoBtn.classList.add('active');      // manual selection is Auto (gray fill)
-                getAutoLiveTarget().classList.add('live'); // real state decided externally (default here)
+                autoBtn?.classList.add('active');      // manual selection is Auto (gray fill)
+                getAutoLiveTarget()?.classList.add('live'); // real state decided externally (default here)
             }
 
             updateDisplayForMode(mode);
@@ -383,17 +385,17 @@ function requestStatus() {
             setMode(group.dataset.mode || 'auto');
 
             // Click handlers
-            offBtn.addEventListener('click',  () => setMode('off'));
-            onBtn.addEventListener('click',   () => setMode('on'));
-            autoBtn.addEventListener('click', () => setMode('auto'));
+            offBtn?.addEventListener('click',  () => setMode('off'));
+            onBtn?.addEventListener('click',   () => setMode('on'));
+            autoBtn?.addEventListener('click', () => setMode('auto'));
 
             // Public hook for telemetry: switch the live outline in AUTO without changing gray selection
             group.updateLive = (isOn) => {
             if ((group.dataset.mode || 'auto') !== 'auto') return;
-            offBtn.classList.remove('live');
-            onBtn.classList.remove('live');
-            (isOn ? onBtn : offBtn).classList.add('live');
-            if (displayValue) displayValue.textContent = isOn ? (onBtn.dataset.value || '--') : '--';
+            offBtn?.classList.remove('live');
+            onBtn?.classList.remove('live');
+            (isOn ? onBtn : offBtn)?.classList.add('live');
+            if (displayValue) displayValue.textContent = isOn ? (onBtn?.dataset.value || '--') : '--';
             };
         });
         });

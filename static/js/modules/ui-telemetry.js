@@ -22,6 +22,9 @@ const TELEMETRY_CONFIG = Object.freeze({
     redlineColor: '#D0021B', // fill color while at/above redline
     nominalColor: '#ffffff' // fill color while below redline
   }),
+  fuelGauge: Object.freeze({
+    capacityGallons: 135 // total capacity used to derive gallons from percentage
+  }),
   relayGaugePrimary: Object.freeze({
     bank: 10, // source bank ID mirrored onto the hero voltage gauge
     stud: 6 // source stud ID mirrored onto the hero voltage gauge
@@ -91,6 +94,7 @@ export function initializeDrawerTabs() {
     panes.forEach(p => p.classList.remove('active'));
     const pane = panes.find(p => Number(p.dataset.tab) === n);
     if (pane) pane.classList.add('active');
+    window.dispatchEvent(new CustomEvent('drawer:tab-changed', { detail: { tab: n } }));
   }
 
   tabs.forEach(tab => {
@@ -587,6 +591,53 @@ export function updateRelayVoltage(msg) {
       gaugeEl.classList.remove('is-low');
     }
   }
+}
+
+/**
+ * Updates the left fuel gauge using websocket percentage data.
+ */
+export function updateFuelGauge(percentage) {
+  const pct = Number(percentage);
+  if (!Number.isFinite(pct)) return;
+
+  const clampedPct = Math.max(0, Math.min(100, pct));
+  const pctCss = `${clampedPct.toFixed(2)}%`;
+  const pctDisplay = clampedPct.toFixed(2);
+  const gallons = (clampedPct / 100) * TELEMETRY_CONFIG.fuelGauge.capacityGallons;
+  const gallonsDisplay = gallons.toFixed(2);
+  const fillColor = clampedPct < 10 ? 'var(--gauge-red)' : 'var(--color-white)';
+  const isVisibleGauge = (el) => !el.closest('#screensaverModal');
+
+  Array.from(document.querySelectorAll('.fuel-gauge.gauge-block'))
+    .filter(isVisibleGauge)
+    .forEach((block) => block.style.setProperty('--pct', pctCss));
+
+  Array.from(document.querySelectorAll('#fuel-mini-gauge-fill'))
+    .filter(isVisibleGauge)
+    .forEach((fill) => {
+      fill.style.width = pctCss;
+      fill.style.backgroundColor = fillColor;
+    });
+
+  Array.from(document.querySelectorAll('#fuel-gauge-value'))
+    .filter(isVisibleGauge)
+    .forEach((el) => { el.textContent = gallonsDisplay; });
+
+  Array.from(document.querySelectorAll('#fuel-gauge-unit'))
+    .filter(isVisibleGauge)
+    .forEach((el) => { el.textContent = 'gal'; });
+
+  Array.from(document.querySelectorAll('#fuel-burn-gauge-value'))
+    .filter(isVisibleGauge)
+    .forEach((el) => { el.textContent = pctDisplay; });
+
+  Array.from(document.querySelectorAll('#fuel-burn-gauge-unit'))
+    .filter(isVisibleGauge)
+    .forEach((el) => { el.textContent = '%'; });
+
+  Array.from(document.querySelectorAll('#fuel-mini-gauge'))
+    .filter(isVisibleGauge)
+    .forEach((el) => el.setAttribute('aria-label', `Fuel level ${pctDisplay}%`));
 }
 
 /**

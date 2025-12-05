@@ -1,4 +1,5 @@
 import { gamepadControlState } from './gamepad-handler.js';
+import { updateAllButtonStates } from './ui-buttons.js';
 
 const AP_MODE_VALUES = Object.freeze(['Manual', 'Crewed', 'Hold', 'Auto', 'Loiter', 'Acro', 'RTH']);
 const AP_MODE_ALIASES = Object.freeze({ rtl: 'RTH' });
@@ -1090,6 +1091,288 @@ function initializeBottomDepthControl() {
 
 
 
+// ============================================================================
+// BUTTON EDITOR MODAL (Payload Control)
+// ============================================================================
+(function initializePayloadButtonEditor() {
+    const SELECTORS = Object.freeze({
+        settingsIcon: '.options-icon[alt="Settings"]',
+        payloadButtons: '.tab-pane[data-tab="2"] .control-button'
+    });
+
+    let modalContainer = null;
+    let modalBackdrop = null;
+    let editorTemplate = null;
+    let editMode = false;
+    let currentEditingDevice = null;
+
+    const defaultIcon = '/static/images/disabled.svg';
+
+    function setEditMode(enabled) {
+        editMode = enabled;
+        window.editMode = enabled;
+        document.body.classList.toggle('editing-mode', enabled);
+        if (modalBackdrop) {
+            modalBackdrop.style.display = enabled ? 'block' : 'none';
+        }
+    }
+
+    function collapseSafetyCaps() {
+        document.querySelectorAll(`${SELECTORS.payloadButtons} .safety-cap`).forEach((cap) => {
+            cap.classList.remove('open');
+        });
+        updateAllButtonStates();
+    }
+
+    function teardownEditorModal() {
+        if (modalContainer) {
+            modalContainer.innerHTML = '';
+            modalContainer.style.display = 'none';
+        }
+        if (modalBackdrop) {
+            modalBackdrop.style.display = 'none';
+        }
+        currentEditingDevice = null;
+        setEditMode(false);
+    }
+
+    function applySettingsToButton(deviceName, settings) {
+        const control = document.querySelector(
+            `${SELECTORS.payloadButtons}[data-device="${deviceName}"]`
+        );
+        if (!control) {
+            teardownEditorModal();
+            return;
+        }
+
+        const button = control.querySelector('button');
+        const buttonIcon = control.querySelector('.button-icon');
+        const safetyCap = control.querySelector('.safety-cap');
+        const capIcon = safetyCap?.querySelector('img');
+        const label = control.querySelector('.button-label');
+
+        if (settings.icon && buttonIcon) {
+            buttonIcon.src = settings.icon;
+            buttonIcon.style.display = 'block';
+        }
+        if (settings.icon && capIcon) {
+            capIcon.src = settings.icon;
+            capIcon.style.display = 'block';
+        }
+        if (label && settings.label) {
+            label.textContent = settings.label;
+        }
+
+        if (safetyCap) {
+            safetyCap.style.display = settings.safetyCap ? 'flex' : 'none';
+            safetyCap.classList.remove('open');
+        }
+
+        if (button) {
+            if (settings.mode) control.dataset.mode = settings.mode;
+            if (settings.timer) control.dataset.timer = settings.timer;
+        }
+
+        updateAllButtonStates();
+        teardownEditorModal();
+    }
+
+    function extractButtonSettings(control) {
+        const buttonIcon = control.querySelector('.button-icon');
+        const safetyCap = control.querySelector('.safety-cap');
+        const label = control.querySelector('.button-label');
+
+        return {
+            label: (label?.textContent || 'Label').trim(),
+            icon: buttonIcon?.getAttribute('src') || defaultIcon,
+            safetyCap: safetyCap ? safetyCap.style.display !== 'none' : false,
+            mode: control.dataset.mode || 'disabled',
+            timer: control.dataset.timer || '300'
+        };
+    }
+
+    function renderEditorModal(settings) {
+        if (!editorTemplate) return null;
+        modalContainer.innerHTML = editorTemplate.innerHTML;
+        const modalWindow = modalContainer.querySelector('.editor-modal-window');
+        if (!modalWindow) return null;
+
+        const iconEl = modalWindow.querySelector('.editor-button-icon');
+        const capIcon = modalWindow.querySelector('.editor-cap-icon');
+        const labelEl = modalWindow.querySelector('.editor-button-label');
+        const capContainer = modalWindow.querySelector('.editor-cap-container');
+        const timerInput = modalWindow.querySelector('.editor-value-input');
+
+        const icon = settings.icon || defaultIcon;
+        if (iconEl) iconEl.src = icon;
+        if (capIcon) capIcon.src = icon;
+        if (labelEl) labelEl.textContent = settings.label;
+        if (capContainer) {
+            capContainer.classList.toggle('state-safety', settings.safetyCap);
+            capContainer.classList.toggle('state-no-cap', !settings.safetyCap);
+        }
+        if (timerInput) timerInput.value = settings.timer || '300';
+
+        const modeWrappers = modalWindow.querySelectorAll('.editor-option-wrapper');
+        modeWrappers.forEach((wrapper) => {
+            wrapper.classList.toggle('active', wrapper.dataset.mode === (settings.mode || 'disabled'));
+        });
+        const isTimer = (settings.mode || 'disabled') === 'timer';
+        modalWindow.classList.toggle('timer-active', isTimer);
+        if (timerInput) timerInput.disabled = !isTimer;
+
+        return modalWindow;
+    }
+
+    function bindEditorEvents(deviceName) {
+        const modalWindow = modalContainer?.querySelector('.editor-modal-window');
+        if (!modalWindow) return;
+
+        const closeEl = modalWindow.querySelector('[data-editor-close]');
+        const cancelBtn = modalWindow.querySelector('.editor-cancel-button');
+        const applyBtn = modalWindow.querySelector('.editor-apply-button');
+        const iconPicker = modalWindow.querySelector('#iconPicker');
+        const previewButton = modalWindow.querySelector('.editor-preview-button');
+        const iconEl = modalWindow.querySelector('.editor-button-icon');
+        const capIcon = modalWindow.querySelector('.editor-cap-icon');
+        const capContainer = modalWindow.querySelector('.editor-cap-container');
+        const labelEl = modalWindow.querySelector('.editor-button-label');
+        const timerInput = modalWindow.querySelector('.editor-value-input');
+        const modeWrappers = modalWindow.querySelectorAll('.editor-option-wrapper');
+
+        const toggleTimerState = (modeValue) => {
+            const isTimer = modeValue === 'timer';
+            modalWindow.classList.toggle('timer-active', isTimer);
+            if (timerInput) timerInput.disabled = !isTimer;
+        };
+
+        previewButton?.addEventListener('click', () => {
+            if (iconPicker) iconPicker.style.display = 'block';
+        });
+
+        modalWindow.querySelectorAll('[data-icon-choice]').forEach((img) => {
+            img.addEventListener('click', () => {
+                const src = img.getAttribute('src');
+                if (iconEl && src) {
+                    iconEl.src = src;
+                    iconEl.style.display = 'block';
+                }
+                if (capIcon && src) {
+                    capIcon.src = src;
+                    capIcon.style.display = 'block';
+                }
+                if (iconPicker) iconPicker.style.display = 'none';
+            });
+        });
+
+        capContainer?.addEventListener('click', () => {
+            capContainer.classList.toggle('state-safety');
+            capContainer.classList.toggle('state-no-cap');
+        });
+
+        modeWrappers.forEach((wrapper) => {
+            wrapper.addEventListener('click', () => {
+                modeWrappers.forEach((w) => w.classList.remove('active'));
+                wrapper.classList.add('active');
+                toggleTimerState(wrapper.dataset.mode);
+            });
+        });
+
+        const bumpTimer = (delta) => {
+            if (!timerInput || timerInput.disabled) return;
+            let value = parseInt(timerInput.value || '0', 10) || 0;
+            value = Math.max(100, Math.min(9900, value + delta));
+            timerInput.value = value;
+        };
+
+        modalWindow.querySelector('.arrow-up')?.addEventListener('click', () => bumpTimer(50));
+        modalWindow.querySelector('.arrow-down')?.addEventListener('click', () => bumpTimer(-50));
+
+        closeEl?.addEventListener('click', teardownEditorModal);
+        cancelBtn?.addEventListener('click', teardownEditorModal);
+
+        applyBtn?.addEventListener('click', () => {
+            const activeMode = modalWindow.querySelector('.editor-option-wrapper.active')?.dataset.mode || 'disabled';
+            const hasSafety = !(capContainer?.classList.contains('state-no-cap'));
+            const selectedIcon = iconEl?.getAttribute('src') || defaultIcon;
+            const labelText = (labelEl?.textContent || 'Label').trim();
+            const timerValue = timerInput?.value || '300';
+
+            applySettingsToButton(deviceName, {
+                mode: activeMode,
+                icon: selectedIcon,
+                safetyCap: hasSafety,
+                label: labelText || 'Label',
+                timer: timerValue
+            });
+        });
+
+        const onContainerClick = (event) => {
+            const backdropEl = modalContainer.querySelector('.editor-modal-backdrop');
+            if (event.target === backdropEl) teardownEditorModal();
+        };
+        modalContainer?.addEventListener('click', onContainerClick, { once: true });
+    }
+
+    function openEditorForDevice(deviceName) {
+        if (!editMode || !modalContainer) return;
+        const control = document.querySelector(
+            `${SELECTORS.payloadButtons}[data-device="${deviceName}"]`
+        );
+        if (!control) return;
+
+        currentEditingDevice = deviceName;
+        const settings = extractButtonSettings(control);
+        const modalWindow = renderEditorModal(settings);
+        if (modalWindow) {
+            modalContainer.style.display = 'block';
+            bindEditorEvents(deviceName);
+        }
+    }
+
+    function setupEditor() {
+        modalContainer = document.getElementById('edit-modal-container');
+        modalBackdrop = document.getElementById('modal-backdrop');
+        editorTemplate = document.getElementById('editor-modal-template');
+        if (!modalContainer) {
+            console.warn('Button editor modal container not found');
+            return;
+        }
+
+        if (typeof window.editMode === 'undefined') {
+            window.editMode = false;
+        }
+        editMode = window.editMode;
+
+        const settingsIcons = document.querySelectorAll(SELECTORS.settingsIcon);
+        settingsIcons.forEach((icon) => {
+            icon.addEventListener('click', () => {
+                if (editMode) {
+                    teardownEditorModal();
+                    updateAllButtonStates();
+                    return;
+                }
+                const tab2 = document.querySelector('.drawer-tab[data-tab="2"]');
+                if (tab2) tab2.click();
+                setEditMode(true);
+                collapseSafetyCaps();
+            });
+        });
+
+        window.buttonEditor = {
+            openEditorForDevice,
+            endEditMode: teardownEditorModal
+        };
+    }
+
+    document.addEventListener('DOMContentLoaded', setupEditor);
+})();
+
+
+
+
+
+
 
 
 // ============================================================================
@@ -1217,6 +1500,7 @@ function synthesizeClickSequence(target, originEvent) {
   let hoverEl  = null;      // hovered step target
   let rafHoverId = 0;       // rAF throttle
   let combinedSelectors = '';
+  let drawerTabListenerAttached = false;
 
   /* Spotlight helpers (CSS variables drive the mask hole) */
   function setSpotlightByRect(r){
@@ -1253,6 +1537,57 @@ function synthesizeClickSequence(target, originEvent) {
     if (!el || !el.closest) return -1;
     for (let i = 0; i < TOUR_STEPS.length; i++){
       if (el.closest(TOUR_STEPS[i].selector)) return i;
+    }
+    return -1;
+  }
+
+  function isElementVisible(el) {
+    if (!el || !document.body.contains(el)) return false;
+    const style = getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0;
+  }
+
+  function clearCoachHighlight() {
+    if (hoverEl && hoverEl !== activeEl) hoverEl.classList.remove('coach-glow');
+    if (activeEl) activeEl.classList.remove('coach-glow');
+    hoverEl = null;
+    activeEl = null;
+    if (mask) {
+      mask.style.setProperty('--r', '0px');
+      mask.style.setProperty('--x', '0px');
+      mask.style.setProperty('--y', '0px');
+    }
+    if (tip) {
+      tip.style.transform = 'translate(-9999px, -9999px)';
+      tipText.innerHTML = '';
+    }
+  }
+
+  function findNextVisibleStep(startIdx = 0) {
+    if (!TOUR_STEPS.length) return -1;
+    for (let offset = 0; offset < TOUR_STEPS.length; offset++) {
+      const i = (startIdx + offset) % TOUR_STEPS.length;
+      const candidate = document.querySelector(TOUR_STEPS[i].selector);
+      if (isElementVisible(candidate)) return i;
+    }
+    return -1;
+  }
+
+  function getTabNumberForElement(el) {
+    const pane = el?.closest?.('.tab-pane[data-tab]');
+    const tabNum = pane ? Number(pane.dataset.tab) : NaN;
+    return Number.isFinite(tabNum) ? tabNum : null;
+  }
+
+  function findFirstStepForTab(tabNum) {
+    if (!Number.isFinite(tabNum)) return -1;
+    for (let i = 0; i < TOUR_STEPS.length; i++) {
+      const target = document.querySelector(TOUR_STEPS[i].selector);
+      if (!target) continue;
+      const paneNum = getTabNumberForElement(target);
+      if (paneNum === tabNum) return i;
     }
     return -1;
   }
@@ -1386,10 +1721,22 @@ async function renderStep(){
   function renderStep(){
     if (!TOUR_STEPS.length) return;
     const step = TOUR_STEPS[idx];
-    const target = document.querySelector(step.selector);
-    if (!target){
-      idx = (idx + 1) % TOUR_STEPS.length;
-      return renderStep();
+    let target = document.querySelector(step.selector);
+    if (!isElementVisible(target)) {
+      const nextIdx = findNextVisibleStep(idx);
+      if (nextIdx < 0) {
+        clearCoachHighlight();
+        return;
+      }
+      if (nextIdx !== idx) {
+        idx = nextIdx;
+        return renderStep();
+      }
+      target = document.querySelector(step.selector);
+      if (!isElementVisible(target)) {
+        clearCoachHighlight();
+        return;
+      }
     }
 
     if (activeEl && activeEl !== hoverEl) activeEl.classList.remove('coach-glow');
@@ -1474,6 +1821,19 @@ async function renderStep(){
     e.stopPropagation();
   }
 
+  function onDrawerTabChanged(e) {
+    if (overlay.hidden) return;
+    const nextTab = Number(e?.detail?.tab);
+    clearCoachHighlight();
+    requestAnimationFrame(() => {
+      const tabIdx = findFirstStepForTab(nextTab);
+      if (tabIdx >= 0) {
+        idx = tabIdx;
+        renderStep();
+      }
+    });
+  }
+
   /* Keyboard */
   function onKey(e){
     if (e.key === 'Escape') return closeTour();
@@ -1495,6 +1855,10 @@ async function renderStep(){
     overlay.addEventListener('mousemove', onOverlayMouseMove);
     overlay.addEventListener('click', onOverlayClick);
     overlay.addEventListener('pointerdown', onOverlayPointerDownCapture, true); // capture phase
+    if (!drawerTabListenerAttached) {
+      window.addEventListener('drawer:tab-changed', onDrawerTabChanged, { passive: true });
+      drawerTabListenerAttached = true;
+    }
 
   }
 
@@ -1504,6 +1868,10 @@ function closeTour(){
   window.removeEventListener('resize', renderStep);
   overlay.removeEventListener('mousemove', onOverlayMouseMove);
   overlay.removeEventListener('click', onOverlayClick);
+  if (drawerTabListenerAttached) {
+    window.removeEventListener('drawer:tab-changed', onDrawerTabChanged);
+    drawerTabListenerAttached = false;
+  }
 
   if (rafHoverId) { cancelAnimationFrame(rafHoverId); rafHoverId = 0; }
 

@@ -122,7 +122,7 @@ KiloWebInterface/
 
 - [ ] Persist tab/screen state across reloads (```localStorage```)
 - [ ] Make Steering twice slower
-- [ ] Actual feedback gauge
+- [ ] Actual steering feedback gauge
 - [x] Wire M20 control surface to backend
 - [x] Wire EGES control surface to backend
 - [x] Add MAVLink telemetry & basic commands (arm/disarm, mode, go-to)
@@ -130,6 +130,10 @@ KiloWebInterface/
 - [x] Add OXE engine controls & gauges
 - [x] Introduce a mock backend and “Demo Mode” for UI-only testing
 - [x] Basic auth/session for protected controls
+- [x] Collective Power Trim Tab Joystick binding
+- [X] Create Moving maps background
+- [x] Create Video feed screen
+- [ ] Create Tacktical Map View
 - [x] Collective Power Trim Tab Joystick binding
 - [X] Create Moving maps background
 - [x] Create Video feed screen
@@ -143,13 +147,16 @@ KiloWebInterface/
 
 ```
 ### To_do backend
-- [x] Fix slow login screen.
+- [x] Fix slow login screen
 - [ ] Fix Steering gauge to -30 to +30
 - [x] Introduce "Springy", "Pilot hold" control schema
-- [x] Inroduce Gear datapoint in WS message.
+- [x] Inroduce Gear datapoint in WS message
 - [x] Fix screensave default values
-- [ ] Joystick dash icon should start in red
+- [x] Joystick dash icon should start in red
 - [x] "Crewed" mode to AP Modes 
+- [x] Wire up fuel gauge
+- [ ] Eges Switch Manual mode "2" implementation
+
 
 ```
 ### To-Do Frontend MVP
@@ -163,13 +170,14 @@ KiloWebInterface/
 - [x] Improve Trim Tab & Gyroscope feedback modal
 - [x] Improve Anchor Control modal
 - [x] Fix Payload contlols safety-caps opening
-- [ ] Fix Payload control buttons edit
+- [x] Fix Payload control buttons edit
 - [ ] Add Battery status dot path
-- [ ] Fill tooltips for 1-8 tabs drawer
-- [ ] Create a new PS dash error icon
-- [ ] Add meaning to carousel-titles
-- [ ] Make minimal size 1366 x 768, check other resolutions
+- [x] Fill tooltips for 1-8 tabs drawer
+- [x] Create a new PS dash error icon
+- [x] Add meaning to carousel-titles
+- [x] Make minimal size 1366 x 768, check other resolutions
 - [ ] Adapt to keyboard
+- [ ] MODAL GAUGES PANEL, Voltage. Delete V duble.
 
 
 ```
