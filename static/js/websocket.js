@@ -9,6 +9,7 @@ import {
     getThrottleGearState,
     // updateThrottleUI, // We DO NOT call this from WS
     updateSteeringUI,
+    updateSteeringFeedbackUI,
     updateEngineTrimUI,
     updateListingUI
 } from './modules/gamepad-handler.js';
@@ -444,7 +445,7 @@ function handleControlStateFeedback(msg) {
     handleThrottleFeedback(msg.throttle, msg.gear, msg.rpm_percent);
   }
   if (msg.steering !== undefined) {
-    updateSteeringUI(msg.steering);
+    updateSteeringFeedbackUI(msg.steering);
   }
   if (msg.engine_trim !== undefined) {
     updateEngineTrimUI(msg.engine_trim);

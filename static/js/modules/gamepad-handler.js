@@ -36,6 +36,8 @@ const GAMEPAD_CONFIG = Object.freeze({
     trimIndicatorSpanDeg: 30 // trim indicator arc sweep (deg)
 });
 
+const RUDDER_POINTER_ORIGIN = Object.freeze({ x: 144, y: 0 });
+
 const JOYSTICK_PREFS_STORAGE_KEY = 'joystickPrefs';
 const JOYSTICK_SCHEMA_ALLOWED = new Set(['springy', 'sticky', 'pilot-hold']);
 const JOYSTICK_SCHEMA_DEFAULTS = Object.freeze({
@@ -74,6 +76,9 @@ export const gamepadControlState = {
     port_trim: 0,
     starboard_trim: 0
 };
+
+let steeringFeedbackAvailable = false;
+let lastSteeringFeedbackDeg = null;
 
 const pilotHoldState = {
     throttle: { isHeld: false, heldValue: 0 },
@@ -222,6 +227,26 @@ function applyDeadzone(value) {
 
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
+}
+
+function setRudderPointerRotation(pointerEl, angleDeg) {
+    if (!pointerEl) return;
+    const clampedAngle = clamp(angleDeg, -GAMEPAD_CONFIG.rudderMaxDegrees, GAMEPAD_CONFIG.rudderMaxDegrees);
+    const visualAngle = -clampedAngle;
+    pointerEl.setAttribute('transform', `rotate(${visualAngle}, ${RUDDER_POINTER_ORIGIN.x}, ${RUDDER_POINTER_ORIGIN.y})`);
+}
+
+function updateRudderStatFromDegrees(angleDeg) {
+    const steeringValue = document.getElementById('rudder-angle-value');
+    if (steeringValue) {
+        const rounded = Math.round(angleDeg);
+        steeringValue.textContent = rounded;
+        const boatStat = document.getElementById('boat-rudder-stat');
+        if (boatStat) {
+            boatStat.classList.add('updating');
+            setTimeout(() => boatStat.classList.remove('updating'), GAMEPAD_CONFIG.statUpdateBlipMs);
+        }
+    }
 }
 
 function formatAxisValue(value) {
@@ -862,11 +887,15 @@ function getThrottleDisplayValue(throttle) {
 }
 
 export function updateSteeringUI(steering) {
-    const degrees = (steering / 100) * GAMEPAD_CONFIG.rudderMaxDegrees;
+    const percent = Number(steering);
+    const degrees = clamp(
+        ((Number.isFinite(percent) ? percent : 0) / 100) * GAMEPAD_CONFIG.rudderMaxDegrees,
+        -GAMEPAD_CONFIG.rudderMaxDegrees,
+        GAMEPAD_CONFIG.rudderMaxDegrees
+    );
     const rudderPointer = document.getElementById('rudder-pointer');
     if (rudderPointer) {
-        const visualAngle = -degrees;
-        rudderPointer.setAttribute('transform', `rotate(${visualAngle}, 144, 0)`);
+        setRudderPointerRotation(rudderPointer, degrees);
     }
 
     const rudderInput = document.getElementById('rudder-input');
@@ -874,17 +903,35 @@ export function updateSteeringUI(steering) {
         rudderInput.value = Math.round(degrees);
     }
 
-    const steeringValue = document.getElementById('rudder-angle-value');
-    if (steeringValue) {
-        steeringValue.textContent = Math.round(degrees);
-        const boatStat = document.getElementById('boat-rudder-stat');
-        if (boatStat) {
-            boatStat.classList.add('updating');
-            setTimeout(() => boatStat.classList.remove('updating'), GAMEPAD_CONFIG.statUpdateBlipMs);
-        }
+    if (!steeringFeedbackAvailable) {
+        updateRudderStatFromDegrees(degrees);
     }
 
     updatePilotHoldIndicator();
+}
+
+export function updateSteeringFeedbackUI(steeringAngleDeg) {
+    const numericAngle = Number(steeringAngleDeg);
+    if (!Number.isFinite(numericAngle)) return;
+
+    const clampedDegrees = clamp(
+        numericAngle,
+        -GAMEPAD_CONFIG.rudderMaxDegrees,
+        GAMEPAD_CONFIG.rudderMaxDegrees
+    );
+
+    const feedbackPointer = document.getElementById('rudder-feedback-pointer');
+    if (feedbackPointer) {
+        setRudderPointerRotation(feedbackPointer, clampedDegrees);
+        feedbackPointer.dataset.feedbackActive = 'true';
+    }
+
+    steeringFeedbackAvailable = true;
+    const changed = lastSteeringFeedbackDeg !== clampedDegrees;
+    lastSteeringFeedbackDeg = clampedDegrees;
+    if (changed) {
+        updateRudderStatFromDegrees(clampedDegrees);
+    }
 }
 
 export function updateEngineTrimUI(trim) {

@@ -133,34 +133,30 @@ KiloWebInterface/
 - [x] Collective Power Trim Tab Joystick binding
 - [X] Create Moving maps background
 - [x] Create Video feed screen
-- [ ] Create Tacktical Map View
+- [x] Create Tacktical Map View
 - [x] Collective Power Trim Tab Joystick binding
 - [X] Create Moving maps background
 - [x] Create Video feed screen
-- [ ] Create Tacktical Map View
-- [ ] Packaging for deployment on a Raspberry Pi or container
-- [ ] Hookup Ignition Button
-- [ ] Create WebSocket hookup for screensaver modal
-- [ ] Refractor Throttle Adress it being too twitchy on the lower range of travel, hard to set percicely, scaling is too agressive, introduce "inercia" limitation
-- [ ] Make throttle yellow ribbon represent RPM feedback.
-
-
-```
-### To_do backend
 - [x] Fix slow login screen
-- [ ] Fix Steering gauge to -30 to +30
 - [x] Introduce "Springy", "Pilot hold" control schema
 - [x] Inroduce Gear datapoint in WS message
 - [x] Fix screensave default values
 - [x] Joystick dash icon should start in red
 - [x] "Crewed" mode to AP Modes 
 - [x] Wire up fuel gauge
+- [ ] Fix Steering gauge to -30 to +30
+- [ ] Create Tacktical Map View
+- [ ] Hookup Ignition Button
+- [ ] Create WebSocket hookup for screensaver modal
+- [ ] Refractor Throttle Adress it being too twitchy on the lower range of travel, hard to set percicely, scaling is too agressive, introduce "inercia" limitation
+- [ ] Make throttle yellow ribbon represent RPM feedback. ()
 - [ ] Eges Switch Manual mode "2" implementation
+- [ ] Packaging for deployment on a Raspberry Pi or container
 
 
 ```
 ### To-Do Frontend MVP
-- [ ] Create boat attitude gauge widget
+- [X] Create boat attitude gauge widget
 - [x] Rework id="debug-panel" 
 - [x] Make Gear Popups with progress bar
 - [x] Fix Engine button
@@ -171,13 +167,13 @@ KiloWebInterface/
 - [x] Improve Anchor Control modal
 - [x] Fix Payload contlols safety-caps opening
 - [x] Fix Payload control buttons edit
-- [ ] Add Battery status dot path
 - [x] Fill tooltips for 1-8 tabs drawer
 - [x] Create a new PS dash error icon
 - [x] Add meaning to carousel-titles
 - [x] Make minimal size 1366 x 768, check other resolutions
+- [ ] Add Battery status dot path
 - [ ] Adapt to keyboard
-- [ ] MODAL GAUGES PANEL, Voltage. Delete V duble.
+- [ ] MODAL GAUGES PANEL, Voltage. Delete V duble
 
 
 ```

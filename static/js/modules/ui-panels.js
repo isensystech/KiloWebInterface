@@ -166,6 +166,7 @@ export function initializeRudderTrimBridge() {
     // Rudder sources we can read from (whichever exists)
     const rudderInput = document.getElementById('rudder-input');     // text/number field
     const rudderPointer = document.getElementById('rudder-pointer');   // SVG pointer with rotate()
+    const rudderFeedbackPointer = document.getElementById('rudder-feedback-pointer'); // feedback pointer
 
     // Trim source: existing readout near the slider (text content with degrees)
     // CORRECTED: Use getElementById
@@ -175,25 +176,37 @@ export function initializeRudderTrimBridge() {
     let lastRudderDeg = null;
     let lastTrimDeg = null;
 
+    function parsePointerDeg(pointer) {
+        if (!pointer) return null;
+        const tr = pointer.getAttribute('transform') || '';
+        const m = tr.match(/rotate\(\s*(-?\d+(?:\.\d+)?)\s*,/);
+        if (m) {
+            const visual = Number(m[1]);
+            if (!Number.isNaN(visual)) {
+                return -visual;
+            }
+        }
+        return null;
+    }
+
     /** Read current rudder angle from DOM without touching existing logic */
     function readRudderDeg() {
+        const hasFeedback = rudderFeedbackPointer?.dataset.feedbackActive === 'true';
+        if (hasFeedback) {
+            const feedbackDeg = parsePointerDeg(rudderFeedbackPointer);
+            if (feedbackDeg !== null) return feedbackDeg;
+        }
         // 1) Prefer explicit input value if present
         if (rudderInput && rudderInput.value !== '') {
             const v = Number(rudderInput.value);
             if (!Number.isNaN(v)) return v;
         }
         // 2) Else derive from pointer's transform rotate(A, cx, cy)
-        if (rudderPointer) {
-            const tr = rudderPointer.getAttribute('transform') || '';
-            // Expect pattern like: rotate(XX, 144, 0)
-            const m = tr.match(/rotate\(\s*(-?\d+(?:\.\d+)?)\s*,/);
-            if (m) {
-                const visual = Number(m[1]);      // visual angle
-                // In many setups pointer rotates opposite sign to logical rudder.
-                // If your UI uses inverted rotate, flip the sign here:
-                return -visual;
-            }
-        }
+        const pointerDeg = parsePointerDeg(rudderPointer);
+        if (pointerDeg !== null) return pointerDeg;
+
+        const fallbackFeedbackDeg = parsePointerDeg(rudderFeedbackPointer);
+        if (fallbackFeedbackDeg !== null) return fallbackFeedbackDeg;
         return null;
     }
 
