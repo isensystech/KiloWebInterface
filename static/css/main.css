@@ -1252,6 +1252,7 @@ html {
     align-items: baseline;/* align icon+number to same baseline */
     justify-content: center;
     margin-top: 8px;      /* adjust to fit under your existing blocks */
+    flex-wrap: wrap;      /* allow wrap when horizontal space is tight */
     }
 
     /* Each stat chip */
@@ -1309,8 +1310,16 @@ html {
     /* Compact styling when embedded in the left gauges column */
     .gauge-boat-stats {
     padding: 4px 10px 0;
-    gap: 12px;
-    justify-content: flex-start;
+    column-gap: 12px;
+    row-gap: 6px;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+    }
+
+    .gauge-boat-stats .boat-stat {
+    flex: 1 1 120px;
+    justify-content: center;
     }
 
     .gauge-boat-stats .boat-stat__value {
