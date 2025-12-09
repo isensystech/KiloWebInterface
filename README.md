@@ -121,8 +121,8 @@ KiloWebInterface/
 ### Roadmap
 
 - [ ] Persist tab/screen state across reloads (```localStorage```)
-- [ ] Make Steering twice slower
-- [ ] Actual steering feedback gauge
+- [x] Make Steering twice slower
+- [x] Actual steering feedback gauge
 - [x] Wire M20 control surface to backend
 - [x] Wire EGES control surface to backend
 - [x] Add MAVLink telemetry & basic commands (arm/disarm, mode, go-to)
@@ -144,6 +144,8 @@ KiloWebInterface/
 - [x] Joystick dash icon should start in red
 - [x] "Crewed" mode to AP Modes 
 - [x] Wire up fuel gauge
+- [x] Wire up oil temp gauge
+- [x] Wire up engine status page
 - [ ] Fix Steering gauge to -30 to +30
 - [ ] Create Tacktical Map View
 - [ ] Hookup Ignition Button

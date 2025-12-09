@@ -17,9 +17,11 @@ import {
     handleStatusIndicator, 
     updateTelemetryValue, 
     updateRpmGauge, 
+    updateSpeedGauge,
     updateRelayVoltage,  // <-- Handles CZone voltage (Tab 4) AND Left Gauge
     updateM20RelayCurrent, // <-- Handles M20 current (Tab 8)
-    updateFuelGauge
+    updateFuelGauge,
+    updateEngineParameters
 } from './modules/ui-telemetry.js';
 import { updateMapFromMavlink } from './map-layer.js';
 
@@ -147,6 +149,12 @@ function handleIncomingMessage(evt) {
       break;
     case 'fuel_gauge':
       updateFuelGauge(msg.percentage);
+      break;
+    case 'engine_params.state':
+      updateEngineParameters(msg);
+      break;
+    case 'engine_rpm.state':
+      updateRpmGauge(msg.rpm, msg.rpm_percent ?? msg.percent);
       break;
     case 'relay.state':
     case 'relay.set':
@@ -413,6 +421,7 @@ function bindClickHandlers() {
     updateTelemetryValue('gps_lat_deg', msg.gps_lat_deg, 6);
     updateTelemetryValue('gps_lng_deg', msg.gps_lng_deg, 6);
     updateMapFromMavlink(msg);
+    updateSpeedGauge(msg.gps_speed_ms);
     updateTelemetryValue('ap_mode', msg.ap_mode || '--');
     if (msg.ap_mode) {
       window.__kiloLatestApMode = msg.ap_mode;

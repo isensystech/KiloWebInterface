@@ -18,9 +18,17 @@ const TELEMETRY_CONFIG = Object.freeze({
     lowVoltageThreshold: 12.0 // voltage threshold that triggers warning styling (volts)
   },
   rpmGauge: Object.freeze({
+    maxRpm: 6000, // used to derive percent when only RPM is provided
     redlinePercent: 90, // percent of max RPM that triggers the redline style
     redlineColor: '#D0021B', // fill color while at/above redline
     nominalColor: '#ffffff' // fill color while below redline
+  }),
+  engineTemperatureGauge: Object.freeze({
+    maxCelsius: 150, // upper bound used to derive percent fill
+    hotThresholdCelsius: 121 // values at/above this trigger red styling
+  }),
+  speedGauge: Object.freeze({
+    maxKnots: 60 // upper bound used to derive percent fill on the speed mini-gauge
   }),
   fuelGauge: Object.freeze({
     capacityGallons: 135 // total capacity used to derive gallons from percentage
@@ -538,16 +546,189 @@ export function updateTelemetryValue(key, value, toFixed) {
   }
 }
 
+const ENGINE_PARAM_FIELD_MAP = Object.freeze({
+  engine_coolant_temp: 'coolant-temperature',
+  engine_oil_temp: 'oil-temperature',
+  engine_oil_pressure: 'oil-pressure',
+  exhaust_gas_temp: 'gas-temperature',
+  manifold_air_pressur: 'manifold-air-pressure',
+  manifold_air_temp: 'manifold-air-temperature',
+  gearbox_oil_pressure: 'gearbox-oil-pressure',
+  fuel_rate_avg_time: 'fuel-rate-avg',
+  fuel_rate_avg_dist: 'fuel-distance',
+  propeller_speed_low: 'propeller-speed-low',
+  fuel_used: 'fuel-used',
+  traveled_distance: 'traveled-distance',
+  max_speed: 'max-speed',
+  engine_hrs: 'engine-hrs'
+});
+
+const clampPercent = (pct) => {
+  if (!Number.isFinite(pct)) return 0;
+  return Math.max(0, Math.min(100, pct));
+};
+
+const msToKnots = (ms) => (Number.isFinite(ms) ? ms * 1.94384 : null);
+
+const deriveRpmPercent = (rpmValue, percentValue) => {
+  if (percentValue !== undefined && percentValue !== null) {
+    const pctNumber = Number(percentValue);
+    if (Number.isFinite(pctNumber)) {
+      return clampPercent(pctNumber);
+    }
+  }
+
+  const rpmNumber = Number(rpmValue);
+  const maxRpm = TELEMETRY_CONFIG.rpmGauge.maxRpm;
+  if (!Number.isFinite(rpmNumber) || !Number.isFinite(maxRpm) || maxRpm <= 0) return 0;
+
+  return clampPercent((rpmNumber / maxRpm) * 100);
+};
+
+const formatEngineParamValue = (key, value) => {
+  if (value === undefined || value === null) return '--';
+  if (key === 'propeller_speed_low' && (typeof value === 'boolean' || typeof value === 'number')) {
+    return value ? 'LOW' : 'OK';
+  }
+  if (typeof value === 'number') {
+    return Number.isInteger(value) ? value.toString() : value.toFixed(1);
+  }
+  return String(value);
+};
+
 export function updateRpmGauge(rpm, percent) {
+  const rpmNumber = Number(rpm);
+  const pct = deriveRpmPercent(rpmNumber, percent);
+  const pctCss = `${pct.toFixed(1)}%`;
+
   const rpmDisplay = document.getElementById("rpm-gauge-value");
   if (rpmDisplay) {
-    rpmDisplay.textContent = rpm;
+    rpmDisplay.textContent = Number.isFinite(rpmNumber) ? rpmNumber : '--';
   }
+
+  Array.from(document.querySelectorAll('.rpm-gauge.gauge-block'))
+    .filter((el) => !el.closest('#screensaverModal'))
+    .forEach((el) => el.style.setProperty('--pct', pctCss));
+
   const rpmGaugeFill = document.getElementById("rpm-gauge-fill");
   if (rpmGaugeFill) {
-    rpmGaugeFill.style.width = `${percent}%`;
+    rpmGaugeFill.style.width = pctCss;
     const { redlinePercent, redlineColor, nominalColor } = TELEMETRY_CONFIG.rpmGauge;
-    rpmGaugeFill.style.backgroundColor = percent >= redlinePercent ? redlineColor : nominalColor;
+    rpmGaugeFill.style.backgroundColor = pct >= redlinePercent ? redlineColor : nominalColor;
+  }
+
+  const miniGauge = document.getElementById("mini-gauge-rpm");
+  if (miniGauge) {
+    miniGauge.setAttribute('aria-label', `RPM level ${Number.isFinite(rpmNumber) ? rpmNumber : '--'}`);
+  }
+}
+
+const avgSpeedState = {
+  sumKnots: 0,
+  count: 0
+};
+
+function updateAverageSpeed(knots) {
+  if (!Number.isFinite(knots)) return;
+  avgSpeedState.sumKnots += knots;
+  avgSpeedState.count += 1;
+  const avg = avgSpeedState.sumKnots / avgSpeedState.count;
+
+  const avgValueEl = document.getElementById('avg-gauge-value');
+  if (avgValueEl) {
+    avgValueEl.textContent = avg.toFixed(1);
+  }
+
+  const avgUnitEl = document.getElementById('avg-gauge-unit');
+  if (avgUnitEl) {
+    avgUnitEl.textContent = 'kt';
+  }
+}
+
+export function updateSpeedGauge(speedMs) {
+  const speedNumber = Number(speedMs);
+  const knots = msToKnots(speedNumber);
+  const { maxKnots } = TELEMETRY_CONFIG.speedGauge;
+  const pct = (Number.isFinite(knots) && Number.isFinite(maxKnots) && maxKnots > 0)
+    ? clampPercent((knots / maxKnots) * 100)
+    : 0;
+  const pctCss = `${pct.toFixed(1)}%`;
+
+  const speedValueEl = document.getElementById('groundspeed_ms');
+  if (speedValueEl) {
+    speedValueEl.textContent = Number.isFinite(knots) ? knots.toFixed(1) : '--';
+  }
+
+  const speedUnitEl = document.getElementById('speed-gauge-unit');
+  if (speedUnitEl) {
+    speedUnitEl.textContent = 'kt';
+  }
+
+  Array.from(document.querySelectorAll('.speed-avg-gauge.gauge-block'))
+    .filter((el) => !el.closest('#screensaverModal'))
+    .forEach((el) => el.style.setProperty('--pct', pctCss));
+
+  const fillEl = document.getElementById('gauge-fill-speed');
+  if (fillEl) {
+    fillEl.style.width = pctCss;
+  }
+
+  const miniGauge = document.getElementById('gauge-speed');
+  if (miniGauge) {
+    miniGauge.setAttribute('aria-label', `Speed ${Number.isFinite(knots) ? knots.toFixed(1) : '--'} knots`);
+  }
+
+  updateAverageSpeed(knots);
+}
+
+export function updateEngineTempGauge(tempC) {
+  const tempNumber = Number(tempC);
+  const { maxCelsius, hotThresholdCelsius } = TELEMETRY_CONFIG.engineTemperatureGauge;
+  const pct = (Number.isFinite(tempNumber) && Number.isFinite(maxCelsius) && maxCelsius > 0)
+    ? clampPercent((tempNumber / maxCelsius) * 100)
+    : 0;
+  const pctCss = `${pct.toFixed(1)}%`;
+
+  const gaugeBlock = document.querySelector('#engine-temp-gauge .engine-temperature-gauge');
+  if (gaugeBlock) {
+    gaugeBlock.style.setProperty('--pct', pctCss);
+    gaugeBlock.classList.remove('hot', 'warm', 'cold', 'norm');
+    if (Number.isFinite(tempNumber) && tempNumber >= hotThresholdCelsius) {
+      gaugeBlock.classList.add('hot');
+    } else {
+      gaugeBlock.classList.add('norm');
+    }
+  }
+
+  const valueEl = document.getElementById('engine-temperature-gauge-value');
+  if (valueEl) {
+    valueEl.textContent = Number.isFinite(tempNumber) ? tempNumber.toFixed(1) : '--';
+  }
+
+  const miniGauge = document.getElementById('engine-temperature-mini-gauge');
+  if (miniGauge) {
+    miniGauge.setAttribute('aria-label', `Engine temperature ${Number.isFinite(tempNumber) ? tempNumber.toFixed(1) : '--'} °C`);
+  }
+}
+
+export function updateEngineParameters(state = {}) {
+  Object.entries(ENGINE_PARAM_FIELD_MAP).forEach(([key, elementId]) => {
+    const valueEl = document.querySelector(`#${elementId} .status-display-value`);
+    if (!valueEl) return;
+    valueEl.textContent = formatEngineParamValue(key, state[key]);
+  });
+
+  updateEngineTempGauge(state.engine_oil_temp);
+
+  const fuelBurnValueEl = document.getElementById('fuel-burn-gauge-value');
+  if (fuelBurnValueEl) {
+    const burn = Number(state.fuel_rate_avg_time);
+    fuelBurnValueEl.textContent = Number.isFinite(burn) ? burn.toFixed(1) : '--';
+  }
+
+  const fuelBurnUnitEl = document.getElementById('fuel-burn-gauge-unit');
+  if (fuelBurnUnitEl) {
+    fuelBurnUnitEl.textContent = 'G/Hr';
   }
 }
 
@@ -626,14 +807,6 @@ export function updateFuelGauge(percentage) {
   Array.from(document.querySelectorAll('#fuel-gauge-unit'))
     .filter(isVisibleGauge)
     .forEach((el) => { el.textContent = 'gal'; });
-
-  Array.from(document.querySelectorAll('#fuel-burn-gauge-value'))
-    .filter(isVisibleGauge)
-    .forEach((el) => { el.textContent = pctDisplay; });
-
-  Array.from(document.querySelectorAll('#fuel-burn-gauge-unit'))
-    .filter(isVisibleGauge)
-    .forEach((el) => { el.textContent = '%'; });
 
   Array.from(document.querySelectorAll('#fuel-mini-gauge'))
     .filter(isVisibleGauge)
