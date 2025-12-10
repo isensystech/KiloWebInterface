@@ -161,6 +161,7 @@ KiloWebInterface/
 
 ```
 ### To-Do Frontend MVP
+
 - [X] Create boat attitude gauge widget
 - [x] Rework id="debug-panel" 
 - [x] Make Gear Popups with progress bar
@@ -194,3 +195,11 @@ KiloWebInterface/
 - [ ] Configure animation in legal-modal, add kilo-logo.svg
 - [ ] Repaint the central boat picture
 - [ ] "Safety" label becomes unreadable on bright FPV background.
+
+```
+### Parameters to expose in settings menu
+- [ ] Steering Angle Max deflection
+- [x] Joystick behaviour on throttle
+- [x] Joystick behaviour on steering
+- [ ] Units of speed Knots / M/S
+- [ ] Craft Name, 
