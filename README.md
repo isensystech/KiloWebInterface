@@ -146,7 +146,7 @@ KiloWebInterface/
 - [x] Wire up fuel gauge
 - [x] Wire up oil temp gauge
 - [x] Wire up engine status page
-- [ ] Fix Steering gauge to -30 to +30
+- [ ] Fix Steering gauge to -30 to +30 (or make selectable options)
 - [ ] Create Tacktical Map View
 - [ ] Hookup Ignition Button
 - [ ] Create WebSocket hookup for screensaver modal
@@ -154,7 +154,10 @@ KiloWebInterface/
 - [ ] Make throttle yellow ribbon represent RPM feedback. ()
 - [ ] Eges Switch Manual mode "2" implementation
 - [ ] Packaging for deployment on a Raspberry Pi or container
-
+- [ ] Create PTZ camera control elements (assign gamepad commands)
+- [ ] Create PTZ Camera position and zoom feedback
+- [ ] Create heading ribbon for map view
+- [ ] Create attitude gauge 
 
 ```
 ### To-Do Frontend MVP
@@ -175,11 +178,11 @@ KiloWebInterface/
 - [x] Make minimal size 1366 x 768, check other resolutions
 - [ ] Add Battery status dot path
 - [ ] Adapt to keyboard
-- [ ] MODAL GAUGES PANEL, Voltage. Delete V duble
+- [x] MODAL GAUGES PANEL, Voltage. Delete V duble
 
 
 ```
-### To-Do Frontend 
+### To-Do Extra Effort 
 - [ ] Unify fonts
 - [ ] Unify colors
 - [ ] Adapt to tablet THIS IS NOT NEEDED!!!!!
