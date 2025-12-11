@@ -7,7 +7,7 @@
 | **Boat 1** | 192.168.11.102 | 192.168.11.1 | http://192.168.11.102 |
 | **Boat 2** | 192.168.12.102 | 192.168.12.1 | http://192.168.12.102 |
 
-**Credentials (both boats):** username: `pi` / password: `unmanned9`  
+**Credentials (both boats):** username: `pi` / password: `un*****d9`  
 **What we're deploying:** USV Control Dashboard (https://github.com/isensystech/KiloWebInterface)
 
 ---
@@ -39,7 +39,7 @@
      - Set hostname: `kilo-usv` (or whatever you prefer)
      - **Enable SSH** ✓ Use password authentication
      - Set username: `pi`
-     - Set password: `unmanned9`
+     - Set password: `un******d9`
      - Configure wireless LAN (if needed):
        - SSID: [your wifi name]
        - Password: [your wifi password]
@@ -76,7 +76,7 @@ ssh pi@kilo-usv.local
 # Mac/Linux: arp -a | grep -i "b8:27:eb\|dc:a6:32"
 # Windows: arp -a | findstr "b8-27-eb dc-a6-32"
 
-# Password: unmanned9
+# Password: un****ed9
 ```
 
 ### Set Static IP on eth0
@@ -115,7 +115,7 @@ exit
 
 # Reconnect using the new static IP
 ssh pi@192.168.11.102
-# Password: unmanned9
+# Password: un*****ed9
 ```
 
 ---
@@ -152,7 +152,7 @@ exit
 
 # Reconnect using the new static IP
 ssh pi@192.168.12.102
-# Password: unmanned9
+# Password: un*******d9
 ```
 
 ---
@@ -172,7 +172,7 @@ ssh pi@192.168.12.102
 ```
 
 **When prompted:**
-- Enter password: `unmanned9`
+- Enter password: `un*****d9`
 
 ---
 
