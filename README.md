@@ -146,7 +146,6 @@ KiloWebInterface/
 - [x] Wire up fuel gauge
 - [x] Wire up oil temp gauge
 - [x] Wire up engine status page
-- [ ] Fix Steering gauge to -30 to +30 (or make selectable options)
 - [ ] Create Tacktical Map View
 - [ ] Hookup Ignition Button
 - [ ] Create WebSocket hookup for screensaver modal
@@ -181,9 +180,9 @@ KiloWebInterface/
 - [ ] Adapt to keyboard
 - [x] MODAL GAUGES PANEL, Voltage. Delete V duble
 
-
 ```
 ### To-Do Extra Effort 
+
 - [ ] Unify fonts
 - [ ] Unify colors
 - [ ] Adapt to tablet THIS IS NOT NEEDED!!!!!
@@ -198,8 +197,15 @@ KiloWebInterface/
 
 ```
 ### Parameters to expose in settings menu
-- [ ] Steering Angle Max deflection
+
+- [ ] Steering angle max deflection angle
+- [ ] Units of speed Knots / M/S
+- [ ] Craft Name, Pilots Callsign
 - [x] Joystick behaviour on throttle
 - [x] Joystick behaviour on steering
-- [ ] Units of speed Knots / M/S
-- [ ] Craft Name, 
+- [ ] Throttle Sensitivity
+- [ ] Steering Sensitivity
+- [ ] Battery to be displayed on the left gauge 
+- [ ] Fuel Tank Max Capacity
+- [ ] Max Engine RPM
+- [ ] Minutes of inactivity before forcing the app back to the splash screen
