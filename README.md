@@ -156,7 +156,8 @@ KiloWebInterface/
 - [ ] Create PTZ camera control elements (assign gamepad commands)
 - [ ] Create PTZ Camera position and zoom feedback
 - [ ] Create heading ribbon for map view
-- [ ] Create attitude gauge 
+- [ ] Create attitude gauge
+- [ ] Create a UI element that represents CAN bus activity
 
 ```
 ### To-Do Frontend MVP
