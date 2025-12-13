@@ -1,265 +1,252 @@
-# Kilo USV Web Interface - Deployment Instructions for Away Team
+# COMPLETE DEPLOYMENT GUIDE - BOAT 1
+## Raspberry Pi Web Interface - From Blank SD Card to Working System
 
-**⚠️ IMPORTANT: TWO BOATS, DIFFERENT IPs**
-
-| Boat | LAN IP | Gateway | Access URL |
-|------|--------|---------|------------|
-| **Boat 1** | 192.168.11.102 | 192.168.11.1 | http://192.168.11.102 |
-| **Boat 2** | 192.168.12.102 | 192.168.12.1 | http://192.168.12.102 |
-
-**Credentials (both boats):** username: `pi` / password: `un*****d9`  
-**What we're deploying:** USV Control Dashboard (https://github.com/isensystech/KiloWebInterface)
+**Boat Configuration:**
+- Boat Number: **1**
+- LAN IP: **192.168.11.102/24**
+- Gateway: **192.168.11.1**
+- ROS Bridge IP: **192.168.11.101**
+- WiFi: Starlink (for internet access during setup)
 
 ---
 
-## Quick Start Overview
-1. Prepare fresh SD card with Raspberry Pi OS
-2. Connect Pi to network
-3. SSH into the Pi
-4. Clone and install the application
-5. Set it up to run on boot
-6. Access the web interface
+## 📦 WHAT YOU NEED
+
+- [ ] Raspberry Pi 4 (4GB+ recommended)
+- [ ] MicroSD card (16GB+)
+- [ ] Computer with SD card reader
+- [ ] Ethernet cable (to connect to boat network 192.168.11.X)
+- [ ] Starlink WiFi access (for downloads during setup)
 
 ---
 
-## Step 1: Prepare the Raspberry Pi
+## STEP 1: FLASH SD CARD
 
-### Option A: If starting with a fresh SD card
+### Using Raspberry Pi Imager
 
-1. **Download Raspberry Pi Imager** on your laptop:
-   - Go to: https://www.raspberrypi.com/software/
-   - Install Raspberry Pi Imager
+1. **Download Raspberry Pi Imager:**
+   - https://www.raspberrypi.com/software/
 
-2. **Flash the SD Card:**
-   - Insert SD card into your computer
-   - Open Raspberry Pi Imager
-   - Click "Choose OS" → Select "Raspberry Pi OS (64-bit)" (recommended)
-   - Click "Choose Storage" → Select your SD card
-   - Click the GEAR ICON (⚙️) to configure settings:
-     - Set hostname: `kilo-usv` (or whatever you prefer)
-     - **Enable SSH** ✓ Use password authentication
-     - Set username: `pi`
-     - Set password: `un******d9`
-     - Configure wireless LAN (if needed):
-       - SSID: [your wifi name]
-       - Password: [your wifi password]
-       - Country: US (or your country)
-   - Click "Save" then "Write"
-   - Wait for it to complete (~5-10 minutes)
+2. **Configure the Image:**
+   - OS: **Raspberry Pi OS (64-bit)** (Debian Bookworm)
+   - Storage: Your SD card
+   
+3. **Click the Gear Icon (⚙️) for Advanced Options:**
 
-3. **Boot the Pi:**
-   - Insert SD card into the Raspberry Pi
-   - Connect power, Ethernet cable to LAN port
-   - Wait 1-2 minutes for first boot
+   **General Tab:**
+   - Hostname: `hp1-usv` (or `kilo-usv`)
+   - Enable SSH: ✅ Use password authentication
+   - Username: `pi`
+   - Password: `unmanned9`
+   - Configure wireless LAN: ✅
+     - SSID: `[Your Starlink WiFi SSID]`
+     - Password: `[Your Starlink WiFi Password]`
+     - Country: `US`
+   - Set locale: ✅ America/Los_Angeles, US keyboard
 
-### Option B: If Pi is already set up
-- Skip to Step 2
+4. **Write the Image**
+   - Click "Write" and wait for completion
+
+5. **Insert SD card into Raspberry Pi and power on**
 
 ---
 
-## Step 2: Configure Static IP on LAN Port
+## STEP 2: INITIAL CONNECTION
 
-**CRITICAL:** The Ethernet (LAN) port must have a static IP for vessel control. Each boat gets a different IP on a different subnet. WiFi will be used for Starlink internet.
+### Option A: Connect via WiFi (Recommended for initial setup)
 
-| Boat | LAN IP | Gateway |
-|------|--------|---------|
-| Boat 1 | 192.168.11.102/24 | 192.168.11.1 |
-| Boat 2 | 192.168.12.102/24 | 192.168.12.1 |
-
-### Initial Connection (via WiFi or hostname)
+Wait 2-3 minutes for Pi to boot and connect to Starlink WiFi.
 
 ```bash
-# Connect via hostname (if WiFi is configured)
-ssh pi@kilo-usv.local
-
-# OR scan network to find Pi
-# Mac/Linux: arp -a | grep -i "b8:27:eb\|dc:a6:32"
-# Windows: arp -a | findstr "b8-27-eb dc-a6-32"
-
-# Password: un****ed9
+# From your computer on same Starlink WiFi
+ssh pi@hp1-usv.local
+# Password: unmanned9
 ```
 
-### Set Static IP on eth0
+If `.local` doesn't work, find the IP:
+```bash
+# Check your router's DHCP leases, or use:
+ping hp1-usv.local
+# Then: ssh pi@[the-ip-address]
+```
 
-**Choose the configuration for YOUR boat:**
+### Option B: Connect via Ethernet
 
-#### BOAT 1 Configuration
+If you have a monitor and keyboard, or want to connect directly via ethernet from your computer, connect and login locally.
+
+---
+
+## STEP 3: CONFIGURE STATIC IP ON ETH0
+
+Once connected via WiFi/SSH:
 
 ```bash
-# Add static IP configuration for eth0 (LAN port) - BOAT 1
+# Verify you're connected
+ip addr show wlan0 | grep "inet "
+# Should show Starlink DHCP address
+
+# Now configure static IP on eth0 for boat LAN
 sudo tee -a /etc/dhcpcd.conf > /dev/null <<'EOF'
 
-# Static IP for eth0 (LAN port) - BOAT 1 - Vessel Control Network
+# Boat 1 Static IP Configuration
 interface eth0
 static ip_address=192.168.11.102/24
 static routers=192.168.11.1
 static domain_name_servers=192.168.11.1 8.8.8.8
 EOF
 
-# Apply changes
+# Restart networking
 sudo systemctl restart dhcpcd
 
-# Wait a few seconds for network to reconfigure
-sleep 5
+# IMPORTANT: You'll lose SSH connection if connected via ethernet
+# Reconnect to the new static IP or continue via WiFi
+```
 
-# Verify the new IP
+### Verify Configuration
+
+```bash
+# Check eth0 has static IP
 ip addr show eth0 | grep "inet "
 # Should show: inet 192.168.11.102/24
-```
 
-**Exit and reconnect via static IP:**
+# Check WiFi still has internet
+ip addr show wlan0 | grep "inet "
+# Should show: inet [Starlink DHCP IP]
 
-```bash
-# Exit current SSH session
-exit
+# Test internet access
+ping -c 3 8.8.8.8
 
-# Reconnect using the new static IP
-ssh pi@192.168.11.102
-# Password: un*****ed9
-```
-
----
-
-#### BOAT 2 Configuration
-
-```bash
-# Add static IP configuration for eth0 (LAN port) - BOAT 2
-sudo tee -a /etc/dhcpcd.conf > /dev/null <<'EOF'
-
-# Static IP for eth0 (LAN port) - BOAT 2 - Vessel Control Network
-interface eth0
-static ip_address=192.168.12.102/24
-static routers=192.168.12.1
-static domain_name_servers=192.168.12.1 8.8.8.8
-EOF
-
-# Apply changes
-sudo systemctl restart dhcpcd
-
-# Wait a few seconds for network to reconfigure
-sleep 5
-
-# Verify the new IP
-ip addr show eth0 | grep "inet "
-# Should show: inet 192.168.12.102/24
-```
-
-**Exit and reconnect via static IP:**
-
-```bash
-# Exit current SSH session
-exit
-
-# Reconnect using the new static IP
-ssh pi@192.168.12.102
-# Password: un*******d9
+# Check default route uses WiFi for internet
+ip route
+# Default should go through wlan0
 ```
 
 ---
 
-## Step 3: Connect to the Raspberry Pi
-
-From now on, always connect via the static LAN IP:
-
-**For Boat 1:**
-```bash
-ssh pi@192.168.11.102
-```
-
-**For Boat 2:**
-```bash
-ssh pi@192.168.12.102
-```
-
-**When prompted:**
-- Enter password: `un*****d9`
-
----
-
-## Step 4: Install Dependencies on the Pi
-
-Once you're logged into the Pi via SSH (at 192.168.11.102 or 192.168.12.102), run these commands:
+## STEP 4: INSTALL DEPENDENCIES
 
 ```bash
-# Update the system
+# Update package lists
 sudo apt update
-sudo apt upgrade -y
 
-# Install Python 3 and pip (should already be installed on newer Pi OS)
-sudo apt install -y python3 python3-pip python3-venv git
+# Install required packages
+sudo apt install -y python3 python3-venv python3-pip git nginx
 
-# Install system dependencies that might be needed
-sudo apt install -y build-essential
+# Verify installations
+python3 --version  # Should be 3.11+
+git --version
+nginx -v
 ```
 
 ---
 
-## Step 5: Clone and Install the Application
+## STEP 5: CLONE KILOWEBINTERFACE
 
 ```bash
-# Go to home directory
+# Navigate to home directory
 cd ~
 
-# Clone the repository
-git clone https://github.com/isensystech/KiloWebInterface.git
+# Clone the repository on the version/map branch
+git clone -b version/map https://github.com/isensystech/KiloWebInterface.git
 
-# Enter the project directory
-cd KiloWebInterface
+# Verify branch
+cd ~/KiloWebInterface
+git branch
+# Should show: * version/map
 
-# Create a Python virtual environment
-python3 -m venv .venv
-
-# Activate the virtual environment
-source .venv/bin/activate
-
-# Install Python dependencies
-pip install fastapi uvicorn
-
-# Optional: If there's a requirements.txt file
-pip install -r requirements.txt
+# Check we have the files
+ls -la
+# Should see: app.py, static/, templates/, requirements.txt
 ```
 
 ---
 
-## Step 6: Test the Application
+## STEP 6: SET UP PYTHON VIRTUAL ENVIRONMENT
 
 ```bash
-# Make sure you're in the KiloWebInterface directory
 cd ~/KiloWebInterface
 
-# Activate virtual environment (if not already active)
+# Create virtual environment
+python3 -m venv .venv
+
+# Activate virtual environment
 source .venv/bin/activate
 
-# Run the application
-python app.py
-```
+# Upgrade pip
+pip install --upgrade pip
 
-**You should see output like:**
-```
-INFO:     Started server process
-INFO:     Uvicorn running on http://0.0.0.0:5000
-```
+# Install websockets first (required for uvicorn WebSocket support)
+pip install websockets
 
-**Test it from your laptop:**
-- Open a web browser
-- Go to:
-  - Boat 1: `http://192.168.11.102:5000`
-  - Boat 2: `http://192.168.12.102:5000`
-- You should see the Kilo USV Control Dashboard
+# Install requirements
+pip install -r requirements.txt
 
-**To stop the test:** Press `Ctrl+C` in the SSH terminal
+# Install FastAPI and uvicorn explicitly
+pip install fastapi uvicorn
+
+# Verify installations
+pip list | grep -E "fastapi|uvicorn|websockets"
+
+# Should show:
+# fastapi        0.124.2 (or similar)
+# uvicorn        0.38.0 (or similar)
+# websockets     15.0.1 (or similar)
+
+# Deactivate for now
+deactivate
+```
 
 ---
 
-## Step 7: Set Up nginx for Port 80 Access
-
-nginx will act as a reverse proxy, allowing access to the dashboard on port 80 (standard HTTP) instead of requiring :5000.
+## STEP 7: CREATE SYSTEMD SERVICE
 
 ```bash
-# Install nginx (if not already installed)
-sudo apt install -y nginx
+# Create the service file
+sudo tee /etc/systemd/system/kilo-web.service > /dev/null <<'EOF'
+[Unit]
+Description=Kilo USV Web Interface
+After=network.target
 
-# Create nginx configuration for the Kilo web interface
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/KiloWebInterface
+ExecStart=/home/pi/KiloWebInterface/.venv/bin/python app.py
+Restart=always
+RestartSec=10
+Environment="PATH=/home/pi/KiloWebInterface/.venv/bin"
+Environment="KILO_CONTROL_WHITELIST=192.168.11.101,127.0.0.1"
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Reload systemd
+sudo systemctl daemon-reload
+
+# Enable service to start on boot
+sudo systemctl enable kilo-web.service
+
+# Start the service
+sudo systemctl start kilo-web.service
+
+# Check status
+sudo systemctl status kilo-web.service
+
+# Should show: Active: active (running)
+
+# Check logs
+sudo journalctl -u kilo-web.service -n 20
+
+# Should see: "Starting Kilo UI server at 0.0.0.0:5000"
+```
+
+---
+
+## STEP 8: CONFIGURE NGINX REVERSE PROXY
+
+```bash
+# Create nginx site configuration
 sudo tee /etc/nginx/sites-available/kilo-web > /dev/null <<'EOF'
 server {
     listen 80;
@@ -279,315 +266,348 @@ server {
 }
 EOF
 
-# Enable the site and disable the default nginx page
-sudo ln -sf /etc/nginx/sites-available/kilo-web /etc/nginx/sites-enabled/
+# Remove default site
 sudo rm -f /etc/nginx/sites-enabled/default
+
+# Enable kilo-web site
+sudo ln -sf /etc/nginx/sites-available/kilo-web /etc/nginx/sites-enabled/
 
 # Test nginx configuration
 sudo nginx -t
 
-# If test passes, restart nginx
-sudo systemctl restart nginx
-sudo systemctl enable nginx
-```
-
-**Test nginx setup:**
-- Open browser on your laptop
-- Go to:
-  - Boat 1: `http://192.168.11.102` (no port number needed!)
-  - Boat 2: `http://192.168.12.102` (no port number needed!)
-- You should see the Kilo USV Control Dashboard
-
----
-
-## Step 8: Set Up Auto-Start on Boot
-
-To make the application run automatically when the Pi boots:
-
-```bash
-# Create a systemd service file
-sudo nano /etc/systemd/system/kilo-web.service
-```
-
-**Paste this content into the file:**
-```ini
-[Unit]
-Description=Kilo USV Web Interface
-After=network.target
-
-[Service]
-Type=simple
-User=pi
-WorkingDirectory=/home/pi/KiloWebInterface
-Environment="PATH=/home/pi/KiloWebInterface/.venv/bin"
-ExecStart=/home/pi/KiloWebInterface/.venv/bin/python app.py
-Restart=always
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target
-```
-
-**Save and exit:**
-- Press `Ctrl+X`
-- Press `Y` to confirm
-- Press `Enter` to save
-
-**Enable and start the service:**
-```bash
-# Reload systemd to recognize the new service
-sudo systemctl daemon-reload
-
-# Enable the service to start on boot
-sudo systemctl enable kilo-web.service
-
-# Start the service now
-sudo systemctl start kilo-web.service
-
-# Check if it's running
-sudo systemctl status kilo-web.service
-```
-
-**You should see:** `Active: active (running)`
-
----
-
-## Step 9: Verify Everything Works
-
-1. **Test the web interface:**
-   - Open browser on your laptop
-   - Go to:
-     - Boat 1: `http://192.168.11.102` (no port needed!)
-     - Boat 2: `http://192.168.12.102` (no port needed!)
-   - Verify the dashboard loads
-
-2. **Check both services are running:**
-   ```bash
-   sudo systemctl status kilo-web.service
-   sudo systemctl status nginx
-   ```
-   Both should show: `Active: active (running)`
-
-3. **Verify correct IP configuration:**
-   ```bash
-   ip addr show eth0 | grep "inet "
-   # Boat 1 should show: inet 192.168.11.102/24
-   # Boat 2 should show: inet 192.168.12.102/24
-   ```
-
-4. **Test auto-start:**
-   ```bash
-   # Reboot the Pi
-   sudo reboot
-   ```
-   - Wait 1-2 minutes
-   - Try accessing the dashboard URL again
-   - It should work automatically!
-
----
-
-## Troubleshooting
-
-### Can't SSH into the Pi?
-- Verify Pi is powered on (LED lights?)
-- Check network cable is connected OR WiFi is configured
-- Try pinging:
-  - Boat 1: `ping 192.168.11.102`
-  - Boat 2: `ping 192.168.12.102`
-- Try hostname: `ssh pi@kilo-usv.local`
-
-### Application won't start?
-```bash
-# Check the service status
-sudo systemctl status kilo-web.service
-
-# Check the logs
-sudo journalctl -u kilo-web.service -n 50
-
-# Manually test
-cd ~/KiloWebInterface
-source .venv/bin/activate
-python app.py
-```
-
-### nginx issues?
-```bash
-# Check nginx status
-sudo systemctl status nginx
-
-# Test configuration
-sudo nginx -t
-
-# Check nginx error log
-sudo tail -20 /var/log/nginx/error.log
+# Should show: syntax is ok, test is successful
 
 # Restart nginx
 sudo systemctl restart nginx
-```
 
-### Port 80 already in use?
-```bash
-# See what's using port 80
-sudo netstat -tlnp | grep :80
+# Enable nginx to start on boot
+sudo systemctl enable nginx
 
-# If Apache is running, disable it
-sudo systemctl stop apache2
-sudo systemctl disable apache2
-sudo systemctl restart nginx
-```
+# Check nginx status
+sudo systemctl status nginx
 
-### Can't access web interface?
-- Verify Pi is on same network as your laptop
-- Try direct access to app:
-  - Boat 1: `http://192.168.11.102:5000`
-  - Boat 2: `http://192.168.12.102:5000`
-- Check firewall on Pi (shouldn't be an issue by default)
-- Verify both services are running:
-  ```bash
-  sudo systemctl status kilo-web.service
-  sudo systemctl status nginx
-  ```
-- Test from the Pi itself: `curl http://127.0.0.1:5000`
-
-### Need to update the application?
-```bash
-cd ~/KiloWebInterface
-git pull
-sudo systemctl restart kilo-web.service
+# Should show: Active: active (running)
 ```
 
 ---
 
-## Quick Reference Commands
+## STEP 9: VERIFY INSTALLATION
+
+### Check Services
 
 ```bash
-# Start the services
-sudo systemctl start kilo-web.service
-sudo systemctl start nginx
-
-# Stop the services
-sudo systemctl stop kilo-web.service
-sudo systemctl stop nginx
-
-# Restart the services
-sudo systemctl restart kilo-web.service
-sudo systemctl restart nginx
-
-# Check service status
+# Both should be active (running)
 sudo systemctl status kilo-web.service
 sudo systemctl status nginx
 
-# View application logs (last 50 lines)
-sudo journalctl -u kilo-web.service -n 50
+# Check listening ports
+ss -tulpn | grep -E ":80|:5000"
 
-# View application logs (live follow)
+# Should show:
+# *:80    (nginx)
+# *:5000  (python/uvicorn)
+```
+
+### Test Web Interface
+
+```bash
+# Test from Pi itself
+curl -I http://localhost
+
+# Should show: HTTP/1.1 200 OK
+
+# Test on LAN IP
+curl -I http://192.168.11.102
+
+# Should show: HTTP/1.1 200 OK
+```
+
+### Test from Your Computer
+
+**On the boat network (192.168.11.X):**
+- Open browser
+- Navigate to: **http://192.168.11.102**
+- Should see Kilo USV Web Interface!
+
+---
+
+## STEP 10: VERIFY NETWORK CONFIGURATION
+
+```bash
+# Show both interfaces
+ip addr show
+
+# Check eth0 (Boat LAN)
+ip addr show eth0
+# Should show: 192.168.11.102/24
+
+# Check wlan0 (Starlink WiFi)  
+ip addr show wlan0
+# Should show: inet [Starlink DHCP IP]
+
+# Check routing table
+ip route
+# Default route should go through wlan0 for internet
+
+# Test boat LAN connectivity
+ping -c 3 192.168.11.1
+
+# Test internet connectivity
+ping -c 3 google.com
+```
+
+---
+
+## STEP 11: FINAL VERIFICATION
+
+### Check Environment Variables
+
+```bash
+# Verify KILO_CONTROL_WHITELIST is set
+sudo systemctl show kilo-web.service | grep KILO_CONTROL_WHITELIST
+
+# Should show:
+# Environment=KILO_CONTROL_WHITELIST=192.168.11.101,127.0.0.1
+```
+
+### Check Logs
+
+```bash
+# Check kilo-web logs
+sudo journalctl -u kilo-web.service -n 30
+
+# Look for:
+# ✅ "Starting Kilo UI server at 0.0.0.0:5000"
+# ✅ No errors
+# ✅ When ROS bridge connects: "192.168.11.101:X - WebSocket /ws [accepted]"
+
+# Check nginx logs
+sudo journalctl -u nginx -n 20
+
+# Look for:
+# ✅ No errors
+```
+
+### Test WebSocket Connections
+
+Once ROS bridge at 192.168.11.101 is running:
+
+```bash
+# Watch for ROS bridge connections in real-time
 sudo journalctl -u kilo-web.service -f
 
-# View nginx error log
-sudo tail -20 /var/log/nginx/error.log
+# You should see:
+# 192.168.11.101:X - "WebSocket /ws" [accepted]
+# connection open
+```
 
-# Test nginx configuration
-sudo nginx -t
+---
 
-# Update the code from GitHub
-cd ~/KiloWebInterface
-git pull
+## 📋 DEPLOYMENT CHECKLIST
+
+**Hardware Setup:**
+- [ ] SD card flashed with Raspberry Pi OS
+- [ ] WiFi configured for Starlink
+- [ ] Pi powered on and booted
+- [ ] SSH connection established
+
+**Network Configuration:**
+- [ ] Static IP configured on eth0: 192.168.11.102
+- [ ] WiFi (wlan0) has internet via Starlink
+- [ ] Can ping boat gateway: 192.168.11.1
+- [ ] Can ping internet: google.com
+
+**Software Installation:**
+- [ ] System updated (apt update)
+- [ ] Dependencies installed (python3, git, nginx)
+- [ ] KiloWebInterface cloned (version/map branch)
+- [ ] Python venv created
+- [ ] Requirements installed (including websockets)
+
+**Service Configuration:**
+- [ ] systemd service created: kilo-web.service
+- [ ] KILO_CONTROL_WHITELIST set: 192.168.11.101,127.0.0.1
+- [ ] Service enabled and running
+- [ ] nginx configured as reverse proxy
+- [ ] nginx enabled and running
+
+**Verification:**
+- [ ] Service status shows active (running)
+- [ ] Port 80 accessible: http://192.168.11.102
+- [ ] Web interface loads in browser
+- [ ] No errors in service logs
+- [ ] Environment variable set correctly
+
+**Integration (when ROS bridge is ready):**
+- [ ] ROS bridge connects from 192.168.11.101
+- [ ] WebSocket connection accepted
+- [ ] Gamepad controls reach ROS bridge
+- [ ] Boat responds to commands
+
+---
+
+## 🔧 TROUBLESHOOTING
+
+### Service Won't Start
+
+```bash
+# Check logs for errors
+sudo journalctl -u kilo-web.service -n 50
+
+# Check if port 5000 is already in use
+sudo lsof -i :5000
+
+# Check file permissions
+ls -la /home/pi/KiloWebInterface/
+
+# Try running manually
+cd /home/pi/KiloWebInterface
+source .venv/bin/activate
+python app.py
+# Check for errors
+```
+
+### Can't Access Web Interface
+
+```bash
+# Check if nginx is running
+sudo systemctl status nginx
+
+# Check if backend is running
+sudo systemctl status kilo-web.service
+
+# Check firewall (should be off by default)
+sudo ufw status
+
+# Test local connection
+curl -I http://localhost
+curl -I http://192.168.11.102
+```
+
+### WebSocket Errors in Browser Console
+
+```bash
+# Check if websockets package is installed
+/home/pi/KiloWebInterface/.venv/bin/pip list | grep websockets
+
+# If missing:
+cd /home/pi/KiloWebInterface
+source .venv/bin/activate
+pip install websockets
+deactivate
 sudo systemctl restart kilo-web.service
 ```
 
----
+### No Connection from ROS Bridge
 
-## Network Configuration
-
-**Dual Network Architecture:**
-
-The Pi is configured with two network interfaces for each boat:
-
-### Boat 1
-
-**eth0 (LAN/Ethernet Port)**
-- **Purpose:** Vessel control network
-- **Configuration:** Static IP
-- **IP Address:** `192.168.11.102/24`
-- **Gateway:** `192.168.11.1`
-- **DNS:** `192.168.11.1`, `8.8.8.8`
-- **Use:** CAN bridge communication, local dashboard access, vessel controls
-
-**wlan0 (WiFi)**
-- **Purpose:** Internet connectivity
-- **Configuration:** DHCP from Starlink
-- **Use:** Software updates, remote monitoring, GitHub access
-
-### Boat 2
-
-**eth0 (LAN/Ethernet Port)**
-- **Purpose:** Vessel control network
-- **Configuration:** Static IP
-- **IP Address:** `192.168.12.102/24`
-- **Gateway:** `192.168.12.1`
-- **DNS:** `192.168.12.1`, `8.8.8.8`
-- **Use:** CAN bridge communication, local dashboard access, vessel controls
-
-**wlan0 (WiFi)**
-- **Purpose:** Internet connectivity
-- **Configuration:** DHCP from Starlink
-- **Use:** Software updates, remote monitoring, GitHub access
-
----
-
-**Access URLs:**
-- Boat 1 Dashboard: `http://192.168.11.102` (port 80 via nginx)
-- Boat 1 Direct backend: `http://192.168.11.102:5000` (FastAPI)
-- Boat 2 Dashboard: `http://192.168.12.102` (port 80 via nginx)
-- Boat 2 Direct backend: `http://192.168.12.102:5000` (FastAPI)
-
-**Why this setup?**
-- Static LAN IP ensures reliable vessel control (never changes)
-- WiFi provides internet without affecting control network
-- Separation between control network and internet for safety
-- **Each boat on separate subnet prevents IP conflicts**
-
-**To verify network configuration:**
 ```bash
-# Check LAN IP
-ip addr show eth0 | grep "inet "
-# Boat 1 should show: inet 192.168.11.102/24
-# Boat 2 should show: inet 192.168.12.102/24
+# Verify environment variable is set
+sudo systemctl show kilo-web.service | grep KILO
 
-# Check WiFi IP (will vary)
-ip addr show wlan0 | grep "inet "
+# Check logs when ROS bridge tries to connect
+sudo journalctl -u kilo-web.service -f
 
-# Check all IPs
-hostname -I
+# Verify ROS bridge is trying to connect to correct IP
+# (check on ROS bridge at 192.168.11.101)
 ```
 
 ---
 
-## Summary Checklist
+## 🚀 QUICK COMMANDS REFERENCE
 
-- [ ] **Identified which boat** (Boat 1 = 192.168.11.102, Boat 2 = 192.168.12.102)
-- [ ] SD card flashed with Raspberry Pi OS (WiFi configured for Starlink)
-- [ ] Pi connected to network (Ethernet cable plugged in + WiFi)
-- [ ] Initial SSH connection successful
-- [ ] Static IP configured on eth0 (correct IP for the boat)
-- [ ] Reconnected via static IP
-- [ ] Git repository cloned
-- [ ] Python dependencies installed
-- [ ] nginx installed and configured
-- [ ] Application tested manually
-- [ ] Systemd service created and enabled
-- [ ] nginx service enabled and running
-- [ ] Auto-start verified after reboot
-- [ ] Web interface accessible at correct URL
-- [ ] Network configuration verified (eth0 = correct static IP, wlan0 = Starlink DHCP)
+### Check Status
+```bash
+sudo systemctl status kilo-web.service nginx
+```
+
+### View Logs
+```bash
+sudo journalctl -u kilo-web.service -n 50
+sudo journalctl -u kilo-web.service -f  # Follow mode
+```
+
+### Restart Services
+```bash
+sudo systemctl restart kilo-web.service
+sudo systemctl restart nginx
+```
+
+### Update Code (when changes pushed to GitHub)
+```bash
+cd ~/KiloWebInterface
+git pull origin version/map
+sudo systemctl restart kilo-web.service
+```
+
+### Network Info
+```bash
+ip addr show
+ip route
+ss -tulpn | grep -E ":80|:5000"
+```
 
 ---
 
-## Need Help?
+## 📝 IMPORTANT NOTES
 
-Contact Scott with:
-- What step you're on
-- Error messages (exact text if possible)
-- Output from: `sudo systemctl status kilo-web.service`
+**Dual Network Setup:**
+- **eth0 (192.168.11.102)**: Boat control network, static IP
+- **wlan0 (Starlink)**: Internet access, DHCP
 
-**Good luck with the deployment! 🚢**
+**Why This Works:**
+- Linux routing prioritizes default route through wlan0 for internet
+- eth0 handles local boat network traffic (192.168.11.X)
+- This allows simultaneous internet access and boat control
+
+**Security Note:**
+- KILO_CONTROL_WHITELIST only allows connections from:
+  - 192.168.11.101 (ROS bridge)
+  - 127.0.0.1 (localhost)
+- All other IPs must authenticate via browser login
+
+**Port Configuration:**
+- Backend runs on: 5000 (internal)
+- nginx proxies to: 80 (external)
+- Users access via: http://192.168.11.102 (port 80)
+
+---
+
+## ⏱️ ESTIMATED TIME
+
+- **SD Card Flashing**: 5-10 minutes
+- **Initial Boot & Updates**: 5-10 minutes
+- **Software Installation**: 10-15 minutes
+- **Configuration**: 5-10 minutes
+- **Testing**: 5 minutes
+
+**Total**: ~30-45 minutes per Pi
+
+---
+
+## 🎯 SUCCESS CRITERIA
+
+**You're done when:**
+1. ✅ Browser loads http://192.168.11.102
+2. ✅ Web interface displays boat controls
+3. ✅ Both services show active (running)
+4. ✅ No errors in logs
+5. ✅ Environment variable shows correct whitelist
+6. ✅ Pi has both LAN (eth0) and internet (wlan0) connectivity
+
+**Ready for integration when:**
+7. ✅ ROS bridge at .101 connects to backend
+8. ✅ WebSocket connection shows [accepted] in logs
+9. ✅ Gamepad data flows from browser → backend → ROS bridge
+10. ✅ Boat responds to commands! 🚢
+
+---
+
+## 🔄 BOAT 2 DIFFERENCES
+
+For reference, Boat 2 configuration:
+- LAN IP: 192.168.12.102 (instead of .11.102)
+- Gateway: 192.168.12.1 (instead of .11.1)
+- ROS Bridge: 192.168.12.101 (instead of .11.101)
+- Whitelist: 192.168.12.101,127.0.0.1
+
+Everything else is identical!
